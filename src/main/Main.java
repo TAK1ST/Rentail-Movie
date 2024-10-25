@@ -9,23 +9,23 @@ import main.utils.DatabaseUtil;
 
 
 public class Main {
-
-    public static void main(String[] args) throws SQLException {
-        Connection conn = null;
+public static Connection connect() {
+        Connection connection = null;
         try {
             // Kết nối với cơ sở dữ liệu
-            conn = DatabaseUtil.getConnection();
-            if (conn != null) {
+            connection = DatabaseUtil.getConnection();
+            if (connection != null) {
                 System.out.println("Kết nối tới cơ sở dữ liệu thành công!");
                
             }
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Kết nối thất bại!");
-        } finally {
-            // Đóng kết nối
-            DatabaseUtil.closeConnection(conn);
-        }
+        } 
+        return connection;
     }
+    public static void main(String[] args) throws SQLException {
+        connect();
     
+}
 }
