@@ -107,26 +107,26 @@ CREATE TABLE IF NOT EXISTS Login_History (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
-CREATE TABLE IF NOT EXISTS Review (
-    review_id INT AUTO_INCREMENT PRIMARY KEY,
-    movie_id INT,
-    user_id INT,
-    review_text TEXT,
-    rating INT CHECK (rating BETWEEN 1 AND 5),
-    review_date DATE,
-    FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-);
+-- CREATE TABLE IF NOT EXISTS Review (
+--     review_id INT AUTO_INCREMENT PRIMARY KEY,
+--     movie_id INT,
+--     user_id INT,
+--     review_text TEXT,
+--     rating INT CHECK (rating BETWEEN 1 AND 5),
+--     review_date DATE,
+--     FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
+--     FOREIGN KEY (user_id) REFERENCES Users(user_id)
+-- );
 
-CREATE TABLE IF NOT EXISTS Wishlist (
-    wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    movie_id INT,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (movie_id) REFERENCES Movie(movie_id)
-);
+-- CREATE TABLE IF NOT EXISTS Wishlist (
+--     wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
+--     user_id INT,
+--     movie_id INT,
+--     FOREIGN KEY (user_id) REFERENCES Users(user_id),
+--     FOREIGN KEY (movie_id) REFERENCES Movie(movie_id)
+-- );
 
-CREATE TABLE IF NOT EXISTS Category (
-    category_id INT AUTO_INCREMENT PRIMARY KEY,
-    category_name VARCHAR(100) NOT NULL
-);
+-- CREATE TABLE IF NOT EXISTS Category (
+--     category_id INT AUTO_INCREMENT PRIMARY KEY,
+--     category_name VARCHAR(100) NOT NULL
+-- );
