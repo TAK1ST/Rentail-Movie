@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import main.services.MovieService;
 import main.utils.DatabaseUtil;
 
 
@@ -26,6 +27,6 @@ public static Connection connect() {
     }
     public static void main(String[] args) throws SQLException {
         connect();
-    
+        
 }
 }
