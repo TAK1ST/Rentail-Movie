@@ -10,10 +10,11 @@ import java.util.List;
 import main.Main;
 import main.models.Movie;
 import main.models.Genre;
+import main.utils.DatabaseUtil;
 public class MovieService {
     public boolean addMovie(Movie movie) {
         String sql = "INSERT INTO Movie (title, description, rating, genre, language, release_year, rental_price, available_copies) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try(Connection connection = Main.connect();
+        try(Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setString(1, movie.getTitle());
             preparedStatement.setString(2, movie.getDescription());
@@ -22,7 +23,7 @@ public class MovieService {
             preparedStatement.setString(5, movie.getLanguage());
             preparedStatement.setString(6, movie.getReleaseYear());
             preparedStatement.setDouble(7, movie.getRentalPrice());
-            preparedStatement.setInt(7, movie.getAvailableCopies());
+            preparedStatement.setInt(8, movie.getAvailableCopies());
             int rowsInserted = preparedStatement.executeUpdate();
             return rowsInserted > 0;
             
@@ -33,7 +34,7 @@ public class MovieService {
     }
      public boolean updateMovie(Movie movie) {
         String sql = "UPDATE Movie SET title = ?, description = ?, rating = ?, genre = ?, language = ?, release_year = ?, rental_price = ?, available_copies = ? WHERE movie_id = ?";
-        try (Connection connection = Main.connect();
+        try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, movie.getTitle());
@@ -56,7 +57,7 @@ public class MovieService {
 
     public boolean deleteMovie(int movieId) {
         String sql = "DELETE FROM Movie WHERE movie_id = ?";
-        try (Connection connection = Main.connect();
+        try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, movieId);
@@ -74,10 +75,10 @@ public class MovieService {
         String sql = "SELECT * FROM Movie";
         List<Movie> movies = new ArrayList<>();
         
-        try (Connection connection = Main.connect();
-             Statement statement = connection.createStatement()) {
+        try (Connection connection = DatabaseUtil.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
              
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = preparedStatement.executeQuery(sql);
 
             while (resultSet.next()) {
                 Movie movie = new Movie(
@@ -116,7 +117,7 @@ public class MovieService {
             sql += " AND rating = ?";
         }
 
-        try (Connection connection = Main.connect();
+        try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             int parameterIndex = 1;
