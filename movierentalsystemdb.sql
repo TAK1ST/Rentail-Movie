@@ -97,19 +97,16 @@ CREATE TABLE Payment (
     FOREIGN KEY (rental_id) REFERENCES Rental(rental_id)
 );
 
-
-
-
--- CREATE TABLE Review (
---     review_id INT AUTO_INCREMENT PRIMARY KEY,
---     movie_id INT,
---     user_id INT,
---     review_text TEXT,
---     rating INT CHECK (rating BETWEEN 1 AND 5),
---     review_date DATE,
---     FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
---     FOREIGN KEY (user_id) REFERENCES User(user_id)
--- );
+CREATE TABLE Review (
+    review_id INT AUTO_INCREMENT PRIMARY KEY,
+    movie_id INT,
+    user_id INT,
+    review_text TEXT,
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    review_date DATE,
+    FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
+);
 
 -- CREATE TABLE Wishlist (
 --     wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
