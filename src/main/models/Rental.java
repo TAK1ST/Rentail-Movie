@@ -2,8 +2,9 @@
 package main.models;
 
 
-public class Rental {
-    private int rentalId;
+import base.Model;
+
+public class Rental extends Model {
     private Users userId;
     private Movie movieId;
     private String rentalDate;
@@ -12,7 +13,7 @@ public class Rental {
     private double overdueFines;
 
     public Rental(int rentalId, Users userId, Movie movieId, String rentalDate, String returnDate, double charges, double overdueFines) {
-        this.rentalId = rentalId;
+        super(rentalId);
         this.userId = userId;
         this.movieId = movieId;
         this.rentalDate = rentalDate;
@@ -22,11 +23,11 @@ public class Rental {
     }
 
     public int getRentalId() {
-        return rentalId;
+        return getId();
     }
 
     public void setRentalId(int rentalId) {
-        this.rentalId = rentalId;
+        setId(rentalId);
     }
 
     public Users getUserId() {
@@ -76,5 +77,17 @@ public class Rental {
     public void setOverdueFines(double overdueFines) {
         this.overdueFines = overdueFines;
     }
-    
+
+    public Object[] getDatabaseValues() {
+        return new Object[]
+                {
+                        getId(),
+                        userId,
+                        movieId,
+                        rentalDate,
+                        returnDate,
+                        charges,
+                        overdueFines
+                };
+    }
 }

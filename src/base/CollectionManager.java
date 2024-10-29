@@ -86,7 +86,6 @@ public abstract class CollectionManager<T extends Model> {
             throw new IOException("Failed to save data", e);
         }
 
-        list.clear();
         loadData(tableName);
         isNotSaved = false;
         return true;
