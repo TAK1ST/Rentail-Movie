@@ -5,134 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="184ba9cb-69ec-48f4-bb3c-8a8e2776120f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/ant.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/models/Review.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/services/ReviewService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/built-jar.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/controllers/CustomerController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/controllers/MovieController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/controllers/RentalController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/models/Actor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/models/CustomerProfile.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/models/Genre.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/models/Movie.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/models/MovieActor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/models/Rental.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/models/Subscription.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/models/Users.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/services/CustomerService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/services/MovieService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/services/RentalService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/main/utils/DatabaseUtil.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/Rentail-Movie.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/allclasses-index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/allpackages-index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/copy.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/element-list" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/help-doc.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/index-files/index-1.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/index-files/index-2.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/index-files/index-3.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/index-files/index-4.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/index-files/index-5.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/index-files/index-6.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/index-files/index-7.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/index-files/index-8.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/jquery-ui.overrides.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/legal/COPYRIGHT" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/legal/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/legal/jquery.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/legal/jqueryUI.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/Main.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/class-use/Main.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/controllers/CustomerController.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/controllers/MovieController.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/controllers/RentalController.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/controllers/class-use/CustomerController.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/controllers/class-use/MovieController.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/controllers/class-use/RentalController.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/controllers/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/controllers/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/controllers/package-use.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/Actor.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/CustomerProfile.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/Genre.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/Movie.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/MovieActor.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/Rental.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/Subscription.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/Users.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/class-use/Actor.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/class-use/CustomerProfile.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/class-use/Genre.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/class-use/Movie.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/class-use/MovieActor.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/class-use/Rental.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/class-use/Subscription.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/class-use/Users.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/models/package-use.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/package-use.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/services/CustomerService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/services/MovieService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/services/RentalService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/services/class-use/CustomerService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/services/class-use/MovieService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/services/class-use/RentalService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/services/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/services/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/services/package-use.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/utils/DatabaseUtil.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/utils/class-use/DatabaseUtil.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/utils/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/utils/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/main/utils/package-use.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/member-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/module-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/overview-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/overview-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/package-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/resources/glass.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/resources/x.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/script-dir/jquery-3.6.0.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/script-dir/jquery-ui.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/script-dir/jquery-ui.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/script.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/search-page.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/search.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/search.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/stylesheet.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/tag-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/javadoc/type-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/build-impl.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/genfiles.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/private/config.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/private/private.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/project.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/CollectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/CollectionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/Model.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/models/Actor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/models/Actor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/models/CustomerProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/models/CustomerProfile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/models/Genre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/models/Genre.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/models/Movie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/models/Movie.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/models/MovieActor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/models/MovieActor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/models/Rental.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/models/Rental.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/models/Subscription.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/models/Subscription.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/models/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/models/Users.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Account.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/CartItem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Customer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Order.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Product.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Review.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/User.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,16 +39,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "duong",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/Code/learnJava/BE2/Rentail-Movie/src/main/utils",
-    "settings.editor.selected.configurable": "settings.qodana"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;duong&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Code/learnJava/BE2/Rentail-Movie/src/main/utils&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.qodana&quot;
   }
-}]]></component>
+}</component>
   <component name="QodanaReportsService">
     <option name="descriptions">
       <ReportDescription localRun="true" path="C:\Users\admin\AppData\Local\Temp\qodana_output\qodana.sarif.json" reportGuid="6a92f5b7-24cf-4cf1-946b-e064145715d8" reportId="Rentail-Movie/qodana/2024-10-29" />

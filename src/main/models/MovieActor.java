@@ -36,12 +36,12 @@ public class MovieActor {
         this.role = role;
     }
 
-    public Object[] getDatabaseValues() {
-        return new Object[]
-                {
-                        getActorId(),
-                        getMovieId(),
-                        getRoleMovieActor()
-                };
-    }
+//    public Object[] getDatabaseValues() {
+//        return new Object[]
+//                {
+//                        getActorId(),
+//                        getMovieId(),
+//                        getRoleMovieActor()
+//                };
+//    }
 }
