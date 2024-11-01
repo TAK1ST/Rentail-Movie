@@ -99,7 +99,7 @@ public class CustomerService {
                     resultSet.getString("returnDate"),
                     resultSet.getDouble("charges"),
                     resultSet.getDouble("overdueFines")
-                );
+                ); 
                 rentalHistory.add(rental);
             }
         } catch (SQLException e) {
