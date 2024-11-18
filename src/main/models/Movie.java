@@ -2,10 +2,9 @@
 package main.models;
 
 
+import base.Model;
 
-
-public class Movie {
-    private int movieId;
+public class Movie extends Model {
     private String title;
     private String description;
     private String rating;
@@ -16,7 +15,7 @@ public class Movie {
     private int availableCopies;
 
     public Movie(int movieId, String title, String description, String rating, Genre genre, String language, String releaseYear, double rentalPrice, int availableCopies) {
-        this.movieId = movieId;
+        super(movieId);
         this.title = title;
         this.description = description;
         this.rating = rating;
@@ -28,11 +27,11 @@ public class Movie {
     }
 
     public int getMovieId() {
-        return movieId;
+        return getId();
     }
 
     public void setMovieId(int movieId) {
-        this.movieId = movieId;
+        this.setId(movieId);
     }
 
     public String getTitle() {
@@ -99,4 +98,18 @@ public class Movie {
         this.availableCopies = availableCopies;
     }
 
+    public Object[] getDatabaseValues() {
+        return new Object[]
+                {
+                        getId(),
+                        title,
+                        description,
+                        rating,
+                        genre,
+                        language,
+                        releaseYear,
+                        rentalPrice,
+                        availableCopies
+                };
+    }
 }

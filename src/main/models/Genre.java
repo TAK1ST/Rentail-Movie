@@ -1,22 +1,21 @@
-
 package main.models;
 
+import base.Model;
 
-public class Genre {
-    private int genreId;
+public class Genre extends Model {
     private String genreName;
 
     public Genre(int genreId, String genreName) {
-        this.genreId = genreId;
+        super(genreId);
         this.genreName = genreName;
     }
 
     public int getGenreId() {
-        return genreId;
+        return getId();
     }
 
     public void setGenreId(int genreId) {
-        this.genreId = genreId;
+        this.setId(genreId);
     }
 
     public String getGenreName() {
@@ -26,5 +25,12 @@ public class Genre {
     public void setGenreName(String genreName) {
         this.genreName = genreName;
     }
-    
+
+    public Object[] getDatabaseValues() {
+        return new Object[]
+                {
+                        getGenreId(),
+                        getGenreName()
+                };
+    }
 }

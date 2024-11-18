@@ -1,30 +1,26 @@
 
 package main.models;
 
-import java.sql.Date;
+import base.Model;
 
-
-
-
-public class Subscription {
-    private int subscriptionId;
+public class Subscription extends Model {
     private int subscriptionType;
-    private String startDate; 
+    private String startDate;
     private String endDate;
 
     public Subscription(int subscriptionId, int subscriptionType, String startDate, String endDate) {
-        this.subscriptionId = subscriptionId;
+        super(subscriptionId);
         this.subscriptionType = subscriptionType;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
     public int getSubscriptionId() {
-        return subscriptionId;
+        return getId();
     }
 
     public void setSubscriptionId(int subscriptionId) {
-        this.subscriptionId = subscriptionId;
+        setId(subscriptionId);
     }
 
     public int getSubscriptionType() {
@@ -50,5 +46,14 @@ public class Subscription {
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
-    
+
+    public Object[] getDatabaseValues() {
+        return new Object[]
+                {
+                        getSubscriptionId(),
+                        getSubscriptionType(),
+                        getStartDate(),
+                        getEndDate()
+                };
+    }
 }

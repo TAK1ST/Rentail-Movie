@@ -1,9 +1,9 @@
 
 package main.models;
 
+import base.Model;
 
-public class Users {
-    private int userId;
+public class Users extends Model {
     private String username;
     private String passwordHash;
     private String email;
@@ -11,7 +11,7 @@ public class Users {
     private Subscription subscription;
 
     public Users(int userId, String username, String passwordHash, String email, int role, Subscription subscription) {
-        this.userId = userId;
+        super(userId);
         this.username = username;
         this.passwordHash = passwordHash;
         this.email = email;
@@ -20,12 +20,10 @@ public class Users {
     }
 
     public int getUserId() {
-        return userId;
+        return super.getId();
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+    public void setUserId(int userId) {this.setId(userId); }
 
     public String getUsername() {
         return username;
@@ -66,5 +64,16 @@ public class Users {
     public void setSubscription(Subscription subscription) {
         this.subscription = subscription;
     }
-    
+
+    public Object[] getDatabaseValues() {
+        return new Object[]
+                {
+                        getId(),
+                        username,
+                        passwordHash,
+                        email,
+                        role,
+                        subscription
+                };
+    }
 }

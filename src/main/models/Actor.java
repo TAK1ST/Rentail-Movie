@@ -2,21 +2,22 @@
 package main.models;
 
 
-public class Actor {
-    private int actorId;
+import base.Model;
+
+public class Actor extends Model {
     private String actorName;
 
     public Actor(int actorId, String actorName) {
-        this.actorId = actorId;
+        super(actorId);
         this.actorName = actorName;
     }
 
     public int getActorId() {
-        return actorId;
+        return super.getId();
     }
 
     public void setActorId(int actorId) {
-        this.actorId = actorId;
+        setId(actorId);
     }
 
     public String getActorName() {
@@ -26,5 +27,12 @@ public class Actor {
     public void setActorName(String actorName) {
         this.actorName = actorName;
     }
-    
+
+    public Object[] getDatabaseValues() {
+        return new Object[]
+                {
+                        getActorId(),
+                        getActorName()
+                };
+    }
 }

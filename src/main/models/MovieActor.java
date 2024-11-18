@@ -1,6 +1,5 @@
-
+// MovieActor.java
 package main.models;
-
 
 public class MovieActor {
     private Movie movieId;
@@ -29,12 +28,20 @@ public class MovieActor {
         this.actorId = actorId;
     }
 
-    public String getRole() {
+    private String getRoleMovieActor() {
         return role;
     }
 
     public void setRole(String role) {
         this.role = role;
     }
-    
+
+//    public Object[] getDatabaseValues() {
+//        return new Object[]
+//                {
+//                        getActorId(),
+//                        getMovieId(),
+//                        getRoleMovieActor()
+//                };
+//    }
 }

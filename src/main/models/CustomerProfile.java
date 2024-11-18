@@ -1,16 +1,16 @@
-
+// CustomerProfile.java
 package main.models;
 
+import base.Model;
 
-public class CustomerProfile {
-    private int profileId;
+public class CustomerProfile extends Model {
     private Users userId;
     private String fullName;
     private String address;
     private int phoneNumber;
 
     public CustomerProfile(int profileId, Users userId, String fullName, String address, int phoneNumber) {
-        this.profileId = profileId;
+        super(profileId);
         this.userId = userId;
         this.fullName = fullName;
         this.address = address;
@@ -18,11 +18,11 @@ public class CustomerProfile {
     }
 
     public int getProfileId() {
-        return profileId;
+        return super.getId();
     }
 
     public void setProfileId(int profileId) {
-        this.profileId = profileId;
+        super.setId(profileId);
     }
 
     public Users getUserId() {
@@ -56,5 +56,21 @@ public class CustomerProfile {
     public void setPhoneNumber(int phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-    
+
+    @Override
+    public Object[] getDatabaseValues() {
+        return new Object[] {
+                getId(),
+                userId != null ? userId.getId() : null,
+                fullName,
+                address,
+                phoneNumber
+        };
+    }
+
+    @Override
+    public String toString() {
+        return String.format("CustomerProfile[profileId=%s, userId=%s, fullName=%s, address=%s, phoneNumber=%s]",
+                getId(), userId != null ? userId.getId() : null, fullName, address, phoneNumber);
+    }
 }
