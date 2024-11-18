@@ -7,9 +7,9 @@ package main.utils;
 import java.io.IOException;
 import java.util.List;
 
-import static utils.Utility.Console.getInt;
-import static utils.Utility.Console.yesOrNo;
-import static utils.Utility.errorLog;
+import static main.utils.Utility.Console.getInt;
+import static main.utils.Utility.Console.yesOrNo;
+import static main.utils.Utility.errorLog;
 /**
  *
  * @author trann

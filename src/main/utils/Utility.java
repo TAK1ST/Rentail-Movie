@@ -1,22 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package main.utils;
 
-import model.Account.Role;
-import model.Order.Condition;
-import model.Order.Payment;
-import model.Order.Status;
+import main.models.*;
 
+import javax.management.relation.Role;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
-/**
- *
- * @author trann
- */
+
 public class Utility {
     private static final Scanner scanner = new Scanner(System.in);
 

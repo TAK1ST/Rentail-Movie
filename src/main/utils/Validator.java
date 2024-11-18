@@ -4,11 +4,7 @@
  */
 package main.utils;
 
-import model.Account;
-import model.Account.Role;
-import model.Order.Condition;
-import model.Order.Payment;
-import model.Order.Status;
+import main.models.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,9 +15,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-import static controller.Managers.getCUM;
-import static utils.Utility.Console.*;
-import static utils.Utility.errorLog;
+import static main.controllers.Managers.getCUM;
+import static main.utils.Utility.Console.*;
+import static main.utils.Utility.errorLog;
 
 /**
  *

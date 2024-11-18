@@ -8,7 +8,6 @@ import java.util.List;
 
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.errorLog;
-import static main.utils.Utility.extractNumber;
 
 public abstract class CollectionManager<T extends Model> {
 
@@ -93,7 +92,7 @@ public abstract class CollectionManager<T extends Model> {
 
     public T searchById(String id) {
         for (T item : list) {
-            if (item.getId() != null && item.getId().equals(id)) {
+            if (item.getId() == Integer.parseInt(id)) {
                 return item;
             }
         }
@@ -102,9 +101,9 @@ public abstract class CollectionManager<T extends Model> {
 
     public void sortById() {
         list.sort((item1, item2) -> {
-            long num1 = extractNumber(item1.getId());
-            long num2 = extractNumber(item2.getId());
-            return Long.compare(num1, num2);
+            int num1 = item1.getId();
+            int num2 = item2.getId();
+            return Integer.compare(num1,num2);
         });
     }
 

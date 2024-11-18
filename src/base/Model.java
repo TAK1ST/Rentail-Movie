@@ -1,4 +1,4 @@
-﻿package base;
+package base;
 
 public abstract class Model {
     private int id;
