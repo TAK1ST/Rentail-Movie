@@ -10,10 +10,7 @@ import model.Account.Role;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- *
- * @author trann
- */
+
 public class IDMaker {
     
     public static synchronized String generateAccID(Account listLastAcc, Role role) {

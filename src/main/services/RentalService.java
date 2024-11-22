@@ -23,7 +23,6 @@ public class RentalService {
             statement.setString(4, rental.getReturnDate());
             statement.setDouble(5, rental.getCharges());
             statement.setDouble(6, rental.getOverdueFines());
-
             return statement.executeUpdate() > 0;  // Trả về true nếu thêm thành công
         } catch (SQLException e) {
             e.printStackTrace();

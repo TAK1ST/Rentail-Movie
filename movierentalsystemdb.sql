@@ -12,6 +12,9 @@ CREATE TABLE IF NOT EXISTS Users
 -- role use integer help flexible and can expand more. 
     role INTEGER NOT NULL,		
     subscription_id INT,
+    full_name VARCHAR(255),
+    address VARCHAR(255),
+    phone_number VARCHAR(20),
     FOREIGN KEY (subscription_id) REFERENCES Subscription(subscription_id) 
 );
 
@@ -23,12 +26,12 @@ CREATE TABLE IF NOT EXISTS Subscription
     end_date datetime
 );
 
-
 CREATE TABLE IF NOT EXISTS Genre
 (
 	genre_id INT AUTO_INCREMENT PRIMARY KEY,
     genre_name varchar(100) NOT NULL
 );
+
 CREATE TABLE IF NOT EXISTS Movie
 (
 	movie_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -88,15 +91,6 @@ CREATE TABLE IF NOT EXISTS Payment (
     payment_date DATE NOT NULL,
     amount DECIMAL(5, 2) NOT NULL,
     FOREIGN KEY (rental_id) REFERENCES Rental(rental_id)
-);
-
-CREATE TABLE IF NOT EXISTS Customer_Profile (
-    profile_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    full_name VARCHAR(255),
-    address VARCHAR(255),
-    phone_number VARCHAR(20),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
 CREATE TABLE IF NOT EXISTS Login_History (

@@ -5,17 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="184ba9cb-69ec-48f4-bb3c-8a8e2776120f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rentail-Movie.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Rentail-Movie.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/CollectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/CollectionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/Model.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/models/Review.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/models/Review.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/services/ReviewService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/services/ReviewService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/utils/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/utils/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/Utility.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/utils/Validator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/Validator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/movierentalsystemdb.sql" beforeDir="false" afterPath="$PROJECT_DIR$/movierentalsystemdb.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/services/RentalService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/services/RentalService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/IDMaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/IDMaker.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,18 +25,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "TAK1ST"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;TAK1ST&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/TAK1ST/Rentail-Movie.git",
-    "accountId": "d26d56f0-be41-4698-a675-90631d1ddf61"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/TAK1ST/Rentail-Movie.git&quot;,
+    &quot;accountId&quot;: &quot;d26d56f0-be41-4698-a675-90631d1ddf61&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/main/models/Actor.java" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -58,21 +51,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Application.Main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/Code/learnJava/BE2/Rentail-Movie/src/main/utils",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "settings.qodana"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Code/learnJava/BE2/Rentail-Movie/src/main/utils&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.qodana&quot;
   }
-}]]></component>
+}</component>
   <component name="QodanaReportsService">
     <option name="descriptions">
       <ReportDescription localRun="true" path="C:\Users\admin\AppData\Local\Temp\qodana_output\qodana.sarif.json" reportGuid="6a92f5b7-24cf-4cf1-946b-e064145715d8" reportId="Rentail-Movie/qodana/2024-10-29" />
