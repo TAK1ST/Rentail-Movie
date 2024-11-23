@@ -8,30 +8,60 @@ public class Movie extends Model {
     private String title;
     private String description;
     private String rating;
-    private Genre genre;
+    private String genreID;
     private String language;
     private String releaseYear;
     private double rentalPrice;
-    private int availableCopies;
 
-    public Movie(int movieId, String title, String description, String rating, Genre genre, String language, String releaseYear, double rentalPrice, int availableCopies) {
+    public Movie(String movieId, String title, String description, String rating, String genreID, String language, String releaseYear, double rentalPrice) {
         super(movieId);
         this.title = title;
         this.description = description;
         this.rating = rating;
-        this.genre = genre;
+        this.genreID = genreID;
         this.language = language;
         this.releaseYear = releaseYear;
         this.rentalPrice = rentalPrice;
-        this.availableCopies = availableCopies;
     }
-
-    public int getMovieId() {
-        return getId();
+    
+    public Movie(Movie other) {
+        super(other.getId());
+        this.title = other.title;
+        this.description = other.description;
+        this.rating = other.rating;
+        this.genreID = other.genreID;
+        this.language = other.language;
+        this.releaseYear = other.releaseYear;
+        this.rentalPrice = other.rentalPrice;
     }
+    
+    @Override
+    public String toString() {
+        return String.format("Movie: %s, %s, %s, %s, %s, %s, %s, %.5f.", 
+                super.getId(), 
+                title, 
+                description, 
+                rating, 
+                genreID, 
+                language, 
+                releaseYear, 
+                rentalPrice);
+    }
+    
+    @Override
+    public Object[] getDatabaseValues() {
+        return new Object[]
+                {
+                        super.getId(),
+                        title,
+                        description,
+                        rating,
+                        genreID,
+                        language,
+                        releaseYear,
+                        rentalPrice,
+                };
 
-    public void setMovieId(int movieId) {
-        this.setId(movieId);
     }
 
     public String getTitle() {
@@ -58,12 +88,12 @@ public class Movie extends Model {
         this.rating = rating;
     }
 
-    public Genre getGenre() {
-        return genre;
+    public String getGenre() {
+        return genreID;
     }
 
-    public void setGenre(Genre genre) {
-        this.genre = genre;
+    public void setGenre(String genreID) {
+        this.genreID = genreID;
     }
 
     public String getLanguage() {
@@ -90,26 +120,4 @@ public class Movie extends Model {
         this.rentalPrice = rentalPrice;
     }
 
-    public int getAvailableCopies() {
-        return availableCopies;
-    }
-
-    public void setAvailableCopies(int availableCopies) {
-        this.availableCopies = availableCopies;
-    }
-
-    public Object[] getDatabaseValues() {
-        return new Object[]
-                {
-                        getId(),
-                        title,
-                        description,
-                        rating,
-                        genre,
-                        language,
-                        releaseYear,
-                        rentalPrice,
-                        availableCopies
-                };
-    }
 }

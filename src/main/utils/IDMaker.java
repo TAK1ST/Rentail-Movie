@@ -4,8 +4,13 @@
  */
 package main.utils;
 
+<<<<<<< HEAD
 import model.Account;
 import model.Account.Role;
+=======
+import main.models.Account;
+import main.models.Account.Role;
+>>>>>>> test
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

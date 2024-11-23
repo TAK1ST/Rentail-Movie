@@ -19,7 +19,7 @@ public class MovieService {
             preparedStatement.setString(1, movie.getTitle());
             preparedStatement.setString(2, movie.getDescription());
             preparedStatement.setString(3, movie.getRating());
-            preparedStatement.setString(4, movie.getGenre().getGenreName());
+            preparedStatement.setString(4, movie.getGenreName());
             preparedStatement.setString(5, movie.getLanguage());
             preparedStatement.setString(6, movie.getReleaseYear());
             preparedStatement.setDouble(7, movie.getRentalPrice());
@@ -39,7 +39,7 @@ public class MovieService {
 
             preparedStatement.setString(1, movie.getTitle());
             preparedStatement.setString(2, movie.getDescription());
-            preparedStatement.setString(3, movie.getGenre().getGenreName());
+            preparedStatement.setString(3, movie.getGenre());
             preparedStatement.setString(4, movie.getLanguage());
             preparedStatement.setString(5, movie.getReleaseYear());
             preparedStatement.setDouble(6, movie.getRentalPrice());

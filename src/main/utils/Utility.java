@@ -1,8 +1,6 @@
 
 package main.utils;
 
-import main.models.*;
-
 import javax.management.relation.Role;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -111,51 +109,6 @@ public class Utility {
             } while (!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n"));
             return input.equalsIgnoreCase("y");
         }
-
-        public static void rolesListing(String message) {
-            Role list[] = Role.values();
-            System.out.println(message);
-            for (int index = 1; index < list.length; index++) {
-                if (index % 3 == 0)
-                    System.out.println();
-                System.out.printf("%2d.%-25s", index, list[index]);
-            }
-            System.out.println("\n");
-        }
-
-        public static void statusListing(String message) {
-            Status list[] = Status.values();
-            System.out.println(message);
-            for (int index = 1; index < list.length; index++) {
-                if (index % 3 == 0)
-                    System.out.println();
-                System.out.printf("%2d.%-25s", index, list[index]);
-            }
-            System.out.println("\n");
-        }
-
-        public static void conditionsListing(String message) {
-            Condition list[] = Condition.values();
-            System.out.println(message);
-            for (int index = 0; index < list.length; index++) {
-                if (index % 3 == 0)
-                    System.out.println();
-                System.out.printf("%2d.%-25s", index, list[index]);
-            }
-            System.out.println("\n");
-        }
-
-        public static void paymentsListing(String message) {
-            Payment list[] = Payment.values();
-            System.out.println(message);
-            for (int index = 1; index < list.length; index++) {
-                if (index % 3 == 0)
-                    System.out.println();
-                System.out.printf("%2d.%-25s", index, list[index]);
-            }
-            System.out.println("\n");
-        }
-
         public static String selectInfo(String message, String[] infoLists, boolean enterToPass) {
             System.out.println("\n" + message);
             for (int index = 0; index < infoLists.length; index++) {

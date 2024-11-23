@@ -3,7 +3,7 @@ package main.controllers;
 
 import java.util.Collections;
 import java.util.List;
-import main.models.CustomerProfile;
+
 import main.models.Rental;
 import main.services.CustomerService;
 
@@ -11,7 +11,7 @@ import main.services.CustomerService;
 public class CustomerController {
     private final CustomerService customerService = new CustomerService();
 
-    public boolean addCustomer(CustomerProfile customer) {
+    public boolean addCustomer(Customer customer) {
         if (customer == null) {
             System.out.println("Customer profile is null. Please provide valid customer details.");
             return false;

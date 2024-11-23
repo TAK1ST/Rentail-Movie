@@ -8,18 +8,20 @@ public class Subscription extends Model {
     private String startDate;
     private String endDate;
 
-    public Subscription(int subscriptionId, int subscriptionType, String startDate, String endDate) {
+
+    public Subscription(String subscriptionId, int subscriptionType, String startDate, String endDate) {
         super(subscriptionId);
         this.subscriptionType = subscriptionType;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public int getSubscriptionId() {
+    public String getSubscriptionId() {
         return getId();
     }
 
-    public void setSubscriptionId(int subscriptionId) {
+    public void setSubscriptionId(String subscriptionId) {
+
         setId(subscriptionId);
     }
 

@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package main.utils;
 
 import main.models.*;
@@ -14,15 +11,10 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-
-import static main.controllers.Managers.getCUM;
 import static main.utils.Utility.Console.*;
 import static main.utils.Utility.errorLog;
 
-/**
- *
- * @author trann
- */
+
 public class Validator {
 
     private static final String EMAIL_PATTERN = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
@@ -55,17 +47,6 @@ public class Validator {
                 }
         } while (input.length() < 5 || !isUnique);
         return input;
-    }
-
-    public static Role getRole(String message, boolean enterToPass) {
-        Role[] listRole = Role.values();
-        rolesListing(message);
-        int input = getInt("Choose an option: ", 0, listRole.length - 1, enterToPass);
-
-        if (input <= -1)
-            return Role.NONE;
-        else
-            return listRole[input];
     }
 
     public static String getPassword(String message, boolean enterToPass) {
@@ -224,57 +205,6 @@ public class Validator {
         } while (!isValidProductPrice(input));
 
         return input;
-    }
-
-    public static Status selectStatus(String message, boolean enterToPass) {
-        Status[] listStatus = Status.values();
-
-        statusListing("Status:");
-        int input = getInt(message, 0, Status.values().length - 1, enterToPass);
-
-        if (input <= -1)
-            return Status.NONE;
-        else
-            return listStatus[input];
-    }
-
-    public static Condition selectCondition(String message, boolean enterToPass) {
-        Condition[] listCondition = Condition.values();
-
-        conditionsListing("Condition:");
-        int input = getInt(message, 0, Condition.values().length - 1, enterToPass);
-
-        if (input <= -1)
-            return Condition.NONE;
-        else
-            return listCondition[input];
-    }
-
-    public static Payment selectPayment(String message, boolean enterToPass) {
-        Payment[] listPayment = Payment.values();
-
-        paymentsListing("Payment:");
-        int input = getInt(message, 0, Status.values().length - 1, enterToPass);
-
-        if (input <= -1)
-            return Payment.NONE;
-        else
-            return listPayment[input];
-    }
-
-    public static Payment getPayment(double totalMoney, String customerId, String sellerId) {
-        Payment payment;
-        while (true) {
-            System.out.printf("\nYour order has total: %.3f\n\n", totalMoney);
-            System.out.println("If you don't want to continue, press Enter to exit.");
-            payment = Validator.selectPayment("Which payment do you want to pay: ", true);
-            if (payment == Payment.APP) {
-                if (!getCUM().pay(customerId, totalMoney))
-                    continue;
-                break;
-            }
-        }
-        return payment;
     }
 
     public static boolean isValidDate(String dateStr) {

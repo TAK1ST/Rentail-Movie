@@ -1,17 +1,20 @@
 package base;
 
 public abstract class Model {
-    private int id;
 
-    public Model(int id) {
+    private String id;
+    
+    public abstract Object[] getDatabaseValues();
+
+    public Model(String id) {
         this.id = id;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -20,5 +23,5 @@ public abstract class Model {
         return String.format("Model[id=%s]", id);
     }
 
-    public abstract Object[] getDatabaseValues();
+
 }

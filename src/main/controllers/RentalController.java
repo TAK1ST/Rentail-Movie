@@ -16,7 +16,7 @@ public class RentalController {
             return false;
         }
         try {
-            return rentalService.addRental(rental);
+            return rentalService.rentMovie(rental);
         } catch (Exception e) {
             System.out.println("Error adding rental: " + e.getMessage());
             return false;

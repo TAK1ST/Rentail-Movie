@@ -10,7 +10,8 @@ public class Users extends Model {
     private int role;
     private Subscription subscription;
 
-    public Users(int userId, String username, String passwordHash, String email, int role, Subscription subscription) {
+
+    public Users(String userId, String username, String passwordHash, String email, int role, Subscription subscription) {
         super(userId);
         this.username = username;
         this.passwordHash = passwordHash;
@@ -19,11 +20,12 @@ public class Users extends Model {
         this.subscription = subscription;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return super.getId();
     }
 
-    public void setUserId(int userId) {this.setId(userId); }
+    public void setUserId(String userId) {this.setId(userId); }
+
 
     public String getUsername() {
         return username;
