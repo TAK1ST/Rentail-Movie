@@ -3,7 +3,6 @@ package main.controllers;
 
 import java.util.Collections;
 import java.util.List;
-import main.models.CustomerProfile;
 import main.models.Rental;
 import main.services.CustomerService;
 

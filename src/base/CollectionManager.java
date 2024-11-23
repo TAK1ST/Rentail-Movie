@@ -8,6 +8,7 @@ import java.util.List;
 
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.errorLog;
+import static main.utils.Utility.extractNumber;
 
 public abstract class CollectionManager<T extends Model> {
 
@@ -26,10 +27,10 @@ public abstract class CollectionManager<T extends Model> {
     }
 
     public abstract List<T> searchBy(String property);
+    
+    protected abstract T createInstanceFromResultSet(ResultSet resultSet) throws SQLException;
 
-//    public void log() {
-//        list.forEach(System.out::println);
-//    }
+    protected abstract void populatePreparedStatement(PreparedStatement preparedStatement, T item) throws SQLException;
 
     public T getById(String message) {
         return searchById(getString(message, false));
@@ -92,7 +93,7 @@ public abstract class CollectionManager<T extends Model> {
 
     public T searchById(String id) {
         for (T item : list) {
-            if (item.getId() == Integer.parseInt(id)) {
+            if (item.getId().equals(id)) {
                 return item;
             }
         }
@@ -100,10 +101,10 @@ public abstract class CollectionManager<T extends Model> {
     }
 
     public void sortById() {
-        list.sort((item1, item2) -> {
-            int num1 = item1.getId();
-            int num2 = item2.getId();
-            return Integer.compare(num1,num2);
+        Collections.sort(list, (item1, item2) ->  {
+            long num1 = extractNumber(item1.getId());
+            long num2 = extractNumber(item2.getId());
+            return Long.compare(num1, num2);
         });
     }
 
@@ -134,8 +135,5 @@ public abstract class CollectionManager<T extends Model> {
     public List<T> getList() {
         return list;
     }
-
-    protected abstract T createInstanceFromResultSet(ResultSet resultSet) throws SQLException;
-
-    protected abstract void populatePreparedStatement(PreparedStatement preparedStatement, T item) throws SQLException;
+    
 }

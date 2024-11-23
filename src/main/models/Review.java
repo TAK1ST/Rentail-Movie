@@ -3,40 +3,71 @@ package main.models;
 import base.Model;
 
 public class Review extends Model {
-    private Movie movie_id;
-    private Users users_id;
-
+    private String movieID;
+    private String userID;
     private int rating;
-    private String review_text;
-    private String review_date;
+    private String reviewText;
+    private String reviewDate;
 
-
-    public Review(int id, Movie movie_id, Users users_id, int rating, String review_text, String review_date) {
+    public Review(String id, String movieID, String userID, int rating, String reviewText, String reviewDate) {
         super(id);
-        this.movie_id = movie_id;
-        this.users_id = users_id;
+        this.movieID = movieID;
+        this.userID = userID;
         this.rating = rating;
-        this.review_date = review_date;
-        this.review_text = review_text;
+        this.reviewDate = reviewDate;
+        this.reviewText = reviewText;
+    }
+    
+    public Review(Review other) {
+        super(other.getId());
+        this.movieID = other.movieID;
+        this.userID = other.userID;
+        this.rating = other.rating;
+        this.reviewDate = other.reviewDate;
+        this.reviewText = other.reviewText;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("Rental: %s, %s, %s, %d, %s, %s.", 
+                super.getId(),
+                movieID,
+                userID,
+                rating,
+                reviewDate,
+                reviewText);
+    }
+    
+    @Override
+    public Object[] getDatabaseValues() {
+        return new Object[]
+                {
+                    super.getId(),
+                    movieID,
+                    userID,
+                    rating,
+                    reviewDate,
+                    reviewText,
+                };
     }
 
-    public Movie getMovie_id() {
-        return movie_id;
+    public String getMovieID() {
+        return movieID;
     }
 
-    public void setMovie_id(Movie movie_id) {
-        this.movie_id = movie_id;
+    public void setMovieID(String movieID) {
+        this.movieID = movieID;
     }
 
-    public Users getUsers_id() {
-        return users_id;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setUsers_id(Users users_id) {
-        this.users_id = users_id;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
-    public int getRating()  {
+    public int getRating() {
         return rating;
     }
 
@@ -44,30 +75,20 @@ public class Review extends Model {
         this.rating = rating;
     }
 
-    public String getReview_date() {
-        return review_date;
+    public String getReviewText() {
+        return reviewText;
     }
 
-    public void setReview_date(String review_date) {
-        this.review_date = review_date;
+    public void setReviewText(String reviewText) {
+        this.reviewText = reviewText;
     }
 
-    public String getReview_text() {
-        return review_text;
+    public String getReviewDate() {
+        return reviewDate;
     }
 
-    public void setReview_text(String review_text) {
-        this.review_text = review_text;
+    public void setReviewDate(String reviewDate) {
+        this.reviewDate = reviewDate;
     }
-
-    public Object[] getDatabaseValues() {
-        return new Object[]
-                {
-                        getId(),
-                        getMovie_id(),
-                        getReview_date(),
-                        getReview_text(),
-                        getUsers_id()
-                };
-    }
+    
 }

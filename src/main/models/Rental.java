@@ -5,45 +5,73 @@ package main.models;
 import base.Model;
 
 public class Rental extends Model {
-    private Users userId;
-    private Movie movieId;
+    private String userID;
+    private String movieID;
     private String rentalDate;
     private String returnDate;
     private double charges;
     private double overdueFines;
 
-    public Rental(int rentalId, Users userId, Movie movieId, String rentalDate, String returnDate, double charges, double overdueFines) {
-        super(rentalId);
-        this.userId = userId;
-        this.movieId = movieId;
+    public Rental(String id, String userID, String movieID, String rentalDate, String returnDate, double charges, double overdueFines) {
+        super(id);
+        this.userID = userID;
+        this.movieID = movieID;
         this.rentalDate = rentalDate;
         this.returnDate = returnDate;
         this.charges = charges;
         this.overdueFines = overdueFines;
     }
-
-    public int getRentalId() {
-        return getId();
+    
+    public Rental(Rental other) {
+        super(other.getId());
+        this.userID = other.userID;
+        this.movieID = other.movieID;
+        this.rentalDate = other.rentalDate;
+        this.returnDate = other.returnDate;
+        this.charges = other.charges;
+        this.overdueFines = other.overdueFines;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("Rental: %s, %s, %s, %s, %s, %.5f, %.5f.", 
+                super.getId(), 
+                userID, 
+                movieID, 
+                rentalDate, 
+                returnDate,
+                charges,
+                overdueFines);
+    }
+    
+    @Override
+    public Object[] getDatabaseValues() {
+        return new Object[]
+                {
+                        getId(),
+                        userID,
+                        movieID,
+                        rentalDate,
+                        returnDate,
+                        charges,
+                        overdueFines
+                };
     }
 
-    public void setRentalId(int rentalId) {
-        setId(rentalId);
+    public String getUserId() {
+        return userID;
     }
 
-    public Users getUserId() {
-        return userId;
+    public void setUserId(String userID) {
+        this.userID = userID;
     }
 
-    public void setUserId(Users userId) {
-        this.userId = userId;
+    public String getStringId() {
+        return movieID;
     }
 
-    public Movie getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(Movie movieId) {
-        this.movieId = movieId;
+    public void setStringId(String movieID) {
+        this.movieID = movieID;
     }
 
     public String getRentalDate() {
@@ -78,16 +106,4 @@ public class Rental extends Model {
         this.overdueFines = overdueFines;
     }
 
-    public Object[] getDatabaseValues() {
-        return new Object[]
-                {
-                        getId(),
-                        userId,
-                        movieId,
-                        rentalDate,
-                        returnDate,
-                        charges,
-                        overdueFines
-                };
-    }
 }

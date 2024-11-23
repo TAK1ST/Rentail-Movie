@@ -4,8 +4,8 @@
  */
 package main.utils;
 
-import model.Account;
-import model.Account.Role;
+import main.models.Account;
+import main.models.Account.Role;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import main.models.CustomerProfile;
@@ -31,7 +30,21 @@ public class CustomerService {
         return false;
     }
 
-    public boolean deleteCustomer(int profileId) {
+    public ddCustomer(CustomerProfile customer) {
+        String sql = "INSERT INTO CustomerProfile (userId, fullName, address, phoneNumber) VALUES (?, ?, ?, ?)";
+        try (Connection connection = DatabaseUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, customer.getUserId().getUserId());
+            preparedStatement.setString(2, customer.getFullName());
+            preparedStatement.setString(3, customer.getAddress());
+            preparedStatement.setInt(4, customer.getPhoneNumber());
+
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;boolean deleteCustomer(int profileId) {
         String sql = "DELETE FROM CustomerProfile WHERE profileId = ?";
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
