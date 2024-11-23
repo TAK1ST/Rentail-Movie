@@ -7,8 +7,8 @@ import base.Model;
 public class Actor extends Model {
     private String actorName;
 
-    public Actor(String actorId, String actorName) {
-        super(actorId);
+    public Actor(String id, String actorName) {
+        super(id);
         this.actorName = actorName;
     }
     

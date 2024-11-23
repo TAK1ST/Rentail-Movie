@@ -11,21 +11,14 @@ public class Users extends Model {
     private Subscription subscription;
 
 
-    public Users(String userId, String username, String passwordHash, String email, int role, Subscription subscription) {
-        super(userId);
+    public Users(String id, String username, String passwordHash, String email, int role, Subscription subscription) {
+        super(id);
         this.username = username;
         this.passwordHash = passwordHash;
         this.email = email;
         this.role = role;
         this.subscription = subscription;
     }
-
-    public String getUserId() {
-        return super.getId();
-    }
-
-    public void setUserId(String userId) {this.setId(userId); }
-
 
     public String getUsername() {
         return username;

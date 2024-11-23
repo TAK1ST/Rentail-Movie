@@ -13,13 +13,13 @@ import main.models.Genre;
 import main.utils.DatabaseUtil;
 public class MovieService {
     public boolean addMovie(Movie movie) {
-        String sql = "INSERT INTO Movie (title, description, rating, genre, language, release_year, rental_price, available_copies) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Movie (title, description, rating, genre_id, language, release_year, rental_price, available_copies) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try(Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setString(1, movie.getTitle());
             preparedStatement.setString(2, movie.getDescription());
             preparedStatement.setString(3, movie.getRating());
-            preparedStatement.setString(4, movie.getGenreName());
+            preparedStatement.setString(4, movie.getGenre());
             preparedStatement.setString(5, movie.getLanguage());
             preparedStatement.setString(6, movie.getReleaseYear());
             preparedStatement.setDouble(7, movie.getRentalPrice());

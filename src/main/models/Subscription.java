@@ -9,20 +9,11 @@ public class Subscription extends Model {
     private String endDate;
 
 
-    public Subscription(String subscriptionId, int subscriptionType, String startDate, String endDate) {
-        super(subscriptionId);
+    public Subscription(String id, int subscriptionType, String startDate, String endDate) {
+        super(id);
         this.subscriptionType = subscriptionType;
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-
-    public String getSubscriptionId() {
-        return getId();
-    }
-
-    public void setSubscriptionId(String subscriptionId) {
-
-        setId(subscriptionId);
     }
 
     public int getSubscriptionType() {
@@ -52,7 +43,6 @@ public class Subscription extends Model {
     public Object[] getDatabaseValues() {
         return new Object[]
                 {
-                        getSubscriptionId(),
                         getSubscriptionType(),
                         getStartDate(),
                         getEndDate()
