@@ -2,38 +2,30 @@
 package main.models;
 
 public class MovieActor {
-    private Movie movieId;
-    private Actor actorId;
-    private String role;
+    private String movieId;
+    private String actorId;
 
-    public MovieActor(Movie movieId, Actor actorId, String role) {
+
+    public MovieActor(String movieId,String actorId) {
         this.movieId = movieId;
         this.actorId = actorId;
-        this.role = role;
+
     }
 
-    public Movie getMovieId() {
+    public String getMovieId() {
         return movieId;
     }
 
-    public void setMovieId(Movie movieId) {
+    public void setMovieId(String movieId) {
         this.movieId = movieId;
     }
 
-    public Actor getActorId() {
+    public String getActorId() {
         return actorId;
     }
 
-    public void setActorId(Actor actorId) {
+    public void setActorId(String actorId) {
         this.actorId = actorId;
-    }
-
-    private String getRoleMovieActor() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
 //    public Object[] getDatabaseValues() {

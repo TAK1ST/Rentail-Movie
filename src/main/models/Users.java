@@ -10,7 +10,7 @@ public class Users extends Model {
     private int role;
     private Subscription subscription;
 
-    public Users(int userId, String username, String passwordHash, String email, int role, Subscription subscription) {
+    public Users(String userId, String username, String passwordHash, String email, int role, Subscription subscription) {
         super(userId);
         this.username = username;
         this.passwordHash = passwordHash;

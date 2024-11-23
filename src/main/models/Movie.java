@@ -13,8 +13,8 @@ public class Movie extends Model {
     private String releaseYear;
     private double rentalPrice;
 
-    public Movie(String id, String title, String description, String rating, String genreID, String language, String releaseYear, double rentalPrice) {
-        super(id);
+    public Movie(String movieId, String title, String description, String rating, String genreID, String language, String releaseYear, double rentalPrice) {
+        super(movieId);
         this.title = title;
         this.description = description;
         this.rating = rating;
