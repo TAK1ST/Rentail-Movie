@@ -19,11 +19,11 @@ public class Users extends Model {
         this.subscription = subscription;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return super.getId();
     }
 
-    public void setUserId(int userId) {this.setId(userId); }
+    public void setUserId(String userId) {this.setId(userId); }
 
     public String getUsername() {
         return username;
