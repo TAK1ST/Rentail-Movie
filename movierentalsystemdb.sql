@@ -10,27 +10,11 @@ CREATE TABLE IF NOT EXISTS Users
     password_hash VARCHAR(255) NOT NULL ,
     email VARCHAR(100) NOT NULL ,
 -- role use integer help flexible and can expand more. 
-    role INTEGER NOT NULL,		
-    subscription_id INT,
+    role INTEGER NOT NULL,	
     full_name VARCHAR(255),
     address VARCHAR(255),
-    phone_number VARCHAR(20),
-    FOREIGN KEY (subscription_id) REFERENCES Subscription(subscription_id) 
-);
-
-CREATE TABLE IF NOT EXISTS Subscription
-(
-	subscription_id INT AUTO_INCREMENT PRIMARY KEY,
-    subsciption_type INTEGER NOT NULL,
-    start_date datetime,
-    end_date datetime
-);
-
-CREATE TABLE IF NOT EXISTS Genre
-(
-	genre_id INT AUTO_INCREMENT PRIMARY KEY,
-    genre_name varchar(100) NOT NULL
-);
+    phone_number VARCHAR(20)
+   );
 
 CREATE TABLE IF NOT EXISTS Movie
 (
@@ -43,8 +27,7 @@ CREATE TABLE IF NOT EXISTS Movie
     release_year date,
     rental_price DECIMAL(10,2) NOT NULL,
     -- track the number of available copies for rent
-    available_copies INT DEFAULT 1 ,
-    FOREIGN KEY (genre_id) REFERENCES Genre(genre_id)
+    available_copies INT DEFAULT 1 
 );
 -- American rating standard 
 -- G: General Audiences. Suitable for all ages. Contains no content that could be considered inappropriate for children.
@@ -53,6 +36,22 @@ CREATE TABLE IF NOT EXISTS Movie
 -- R: Restricted. Under 17 requires accompanying parent or adult guardian.
 -- NC-17: No One 17 and Under Admitted. Clearly adult content.   
 -- NR: Not Rated. The film has not been rated by the Motion Picture Association of America (MPAA).
+
+
+CREATE TABLE IF NOT EXISTS Genre
+(
+	genre_id INT AUTO_INCREMENT PRIMARY KEY,
+    genre_name varchar(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Movie_Genre
+(
+    movie_id INT NOT NULL,
+    genre_id INT NOT NULL,
+    FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
+    FOREIGN KEY (genre_id) REFERENCES Genre(genre_id),
+    PRIMARY KEY (movie_id, genre_id)
+);
 
 -- This table tracks movie rentals, including rental and return dates, charges, and fines.
 CREATE TABLE IF NOT EXISTS Rental (
@@ -85,21 +84,21 @@ CREATE TABLE IF NOT EXISTS Movie_Actor (
     FOREIGN KEY (actor_id) REFERENCES Actor(actor_id)
 );
 
-CREATE TABLE IF NOT EXISTS Payment (
-    payment_id INT AUTO_INCREMENT PRIMARY KEY,
-    rental_id INT,
-    payment_date DATE NOT NULL,
-    amount DECIMAL(5, 2) NOT NULL,
-    FOREIGN KEY (rental_id) REFERENCES Rental(rental_id)
-);
+-- CREATE TABLE IF NOT EXISTS Payment (
+--     payment_id INT AUTO_INCREMENT PRIMARY KEY,
+--     rental_id INT,
+--     payment_date DATE NOT NULL,
+--     amount DECIMAL(5, 2) NOT NULL,
+--     FOREIGN KEY (rental_id) REFERENCES Rental(rental_id)
+-- );
 
-CREATE TABLE IF NOT EXISTS Login_History (
-    login_history_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    login_time DATETIME NOT NULL,
-    logout_time DATETIME,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-);
+-- CREATE TABLE IF NOT EXISTS Login_History (
+--     login_history_id INT AUTO_INCREMENT PRIMARY KEY,
+--     user_id INT,
+--     login_time DATETIME NOT NULL,
+--     logout_time DATETIME,
+--     FOREIGN KEY (user_id) REFERENCES Users(user_id)
+-- );
 
 -- CREATE TABLE IF NOT EXISTS Review (
 --     review_id INT AUTO_INCREMENT PRIMARY KEY,
