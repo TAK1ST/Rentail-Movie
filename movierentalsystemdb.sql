@@ -5,8 +5,8 @@ USE movierentalsystemdb;
 
 CREATE TABLE IF NOT EXISTS Users
 (
-	user_id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
+	user_id CHAR(8) PRIMARY KEY,
+    username NVARCHAR(50) NOT NULL,
     password_hash VARCHAR(255) NOT NULL ,
     email VARCHAR(100) NOT NULL ,
 -- role use integer help flexible and can expand more. 
@@ -18,16 +18,16 @@ CREATE TABLE IF NOT EXISTS Users
 
 CREATE TABLE IF NOT EXISTS Movie
 (
-	movie_id INT AUTO_INCREMENT PRIMARY KEY,
-    title nvarchar(100) NOT NULL,
+	movie_id CHAR(8) PRIMARY KEY,
+    	title NVARCHAR(100) NOT NULL,
 	description TEXT,
-    genre_id INT NOT NULL,
-    rating ENUM('G', 'PG', 'PG-13', 'R', 'NC-17', 'NR'),
-    language varchar(20),
-    release_year date,
-    rental_price DECIMAL(10,2) NOT NULL,
+    	rating ENUM('G', 'PG', 'PG-13', 'R', 'NC-17', 'NR'),
+	genre_id char(8) NOT NULL,
+    	language varchar(20),
+    	release_year date,
+    	rental_price DECIMAL(10,2) NOT NULL,
     -- track the number of available copies for rent
-    available_copies INT DEFAULT 1 
+    	available_copies INT DEFAULT 1 
 );
 -- American rating standard 
 -- G: General Audiences. Suitable for all ages. Contains no content that could be considered inappropriate for children.
@@ -40,14 +40,14 @@ CREATE TABLE IF NOT EXISTS Movie
 
 CREATE TABLE IF NOT EXISTS Genre
 (
-	genre_id INT AUTO_INCREMENT PRIMARY KEY,
-    genre_name varchar(100) NOT NULL
+	genre_id CHAR(8) PRIMARY KEY,
+	genre_name varchar(100) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Movie_Genre
 (
-    movie_id INT NOT NULL,
-    genre_id INT NOT NULL,
+    movie_id CHAR(8) NOT NULL,
+    genre_id CHAR(8) NOT NULL,
     FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
     FOREIGN KEY (genre_id) REFERENCES Genre(genre_id),
     PRIMARY KEY (movie_id, genre_id)
@@ -55,9 +55,9 @@ CREATE TABLE IF NOT EXISTS Movie_Genre
 
 -- This table tracks movie rentals, including rental and return dates, charges, and fines.
 CREATE TABLE IF NOT EXISTS Rental (
-    rental_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    movie_id INT,
+    rental_id CHAR(8) PRIMARY KEY,
+    user_id CHAR(8),
+    movie_id CHAR(8),
     rental_date DATE NOT NULL,
     return_date DATE,
     charges DECIMAL(5, 2),
@@ -70,14 +70,14 @@ CREATE TABLE IF NOT EXISTS Rental (
 -- overdue_fines (calculated if the return is late)
 
 CREATE TABLE IF NOT EXISTS Actor (
-    actor_id INT AUTO_INCREMENT PRIMARY KEY,
-    actor_name VARCHAR(255) NOT NULL
+    actor_id CHAR(8) PRIMARY KEY,
+    actor_name NVARCHAR(255) NOT NULL
 );
 
 -- change M-N Movie and Actor to 1-N thought Movie_Actor
 CREATE TABLE IF NOT EXISTS Movie_Actor (
-    movie_id INT,
-    actor_id INT,
+    movie_id CHAR(8),
+    actor_id CHAR(8),
     role VARCHAR(100),
     PRIMARY KEY (movie_id, actor_id),
     FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
