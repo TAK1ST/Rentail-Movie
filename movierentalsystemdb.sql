@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS Movie
 	description TEXT,
     	rating ENUM('G', 'PG', 'PG-13', 'R', 'NC-17', 'NR'),
 	genre_id char(8) NOT NULL,
+	movie_id CHAR(8) NOT NULL,
     	language varchar(20),
     	release_year date,
     	rental_price DECIMAL(10,2) NOT NULL,
