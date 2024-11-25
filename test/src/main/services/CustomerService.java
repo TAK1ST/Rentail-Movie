@@ -1,4 +1,4 @@
-package main.services;
+package src.main.services;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

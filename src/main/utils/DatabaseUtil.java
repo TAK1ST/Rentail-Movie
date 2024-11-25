@@ -11,7 +11,7 @@ import java.sql.Statement;
 public class DatabaseUtil {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/movierentalsystemdb";
     private static final String USER = "root";  
-    private static final String PASSWORD = "1";  
+    private static final String PASSWORD = "start";  
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
