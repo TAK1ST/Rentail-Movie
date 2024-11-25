@@ -3,6 +3,7 @@ package main.models;
 
 import base.Model;
 
+import static main.encription.PasswordEncryptor.encryptPassword;
 public class Users extends Model {
     private String username;
     private String passwordHash;
@@ -29,7 +30,7 @@ public class Users extends Model {
     }
 
     public String getPasswordHash() {
-        return passwordHash;
+        return encryptPassword(passwordHash);
     }
 
     public void setPasswordHash(String passwordHash) {
@@ -65,7 +66,7 @@ public class Users extends Model {
                 {
                         getId(),
                         username,
-                        passwordHash,
+                        getPasswordHash(),
                         email,
                         role,
                         subscription
