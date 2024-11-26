@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="24.9.0">
   <diagram name="Page-1" id="xdNO-wtEi7Ypv27mEj1e">
-    <mxGraphModel dx="982" dy="546" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1095" dy="609" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -27,6 +27,9 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="HvHesekv2nDa_G__FXom-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="vwZq9Y9TnrJTcbUkJgKD-8" target="HvHesekv2nDa_G__FXom-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="vwZq9Y9TnrJTcbUkJgKD-8" value="Users" style="whiteSpace=wrap;html=1;strokeColor=default;" parent="1" vertex="1">
           <mxGeometry x="510" y="577.5" width="120" height="40" as="geometry" />
         </mxCell>
@@ -40,10 +43,10 @@
           <mxGeometry x="570" y="685" width="90" height="40" as="geometry" />
         </mxCell>
         <mxCell id="vwZq9Y9TnrJTcbUkJgKD-12" value="email" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="390" y="645" width="90" height="40" as="geometry" />
+          <mxGeometry x="370" y="685" width="90" height="40" as="geometry" />
         </mxCell>
         <mxCell id="vwZq9Y9TnrJTcbUkJgKD-13" value="password_hash" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="660" y="525" width="90" height="40" as="geometry" />
+          <mxGeometry x="700" y="485" width="90" height="40" as="geometry" />
         </mxCell>
         <mxCell id="vwZq9Y9TnrJTcbUkJgKD-14" value="username" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="480" y="695" width="90" height="40" as="geometry" />
@@ -339,6 +342,9 @@
         </mxCell>
         <mxCell id="HvHesekv2nDa_G__FXom-9" value="" style="ellipse;whiteSpace=wrap;html=1;gradientColor=none;fillStyle=dashed;fillColor=none;dashed=1;dashPattern=12 12;" vertex="1" parent="1">
           <mxGeometry x="1268.75" y="635" width="102.5" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HvHesekv2nDa_G__FXom-10" value="status" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="578.75" width="80" height="37.5" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
