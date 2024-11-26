@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import main.utils.Menu;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.extractNumber;
 
@@ -74,59 +75,16 @@ public abstract class ListManager<T extends Model> {
         return list;
     }
     
+    public void display(T item, String title) {
+        if (checkNull(item)) return;
+        if (!title.isBlank()) Menu.showTitle(title);
+        System.out.println(item);
+    }
+    
+    public void display(List<T> list, String title) {
+        if (checkEmpty(list)) return;
+        if (!title.isBlank()) Menu.showTitle(title);
+        list.forEach(item -> System.out.println(item));
+    }
+    
 }
-
-//    public final void loadData(String tableName) throws IOException {
-//        list.clear();
-//        String query = "SELECT * FROM " + tableName;
-//
-//        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-//             PreparedStatement preparedStatement = connection.prepareStatement(query);
-//             ResultSet resultSet = preparedStatement.executeQuery()) {
-//
-//            while (resultSet.next()) {
-//                T item = createInstanceFromResultSet(resultSet);
-//                if (item != null) {
-//                    list.add(item);
-//                }
-//            }
-//        } catch (SQLException e) {
-//            errorLog("Error loading data from database: " + e.getMessage());
-//            throw new IOException("Failed to load data", e);
-//        }
-//    }
-
-//    public boolean saveData(String tableName) throws IOException {
-//        if (!isNotSaved) {
-//            System.out.printf("Already saved %s.\n", className);
-//            return false;
-//        }
-//
-//        // get columns from the first list
-//        Object[] firstItemValues = list.isEmpty() ? null : list.get(0).getDatabaseValues();
-//        if (firstItemValues == null) {
-//            throw new IOException("No values available for database insertion.");
-//        }
-//
-//        //dynamic query to save flexible
-//        String query = "INSERT INTO " + tableName + " VALUES (" +
-//                String.join(", ", Collections.nCopies(firstItemValues.length, "?")) + ")";
-//        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-//             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-//            for (T item : list) {
-//                Object[] values = item.getDatabaseValues();
-//                for (int i = 0; i < values.length; i++) {
-//                    preparedStatement.setObject(i + 1, values[i]);
-//                }
-//                preparedStatement.addBatch();
-//            }
-//            preparedStatement.executeBatch();
-//        } catch (SQLException e) {
-//            errorLog("Error saving data to database: " + e.getMessage());
-//            throw new IOException("Failed to save data", e);
-//        }
-//
-//        loadData(tableName);
-//        isNotSaved = false;
-//        return true;
-//    }

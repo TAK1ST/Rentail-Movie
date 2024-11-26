@@ -52,7 +52,7 @@ public class UserServices extends ListManager<Users> {
             new MenuOption[]{
                 new MenuOption("Add User", () -> showSuccess(addUser(Role.ADMIN))),
                 new MenuOption("Delete User", () -> showSuccess(deleteUser())),
-                new MenuOption("Update User", () -> showSuccess(updateUser())),
+                new MenuOption("Update User", () -> showSuccess(updateUser(""))),
                 new MenuOption("Search User", () -> searchUser()),
                 new MenuOption("Display Users", () -> display(list, DISPLAY_TITLE)),
                 new MenuOption("Back", () -> { /* Exit action */ })
@@ -105,15 +105,24 @@ public class UserServices extends ListManager<Users> {
         return true;
     }
 
-    public boolean updateUser() {
+    public boolean updateUser(String userID) {
         if (checkEmpty(list)) return false;
 
-        Users foundUser = (Users)getById("Enter user's id to update: ");
+        Users foundUser = null;
+        if (userID.isEmpty()) {
+            foundUser = (Users)getById("Enter user's id to update: ");
+        } else {
+            foundUser = (Users)searchById(userID);
+        }        
         if (checkNull(foundUser)) return false;
 
         String newUsername = Validator.getUsername("Enter new username: ", true, list);
         String newPassword = Validator.getPassword("Enter new password: ", true);
-        Role newRole = Validator.getRole("Enter new role: ", true);
+        
+        Role newRole = Role.NONE;
+        if (foundUser.getRole() == Role.ADMIN.getValue())
+            newRole = Validator.getRole("Enter new role: ", true);
+        
         String newFullName = getString("Enter full name: ", true);
         String newAddress = getString("Enter your address: ", true); 
         String newPhoneNumber = Validator.getPhoneNumber("Enter your phone number: ", true);
@@ -148,13 +157,6 @@ public class UserServices extends ListManager<Users> {
         display(getUserBy("Enter any user's propety to seach: "), DISPLAY_TITLE);
     }
 
-    public void display(List<Users> list, String title) {
-        if (checkEmpty(list)) return;
-        if (!title.isBlank()) Menu.showTitle(title);
-        
-        list.forEach((item) -> System.out.println(item));
-    }
-
     public List<Users> getUserBy(String message) {
         return searchBy(getString(message, false));
     }
@@ -172,6 +174,11 @@ public class UserServices extends ListManager<Users> {
             ) result.add(item);
         
         return result;
+    }
+    
+    public void showMyProfile(String userID) {
+        Users myProfile = searchById(userID);
+        display(myProfile, "My profile");
     }
     
 }

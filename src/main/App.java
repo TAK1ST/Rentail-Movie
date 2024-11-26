@@ -14,13 +14,13 @@ public class App {
         redirect(AuthenPannel.getUsers());
     }
     
-    private static void redirect(Users account) {
+    private static void redirect(Users account) throws IOException {
         switch(account.getRole()) {
             case 1: 
                 AdminPannel.show();
                 break;
             case 2:
-                UserPannel.show();
+                UserPannel.show(account);
         }
     }
 }

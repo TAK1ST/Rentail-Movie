@@ -43,21 +43,6 @@ public final class ReviewServices extends ListManager<Review> {
 
     public void adminMenu() throws IOException {
         Menu.showManagerMenu(
-<<<<<<< HEAD
-                "Review Management",
-                null,
-                new MenuOption[]{
-                    new MenuOption("Add review", () -> showSuccess(addReview("U00000"))),
-                    new MenuOption("Delete review", () -> showSuccess(deleteReview())),
-                    new MenuOption("Update review", () -> showSuccess(updateReview())),
-                    new MenuOption("Search review", () -> searchReview()),
-                    new MenuOption("Show all review", () -> display(list, DISPLAY_TITLE)),
-                    new MenuOption("Back", () -> {
-                        /* Exit action */ })
-                },
-                new Menu.MenuAction[]{() -> Menu.getSaveMessage(isNotSaved)},
-                true
-=======
             "Review Management",
             null,
             new MenuOption[]{
@@ -70,8 +55,8 @@ public final class ReviewServices extends ListManager<Review> {
             },
             new Menu.MenuAction[] { () -> Menu.getSaveMessage(isNotSaved) },
             true
->>>>>>> 0940092752e6221b6c79d27e067d0ece7fbacc85
         );
+  
     }
 
     public boolean addReview(String userID) {
@@ -145,18 +130,6 @@ public final class ReviewServices extends ListManager<Review> {
         return true;
     }
 
-    public void display(List<Review> list, String title) {
-        if (checkEmpty(list)) {
-            return;
-        }
-
-        if (!title.isBlank()) {
-            Menu.showTitle(title);
-        }
-
-        list.forEach(item -> System.out.println(item));
-    }
-
     public void searchReview() {
         if (checkEmpty(list)) {
             return;
@@ -167,8 +140,8 @@ public final class ReviewServices extends ListManager<Review> {
 
     public List<Review> getReviewBy(String message) {
         return searchBy(getString(message, false));
-    }
-
+    }  
+    
     public void sortBy(String propety) {
         if (checkEmpty(list)) {
             return;
@@ -199,12 +172,12 @@ public final class ReviewServices extends ListManager<Review> {
         return result;
     }
 
-    public static double calculateAverageRating(String movieId) throws SQLException {
+    public static double calculateAverageRating(String movieID) throws SQLException {
         String query = "SELECT AVG(rating) AS average_rating FROM Review WHERE movie_id = ?";
 
         try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, movieId);
+            preparedStatement.setString(1, movieID);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -214,4 +187,18 @@ public final class ReviewServices extends ListManager<Review> {
         }
         return 0;
     }
+    
+    public void displayAMovieReviews() {
+        Movie foundMovie = (Movie) getMS().getById("Enter movie's id to update: ");
+        if (getMS().checkNull(foundMovie)) return;
+        
+        List<Review> movieReviews = searchBy(foundMovie.getId());
+        display(movieReviews, foundMovie.getTitle() + " 's reviews:");
+    }
+    
+    public void myReviews(String userID) {
+        List<Review> movieReviews = searchBy(userID);
+        display(movieReviews, "My reviews:");
+    }
+    
 }

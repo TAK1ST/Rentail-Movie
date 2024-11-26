@@ -78,14 +78,6 @@ public class GenreServices extends ListManager<Genre> {
         return true;
     }
 
-    public void display(List<Genre> list, String title) {
-        if (checkEmpty(list)) return;
-        
-        if (!title.isBlank()) Menu.showTitle(title);
-
-        list.forEach(item -> System.out.println(item));
-    }
-
     public void searchGenre() {
         if (checkEmpty(list)) return;
 

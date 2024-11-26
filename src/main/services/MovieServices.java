@@ -77,13 +77,11 @@ public class MovieServices extends ListManager<Movie> {
         }
 
         Movie foundMovie = (Movie) getById("Enter movie's id to update: ");
-        if (checkNull(foundMovie)) {
-            return false;
-        }
+        if (checkNull(foundMovie)) return false;
+        
 
         String title = getString("Enter title: ", true);
         String description = getString("Enter description: ", true);
-        double rating = getDouble("Enter rating (1-5): ", 1, 5, true);
         String language = getString("Enter language: ", true);
         LocalDate releaseYear = getDate("Enter release date: ", true);
         Double rentalPrice = getDouble("Enter rental price: ", 0, 1000, true);
@@ -120,18 +118,6 @@ public class MovieServices extends ListManager<Movie> {
         list.remove(foundMovie);
         MovieDAO.deleteMovieFromDB(foundMovie.getId());
         return true;
-    }
-
-    public void display(List<Movie> list, String title) {
-        if (checkEmpty(list)) {
-            return;
-        }
-
-        if (!title.isBlank()) {
-            Menu.showTitle(title);
-        }
-
-        list.forEach(item -> System.out.println(item));
     }
 
     public void searchMovie() {

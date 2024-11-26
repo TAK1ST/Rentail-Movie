@@ -106,13 +106,6 @@ public class RentalServices extends ListManager<Rental> {
         return true;
     }
     
-    public void display(List<Rental> list, String title) {
-        if (checkEmpty(list)) return;
-        
-        if (!title.isBlank()) Menu.showTitle(title);
-        list.forEach(item -> System.out.println(item));
-    }
-    
     public void searchRental() {
         if (checkEmpty(list)) return;
         display(getRentalBy("Enter rental's propety to search: "), DISPLAY_TITLE);
@@ -134,6 +127,11 @@ public class RentalServices extends ListManager<Rental> {
                     || String.valueOf(item.getOverdueFines()).equals(propety)
             ) result.add(item);
         return result;
+    }
+    
+    public void myHistoryRental(String userID) {
+        List<Rental> rentalList = searchBy(userID);   
+        display(rentalList, "My Rental History");
     }
     
 }

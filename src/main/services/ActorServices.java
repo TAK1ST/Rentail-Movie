@@ -23,7 +23,7 @@ public class ActorServices extends ListManager<Actor> {
         ActorDAO.getAllActor();
     }
     
-    public void managerMenu() throws IOException {  
+    public void adminMenu() throws IOException {  
         Menu.showManagerMenu(
             "Actor Management",
             null,
@@ -71,14 +71,6 @@ public class ActorServices extends ListManager<Actor> {
         list.remove(foundActor);
         ActorDAO.deleteActorFromDB(foundActor.getId());
         return true;
-    }
-
-    public void display(List<Actor> list, String title) {
-        if (checkEmpty(list)) return;
-        
-        if (!title.isBlank()) Menu.showTitle(title);
-
-        list.forEach(item -> System.out.println(item));
     }
 
     public void searchActor() {
