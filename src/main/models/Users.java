@@ -1,7 +1,7 @@
 package main.models;
 
 import base.Model;
-import static main.utils.PasswordEncryptor.encryptPassword;
+import static main.utils.PassEncryptor.encryptPassword;
 
 public class Users extends Model {
     

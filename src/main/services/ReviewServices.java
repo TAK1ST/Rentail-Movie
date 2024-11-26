@@ -5,6 +5,7 @@
 package main.services;
 
 import base.ListManager;
+import constants.Constants;
 import main.utils.Menu;
 import static main.services.Services.getMS;
 import java.io.IOException;
@@ -42,6 +43,7 @@ public final class ReviewServices extends ListManager<Review> {
 
     public void adminMenu() throws IOException {
         Menu.showManagerMenu(
+<<<<<<< HEAD
                 "Review Management",
                 null,
                 new MenuOption[]{
@@ -55,6 +57,20 @@ public final class ReviewServices extends ListManager<Review> {
                 },
                 new Menu.MenuAction[]{() -> Menu.getSaveMessage(isNotSaved)},
                 true
+=======
+            "Review Management",
+            null,
+            new MenuOption[]{
+                new MenuOption("Add review", () -> showSuccess(addReview(Constants.DEFAULT_ADMIN_ID))),
+                new MenuOption("Delete review", () -> showSuccess(deleteReview())),
+                new MenuOption("Update review", () -> showSuccess(updateReview())),
+                new MenuOption("Search review", () -> searchReview()),
+                new MenuOption("Show all review", () -> display(list, DISPLAY_TITLE)),
+                new MenuOption("Back", () -> { /* Exit action */ })
+            },
+            new Menu.MenuAction[] { () -> Menu.getSaveMessage(isNotSaved) },
+            true
+>>>>>>> 0940092752e6221b6c79d27e067d0ece7fbacc85
         );
     }
 
@@ -73,7 +89,7 @@ public final class ReviewServices extends ListManager<Review> {
             return false;
         }
 
-        String id = list.isEmpty() ? "R00001" : IDGenerator.generateID(list.getLast().getId(), "R");
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "R");
         double rating = getInteger("Enter rating (1-5): ", 1, 5, false);
         String reviewText = getString("Enter comment: ", true);
 

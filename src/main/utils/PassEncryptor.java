@@ -3,7 +3,7 @@ package main.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class PasswordEncryptor{
+public class PassEncryptor{
 
     // Method to encrypt a password using SHA-256 algorithm
     public static String encryptPassword(String password) //This method takes a plain-text password as input

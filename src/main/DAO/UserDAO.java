@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import main.models.Users;
 import main.utils.DatabaseUtil;
-import static main.utils.PasswordEncryptor.encryptPassword;
+import static main.utils.PassEncryptor.encryptPassword;
 
 /**
  *

@@ -1,6 +1,7 @@
 package main.services;
 
 import base.ListManager;
+import constants.Constants;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import main.utils.Menu;
 import main.utils.Menu.MenuAction;
 import main.utils.Menu.MenuOption;
 import static main.utils.Menu.showSuccess;
-import static main.utils.PasswordEncryptor.encryptPassword;
+import static main.utils.PassEncryptor.encryptPassword;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.Console.yesOrNo;
 import main.utils.Validator;
@@ -34,7 +35,7 @@ public class UserServices extends ListManager<Users> {
     
     private void setDefaultUsers() throws IOException {
         list.add(new Users(
-                IDGenerator.generateID("", "U"), 
+                Constants.DEFAULT_ADMIN_ID, 
                 "admin", 
                 encryptPassword("1"), 
                 Role.ADMIN,  
@@ -62,7 +63,7 @@ public class UserServices extends ListManager<Users> {
     }
     
     public boolean registorUser() {
-        String id = !list.isEmpty() ? IDGenerator.generateID(list.getLast().getId(), "U") : "U00000";
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
         String username = Validator.getUsername("Enter username: ", false, list);
         String password = Validator.getPassword("Enter password: ", false);
         
@@ -89,9 +90,8 @@ public class UserServices extends ListManager<Users> {
         return true;
     }
 
-    public boolean addUser(Role registorRole) throws IOException {
-        
-        String id = !list.isEmpty() ? IDGenerator.generateID(list.getLast().getId(), "U") : "U00000";
+    public boolean addUser(Role registorRole) throws IOException {   
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
         list.add(new Users(
                 id, 
                 Validator.getUsername("Enter username: ", false, list), 

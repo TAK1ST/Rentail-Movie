@@ -41,7 +41,7 @@ public class ActorServices extends ListManager<Actor> {
     }
     
     public boolean addActor() {
-        String id = list.isEmpty() ? "A00001" : IDGenerator.generateID(list.getLast().getId(), "A");
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "A");
         String name = getString("Enter actor's name: ", false);
     
         list.add(new Actor(id, name));
