@@ -7,7 +7,6 @@ import java.sql.Date;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import main.models.Rental;
@@ -23,7 +22,7 @@ public class RentalService {
             try (PreparedStatement preparedStatement = connection.prepareStatement(rentalSql)) {
                 preparedStatement.setString(1, rental.getUserId());
                 preparedStatement.setString(2, rental.getMovieId());
-                Date.valueOf(LocalDate preparedStatement.setDate(3, rental.getRentalDate()));
+                preparedStatement.setDate(3, rental.getRentalDate()));
                 preparedStatement.setDouble(4, rental.getCharges());
                 preparedStatement.executeUpdate();
             }

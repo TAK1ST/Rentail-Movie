@@ -103,8 +103,8 @@ CREATE TABLE IF NOT EXISTS Rental (
 
 CREATE TABLE IF NOT EXISTS Review (
     review_id INT AUTO_INCREMENT PRIMARY KEY,
-    movie_id INT,
-    user_id INT,
+    movie_id char(8),
+    user_id char(8),
     review_text TEXT,
     rating DOUBLE(5,1) DEFAULT 0,
     review_date DATE,

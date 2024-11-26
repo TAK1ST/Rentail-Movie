@@ -6,7 +6,7 @@ package main.services;
 
 import base.ListManager;
 import main.utils.Menu;
-import static main.services.Managers.getMS;
+import static main.services.Services.getMS;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;

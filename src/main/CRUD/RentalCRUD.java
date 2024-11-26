@@ -5,6 +5,7 @@
 package main.CRUD;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,8 +28,8 @@ public class RentalCRUD {
             preparedStatement.setString(1, rental.getId());
             preparedStatement.setString(2, rental.getUserId());
             preparedStatement.setString(3, rental.getMovieId());
-            preparedStatement.setDate(4, rental.getRentalDate()).toLocalDate();
-            preparedStatement.setDate(5, rental.getReturnDate());
+            preparedStatement.setDate(4, Date.valueOf(rental.getRentalDate()));
+            preparedStatement.setDate(5, Date.valueOf(rental.getReturnDate()));
             preparedStatement.setDouble(6, rental.getCharges());
             preparedStatement.setDouble(7, rental.getOverdueFines());
 
@@ -46,8 +47,8 @@ public class RentalCRUD {
             
             preparedStatement.setString(1, rental.getUserId());
             preparedStatement.setString(2, rental.getMovieId());
-            preparedStatement.setString(3, rental.getRentalDate());
-            preparedStatement.setString(4, rental.getReturnDate());
+            preparedStatement.setDate(3, Date.valueOf(rental.getRentalDate()));
+            preparedStatement.setDate(4, Date.valueOf(rental.getReturnDate()));
             preparedStatement.setDouble(5, rental.getCharges());
             preparedStatement.setDouble(6, rental.getOverdueFines());
             preparedStatement.setString(7, rental.getId());
@@ -85,8 +86,8 @@ public class RentalCRUD {
                     resultSet.getString("rentalId"),
                     resultSet.getString("userId"),
                     resultSet.getString("movieId"),
-                    resultSet.getString("rentalDate"),
-                    resultSet.getString("returnDate"),
+                    resultSet.getDate("rentalDate").toLocalDate(),
+                    resultSet.getDate("returnDate").toLocalDate(),
                     resultSet.getDouble("charges"),
                     resultSet.getDouble("overdueFines")
                 );

@@ -4,6 +4,7 @@
  */
 package main.utils;
 
+import constants.Constants;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -17,7 +18,7 @@ public class IDGenerator {
     }
     
     public static String generateID(String lastestID, String prefix) {
-        int lastNumberID = Integer.parseInt(lastestID.substring(prefix.length()));   
-        return String.format("%s%04d", prefix, ++lastNumberID);
+        int lastNumberID = lastestID.isEmpty() ? 0 : Integer.parseInt(lastestID.substring(prefix.length()));   
+        return String.format("%s%0" + Constants.ID_LENGTH + "d", prefix, ++lastNumberID);
     }   
 }
