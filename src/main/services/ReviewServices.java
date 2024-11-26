@@ -5,6 +5,7 @@
 package main.services;
 
 import base.ListManager;
+import constants.Constants;
 import main.utils.Menu;
 import static main.services.Services.getMS;
 import java.io.IOException;
@@ -40,7 +41,7 @@ public final class ReviewServices extends ListManager<Review> {
             "Review Management",
             null,
             new MenuOption[]{
-                new MenuOption("Add review", () -> showSuccess(addReview("U00000"))),
+                new MenuOption("Add review", () -> showSuccess(addReview(Constants.DEFAULT_ADMIN_ID))),
                 new MenuOption("Delete review", () -> showSuccess(deleteReview())),
                 new MenuOption("Update review", () -> showSuccess(updateReview())),
                 new MenuOption("Search review", () -> searchReview()),
@@ -64,7 +65,7 @@ public final class ReviewServices extends ListManager<Review> {
         Movie foundMovie = (Movie) getMS().searchById(input);
         if (getMS().checkNull(foundMovie)) return false;
 
-        String id = list.isEmpty() ? "R00001" : IDGenerator.generateID(list.getLast().getId(), "R");
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "R");
         double rating = getInteger("Enter rating (1-5): ", 1, 5, false);
         String reviewText = getString("Enter comment: ", true);
 

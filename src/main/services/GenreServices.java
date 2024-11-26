@@ -46,7 +46,7 @@ public class GenreServices extends ListManager<Genre> {
     }
 
     public boolean addGenre() {
-        String id = list.isEmpty() ? "G00001" : IDGenerator.generateID(list.getLast().getId(), "G");
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "G");
         String name = getName("Enter genre: ", false);
         
         list.add(new Genre(id, name));

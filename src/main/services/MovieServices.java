@@ -1,6 +1,7 @@
 package main.services;
 
 import base.ListManager;
+import constants.Constants;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class MovieServices extends ListManager<Movie> {
                 "Movie Management",
                 null,
                 new Menu.MenuOption[]{
-                    new Menu.MenuOption("Add movie", () -> showSuccess(addMovie("U00000"))),
+                    new Menu.MenuOption("Add movie", () -> showSuccess(addMovie(Constants.DEFAULT_ADMIN_ID))),
                     new Menu.MenuOption("Delete movie", () -> showSuccess(deleteMovie())),
                     new Menu.MenuOption("Update movie", () -> showSuccess(updateMovie())),
                     new Menu.MenuOption("Search movie", () -> searchMovie()),
@@ -43,7 +44,7 @@ public class MovieServices extends ListManager<Movie> {
     }
 
     public boolean addMovie(String userID) {
-        String id = list.isEmpty() ? "M00001" : IDGenerator.generateID(list.getLast().getId(), "M");
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "M");
 
         String title = getString("Enter title: ", false);
         String description = getString("Enter description: ", false);
@@ -53,7 +54,6 @@ public class MovieServices extends ListManager<Movie> {
         Double rentalPrice = getDouble("Enter rental price: ", 0, 1000, false);
         int availableCopies = getInteger("Enter available copies: ", 0, 100, false);
         
-        String[] actornames= fuction();
         
 
         Movie newMovie = new Movie(
