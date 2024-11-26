@@ -3,17 +3,17 @@ package main.models;
 
 
 import base.Model;
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class Rental extends Model {
     private String userID;
     private String movieID;
-    private Date rentalDate;
-    private Date returnDate;
+    private LocalDate rentalDate;
+    private LocalDate returnDate;
     private double charges;
     private double overdueFines;
 
-    public Rental(String id, String userID, String movieID, Date rentalDate, Date returnDate, double charges, double overdueFines) {
+    public Rental(String id, String userID, String movieID, LocalDate rentalDate, LocalDate returnDate, double charges, double overdueFines) {
         super(id);
         this.userID = userID;
         this.movieID = movieID;
@@ -79,19 +79,19 @@ public class Rental extends Model {
         this.movieID = movieID;
     }
 
-    public Date getRentalDate() {
+    public LocalDate getRentalDate() {
         return rentalDate;
     }
 
-    public void setRentalDate(Date rentalDate) {
+    public void setRentalDate(LocalDate rentalDate) {
         this.rentalDate = rentalDate;
     }
 
-    public Date getReturnDate() {
+    public LocalDate getReturnDate() {
         return returnDate;
     }
 
-    public void setReturnDate(Date returnDate) {
+    public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
     }
 

@@ -11,9 +11,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import main.CRUD.RentalCRUD;
+import main.models.Movie;
 import static main.services.Managers.getMS;
 import static main.services.Managers.getUS;
-import main.models.
 import main.models.Rental;
 import main.models.Users;
 import main.utils.IDGenerator;
@@ -71,8 +71,8 @@ public class RentalServices extends ListManager<Rental> {
             id,
             userID, 
             foundMovie.getId(), 
-            rentalDate.toString(), 
-            returnDate.toString(), 
+            rentalDate, 
+            returnDate, 
             charge, 
             0));
         RentalCRUD.addRentalToDB(list.getLast());
@@ -95,8 +95,8 @@ public class RentalServices extends ListManager<Rental> {
         LocalDate rentalDate = getDate("Change rental date (dd/MS/yyyy): ", true);
         LocalDate returnDate = getDate("Change return date (dd/MS/yyyy): ", true);
         
-        if (rentalDate != null) foundRental.setRentalDate(rentalDate.toString());
-        if (returnDate != null) foundRental.setReturnDate(returnDate.toString());
+        if (rentalDate != null) foundRental.setRentalDate(rentalDate);
+        if (returnDate != null) foundRental.setReturnDate(returnDate);
         if (rentalDate != null && returnDate != null) foundRental.setCharges(ChronoUnit.DAYS.between(rentalDate, returnDate) * foundMovie.getRentalPrice());
         
         RentalCRUD.updateRentalFromDB(foundRental);

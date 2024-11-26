@@ -5,7 +5,6 @@
 package main.CRUD;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -76,13 +75,16 @@ public class MovieCRUD {
         try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 Movie movie = new Movie(
-                        resultSet.getString("movieId"),
+                        resultSet.getString("movie_id"),
                         resultSet.getString("title"),
                         resultSet.getString("description"),
+                        resultSet.getDouble("rating"),
+                        genres,
+                        actors,
                         resultSet.getString("language"),
-                        resultSet.getDate("releaseYear").toLocalDate(),
-                        resultSet.getDouble("rentalPrice"),
-                        resultSet.getInt("availableCopies")
+                        resultSet.getDate("release_year").toLocalDate(),
+                        resultSet.getDouble("rental_price"),
+                        resultSet.getInt("available_copies")
                 );
                 list.add(movie);
             }
