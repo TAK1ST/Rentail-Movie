@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package src.main.controllers;
+package main.controllers;
 
 import base.Manager;
 import java.io.IOException;
@@ -12,8 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import main.models.User;
-import main.models.User.Role;
+import main.models.Users;
+import main.models.Users.Role;
 import main.utils.DatabaseUtil;
 import main.utils.Menu;
 import main.utils.Menu.MenuAction;
@@ -27,19 +27,19 @@ import main.utils.Validator;
  *
  * @author trann
  */
-public class UserManager extends Manager<User> {
+public class UserManager extends Manager<Users> {
     
     private static final String DISPLAY_TITLE = "List of User";
       
     public UserManager() throws IOException {
-        super(User.className());
+        super(Users.className());
         getAllUser();
         if (list.isEmpty()) 
             setDefaultUsers();
     }
     
     private void setDefaultUsers() throws IOException {
-        list.add(new User("U00000", "admin", "1", Role.ADMIN, "None", null, null, null, null));
+        list.add(new Users("U00000", "admin", "1", Role.ADMIN, "None", null, null, null, null));
     }
       
     public void managerMenu() throws IOException {
@@ -62,7 +62,7 @@ public class UserManager extends Manager<User> {
     public boolean addUser(Role registorRole) throws IOException {
         
         String id = !list.isEmpty() ? Utility.generateID(list.getLast().getId(), "U") : "U00000";
-        list.add(new User(
+        list.add(new Users(
                 id, 
                 Validator.getUsername("Enter username: ", false, list), 
                 Validator.getPassword("Enter password: ", false), 
@@ -79,7 +79,7 @@ public class UserManager extends Manager<User> {
     public boolean updateUser() {
         if (checkEmpty(list)) return false;
 
-        User foundUser = (User)getById("Enter user's id to update: ");
+        Users foundUser = (Users)getById("Enter user's id to update: ");
         if (checkNull(foundUser)) return false;
 
         String newUsername = Validator.getUsername("Enter new username: ", true, list);
@@ -107,7 +107,7 @@ public class UserManager extends Manager<User> {
     public boolean deleteUser() throws IOException { 
         if (checkEmpty(list)) return false;
 
-        User foundUser = (User)getById("Enter user's id to delete: ");
+        Users foundUser = (Users)getById("Enter user's id to delete: ");
         if (checkNull(foundUser)) return false;
 
         list.remove(foundUser);
@@ -121,21 +121,21 @@ public class UserManager extends Manager<User> {
         display(getUserBy("Enter any user's propety to seach: "), DISPLAY_TITLE);
     }
 
-    public void display(List<User> list, String title) {
+    public void display(List<Users> list, String title) {
         if (checkEmpty(list)) return;
         if (!title.isBlank()) Menu.showTitle(title);
         
         list.forEach((item) -> System.out.println(item));
     }
 
-    public List<User> getUserBy(String message) {
+    public List<Users> getUserBy(String message) {
         return searchBy(getString(message, false));
     }
     
     @Override
-    public List<User> searchBy(String propety) {
-        List<User> result = new ArrayList<>();
-        for (User item : list) 
+    public List<Users> searchBy(String propety) {
+        List<Users> result = new ArrayList<>();
+        for (Users item : list) 
             if (item.getUsername().equals(propety) 
                     || item.getStatus().equals(propety)
                     || String.valueOf(item.getRole()).equals(propety)
@@ -148,8 +148,8 @@ public class UserManager extends Manager<User> {
         return result;
     }
     
-        public boolean addUserToDB(User user) {
-        String sql = "INSERT INTO User (userId, username, password, role, status, fullname, address, phoneNumber, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        public boolean addUserToDB(Users user) {
+        String sql = "INSERT INTO Users (user_id, username, password_hash, role, full_name, address, phone_number, email, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -157,11 +157,11 @@ public class UserManager extends Manager<User> {
             preparedStatement.setString(2, user.getUsername());
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.setInt(4, user.getRole());
-            preparedStatement.setString(5, user.getStatus());
-            preparedStatement.setString(6, user.getFullName());
-            preparedStatement.setString(7, user.getAddress());
-            preparedStatement.setString(8, user.getPhoneNumber());
-            preparedStatement.setString(9, user.getEmail());
+            preparedStatement.setString(5, user.getFullName());
+            preparedStatement.setString(6, user.getAddress());
+            preparedStatement.setString(7, user.getPhoneNumber());
+            preparedStatement.setString(8, user.getEmail());
+            preparedStatement.setString(9, user.getStatus());
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -170,8 +170,8 @@ public class UserManager extends Manager<User> {
         return false;
     }
     
-    public boolean updateUserFromDB(User user) {
-        String sql = "UPDATE User SET username = ?, password = ?, role = ?, status = ?, fullname = ?, address = ?, phoneNumber = ?, email = ? WHERE userId = ?";
+    public boolean updateUserFromDB(Users user) {
+        String sql = "UPDATE Users SET username = ?, password = ?, role = ?, status = ?, fullname = ?, address = ?, phoneNumber = ?, email = ? WHERE userId = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -206,22 +206,22 @@ public class UserManager extends Manager<User> {
     }
     
     public void getAllUser() {
-        String sql = "SELECT * FROM User";
+        String sql = "SELECT * FROM Users";
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                User user = new User(
-                    resultSet.getString("userId"),
+                Users user = new Users(
+                    resultSet.getString("user_id"),
                     resultSet.getString("username"),
-                    resultSet.getString("password"),
+                    resultSet.getString("password_hash"),
                     resultSet.getInt("role"),
-                    resultSet.getString("status"),
-                    resultSet.getString("fullname"),
+                    resultSet.getString("full_name"),
                     resultSet.getString("address"),
-                    resultSet.getString("phoneNumber"),
-                    resultSet.getString("email")
+                    resultSet.getString("phone_number"),
+                    resultSet.getString("email"),
+                    resultSet.getString("status")
                 );
                 list.add(user);
             }

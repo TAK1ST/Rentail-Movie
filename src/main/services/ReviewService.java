@@ -1,4 +1,4 @@
-package src.main.services;
+package main.services;
 
 import main.models.Genre;
 import main.models.Movie;

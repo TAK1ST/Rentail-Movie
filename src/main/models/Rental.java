@@ -3,31 +3,29 @@ package main.models;
 
 
 import base.Model;
-import java.sql.Date;
 
 public class Rental extends Model {
-    private String userId;
-    private String movieId;
-    private Date rentalDate;
-    private Date returnDate;
+    private String userID;
+    private String movieID;
+    private String rentalDate;
+    private String returnDate;
     private double charges;
     private double overdueFines;
 
-    public Rental(String rentalId, String userId, String movieId, Date rentalDate, Date returnDate, double charges, double overdueFines) {
-
-        super(rentalId);
-        this.userId = userId;
-        this.movieId = movieId;
+    public Rental(String id, String userID, String movieID, String rentalDate, String returnDate, double charges, double overdueFines) {
+        super(id);
+        this.userID = userID;
+        this.movieID = movieID;
         this.rentalDate = rentalDate;
         this.returnDate = returnDate;
         this.charges = charges;
         this.overdueFines = overdueFines;
     }
-
+    
     public Rental(Rental other) {
         super(other.getId());
-        this.userId = other.userId;
-        this.movieId = other.movieId;
+        this.userID = other.userID;
+        this.movieID = other.movieID;
         this.rentalDate = other.rentalDate;
         this.returnDate = other.returnDate;
         this.charges = other.charges;
@@ -38,8 +36,8 @@ public class Rental extends Model {
     public String toString() {
         return String.format("Rental: %s, %s, %s, %s, %s, %.5f, %.5f.", 
                 super.getId(), 
-                userId, 
-                movieId, 
+                userID, 
+                movieID, 
                 rentalDate, 
                 returnDate,
                 charges,
@@ -51,44 +49,48 @@ public class Rental extends Model {
         return new Object[]
                 {
                         getId(),
-                        userId,
-                        movieId,
+                        userID,
+                        movieID,
                         rentalDate,
                         returnDate,
                         charges,
                         overdueFines
                 };
     }
+    
+    public static String className() {
+        return "Rental";
+    }
 
     public String getUserId() {
-        return userId;
+        return userID;
     }
 
     public void setUserId(String userID) {
-        this.userId = userID;
+        this.userID = userID;
     }
 
     public String getMovieId() {
-        return movieId;
+        return movieID;
     }
 
-    public void setMovieId(String movieId) {
-        this.movieId = movieId;
+    public void setMovieId(String movieID) {
+        this.movieID = movieID;
     }
 
-    public Date getRentalDate() {
+    public String getRentalDate() {
         return rentalDate;
     }
 
-    public void setRentalDate(Date rentalDate) {
+    public void setRentalDate(String rentalDate) {
         this.rentalDate = rentalDate;
     }
 
-    public Date getReturnDate() {
+    public String getReturnDate() {
         return returnDate;
     }
 
-    public void setReturnDate(Date returnDate) {
+    public void setReturnDate(String returnDate) {
         this.returnDate = returnDate;
     }
 

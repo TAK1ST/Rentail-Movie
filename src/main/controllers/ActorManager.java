@@ -1,8 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package src.main.controllers;
+package main.controllers;
 
 import base.Manager;
 import java.io.IOException;
@@ -109,7 +105,7 @@ public class ActorManager extends Manager<Actor> {
     }
     
     public boolean addActorToDB(Actor actor) {
-        String sql = "INSERT INTO Actor (actorId, actorName) VALUES (?, ?)";
+        String sql = "INSERT INTO Actor (actor_id, actor_name) VALUES (?, ?)";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -124,7 +120,7 @@ public class ActorManager extends Manager<Actor> {
     }
     
     public boolean updateActorFromDB(Actor actor) {
-        String sql = "UPDATE Actor SET actorName = ? WHERE actorId = ?";
+        String sql = "UPDATE Actor SET actor_name = ? WHERE actor_id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -138,12 +134,12 @@ public class ActorManager extends Manager<Actor> {
         return false;
     }
     
-    public boolean deleteActorFromDB(String actorID) {
+    public boolean deleteActorFromDB(String actor_id) {
         String sql = "DELETE FROM Actor WHERE actorId = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, actorID);
+            preparedStatement.setString(1, actor_id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -159,8 +155,8 @@ public class ActorManager extends Manager<Actor> {
 
             while (resultSet.next()) {
                 Actor actor = new Actor(
-                    resultSet.getString("actorID"),
-                    resultSet.getString("actorName")
+                    resultSet.getString("actor_id"),
+                    resultSet.getString("actor_name")
                 );
                 list.add(actor);
             }

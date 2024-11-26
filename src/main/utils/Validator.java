@@ -1,7 +1,8 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package main.utils;
-
-import main.models.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,36 +12,44 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-import static main.utils.Utility.Console.*;
+import main.models.Users;
+import main.models.Users.Role;
+import static main.utils.Utility.Console.getDouble;
+import static main.utils.Utility.Console.getInt;
+import static main.utils.Utility.Console.getString;
+import static main.utils.Utility.Console.rolesListing;
 import static main.utils.Utility.errorLog;
 
-
+/**
+ *
+ * @author trann
+ */
 public class Validator {
-
+    
     private static final String EMAIL_PATTERN = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
     private static final String PHONE_PATTERN = "^\\d{10}$";
     private static final long MAX_PRODUCT_PRICE = 100000000;
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+    
     private static final Scanner scanner = new Scanner(System.in);
-
-    public static <T extends Account> String getUsername(String message, boolean enterToPass, List<T> list) {
+    
+    public static <T extends Users> String getUsername(String message, boolean enterToPass, List<T> list) {
         String input = "";
         boolean isUnique;
         do {
             isUnique = true;
             System.out.print(message);
-            input = scanner.nextLine();
-            if (input.isEmpty() && enterToPass)
+            input = scanner.nextLine();   
+            if (input.isEmpty() && enterToPass) 
                 return "";
 
-            if (input.isEmpty())
+            if (input.isBlank()) 
                 errorLog("Username must not be empty");
-
-            if (input.length() < 5)
-                errorLog("Accountname must be at least 5 character");
-
-            for (T item : list)
+            
+            if (input.length() < 5) 
+                errorLog("Accountname must be at least 5 character");         
+ 
+            for(T item : list) 
                 if (item.getUsername().equals(input)) {
                     errorLog("Accountname has already exist");
                     isUnique = false;
@@ -49,27 +58,38 @@ public class Validator {
         return input;
     }
 
+    public static Role getRole(String message, boolean enterToPass) {
+        Role[] listRole = Role.values();
+        rolesListing(message);
+        int input = getInt("Choose an option: ", 0, listRole.length - 1, enterToPass);
+
+        if (input <= -1) 
+            return Role.NONE;
+        else 
+            return listRole[input];
+    }
+    
     public static String getPassword(String message, boolean enterToPass) {
         String input = "";
         do {
             System.out.print(message);
             input = scanner.nextLine();
 
-            if (input.isEmpty() && enterToPass)
+            if (input.isEmpty() && enterToPass) 
                 return "";
-
-            if (input.isEmpty())
+            
+            if (input.isEmpty()) 
                 errorLog("Password must not be empty");
-
+           
             confirmPassword("Confirm password: ", input);
 
-            if (input.length() < 6)
+            if (input.length() < 6) 
                 errorLog("Password must be at least 6 character");
 
-            if (input.contains(" "))
+            if (input.contains(" ")) 
                 errorLog("Password must contain no space");
-
-        } while (input.length() < 6 || input.contains(" "));
+         
+        } while (input.length() < 6 || input.contains(" ")); 
         return input;
     }
 
@@ -79,50 +99,50 @@ public class Validator {
             System.out.print(message);
             confirm = scanner.nextLine();
 
-            if (!confirm.equals(password))
+            if(!confirm.equals(password)) 
                 errorLog("Password Unmatch");
-
+            
         } while (!confirm.equals(password));
     }
-
+    
     public static String getName(String message, boolean enterToPass) {
         String input = "";
         do {
             System.out.print(message);
-            input = scanner.nextLine();
-            if (input.isEmpty() && enterToPass)
-                return "";
-
-            if (input.isEmpty())
+            input = scanner.nextLine(); 
+            if (input.isEmpty() && enterToPass) 
+               return "";
+            
+            if (input.isBlank()) 
                 errorLog("Name must not be empty");
 
-            if (!Validator.isValidName(input))
+            if (!Validator.isValidName(input)) 
                 errorLog("Name must not have special characters");
-
-        } while (input.isEmpty() || !Validator.isValidName(input));
+            
+        } while (input.isBlank() || !Validator.isValidName(input));
 
         return input;
     }
-
+          
     public static LocalDate getDate(String message, boolean enterToPass) {
         String input = "";
         do {
             System.out.print(message);
-            input = scanner.nextLine();
-            if (input.isEmpty() && enterToPass)
-                return null;
-
-            if (input.isEmpty())
+            input = scanner.nextLine(); 
+            if (input.isEmpty() && enterToPass) 
+               return null;
+            
+            if (input.isBlank()) 
                 errorLog("Date must not be empty");
 
-            if (!Validator.isValidDate(input))
+            if (!Validator.isValidDate(input)) 
                 errorLog("Date must be right format dd/MM/yyyy");
-
+                
         } while (!Validator.isValidDate(input));
 
         return LocalDate.parse(input, DATE);
     }
-
+    
     public static LocalTime getTime() {
         int hours, minutes, seconds;
 
@@ -147,25 +167,25 @@ public class Validator {
             }
         }
     }
-
+    
     public static LocalDateTime getDateTime() {
         LocalDate date = getDate("Enter date: ", false);
         LocalTime time = getTime();
-
+ 
         return date.atTime(time);
     }
-
+    
     public static String getPhoneNumber(String message, boolean enterToPass) {
         String input = "";
         do {
             input = getString(message, enterToPass);
-            if (input.isEmpty() && enterToPass)
+            if (input.isEmpty() && enterToPass) 
                 return "";
 
-            if (input.isEmpty())
+            if (input.isBlank()) 
                 errorLog("Phone number must not be empty");
 
-            if (!Validator.isValidPhoneNumber(input))
+            if (!Validator.isValidPhoneNumber(input)) 
                 errorLog("Phone number must be 10 digit");
 
         } while (!Validator.isValidPhoneNumber(input));
@@ -177,20 +197,20 @@ public class Validator {
         String input = "";
         do {
             input = getString(message, enterToPass);
-            if (input.isEmpty() && enterToPass)
+            if (input.isEmpty() && enterToPass) 
                 return "";
 
-            if (input.isEmpty())
+            if (input.isBlank()) 
                 errorLog("Email must not be empty");
 
-            if (!Validator.isValidEmail(input))
+            if (!Validator.isValidEmail(input)) 
                 errorLog("Email must has format ...@gmail.com");
 
         } while (!Validator.isValidEmail(input));
 
         return input;
     }
-
+    
     public static double getProductPrice(String message, boolean enterToPass) {
         double input = 0f;
         do {
@@ -199,31 +219,31 @@ public class Validator {
             if (input <= -9999999 && enterToPass)
                 return -9999999f;
 
-            if (!isValidProductPrice(input))
+            if (!isValidProductPrice(input)) 
                 errorLog("Product's price must be in range 0 -> 1000000");
 
         } while (!isValidProductPrice(input));
 
         return input;
     }
-
+    
     public static boolean isValidDate(String dateStr) {
         try {
             LocalDate date = LocalDate.parse(dateStr, DATE);
-            return true;
+            return true; 
         } catch (DateTimeParseException e) {
             return false;
         }
     }
-
+    
     public static boolean isValidName(String name) {
         return name.matches("[a-zA-Z0-9 ]+");
     }
-
+    
     public static boolean isValidProductPrice(double price) {
         return price >= 0 && price <= MAX_PRODUCT_PRICE;
     }
-
+    
     public static boolean isValidUsername(String username) {
         return username != null && username.length() >= 5 && !username.contains(" ");
     }

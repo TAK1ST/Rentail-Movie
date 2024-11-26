@@ -1,24 +1,111 @@
-
+// CustomerProfile.java
 package main.models;
 
 import base.Model;
 
-import static main.encription.PasswordEncryptor.encryptPassword;
 public class Users extends Model {
+    
+    public static enum Role {    
+        NONE(0),
+        ADMIN(1),
+        USER(2);
+        
+        private final int value;
+
+        Role(int value) {
+            this.value = value;
+        }
+        
+        public int getValue() {
+            return value;
+        }
+        
+        public static Role fromValue(int value) {
+            for (Role item : Role.values()) {
+                if (item.value == value) {
+                    return item;
+                }
+            }
+            throw new IllegalArgumentException("Invalid value: " + value);
+        }
+    }
+    
     private String username;
-    private String passwordHash;
-    private String email;
+    private String password;
     private int role;
-    private Subscription subscription;
+    private String status;
+    private String fullName;
+    private String address;
+    private String phoneNumber;
+    private String email;
 
-
-    public Users(String id, String username, String passwordHash, String email, int role, Subscription subscription) {
+    public Users(String id, String username, String password, int role, String status, String fullName, String address, String phoneNumber, String email) {
         super(id);
         this.username = username;
-        this.passwordHash = passwordHash;
-        this.email = email;
+        this.password = password;
         this.role = role;
-        this.subscription = subscription;
+        this.status = status;
+        this.fullName = fullName;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
+    
+    public Users(String id, String username, String password, Role role, String status, String fullName, String address, String phoneNumber, String email) {
+        super(id);
+        this.username = username;
+        this.password = password;
+        this.role = role.getValue();
+        this.status = status;
+        this.fullName = fullName;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
+    
+    public Users(Users other) {
+        super(other.getId());
+        this.username = other.username;
+        this.password = other.password;
+        this.role = other.role;
+        this.status = other.status;
+        this.fullName = other.fullName;
+        this.address = other.address;
+        this.phoneNumber = other.phoneNumber;
+        this.email = other.email;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("User: %s, %s, %s, %d, %s, %s, %s, %s, %s.", 
+                super.getId(),
+                username,
+                password,
+                role,
+                status,
+                fullName,
+                address,
+                phoneNumber,
+                email);
+    }
+    
+    @Override
+    public Object[] getDatabaseValues() {
+        return new Object[] {
+            super.getId(),
+            username,
+            password,
+            role,
+            status,
+            fullName,
+            address,
+            phoneNumber,
+            email,
+        };
+    }
+    
+    public static String className() {
+        return "Users";
     }
 
     public String getUsername() {
@@ -29,20 +116,12 @@ public class Users extends Model {
         this.username = username;
     }
 
-    public String getPasswordHash() {
-        return encryptPassword(passwordHash);
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getRole() {
@@ -53,23 +132,44 @@ public class Users extends Model {
         this.role = role;
     }
 
-    public Subscription getSubscription() {
-        return subscription;
+    public String getStatus() {
+        return status;
     }
 
-    public void setSubscription(Subscription subscription) {
-        this.subscription = subscription;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public Object[] getDatabaseValues() {
-        return new Object[]
-                {
-                        getId(),
-                        username,
-                        getPasswordHash(),
-                        email,
-                        role,
-                        subscription
-                };
+    public String getFullName() {
+        return fullName;
     }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 }

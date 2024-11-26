@@ -3,11 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/Code/learnJava/BE2/Rentail-Movie/test/src/main/utils/DatabaseUtil.java</file>
-            <file>file:/E:/Code/learnJava/BE2/Rentail-Movie/src/main/utils/Menu.java</file>
-            <file>file:/E:/Code/learnJava/BE2/Rentail-Movie/src/main/Main.java</file>
-            <file>file:/E:/Code/learnJava/BE2/Rentail-Movie/test/src/main/Main.java</file>
-            <file>file:/E:/Code/learnJava/BE2/Rentail-Movie/src/main/utils/DatabaseUtil.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/test/src/main/models/Actor.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/test/src/main/services/CustomerService.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/Main.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/test/src/main/controllers/ActorManager.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/test/src/base/Manager.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/test/src/main/controllers/Managers.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/models/Actor.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/test/src/main/controllers/ReviewManager.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/utils/DatabaseUtil.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/test/src/main/Main.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/test/src/main/controllers/RentalManager.java</file>
         </group>
     </open-files>
 </project-private>

@@ -5,8 +5,8 @@ import base.Model;
 public class Genre extends Model {
     private String genreName;
 
-    public Genre(String id, String genreName) {
-        super(id);
+    public Genre(String genreId, String genreName) {
+        super(genreId);
         this.genreName = genreName;
     }
     
@@ -27,7 +27,10 @@ public class Genre extends Model {
                         super.getId(),
                         genreName,
                 };
-
+    }
+    
+    public static String className() {
+        return "Genre";
     }
 
     public String getGenreName() {

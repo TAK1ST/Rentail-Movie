@@ -1,7 +1,6 @@
 package base;
 
 public abstract class Model {
-
     private String id;
     
     public abstract Object[] getDatabaseValues();
@@ -22,6 +21,5 @@ public abstract class Model {
     public String toString() {
         return String.format("Model[id=%s]", id);
     }
-
 
 }

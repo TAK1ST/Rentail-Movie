@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package src.main.controllers;
+package main.controllers;
 
 import base.Manager;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import static main.controllers.Managers.getMM;
 import static main.controllers.Managers.getUM;
 import main.models.Movie;
 import main.models.Rental;
-import main.models.User;
+import main.models.Users;
 import main.utils.DatabaseUtil;
 import main.utils.Menu;
 import static main.utils.Menu.showSuccess;
@@ -57,7 +57,7 @@ public class RentalManager extends Manager<Rental> {
     }
 
     public boolean addRental(String userID) {
-        User foundUser = (User) getUM().searchById(userID);
+        Users foundUser = (Users) getUM().searchById(userID);
         if (getUM().checkNull(foundUser)) return false;
         
         String input = getString("Enter movie' id to rent: ", false);

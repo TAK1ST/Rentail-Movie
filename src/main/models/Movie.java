@@ -7,23 +7,25 @@ import base.Model;
 public class Movie extends Model {
     private String title;
     private String description;
-    private String rating;
-    private String genreId;
+    private double rating;
+    private String genreID;
     private String language;
     private String releaseYear;
     private double rentalPrice;
-     private int availableCopies; 
-
-    public Movie(String id, String title, String description, String rating, String genreId, String language, String releaseYear, double rentalPrice, int availableCopies) {
+    private int available_copies;
+    
+    //Constructor
+    
+    public Movie(String id, String title, String description, double rating, String genreID, String language, String releaseYear, double rentalPrice,int available_copies) {
         super(id);
         this.title = title;
         this.description = description;
         this.rating = rating;
-        this.genreId = genreId;
+        this.genreID = genreID;
         this.language = language;
         this.releaseYear = releaseYear;
         this.rentalPrice = rentalPrice;
-        this.availableCopies = availableCopies;
+        this.available_copies = available_copies;
     }
     
     public Movie(Movie other) {
@@ -31,25 +33,26 @@ public class Movie extends Model {
         this.title = other.title;
         this.description = other.description;
         this.rating = other.rating;
-        this.genreId = other.genreId;
+        this.genreID = other.genreID;
         this.language = other.language;
         this.releaseYear = other.releaseYear;
         this.rentalPrice = other.rentalPrice;
-        this.availableCopies = other.availableCopies;
+        this.available_copies = available_copies;
     }
-    
+    //Methods
     @Override
     public String toString() {
-        return String.format("Movie: %s, %s, %s, %s, %s, %s, %s, %.5f., %d", 
+        return String.format("Movie: %s, %s, %s, %.5f, %s, %s, %s, %.5f, %d.", 
                 super.getId(), 
                 title, 
                 description, 
                 rating, 
-                genreId, 
+                genreID, 
                 language, 
                 releaseYear, 
                 rentalPrice,
-                availableCopies);
+                available_copies
+        );
     }
     
     @Override
@@ -60,13 +63,16 @@ public class Movie extends Model {
                         title,
                         description,
                         rating,
-                        genreId,
+                        genreID,
                         language,
                         releaseYear,
                         rentalPrice,
-                        availableCopies,
+                        available_copies
                 };
-
+    }
+    
+    public static String className() {
+        return "Movie";
     }
 
     public String getTitle() {
@@ -85,12 +91,20 @@ public class Movie extends Model {
         this.description = description;
     }
 
-    public String getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public String getGenre() {
+        return genreID;
+    }
+
+    public void setGenre(String genreID) {
+        this.genreID = genreID;
     }
 
     public String getLanguage() {
@@ -117,20 +131,11 @@ public class Movie extends Model {
         this.rentalPrice = rentalPrice;
     }
 
-    public String getGenreId() {
-        return genreId;
+    public int getAvailable_copies() {
+        return available_copies;
     }
 
-    public void setGenreId(String genreId) {
-        this.genreId = genreId;
+    public void setAvailable_copies(int available_copies) {
+        this.available_copies = available_copies;
     }
-
-    public int getAvailableCopies() {
-        return availableCopies;
-    }
-
-    public void setAvailableCopies(int availableCopies) {
-        this.availableCopies = availableCopies;
-    }
-    
 }
