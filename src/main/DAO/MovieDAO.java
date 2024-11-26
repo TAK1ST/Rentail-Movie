@@ -58,7 +58,7 @@ public class MovieDAO {
     }
 
     public static boolean deleteMovieFromDB(String movieID) {
-        String sql = "DELETE FROM Movie WHERE movieId = ?";
+        String sql = "DELETE FROM Movie WHERE movie_id = ?";
         try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, movieID);

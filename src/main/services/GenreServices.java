@@ -25,7 +25,7 @@ public class GenreServices extends ListManager<Genre> {
     
     public GenreServices() throws IOException {
         super(Genre.className());
-        GenreDAO.getAllGenre();
+        list = GenreDAO.getAllGenre();
     }
     
     public void adminMenu() throws IOException {  
@@ -40,7 +40,7 @@ public class GenreServices extends ListManager<Genre> {
                 new Menu.MenuOption("Show all genre", () -> display(list, DISPLAY_TITLE)),
                 new Menu.MenuOption("Back", () -> { /* Exit action */ })
             },
-            new Menu.MenuAction[] { () -> Menu.getSaveMessage(isNotSaved) },
+            new Menu.MenuAction[] { () -> {} },
             true
         );
     }

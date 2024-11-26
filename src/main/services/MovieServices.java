@@ -30,7 +30,7 @@ public class MovieServices extends ListManager<Movie> {
 
     public MovieServices() throws IOException {
         super(Movie.className());
-        MovieDAO.getAllMovie();
+        list = MovieDAO.getAllMovie();
     }
 
     public void adminMenu() throws IOException {
@@ -55,7 +55,6 @@ public class MovieServices extends ListManager<Movie> {
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "M");
         String title = getString("Enter title: ", false);
         String description = getString("Enter description: ", false);
-        Double rating = getDouble("Enter rating (1-5): ", 1, 5, false);
         System.out.println("Select Genres for the movie:");
         List<String> genreIds = displayAndSelectGenres();
         System.out.println("Select Actors for the movie:");
@@ -69,7 +68,7 @@ public class MovieServices extends ListManager<Movie> {
                 id,
                 title,
                 description,
-                rating,
+                0,
                 genreIds,
                 actorIds,
                 language,

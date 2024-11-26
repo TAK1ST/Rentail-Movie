@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import main.models.Users;
+import main.models.User;
 import main.utils.DatabaseUtil;
 import static main.utils.PassEncryptor.encryptPassword;
 
@@ -19,7 +19,7 @@ import static main.utils.PassEncryptor.encryptPassword;
  * @author trann
  */
 public class UserDAO {
-    public static boolean addUserToDB(Users user) {
+    public static boolean addUserToDB(User user) {
         String sql = "INSERT INTO Users (user_id, username, password_hash, role, full_name, address, phone_number, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -40,8 +40,8 @@ public class UserDAO {
         return false;
     }
     
-    public static boolean updateUserFromDB(Users user) {
-        String sql = "UPDATE Users SET username = ?, password = ?, role = ?, fullname = ?, address = ?, phoneNumber = ?, email = ? WHERE userId = ?";
+    public static boolean updateUserFromDB(User user) {
+        String sql = "UPDATE Users SET username = ?, password_hash = ?, role = ?, full_name = ?, address = ?, phone_number = ?, email = ? WHERE user_id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -62,7 +62,7 @@ public class UserDAO {
     }
     
     public static boolean deleteUserFromDB(String userID) {
-        String sql = "DELETE FROM User WHERE userId = ?";
+        String sql = "DELETE FROM Users WHERE user_id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -74,15 +74,15 @@ public class UserDAO {
         return false;
     }
     
-    public static List<Users> getAllUser() {
+    public static List<User> getAllUser() {
         String sql = "SELECT * FROM Users";
-        List<Users> list = new ArrayList<>();
+        List<User> list = new ArrayList<>();
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                Users user = new Users(
+                User user = new User(
                     resultSet.getString("user_id"),
                     resultSet.getString("username"),
                     resultSet.getString("password_hash"),

@@ -10,13 +10,9 @@ import static main.utils.Utility.extractNumber;
 
 public abstract class ListManager<T extends Model> {
 
-    public final List<T> list = new ArrayList<>();
+    public List<T> list = new ArrayList<>();
     protected boolean isNotSaved = false;
     private final String className;
-
-    private static final String URL = "jdbc:mysql://localhost:3306/your_database";
-    private static final String USER = "root";
-    private static final String PASSWORD = "1";
 
     public ListManager(String className) throws IOException {
         this.className = className;

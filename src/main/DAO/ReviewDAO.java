@@ -20,7 +20,7 @@ import main.utils.DatabaseUtil;
 public class ReviewDAO {
     
     public static boolean addReviewToDB(Review review) {
-        String sql = "INSERT INTO Review (reviewId, userId, movieId, rating, reviewDate, reviewText) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Review (review_id, user_id, movie_id, rating, review_date, review_text) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -39,7 +39,7 @@ public class ReviewDAO {
     }
     
     public static boolean updateReviewFromDB(Review review) {
-        String sql = "UPDATE Review SET userId = ?, movieId = ?, rating = ?, reviewDate = ?, reviewText = ? WHERE reviewId = ?";
+        String sql = "UPDATE Review SET user_id = ?, movie_id = ?, rating = ?, review_date = ?, review_text = ? WHERE review_id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -58,7 +58,7 @@ public class ReviewDAO {
     }
     
     public static boolean deleteReviewFromDB(String reviewID) {
-        String sql = "DELETE FROM Review WHERE reviewId = ?";
+        String sql = "DELETE FROM Review WHERE review_id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -79,12 +79,12 @@ public class ReviewDAO {
 
             while (resultSet.next()) {
                 Review review = new Review(
-                    resultSet.getString("reviewId"),
-                    resultSet.getString("userID"),
-                    resultSet.getString("movieId"),
+                    resultSet.getString("review_id"),
+                    resultSet.getString("user_id"),
+                    resultSet.getString("movie_id"),
                     resultSet.getDouble("rating"),
-                    resultSet.getString("reviewDate"),
-                    resultSet.getString("reviewText")
+                    resultSet.getString("review_date"),
+                    resultSet.getString("review_text")
                 );
                 list.add(review);
             }

@@ -38,7 +38,7 @@ public final class ReviewServices extends ListManager<Review> {
 
     public ReviewServices() throws IOException {
         super(Review.className());
-        ReviewDAO.getAllReview();
+        list = ReviewDAO.getAllReview();
     }
 
     public void adminMenu() throws IOException {

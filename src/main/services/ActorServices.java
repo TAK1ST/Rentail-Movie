@@ -20,7 +20,7 @@ public class ActorServices extends ListManager<Actor> {
     
     public ActorServices() throws IOException {
         super(Actor.className());
-        ActorDAO.getAllActor();
+        list = ActorDAO.getAllActor();
     }
     
     public void adminMenu() throws IOException {  
@@ -35,7 +35,7 @@ public class ActorServices extends ListManager<Actor> {
                 new Menu.MenuOption("Show all actor", () -> display(list, DISPLAY_TITLE)),
                 new Menu.MenuOption("Back", () -> { /* Exit action */ })
             },
-            new Menu.MenuAction[] { () -> Menu.getSaveMessage(isNotSaved) },
+            new Menu.MenuAction[] { () -> {} },
             true
         );
     }

@@ -14,7 +14,7 @@ import static main.services.Services.getMS;
 import static main.services.Services.getUS;
 import main.models.Movie;
 import main.models.Rental;
-import main.models.Users;
+import main.models.User;
 import static main.utils.DatabaseUtil.getConnection;
 import main.utils.IDGenerator;
 import main.utils.Menu;
@@ -32,7 +32,7 @@ public class RentalServices extends ListManager<Rental> {
     
     public RentalServices() throws IOException {
         super(Rental.className());
-        RentalDAO.getAllRental();
+        list = RentalDAO.getAllRental();
     }
     
     public void adminMenu() throws IOException {  
@@ -56,7 +56,7 @@ public class RentalServices extends ListManager<Rental> {
     String rentalSql = "INSERT INTO Rental (user_id, movie_id, rental_date, charges) VALUES (?, ?, ?, ?)";
     String reduceCopiesSql = "UPDATE Movie SET available_copies = available_copies - 1 WHERE movie_id = ? AND available_copies > 0";
     
-    Users foundUser = (Users) getUS().searchById(userID);
+    User foundUser = (User) getUS().searchById(userID);
     if (getUS().checkNull(foundUser)) {
         errorLog("User not found!");
         return false;

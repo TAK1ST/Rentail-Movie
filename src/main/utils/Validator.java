@@ -12,8 +12,8 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-import main.models.Users;
-import main.models.Users.Role;
+import main.models.User;
+import main.models.User.Role;
 import static main.utils.Utility.Console.getDouble;
 import static main.utils.Utility.Console.getInteger;
 import static main.utils.Utility.Console.getString;
@@ -33,7 +33,7 @@ public class Validator {
     
     private static final Scanner scanner = new Scanner(System.in);
     
-    public static <T extends Users> String getUsername(String message, boolean enterToPass, List<T> list) {
+    public static <T extends User> String getUsername(String message, boolean enterToPass, List<T> list) {
         String input = "";
         boolean isUnique;
         do {
