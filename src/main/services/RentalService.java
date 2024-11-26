@@ -7,6 +7,7 @@ import java.sql.Date;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import main.models.Rental;
@@ -22,7 +23,7 @@ public class RentalService {
             try (PreparedStatement preparedStatement = connection.prepareStatement(rentalSql)) {
                 preparedStatement.setString(1, rental.getUserId());
                 preparedStatement.setString(2, rental.getMovieId());
-                preparedStatement.setDate(3, rental.getRentalDate());
+                Date.valueOf(LocalDate preparedStatement.setDate(3, rental.getRentalDate()));
                 preparedStatement.setDouble(4, rental.getCharges());
                 preparedStatement.executeUpdate();
             }
@@ -54,8 +55,8 @@ public class RentalService {
                         resultSet.getString("id"),
                         resultSet.getString("user_id"),
                         resultSet.getString("movie_id"),
-                        resultSet.getDate("rental_date"),
-                        resultSet.getDate("return_date"),
+                        resultSet.getDate("rental_date").toLocalDate(),
+                        resultSet.getDate("return_date").toLocalDate(),
                         resultSet.getDouble("charges"),
                         resultSet.getDouble("overdue_fines")
                 ));
@@ -83,8 +84,8 @@ public class RentalService {
                         resultSet.getString("id"),
                         resultSet.getString("user_id"),
                         resultSet.getString("movie_id"),
-                        resultSet.getDate("rental_date"),
-                        resultSet.getDate("return_date"),
+                        resultSet.getDate("rental_date").toLocalDate(),
+                        resultSet.getDate("return_date").toLocalDate(),
                         resultSet.getDouble("charges"),
                         resultSet.getDouble("overdue_fines")
                 );
@@ -98,7 +99,7 @@ public class RentalService {
         }
 
         long overdueDays = java.time.temporal.ChronoUnit.DAYS.between(
-                rental.getRentalDate().toLocalDate(), returnDate.toLocalDate()
+                rental.getRentalDate(), returnDate.toLocalDate()
         ) - 7;
         double overdueFine = overdueDays > 0 ? overdueDays * 2.0 : 0.0;
 

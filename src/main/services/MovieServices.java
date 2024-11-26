@@ -13,6 +13,7 @@ import static main.utils.Menu.showSuccess;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.Console.getDouble;
 import static main.utils.Utility.Console.getInteger;
+import static main.utils.Utility.Console.selectInfo;
 import static main.utils.Validator.getDate;
 
 public class MovieServices extends ListManager<Movie> {
@@ -44,19 +45,36 @@ public class MovieServices extends ListManager<Movie> {
 
     public boolean addMovie(String userID) {
         String id = list.isEmpty() ? "M00001" : IDGenerator.generateID(list.getLast().getId(), "M");
-
         String title = getString("Enter title: ", false);
         String description = getString("Enter description: ", false);
-        double rating = getDouble("Enter rating (1-5): ", 1, 5, false);
+        Double rating = getDouble("Enter rating (1-5): ", 1, 5, false);
+
+        String[] genreList = MovieCRUD.getAllGenres(); // Giả sử có một phương thức getAllGenres() trả về danh sách thể loại.
+        String selectedGenre = selectInfo("Choose a genre:", genreList, false);
+
+        String[] actorList = MovieCRUD.getAllActors(); // Giả sử có một phương thức getAllActors() trả về danh sách diễn viên.
+        String selectedActor = selectInfo("Choose an actor:", actorList, false);
         String language = getString("Enter language: ", false);
         LocalDate releaseYear = getDate("Enter release date: ", false);
         Double rentalPrice = getDouble("Enter rental price: ", 0, 1000, false);
         int availableCopies = getInteger("Enter available copies: ", 0, 100, false);
+        
+        List<String> selectedGenreIds = new ArrayList<>();
+        if (!selectedGenre.isEmpty()) {
+            selectedGenreIds.add(selectedGenre);  // Lưu ID thể loại
+        }
 
+        List<String> selectedActorIds = new ArrayList<>();
+        if (!selectedActor.isEmpty()) {
+            selectedActorIds.add(selectedActor);  // Lưu ID diễn viên
+        }
         Movie newMovie = new Movie(
                 id,
                 title,
                 description,
+                rating,
+                selectedGenreIds,  // Sử dụng ID thể loại đã chọn
+                selectedActorIds,
                 language,
                 releaseYear,
                 rentalPrice,

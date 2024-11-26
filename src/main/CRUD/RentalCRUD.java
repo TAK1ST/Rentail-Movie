@@ -27,8 +27,8 @@ public class RentalCRUD {
             preparedStatement.setString(1, rental.getId());
             preparedStatement.setString(2, rental.getUserId());
             preparedStatement.setString(3, rental.getMovieId());
-            preparedStatement.setLocalDate(4, rental.getRentalDate());
-            preparedStatement.setLocalDate(5, rental.getReturnDate());
+            preparedStatement.setDate(4, rental.getRentalDate()).toLocalDate();
+            preparedStatement.setDate(5, rental.getReturnDate());
             preparedStatement.setDouble(6, rental.getCharges());
             preparedStatement.setDouble(7, rental.getOverdueFines());
 
