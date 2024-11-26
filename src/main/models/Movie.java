@@ -1,80 +1,72 @@
-
 package main.models;
 
-
 import base.Model;
+import java.time.LocalDate; 
 
 public class Movie extends Model {
     private String title;
     private String description;
-    private double rating;
-    private String genreID;
     private String language;
-    private String releaseYear;
+    private LocalDate releaseYear;  
     private double rentalPrice;
-    private int available_copies;
-    
-    //Constructor
-    
-    public Movie(String id, String title, String description, double rating, String genreID, String language, String releaseYear, double rentalPrice,int available_copies) {
+    private int availableCopies;
+
+    // Constructor
+    public Movie(String id, String title, String description, String language, LocalDate releaseYear, double rentalPrice, int availableCopies) {
         super(id);
         this.title = title;
         this.description = description;
-        this.rating = rating;
-        this.genreID = genreID;
         this.language = language;
         this.releaseYear = releaseYear;
         this.rentalPrice = rentalPrice;
-        this.available_copies = available_copies;
+        this.availableCopies = availableCopies;
     }
-    
+
+    // Copy constructor
     public Movie(Movie other) {
         super(other.getId());
         this.title = other.title;
         this.description = other.description;
-        this.rating = other.rating;
-        this.genreID = other.genreID;
         this.language = other.language;
         this.releaseYear = other.releaseYear;
         this.rentalPrice = other.rentalPrice;
-        this.available_copies = available_copies;
+        this.availableCopies = other.availableCopies;
     }
-    //Methods
+
+    // Method to return a string representation of the movie
     @Override
     public String toString() {
-        return String.format("Movie: %s, %s, %s, %.5f, %s, %s, %s, %.5f, %d.", 
+        return String.format("Movie: %s, %s, %s, %s, %.2f, %d.", 
                 super.getId(), 
                 title, 
                 description, 
-                rating, 
-                genreID, 
                 language, 
-                releaseYear, 
                 rentalPrice,
-                available_copies
+                availableCopies
         );
     }
-    
+
+    // Convert Movie object into an array of database values
     @Override
     public Object[] getDatabaseValues() {
-        return new Object[]
-                {
-                        super.getId(),
-                        title,
-                        description,
-                        rating,
-                        genreID,
-                        language,
-                        releaseYear,
-                        rentalPrice,
-                        available_copies
-                };
+        return new Object[]{
+                super.getId(),
+                title,
+                description,
+                language,
+                releaseYear,  
+                rentalPrice,
+                availableCopies
+        };
     }
+
     
+    // Static method to get the class name
     public static String className() {
         return "Movie";
     }
 
+    // Getters and setters
     public String getTitle() {
         return title;
     }
@@ -91,22 +83,6 @@ public class Movie extends Model {
         this.description = description;
     }
 
-    public double getRating() {
-        return rating;
-    }
-
-    public void setRating(double rating) {
-        this.rating = rating;
-    }
-
-    public String getGenre() {
-        return genreID;
-    }
-
-    public void setGenre(String genreID) {
-        this.genreID = genreID;
-    }
-
     public String getLanguage() {
         return language;
     }
@@ -115,11 +91,11 @@ public class Movie extends Model {
         this.language = language;
     }
 
-    public String getReleaseYear() {
+    public LocalDate getReleaseYear() {
         return releaseYear;
     }
 
-    public void setReleaseYear(String releaseYear) {
+    public void setReleaseYear(LocalDate releaseYear) {
         this.releaseYear = releaseYear;
     }
 
@@ -131,11 +107,11 @@ public class Movie extends Model {
         this.rentalPrice = rentalPrice;
     }
 
-    public int getAvailable_copies() {
-        return available_copies;
+    public int getAvailableCopies() {
+        return availableCopies;
     }
 
-    public void setAvailable_copies(int available_copies) {
-        this.available_copies = available_copies;
+    public void setAvailableCopies(int availableCopies) {
+        this.availableCopies = availableCopies;
     }
 }

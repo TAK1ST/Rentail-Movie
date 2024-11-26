@@ -74,7 +74,7 @@ public class Utility {
             return result;
         }
 
-        public static int getInt(String message, int min, int max, boolean enterToPass) {
+        public static int getInteger(String message, int min, int max, boolean enterToPass) {
             int number;
             while (true) {
                 System.out.print(message);
@@ -146,7 +146,7 @@ public class Utility {
 		}
 		System.out.println("\n");
 		if (!enterToPass) 
-                    return infoLists[getInt("Enter an option: ", 0, infoLists.length - 1, enterToPass)];
+                    return infoLists[getInteger("Enter an option: ", 0, infoLists.length - 1, enterToPass)];
                 else 
                     return "";
 	}

@@ -7,7 +7,7 @@ package main.utils;
 import java.io.IOException;
 import java.util.List;
 
-import static main.utils.Utility.Console.getInt;
+import static main.utils.Utility.Console.getInteger;
 import static main.utils.Utility.Console.yesOrNo;
 import static main.utils.Utility.errorLog;
 /**
@@ -99,13 +99,13 @@ public class Menu {
     }
     
     public static int getChoice(String message, int max) {
-        return getInt("\n[MENU] " + message, INIT_NUM, max, false);
+        return getInteger("\n[MENU] " + message, INIT_NUM, max, false);
     }
     
     public static int getChoice(String message, List<Integer> list) {
         Integer input;
         do {
-            input = getInt(message, -1000000, 1000000, false);
+            input = getInteger(message, -1000000, 1000000, false);
             
             if (!list.contains(input)) 
                 errorLog("Wrong list's id");

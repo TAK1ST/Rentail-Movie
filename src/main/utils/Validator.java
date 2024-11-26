@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import main.models.Users;
 import main.models.Users.Role;
 import static main.utils.Utility.Console.getDouble;
-import static main.utils.Utility.Console.getInt;
+import static main.utils.Utility.Console.getInteger;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.Console.rolesListing;
 import static main.utils.Utility.errorLog;
@@ -61,7 +61,7 @@ public class Validator {
     public static Role getRole(String message, boolean enterToPass) {
         Role[] listRole = Role.values();
         rolesListing(message);
-        int input = getInt("Choose an option: ", 0, listRole.length - 1, enterToPass);
+        int input = getInteger("Choose an option: ", 0, listRole.length - 1, enterToPass);
 
         if (input <= -1) 
             return Role.NONE;

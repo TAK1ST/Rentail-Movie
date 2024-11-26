@@ -3,34 +3,35 @@ package main.services;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate; // Import LocalDate để xử lý ngày tháng
 import main.models.Movie;
-import main.models.Genre;
 import main.utils.DatabaseUtil;
 
 public class MovieService {
 
     // Add a new movie to the database
-    public boolean addMovie(Movie movie) {
-        String sql = "INSERT INTO Movie (title, description, rating, language, release_year, rental_price, available_copies) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DatabaseUtil.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+public boolean addMovie(Movie movie) {
+    String sql = "INSERT INTO Movie (movie_id, title, description, language, release_year, rental_price, available_copies) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    try (Connection connection = DatabaseUtil.getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, movie.getTitle());
-            preparedStatement.setString(2, movie.getDescription());
-            preparedStatement.setString(3, movie.getRating());
-            preparedStatement.setString(4, movie.getLanguage());
-            preparedStatement.setString(5, movie.getReleaseYear());
-            preparedStatement.setDouble(6, movie.getRentalPrice());
-            preparedStatement.setInt(7, movie.getAvailableCopies());
+        preparedStatement.setString(1, movie.getId()); // movie_id is CHAR(8)
+        preparedStatement.setString(2, movie.getTitle());
+        preparedStatement.setString(3, movie.getDescription());
+        preparedStatement.setString(4, movie.getLanguage());
+        preparedStatement.setDate(5, Date.valueOf(movie.getReleaseYear())); 
+        preparedStatement.setDouble(6, movie.getRentalPrice()); 
+        preparedStatement.setInt(7, movie.getAvailableCopies());
 
-            int rowsInserted = preparedStatement.executeUpdate();
-            return rowsInserted > 0;
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        int rowsInserted = preparedStatement.executeUpdate();
+        return rowsInserted > 0;
+
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return false;
+}
+
 
     // Update movie details in the database
     public boolean updateMovie(Movie movie) {
@@ -40,16 +41,16 @@ public class MovieService {
 
             preparedStatement.setString(1, movie.getTitle());
             preparedStatement.setString(2, movie.getDescription());
-            preparedStatement.setString(3, movie.getRating());
+            preparedStatement.setDouble(3, movie.getRentalPrice()); 
             preparedStatement.setString(4, movie.getLanguage());
-            preparedStatement.setString(5, movie.getReleaseYear());
+            preparedStatement.setDate(5, Date.valueOf(movie.getReleaseYear())); 
             preparedStatement.setDouble(6, movie.getRentalPrice());
             preparedStatement.setInt(7, movie.getAvailableCopies());
-            preparedStatement.setString(8, movie.getMovieId());  // Using movie_id for update condition
+            preparedStatement.setString(8, movie.getId());  
 
             int rowsUpdated = preparedStatement.executeUpdate();
             return rowsUpdated > 0;
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -66,7 +67,7 @@ public class MovieService {
 
             int rowsDeleted = preparedStatement.executeUpdate();
             return rowsDeleted > 0;
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -84,13 +85,11 @@ public class MovieService {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Movie movie = new Movie(
-                    resultSet.getString("movie_id"),  // movie_id is CHAR(8), not INT
+                    resultSet.getString("movie_id"),  
                     resultSet.getString("title"),
                     resultSet.getString("description"),
-                    resultSet.getString("rating"),
-                    resultSet.getString("genre_id"),  // genre_id is stored here
                     resultSet.getString("language"),
-                    resultSet.getString("release_year"),
+                    resultSet.getDate("release_year").toLocalDate(), // Convert SQL Date to LocalDate
                     resultSet.getDouble("rental_price"),
                     resultSet.getInt("available_copies")
                 );
@@ -144,10 +143,8 @@ public class MovieService {
                     resultSet.getString("movie_id"),
                     resultSet.getString("title"),
                     resultSet.getString("description"),
-                    resultSet.getString("rating"),
-                    resultSet.getString("genre_id"),
                     resultSet.getString("language"),
-                    resultSet.getString("release_year"),
+                    resultSet.getDate("release_year").toLocalDate(),
                     resultSet.getDouble("rental_price"),
                     resultSet.getInt("available_copies")
                 );

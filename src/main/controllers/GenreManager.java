@@ -111,7 +111,7 @@ public class GenreManager extends Manager<Genre> {
     }
     
     public boolean addGenreToDB(Genre genre) {
-        String sql = "INSERT INTO Genre (genreId, genreName) VALUES (?, ?)";
+        String sql = "INSERT INTO Genre (genre_id, genre_name) VALUES (?, ?)";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -126,7 +126,7 @@ public class GenreManager extends Manager<Genre> {
     }
     
     public boolean updateGenreFromDB(Genre genre) {
-        String sql = "UPDATE Genre SET genreName = ? WHERE genreId = ?";
+        String sql = "UPDATE Genre SET genre_name = ? WHERE genre_id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -140,12 +140,12 @@ public class GenreManager extends Manager<Genre> {
         return false;
     }
     
-    public boolean deleteGenreFromDB(String genreID) {
-        String sql = "DELETE FROM Genre WHERE genreId = ?";
+    public boolean deleteGenreFromDB(String genre_id) {
+        String sql = "DELETE FROM Genre WHERE genre_id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, genreID);
+            preparedStatement.setString(1, genre_id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -161,8 +161,8 @@ public class GenreManager extends Manager<Genre> {
 
             while (resultSet.next()) {
                 Genre genre = new Genre(
-                    resultSet.getString("genreID"),
-                    resultSet.getString("genreName")
+                    resultSet.getString("genre_id"),
+                    resultSet.getString("genre_name")
                 );
                 list.add(genre);
             }
