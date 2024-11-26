@@ -45,7 +45,7 @@ public class AuthenServices {
         int input = Menu.getChoice("Enter choice: ", options.length);
         switch(input) {
             case 1: 
-                checkCreate = checkCreate && getUS().addUser(Users.Role.USER);
+                checkCreate = checkCreate && getUS().registorUser();
                 break;
             case 2: 
                 return null;
