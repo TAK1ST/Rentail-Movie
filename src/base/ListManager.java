@@ -7,7 +7,7 @@ import java.util.List;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.extractNumber;
 
-public abstract class Manager<T extends Model> {
+public abstract class ListManager<T extends Model> {
 
     protected final List<T> list = new ArrayList<>();
     protected boolean isNotSaved = false;
@@ -17,7 +17,7 @@ public abstract class Manager<T extends Model> {
     private static final String USER = "root";
     private static final String PASSWORD = "1";
 
-    public Manager(String className) throws IOException {
+    public ListManager(String className) throws IOException {
         this.className = className;
         this.isNotSaved = false;
     }
