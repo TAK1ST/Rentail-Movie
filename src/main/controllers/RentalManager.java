@@ -158,8 +158,8 @@ public class RentalManager extends Manager<Rental> {
             preparedStatement.setString(1, rental.getId());
             preparedStatement.setString(2, rental.getUserId());
             preparedStatement.setString(3, rental.getMovieId());
-            preparedStatement.setString(4, rental.getRentalDate());
-            preparedStatement.setString(5, rental.getReturnDate());
+            preparedStatement.setDate(4, rental.getRentalDate());
+            preparedStatement.setDate(5, rental.getReturnDate());
             preparedStatement.setDouble(6, rental.getCharges());
             preparedStatement.setDouble(7, rental.getOverdueFines());
 
@@ -177,8 +177,8 @@ public class RentalManager extends Manager<Rental> {
             
             preparedStatement.setString(1, rental.getUserId());
             preparedStatement.setString(2, rental.getMovieId());
-            preparedStatement.setString(3, rental.getRentalDate());
-            preparedStatement.setString(4, rental.getReturnDate());
+            preparedStatement.setDate(3, rental.getRentalDate());
+            preparedStatement.setDate(4, rental.getReturnDate());
             preparedStatement.setDouble(5, rental.getCharges());
             preparedStatement.setDouble(6, rental.getOverdueFines());
             preparedStatement.setString(7, rental.getId());
@@ -191,7 +191,7 @@ public class RentalManager extends Manager<Rental> {
     }
     
     public boolean deleteRentalFromDB(String rentalID) {
-        String sql = "DELETE FROM Rental WHERE rentalId = ?";
+        String sql = "DELETE FROM Rental WHERE rental_id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -215,8 +215,8 @@ public class RentalManager extends Manager<Rental> {
                     resultSet.getString("rentalId"),
                     resultSet.getString("userId"),
                     resultSet.getString("movieId"),
-                    resultSet.getString("rentalDate"),
-                    resultSet.getString("returnDate"),
+                    resultSet.getDate("rentalDate"),
+                    resultSet.getDate("returnDate"),
                     resultSet.getDouble("charges"),
                     resultSet.getDouble("overdueFines")
                 );
