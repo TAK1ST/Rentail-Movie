@@ -3,7 +3,7 @@ package main.models;
 import base.Model;
 import static main.utils.PassEncryptor.encryptPassword;
 
-public class Users extends Model {
+public class User extends Model {
     
     public static enum Role {    
         NONE(0),
@@ -38,7 +38,7 @@ public class Users extends Model {
     private String phoneNumber;
     private String email;
 
-    public Users(String id, String username, String password, int role, String fullName, String address, String phoneNumber, String email) {
+    public User(String id, String username, String password, int role, String fullName, String address, String phoneNumber, String email) {
         super(id);
         this.username = username;
         this.password = password;
@@ -49,7 +49,7 @@ public class Users extends Model {
         this.email = email;
     }
     
-    public Users(String id, String username, String password, Role role, String fullName, String address, String phoneNumber, String email) {
+    public User(String id, String username, String password, Role role, String fullName, String address, String phoneNumber, String email) {
         super(id);
         this.username = username;
         this.password = password;
@@ -60,7 +60,7 @@ public class Users extends Model {
         this.email = email;
     }
     
-    public Users(Users other) {
+    public User(User other) {
         super(other.getId());
         this.username = other.username;
         this.password = other.password;
@@ -99,7 +99,7 @@ public class Users extends Model {
     }
     
     public static String className() {
-        return "Users";
+        return "User";
     }
 
     public String getUsername() {

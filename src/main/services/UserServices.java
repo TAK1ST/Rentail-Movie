@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import main.DAO.UserDAO;
-import main.models.Users;
-import main.models.Users.Role;
+import main.models.User;
+import main.models.User.Role;
 import main.utils.IDGenerator;
 import main.utils.Menu;
 import main.utils.Menu.MenuAction;
@@ -22,19 +22,19 @@ import main.utils.Validator;
  *
  * @author trann
  */
-public class UserServices extends ListManager<Users> {
+public class UserServices extends ListManager<User> {
     
     private static final String DISPLAY_TITLE = "List of User";
       
     public UserServices() throws IOException {
-        super(Users.className());
+        super(User.className());
         UserDAO.getAllUser();
         if (list.isEmpty()) 
             setDefaultUsers();
     }
     
     private void setDefaultUsers() throws IOException {
-        list.add(new Users(
+        list.add(new User(
                 Constants.DEFAULT_ADMIN_ID, 
                 "admin", 
                 encryptPassword("1"), 
@@ -77,7 +77,7 @@ public class UserServices extends ListManager<Users> {
             fullName = address = phoneNumber = email = null;
         }
         
-        list.add(new Users(
+        list.add(new User(
                 id, 
                 username, 
                 encryptPassword(password), 
@@ -92,7 +92,7 @@ public class UserServices extends ListManager<Users> {
 
     public boolean addUser(Role registorRole) throws IOException {   
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
-        list.add(new Users(
+        list.add(new User(
                 id, 
                 Validator.getUsername("Enter username: ", false, list), 
                 Validator.getPassword("Enter password: ", false), 
@@ -108,11 +108,11 @@ public class UserServices extends ListManager<Users> {
     public boolean updateUser(String userID) {
         if (checkEmpty(list)) return false;
 
-        Users foundUser = null;
+        User foundUser = null;
         if (userID.isEmpty()) {
-            foundUser = (Users)getById("Enter user's id to update: ");
+            foundUser = (User)getById("Enter user's id to update: ");
         } else {
-            foundUser = (Users)searchById(userID);
+            foundUser = (User)searchById(userID);
         }        
         if (checkNull(foundUser)) return false;
 
@@ -143,7 +143,7 @@ public class UserServices extends ListManager<Users> {
     public boolean deleteUser() throws IOException { 
         if (checkEmpty(list)) return false;
 
-        Users foundUser = (Users)getById("Enter user's id to delete: ");
+        User foundUser = (User)getById("Enter user's id to delete: ");
         if (checkNull(foundUser)) return false;
 
         list.remove(foundUser);
@@ -157,14 +157,14 @@ public class UserServices extends ListManager<Users> {
         display(getUserBy("Enter any user's propety to seach: "), DISPLAY_TITLE);
     }
 
-    public List<Users> getUserBy(String message) {
+    public List<User> getUserBy(String message) {
         return searchBy(getString(message, false));
     }
     
     @Override
-    public List<Users> searchBy(String propety) {
-        List<Users> result = new ArrayList<>();
-        for (Users item : list) 
+    public List<User> searchBy(String propety) {
+        List<User> result = new ArrayList<>();
+        for (User item : list) 
             if (item.getUsername().equals(propety) 
                     || String.valueOf(item.getRole()).equals(propety)
                     || item.getFullName().equals(propety)
@@ -177,7 +177,7 @@ public class UserServices extends ListManager<Users> {
     }
     
     public void showMyProfile(String userID) {
-        Users myProfile = searchById(userID);
+        User myProfile = searchById(userID);
         display(myProfile, "My profile");
     }
     

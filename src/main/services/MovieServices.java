@@ -200,9 +200,9 @@ public class MovieServices extends ListManager<Movie> {
         if (!description.isEmpty()) {
             foundMovie.setDescription(description);
         }
-        if (rating > 0) {
-            foundMovie.setRating(rating);
-        }
+//        if (rating > 0) {
+//            foundMovie.setRating(rating);
+//        }
         if (!language.isEmpty()) {
             foundMovie.setLanguage(language);
         }

@@ -5,7 +5,7 @@
 package main.view;
 
 import java.io.IOException;
-import main.models.Users;
+import main.models.User;
 import static main.services.Services.getAS;
 import static main.services.Services.getGS;
 import static main.services.Services.getMS;
@@ -20,7 +20,7 @@ import main.utils.Menu;
  */
 public class UserPannel {
     
-    public static void show(Users account) throws IOException {
+    public static void show(User account) throws IOException {
         Menu.showManagerMenu(
             "Movie Rental (Admin)",
             null,

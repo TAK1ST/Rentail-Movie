@@ -50,7 +50,7 @@ public class ActorDAO {
     }
     
     public static boolean deleteActorFromDB(String actor_id) {
-        String sql = "DELETE FROM Actor WHERE actorId = ?";
+        String sql = "DELETE FROM Actor WHERE actor_id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
