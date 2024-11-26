@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS Users
 	user_id CHAR(8) PRIMARY KEY,
     username NVARCHAR(50) NOT NULL,
     password_hash VARCHAR(255) NOT NULL ,
-    email VARCHAR(100) NOT NULL ,
+    email VARCHAR(100) ,
 -- role use integer help flexible and can expand more. 
     role INTEGER NOT NULL,	
     full_name VARCHAR(255),
