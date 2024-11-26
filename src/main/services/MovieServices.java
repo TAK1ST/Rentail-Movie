@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import main.CRUD.MovieCRUD;
+import main.DAO.MovieDAO;
 import main.models.Movie;
 import main.utils.IDGenerator;
 import main.utils.Menu;
@@ -21,7 +21,7 @@ public class MovieServices extends ListManager<Movie> {
 
     public MovieServices() throws IOException {
         super(Movie.className());
-        MovieCRUD.getAllMovie();
+        MovieDAO.getAllMovie();
     }
 
     public void adminMenu() throws IOException {
@@ -64,7 +64,7 @@ public class MovieServices extends ListManager<Movie> {
         );
 
         list.add(newMovie);
-        MovieCRUD.addMovieToDB(newMovie);
+        MovieDAO.addMovieToDB(newMovie);
         return true;
     }
 
@@ -100,7 +100,7 @@ public class MovieServices extends ListManager<Movie> {
         if (rentalPrice > 0) {
             foundMovie.setRentalPrice(rentalPrice);
         }
-        MovieCRUD.updateMovieFromDB(foundMovie);
+        MovieDAO.updateMovieFromDB(foundMovie);
         return true;
     }
 
@@ -115,7 +115,7 @@ public class MovieServices extends ListManager<Movie> {
         }
 
         list.remove(foundMovie);
-        MovieCRUD.deleteMovieFromDB(foundMovie.getId());
+        MovieDAO.deleteMovieFromDB(foundMovie.getId());
         return true;
     }
 

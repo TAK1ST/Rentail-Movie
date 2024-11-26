@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import main.CRUD.ReviewCRUD;
+import main.DAO.ReviewDAO;
 import main.models.Movie;
 import main.models.Review;
 import main.utils.IDGenerator;
@@ -32,7 +32,7 @@ public final class ReviewServices extends ListManager<Review> {
     
     public ReviewServices() throws IOException {
         super(Review.className());
-        ReviewCRUD.getAllReview();
+        ReviewDAO.getAllReview();
     }
     
     public void adminMenu() throws IOException {  
@@ -75,7 +75,7 @@ public final class ReviewServices extends ListManager<Review> {
             rating,
             LocalDate.now().toString(),
             reviewText));
-        ReviewCRUD.addReviewToDB(list.getLast());
+        ReviewDAO.addReviewToDB(list.getLast());
         return true;
     }
 
@@ -93,7 +93,7 @@ public final class ReviewServices extends ListManager<Review> {
         if (rating > 0) foundReview.setRating(rating);
         if (!reviewText.isEmpty()) foundReview.setReviewText(reviewText);
 
-        ReviewCRUD.updateReviewFromDB(foundReview);
+        ReviewDAO.updateReviewFromDB(foundReview);
         return true;
     }
 
@@ -104,7 +104,7 @@ public final class ReviewServices extends ListManager<Review> {
         if (checkNull(foundReview)) return false;
 
         list.remove(foundReview);
-        ReviewCRUD.deleteReviewFromDB(foundReview.getId());
+        ReviewDAO.deleteReviewFromDB(foundReview.getId());
         return true;
     }
 

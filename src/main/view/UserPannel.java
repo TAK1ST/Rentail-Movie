@@ -10,6 +10,5 @@ package main.view;
  */
 public class UserPannel {
     
-    public   
     
 }

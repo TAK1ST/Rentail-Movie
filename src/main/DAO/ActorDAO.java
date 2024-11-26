@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package main.CRUD;
+package main.DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,22 +10,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import main.models.Genre;
+import main.models.Actor;
 import main.utils.DatabaseUtil;
 
 /**
  *
  * @author trann
  */
-public class GenreCRUD {
+public class ActorDAO {
     
-    public static boolean addGenreToDB(Genre genre) {
-        String sql = "INSERT INTO Genre (genre_id, genre_name) VALUES (?, ?)";
+    public static boolean addActorToDB(Actor actor) {
+        String sql = "INSERT INTO Actor (actor_id, actor_name) VALUES (?, ?)";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, genre.getId());
-            preparedStatement.setString(2, genre.getGenreName());
+            preparedStatement.setString(1, actor.getId());
+            preparedStatement.setString(2, actor.getActorName());
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -34,14 +34,14 @@ public class GenreCRUD {
         return false;
     }
     
-    public static boolean updateGenreFromDB(Genre genre) {
-        String sql = "UPDATE Genre SET genre_name = ? WHERE genre_id = ?";
+    public static boolean updateActorFromDB(Actor actor) {
+        String sql = "UPDATE Actor SET actor_name = ? WHERE actor_id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, genre.getGenreName());
-            preparedStatement.setString(2, genre.getId());
-            
+            preparedStatement.setString(1, actor.getActorName());
+            preparedStatement.setString(2, actor.getId());
+
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -49,12 +49,12 @@ public class GenreCRUD {
         return false;
     }
     
-    public static boolean deleteGenreFromDB(String genre_id) {
-        String sql = "DELETE FROM Genre WHERE genre_id = ?";
+    public static boolean deleteActorFromDB(String actor_id) {
+        String sql = "DELETE FROM Actor WHERE actorId = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, genre_id);
+            preparedStatement.setString(1, actor_id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,19 +62,19 @@ public class GenreCRUD {
         return false;
     }
     
-    public static List<Genre> getAllGenre() {
-        String sql = "SELECT * FROM Genre";
-        List<Genre> list = new ArrayList<>();
+    public static List<Actor> getAllActor() {
+        String sql = "SELECT * FROM Actor";
+        List<Actor> list = new ArrayList<>();
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                Genre genre = new Genre(
-                    resultSet.getString("genre_id"),
-                    resultSet.getString("genre_name")
+                Actor actor = new Actor(
+                    resultSet.getString("actor_id"),
+                    resultSet.getString("actor_name")
                 );
-                list.add(genre);
+                list.add(actor);
             }
         } catch (SQLException e) {
             e.printStackTrace();

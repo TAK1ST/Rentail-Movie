@@ -4,7 +4,7 @@ import base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import main.CRUD.ActorCRUD;
+import main.DAO.ActorDAO;
 import main.models.Actor;
 import main.utils.IDGenerator;
 import main.utils.Menu;
@@ -20,7 +20,7 @@ public class ActorServices extends ListManager<Actor> {
     
     public ActorServices() throws IOException {
         super(Actor.className());
-        ActorCRUD.getAllActor();
+        ActorDAO.getAllActor();
     }
     
     public void managerMenu() throws IOException {  
@@ -45,7 +45,7 @@ public class ActorServices extends ListManager<Actor> {
         String name = getString("Enter actor's name: ", false);
     
         list.add(new Actor(id, name));
-        ActorCRUD.addActorToDB(list.getLast());
+        ActorDAO.addActorToDB(list.getLast());
         return true;
     }
 
@@ -58,7 +58,7 @@ public class ActorServices extends ListManager<Actor> {
         String name = getString("Enter actor's name: ", true);     
         if (!name.isEmpty()) foundActor.setActorName(name);
         
-        ActorCRUD.updateActorFromDB(foundActor);
+        ActorDAO.updateActorFromDB(foundActor);
         return true;
     }
 
@@ -69,7 +69,7 @@ public class ActorServices extends ListManager<Actor> {
         if (checkNull(foundActor)) return false;
 
         list.remove(foundActor);
-        ActorCRUD.deleteActorFromDB(foundActor.getId());
+        ActorDAO.deleteActorFromDB(foundActor.getId());
         return true;
     }
 
