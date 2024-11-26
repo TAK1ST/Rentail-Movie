@@ -10,4 +10,8 @@ package main.view;
  */
 public class AdminPannel {
     
+    public static void show() {
+        
+    }
+    
 }

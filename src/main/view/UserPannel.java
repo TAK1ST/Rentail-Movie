@@ -10,6 +10,8 @@ package main.view;
  */
 public class UserPannel {
     
-    public   
+    public static void show() {
+        
+    }
     
 }
