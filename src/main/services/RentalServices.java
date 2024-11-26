@@ -52,7 +52,7 @@ public class RentalServices {
 
             while (resultSet.next()) {
                 rentals.add(new Rental(
-                        resultSet.getString("id"),
+                        resultSet.getString("rental_id"),
                         resultSet.getString("user_id"),
                         resultSet.getString("movie_id"),
                         resultSet.getDate("rental_date").toLocalDate(),
@@ -68,8 +68,8 @@ public class RentalServices {
         return rentals;
     }
      public double returnMovie(String rentalId, Date returnDate) {
-    String getRentalSql = "SELECT * FROM Rental WHERE id = ?";
-    String updateRentalSql = "UPDATE Rental SET return_date = ?, overdue_fines = ? WHERE id = ?";
+    String getRentalSql = "SELECT * FROM Rental WHERE rental_id = ?";
+    String updateRentalSql = "UPDATE Rental SET return_date = ?, overdue_fines = ? WHERE rental_id = ?";
     String increaseCopiesSql = "UPDATE Movie SET available_copies = available_copies + 1 WHERE movie_id = ?";
 
     try (Connection connection = DatabaseUtil.getConnection()) {
@@ -81,7 +81,7 @@ public class RentalServices {
 
             if (resultSet.next()) {
                 rental = new Rental(
-                        resultSet.getString("id"),
+                        resultSet.getString("rental_id"),
                         resultSet.getString("user_id"),
                         resultSet.getString("movie_id"),
                         resultSet.getDate("rental_date").toLocalDate(),

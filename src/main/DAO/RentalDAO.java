@@ -1,8 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package main.CRUD;
+package main.DAO;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -18,10 +14,10 @@ import main.utils.DatabaseUtil;
  *
  * @author trann
  */
-public class RentalCRUD {
+public class RentalDAO {
     
     public static boolean addRentalToDB(Rental rental) {
-        String sql = "INSERT INTO Rental (rental_id, user_id, movie_id, retal_date, return_date, charges, overdue_fines) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Rental (rental_id, user_id, movie_id, rental_date, return_date, charges, overdue_fines) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -41,7 +37,7 @@ public class RentalCRUD {
     }
     
     public static boolean updateRentalFromDB(Rental rental) {
-        String sql = "UPDATE Rental SET userId = ?, movieId = ?, rentalDate = ?, returnDate = ?, charges = ?, overdueFines = ? WHERE rentalId = ?";
+        String sql = "UPDATE Rental SET user_id = ?, movie_id = ?, rental_date = ?, return_date = ?, charges = ?, overdue_fines = ? WHERE rental_id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             
@@ -61,7 +57,7 @@ public class RentalCRUD {
     }
     
     public static boolean deleteRentalFromDB(String rentalID) {
-        String sql = "DELETE FROM Rental WHERE rentalId = ?";
+        String sql = "DELETE FROM Rental WHERE rental_id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -83,13 +79,13 @@ public class RentalCRUD {
 
             while (resultSet.next()) {
                 Rental rental = new Rental(
-                    resultSet.getString("rentalId"),
-                    resultSet.getString("userId"),
-                    resultSet.getString("movieId"),
-                    resultSet.getDate("rentalDate").toLocalDate(),
-                    resultSet.getDate("returnDate").toLocalDate(),
+                    resultSet.getString("rental_id"),
+                    resultSet.getString("user_id"),
+                    resultSet.getString("movie_id"),
+                    resultSet.getDate("rental_date").toLocalDate(),
+                    resultSet.getDate("return_date").toLocalDate(),
                     resultSet.getDouble("charges"),
-                    resultSet.getDouble("overdueFines")
+                    resultSet.getDouble("overdue_fines")
                 );
                 list.add(rental);
             }

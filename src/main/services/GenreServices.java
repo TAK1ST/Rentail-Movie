@@ -8,7 +8,7 @@ import base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import main.CRUD.GenreCRUD;
+import main.DAO.GenreDAO;
 import main.models.Genre;
 import main.utils.IDGenerator;
 import main.utils.Menu;
@@ -25,7 +25,7 @@ public class GenreServices extends ListManager<Genre> {
     
     public GenreServices() throws IOException {
         super(Genre.className());
-        GenreCRUD.getAllGenre();
+        GenreDAO.getAllGenre();
     }
     
     public void adminMenu() throws IOException {  
@@ -50,7 +50,7 @@ public class GenreServices extends ListManager<Genre> {
         String name = getName("Enter genre: ", false);
         
         list.add(new Genre(id, name));
-        GenreCRUD.addGenreToDB(list.getLast());
+        GenreDAO.addGenreToDB(list.getLast());
         return true;
     }
 
@@ -63,7 +63,7 @@ public class GenreServices extends ListManager<Genre> {
         String name = getName("Enter genre: ", true);
         if (!name.isEmpty()) foundGenre.setGenreName(name);  
         
-        GenreCRUD.updateGenreFromDB(foundGenre);
+        GenreDAO.updateGenreFromDB(foundGenre);
         return true;
     }
 
@@ -74,7 +74,7 @@ public class GenreServices extends ListManager<Genre> {
         if (checkNull(foundGenre)) return false;
 
         list.remove(foundGenre);
-        GenreCRUD.deleteGenreFromDB(foundGenre.getId());
+        GenreDAO.deleteGenreFromDB(foundGenre.getId());
         return true;
     }
 

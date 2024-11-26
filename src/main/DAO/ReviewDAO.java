@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package main.CRUD;
+package main.DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +17,7 @@ import main.utils.DatabaseUtil;
  *
  * @author trann
  */
-public class ReviewCRUD {
+public class ReviewDAO {
     
     public static boolean addReviewToDB(Review review) {
         String sql = "INSERT INTO Review (reviewId, userId, movieId, rating, reviewDate, reviewText) VALUES (?, ?, ?, ?, ?, ?)";

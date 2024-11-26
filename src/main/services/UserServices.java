@@ -8,7 +8,7 @@ import base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import main.CRUD.UserCRUD;
+import main.DAO.UserDAO;
 import main.models.Users;
 import main.models.Users.Role;
 import main.utils.IDGenerator;
@@ -30,7 +30,7 @@ public class UserServices extends ListManager<Users> {
       
     public UserServices() throws IOException {
         super(Users.className());
-        UserCRUD.getAllUser();
+        UserDAO.getAllUser();
         if (list.isEmpty()) 
             setDefaultUsers();
     }
@@ -88,7 +88,7 @@ public class UserServices extends ListManager<Users> {
                 address, 
                 phoneNumber, 
                 email));
-        UserCRUD.addUserToDB(list.getLast());
+        UserDAO.addUserToDB(list.getLast());
         return true;
     }
 
@@ -104,7 +104,7 @@ public class UserServices extends ListManager<Users> {
                 getString("Enter your address: ", false), 
                 Validator.getPhoneNumber("Enter your phone number: ", false), 
                 Validator.getEmail("Enter your email: ", false)));
-        UserCRUD.addUserToDB(list.getLast());
+        UserDAO.addUserToDB(list.getLast());
         return true;
     }
 
@@ -130,7 +130,7 @@ public class UserServices extends ListManager<Users> {
         if (!newPhoneNumber.isEmpty()) foundUser.setPhoneNumber(newPhoneNumber);
         if (!newEmail.isEmpty()) foundUser.setEmail(newEmail);  
 
-        UserCRUD.updateUserFromDB(foundUser);
+        UserDAO.updateUserFromDB(foundUser);
         return true;
     }
 
@@ -141,7 +141,7 @@ public class UserServices extends ListManager<Users> {
         if (checkNull(foundUser)) return false;
 
         list.remove(foundUser);
-        UserCRUD.deleteUserFromDB(foundUser.getId());
+        UserDAO.deleteUserFromDB(foundUser.getId());
         return true;
     }
 
