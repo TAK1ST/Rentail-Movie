@@ -20,7 +20,7 @@ import java.util.List;
 import main.DAO.ReviewDAO;
 import main.models.Movie;
 import main.models.Review;
-import main.utils.DatabaseUtil;
+import static main.utils.DatabaseUtil.getConnection;
 import main.utils.IDGenerator;
 import main.utils.Menu.MenuOption;
 import static main.utils.Menu.showSuccess;
@@ -43,11 +43,10 @@ public final class ReviewServices extends ListManager<Review> {
 
     public void adminMenu() throws IOException {
         Menu.showManagerMenu(
-<<<<<<< HEAD
                 "Review Management",
                 null,
                 new MenuOption[]{
-                    new MenuOption("Add review", () -> showSuccess(addReview("U00000"))),
+                    new MenuOption("Add review", () -> showSuccess(addReview(Constants.DEFAULT_ADMIN_ID))),
                     new MenuOption("Delete review", () -> showSuccess(deleteReview())),
                     new MenuOption("Update review", () -> showSuccess(updateReview())),
                     new MenuOption("Search review", () -> searchReview()),
@@ -57,20 +56,6 @@ public final class ReviewServices extends ListManager<Review> {
                 },
                 new Menu.MenuAction[]{() -> Menu.getSaveMessage(isNotSaved)},
                 true
-=======
-            "Review Management",
-            null,
-            new MenuOption[]{
-                new MenuOption("Add review", () -> showSuccess(addReview(Constants.DEFAULT_ADMIN_ID))),
-                new MenuOption("Delete review", () -> showSuccess(deleteReview())),
-                new MenuOption("Update review", () -> showSuccess(updateReview())),
-                new MenuOption("Search review", () -> searchReview()),
-                new MenuOption("Show all review", () -> display(list, DISPLAY_TITLE)),
-                new MenuOption("Back", () -> { /* Exit action */ })
-            },
-            new Menu.MenuAction[] { () -> Menu.getSaveMessage(isNotSaved) },
-            true
->>>>>>> 0940092752e6221b6c79d27e067d0ece7fbacc85
         );
     }
 
@@ -166,7 +151,8 @@ public final class ReviewServices extends ListManager<Review> {
     }
 
     public List<Review> getReviewBy(String message) {
-        return searchBy(getString(message, false));
+        String property = getString(message, false);
+        return searchBy(property);
     }
 
     public void sortBy(String propety) {
@@ -185,24 +171,34 @@ public final class ReviewServices extends ListManager<Review> {
     }
 
     @Override
-    public List<Review> searchBy(String propety) {
+    public List<Review> searchBy(String property) {
         List<Review> result = new ArrayList<>();
+
         for (Review item : list) {
-            if (item.getMovieID().equals(propety)
-                    || item.getReviewText().equalsIgnoreCase(propety)
-                    || item.getReviewDate().equals(propety)
-                    || item.getUserID().equals(propety)
-                    || String.valueOf(item.getRating()).equals(propety)) {
+            if (item.getMovieID().equalsIgnoreCase(property)
+                    || item.getReviewText().toLowerCase().contains(property.toLowerCase())
+                    || item.getReviewDate().equals(property)
+                    || item.getUserID().equalsIgnoreCase(property)
+                    || String.valueOf(item.getRating()).equals(property)) {
                 result.add(item);
             }
         }
+
+        // Automatically display the results
+        if (result.isEmpty()) {
+            System.out.println("No reviews found matching the given property.");
+        } else {
+            System.out.println(DISPLAY_TITLE);
+            result.forEach(System.out::println);
+        }
+
         return result;
     }
 
     public static double calculateAverageRating(String movieId) throws SQLException {
         String query = "SELECT AVG(rating) AS average_rating FROM Review WHERE movie_id = ?";
 
-        try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, movieId);
 
@@ -212,6 +208,6 @@ public final class ReviewServices extends ListManager<Review> {
                 }
             }
         }
-        return 0;
+        return 0; // dont have rating
     }
 }
