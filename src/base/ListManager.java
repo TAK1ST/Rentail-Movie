@@ -9,7 +9,7 @@ import static main.utils.Utility.extractNumber;
 
 public abstract class ListManager<T extends Model> {
 
-    protected final List<T> list = new ArrayList<>();
+    public final List<T> list = new ArrayList<>();
     protected boolean isNotSaved = false;
     private final String className;
 

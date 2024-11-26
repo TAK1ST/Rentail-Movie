@@ -5,9 +5,11 @@
 package main.DAO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import main.models.Movie;
@@ -26,10 +28,12 @@ public class MovieDAO {
             preparedStatement.setString(1, movie.getId());
             preparedStatement.setString(2, movie.getTitle());
             preparedStatement.setString(3, movie.getDescription());
-            preparedStatement.setString(4, movie.getLanguage());
-            preparedStatement.setDate(5, movie.getReleaseYear()); // Sử dụng Date.valueOf() để chuyển LocalDate thành java.sql.Date
-            preparedStatement.setDouble(6, movie.getRentalPrice());
-            preparedStatement.setInt(7, movie.getAvailable_copies());
+            preparedStatement.setDouble(4, movie.getRating());
+            
+            preparedStatement.setString(5, movie.getLanguage());
+            preparedStatement.setDate(6, Date.valueOf(LocalDate.movie.getReleaseYear())); 
+            preparedStatement.setDouble(7, movie.getRentalPrice());
+            preparedStatement.setInt(8, movie.getAvailable_copies());
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -93,4 +97,5 @@ public class MovieDAO {
         }
         return list;
     }
+   
 }
