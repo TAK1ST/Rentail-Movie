@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.services;
 
 import base.ListManager;
@@ -16,6 +12,7 @@ import main.utils.Menu;
 import main.utils.Menu.MenuAction;
 import main.utils.Menu.MenuOption;
 import static main.utils.Menu.showSuccess;
+import static main.utils.PasswordEncryptor.encryptPassword;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.Console.yesOrNo;
 import main.utils.Validator;
@@ -39,7 +36,7 @@ public class UserServices extends ListManager<Users> {
         list.add(new Users(
                 IDGenerator.generateID("", "U"), 
                 "admin", 
-                "1", 
+                encryptPassword("1"), 
                 Role.ADMIN,  
                 null, 
                 null, 
@@ -82,7 +79,7 @@ public class UserServices extends ListManager<Users> {
         list.add(new Users(
                 id, 
                 username, 
-                password, 
+                encryptPassword(password), 
                 Role.USER, 
                 fullName, 
                 address, 
@@ -123,7 +120,7 @@ public class UserServices extends ListManager<Users> {
         String newEmail = Validator.getEmail("Enter your email: ", true);
 
         if (!newUsername.isEmpty()) foundUser.setUsername(newUsername);
-        if (!newPassword.isEmpty()) foundUser.setPassword(newPassword);
+        if (!newPassword.isEmpty()) foundUser.setPassword(encryptPassword(newPassword));
         if (newRole != Role.NONE) foundUser.setRole(newRole.getValue());
         if (!newFullName.isEmpty()) foundUser.setFullName(newFullName);
         if (!newAddress.isEmpty()) foundUser.setAddress(newAddress);

@@ -1,13 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.services;
 
 import java.io.IOException;
 import main.models.Users;
 import static main.services.Services.getUS;
 import main.utils.Menu;
+import static main.utils.PasswordEncryptor.encryptPassword;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.errorLog;
 
@@ -25,7 +22,7 @@ public class AuthenServices {
         String password = getString("Enter password: ", false);
 
         for (Users item : getUS().getList()) 
-            if (item.getUsername().equals(username) && item.getPassword().equals(password)) {
+            if (item.getUsername().equals(username) && item.getPassword().equals(encryptPassword(password))) {
                 account = new Users(item);
                 break;
             }                
@@ -45,7 +42,7 @@ public class AuthenServices {
         int input = Menu.getChoice("Enter choice: ", options.length);
         switch(input) {
             case 1: 
-                checkCreate = checkCreate && getUS().addUser(Users.Role.USER);
+                checkCreate = checkCreate && getUS().registorUser();
                 break;
             case 2: 
                 return null;

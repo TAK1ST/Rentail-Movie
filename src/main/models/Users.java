@@ -1,8 +1,7 @@
-// CustomerProfile.java
 package main.models;
 
 import base.Model;
-import static main.encription.PasswordEncryptor.encryptPassword;
+import static main.utils.PasswordEncryptor.encryptPassword;
 
 public class Users extends Model {
     
@@ -112,7 +111,7 @@ public class Users extends Model {
     }
 
     public String getPassword() {
-        return encryptPassword(password);
+        return password;
     }
 
     public void setPassword(String password) {
