@@ -2,38 +2,35 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package main.controllers;
+package main.services;
 
-import base.Manager;
+import base.ListManager;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import main.CRUD.UserCRUD;
 import main.models.Users;
 import main.models.Users.Role;
-import main.utils.DatabaseUtil;
+import main.utils.IDGenerator;
 import main.utils.Menu;
 import main.utils.Menu.MenuAction;
 import main.utils.Menu.MenuOption;
 import static main.utils.Menu.showSuccess;
-import main.utils.Utility;
 import static main.utils.Utility.Console.getString;
+import static main.utils.Utility.Console.yesOrNo;
 import main.utils.Validator;
 
 /**
  *
  * @author trann
  */
-public class UserManager extends Manager<Users> {
+public class UserServices extends ListManager<Users> {
     
     private static final String DISPLAY_TITLE = "List of User";
       
-    public UserManager() throws IOException {
+    public UserServices() throws IOException {
         super(Users.className());
-        getAllUser();
+        UserCRUD.getAllUser();
         if (list.isEmpty()) 
             setDefaultUsers();
     }
@@ -42,7 +39,7 @@ public class UserManager extends Manager<Users> {
         list.add(new Users("U00000", "admin", "1", Role.ADMIN, "None", null, null, null, null));
     }
       
-    public void managerMenu() throws IOException {
+    public void adminMenu() throws IOException {
         Menu.showManagerMenu(
             "User Managment",
             null,
@@ -58,10 +55,40 @@ public class UserManager extends Manager<Users> {
             true
         );
     }
+    
+    public boolean registorUser() {
+        String id = !list.isEmpty() ? IDGenerator.generateID(list.getLast().getId(), "U") : "U00000";
+        String username = Validator.getUsername("Enter username: ", false, list);
+        String password = Validator.getPassword("Enter password: ", false);
+        
+        String status, fullName, address, phoneNumber, email;
+        if (yesOrNo("Fill in all infomation? (y/n): ")) {
+            status = getString("Enter status: ", false);
+            fullName = getString("Enter full name: ", false);
+            address = getString("Enter your address: ", false);
+            phoneNumber = Validator.getPhoneNumber("Enter your phone number: ", false);
+            email = Validator.getEmail("Enter your email: ", false);
+        } else {
+            status = fullName = address = phoneNumber = email = null;
+        }
+        
+        list.add(new Users(
+                id, 
+                username, 
+                password, 
+                Role.USER, 
+                status, 
+                fullName, 
+                address, 
+                phoneNumber, 
+                email));
+        UserCRUD.addUserToDB(list.getLast());
+        return true;
+    }
 
     public boolean addUser(Role registorRole) throws IOException {
         
-        String id = !list.isEmpty() ? Utility.generateID(list.getLast().getId(), "U") : "U00000";
+        String id = !list.isEmpty() ? IDGenerator.generateID(list.getLast().getId(), "U") : "U00000";
         list.add(new Users(
                 id, 
                 Validator.getUsername("Enter username: ", false, list), 
@@ -72,7 +99,7 @@ public class UserManager extends Manager<Users> {
                 getString("Enter your address: ", false), 
                 Validator.getPhoneNumber("Enter your phone number: ", false), 
                 Validator.getEmail("Enter your email: ", false)));
-        addUserToDB(list.getLast());
+        UserCRUD.addUserToDB(list.getLast());
         return true;
     }
 
@@ -100,7 +127,7 @@ public class UserManager extends Manager<Users> {
         if (!newPhoneNumber.isEmpty()) foundUser.setPhoneNumber(newPhoneNumber);
         if (!newEmail.isEmpty()) foundUser.setEmail(newEmail);  
 
-        updateUserFromDB(foundUser);
+        UserCRUD.updateUserFromDB(foundUser);
         return true;
     }
 
@@ -111,7 +138,7 @@ public class UserManager extends Manager<Users> {
         if (checkNull(foundUser)) return false;
 
         list.remove(foundUser);
-        deleteUserFromDB(foundUser.getId());
+        UserCRUD.deleteUserFromDB(foundUser.getId());
         return true;
     }
 
@@ -146,88 +173,6 @@ public class UserManager extends Manager<Users> {
             ) result.add(item);
         
         return result;
-    }
-    
-        public boolean addUserToDB(Users user) {
-        String sql = "INSERT INTO Users (user_id, username, password_hash, role, full_name, address, phone_number, email, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DatabaseUtil.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, user.getId());
-            preparedStatement.setString(2, user.getUsername());
-            preparedStatement.setString(3, user.getPassword());
-            preparedStatement.setInt(4, user.getRole());
-            preparedStatement.setString(5, user.getFullName());
-            preparedStatement.setString(6, user.getAddress());
-            preparedStatement.setString(7, user.getPhoneNumber());
-            preparedStatement.setString(8, user.getEmail());
-            preparedStatement.setString(9, user.getStatus());
-
-            return preparedStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public boolean updateUserFromDB(Users user) {
-        String sql = "UPDATE Users SET username = ?, password = ?, role = ?, status = ?, fullname = ?, address = ?, phoneNumber = ?, email = ? WHERE userId = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setInt(3, user.getRole());
-            preparedStatement.setString(4, user.getStatus());
-            preparedStatement.setString(5, user.getFullName());
-            preparedStatement.setString(6, user.getAddress());
-            preparedStatement.setString(7, user.getPhoneNumber());
-            preparedStatement.setString(8, user.getEmail());
-            preparedStatement.setString(9, user.getId());
-
-            return preparedStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public boolean deleteUserFromDB(String userID) {
-        String sql = "DELETE FROM User WHERE userId = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, userID);
-            return preparedStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public void getAllUser() {
-        String sql = "SELECT * FROM Users";
-        try (Connection connection = DatabaseUtil.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-
-            while (resultSet.next()) {
-                Users user = new Users(
-                    resultSet.getString("user_id"),
-                    resultSet.getString("username"),
-                    resultSet.getString("password_hash"),
-                    resultSet.getInt("role"),
-                    resultSet.getString("full_name"),
-                    resultSet.getString("address"),
-                    resultSet.getString("phone_number"),
-                    resultSet.getString("email"),
-                    resultSet.getString("status")
-                );
-                list.add(user);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
     
 }

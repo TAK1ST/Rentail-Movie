@@ -43,7 +43,7 @@ public class StatisticsUtils {
             if (rs.next()) {
                 String customerName = rs.getString("full_name");
                 int rentalCount = rs.getInt("rental_count");
-                System.out.println("Người thuê nhiều nhất: " + customerName + " với " + rentalCount + " lần thuê");
+                System.out.println("Person of the most rent: " + customerName + " with " + rentalCount + " rent.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -58,14 +58,14 @@ public class StatisticsUtils {
         try (Connection connection = getConnection(); Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
             if (rs.next()) {
                 double totalRevenue = rs.getDouble("total_revenue");
-                System.out.println("Tổng doanh thu từ rentals: " + totalRevenue);
+                System.out.println("Total revenue from rentals: " + totalRevenue); //revenue: doanh thu
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Tính tổng các khoản phí và phạt quá hạn
+    // total overdue fees and penalties
     public static void printTotalFinesAndCharges() {
         String query = "SELECT SUM(r.overdue_fines) + SUM(r.charges) AS total_fines_and_charges "
                 + "FROM Rental r";
@@ -80,7 +80,7 @@ public class StatisticsUtils {
         }
     }
 
-    // Kiểm tra số lượng bản sao còn lại của phim trong kho
+    // The number of copies of the film remaining in stock
     public static void printAvailableCopies() {
         String query = "SELECT title, available_copies FROM Movie";
 

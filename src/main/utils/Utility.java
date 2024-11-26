@@ -17,18 +17,6 @@ import main.models.Users.Role;
 public class Utility {
     private static final Scanner scanner = new Scanner(System.in);
     
-    public static synchronized String generateIDByTime(String typeCode) {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter year = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        String timestamp = now.format(year);
-        return String.format("%s%s", typeCode, timestamp);
-    }
-    
-    public static String generateID(String lastestID, String prefix) {
-        int lastNumberID = Integer.parseInt(lastestID.substring(prefix.length()));   
-        return String.format("%s%04d", prefix, ++lastNumberID);
-    }
-    
     public static boolean isDateInRange(LocalDate startDate, LocalDate endDate, LocalDate targetDate) {
         return (targetDate.isEqual(startDate) || targetDate.isAfter(startDate)) &&
                (targetDate.isEqual(endDate) || targetDate.isBefore(endDate));
@@ -74,7 +62,7 @@ public class Utility {
             return result;
         }
 
-        public static int getInt(String message, int min, int max, boolean enterToPass) {
+        public static int getInteger(String message, int min, int max, boolean enterToPass) {
             int number;
             while (true) {
                 System.out.print(message);
@@ -146,7 +134,7 @@ public class Utility {
 		}
 		System.out.println("\n");
 		if (!enterToPass) 
-                    return infoLists[getInt("Enter an option: ", 0, infoLists.length - 1, enterToPass)];
+                    return infoLists[getInteger("Enter an option: ", 0, infoLists.length - 1, enterToPass)];
                 else 
                     return "";
 	}

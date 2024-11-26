@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS Movie
 	movie_id CHAR(8) PRIMARY KEY,
     	title NVARCHAR(100) NOT NULL,
 	description TEXT,
-    	rating ENUM('G', 'PG', 'PG-13', 'R', 'NC-17', 'NR'),
+	-- ENUM('G', 'PG', 'PG-13', 'R', 'NC-17', 'NR')
 	language varchar(20),
     	release_year date,
     	rental_price DECIMAL(10,2) NOT NULL,
@@ -101,16 +101,16 @@ CREATE TABLE IF NOT EXISTS Rental (
 --     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 -- );
 
--- CREATE TABLE IF NOT EXISTS Review (
---     review_id INT AUTO_INCREMENT PRIMARY KEY,
---     movie_id INT,
---     user_id INT,
---     review_text TEXT,
---     rating INT CHECK (rating BETWEEN 1 AND 5),
---     review_date DATE,
---     FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
---     FOREIGN KEY (user_id) REFERENCES Users(user_id)
--- );
+CREATE TABLE IF NOT EXISTS Review (
+    review_id INT AUTO_INCREMENT PRIMARY KEY,
+    movie_id INT,
+    user_id INT,
+    review_text TEXT,
+    rating DOUBLE(5,1) DEFAULT 0,
+    review_date DATE,
+    FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
 
 -- CREATE TABLE IF NOT EXISTS Wishlist (
 --     wishlist_id INT AUTO_INCREMENT PRIMARY KEY,

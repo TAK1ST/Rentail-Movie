@@ -2,22 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package main.controllers;
+package main.services;
 
-import base.Manager;
+import base.ListManager;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import main.CRUD.GenreCRUD;
 import main.models.Genre;
-import main.models.Genre;
-import main.utils.DatabaseUtil;
+import main.utils.IDGenerator;
 import main.utils.Menu;
 import static main.utils.Menu.showSuccess;
-import main.utils.Utility;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Validator.getName;
 
@@ -25,15 +20,15 @@ import static main.utils.Validator.getName;
  *
  * @author trann
  */
-public class GenreManager extends Manager<Genre> {
+public class GenreServices extends ListManager<Genre> {
     private static final String DISPLAY_TITLE = "List of Genre:";
     
-    public GenreManager() throws IOException {
+    public GenreServices() throws IOException {
         super(Genre.className());
-        getAllGenre();
+        GenreCRUD.getAllGenre();
     }
     
-    public void managerMenu() throws IOException {  
+    public void adminMenu() throws IOException {  
         Menu.showManagerMenu(
             "Genre Management",
             null,
@@ -51,11 +46,11 @@ public class GenreManager extends Manager<Genre> {
     }
 
     public boolean addGenre() {
-        String id = list.isEmpty() ? "G00001" : Utility.generateID(list.getLast().getId(), "G");
+        String id = list.isEmpty() ? "G00001" : IDGenerator.generateID(list.getLast().getId(), "G");
         String name = getName("Enter genre: ", false);
         
         list.add(new Genre(id, name));
-        addGenreToDB(list.getLast());
+        GenreCRUD.addGenreToDB(list.getLast());
         return true;
     }
 
@@ -68,7 +63,7 @@ public class GenreManager extends Manager<Genre> {
         String name = getName("Enter genre: ", true);
         if (!name.isEmpty()) foundGenre.setGenreName(name);  
         
-        updateGenreFromDB(foundGenre);
+        GenreCRUD.updateGenreFromDB(foundGenre);
         return true;
     }
 
@@ -79,7 +74,7 @@ public class GenreManager extends Manager<Genre> {
         if (checkNull(foundGenre)) return false;
 
         list.remove(foundGenre);
-        deleteGenreFromDB(foundGenre.getId());
+        GenreCRUD.deleteGenreFromDB(foundGenre.getId());
         return true;
     }
 
@@ -110,64 +105,4 @@ public class GenreManager extends Manager<Genre> {
         return result;
     }
     
-    public boolean addGenreToDB(Genre genre) {
-        String sql = "INSERT INTO Genre (genreId, genreName) VALUES (?, ?)";
-        try (Connection connection = DatabaseUtil.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, genre.getId());
-            preparedStatement.setString(2, genre.getGenreName());
-
-            return preparedStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public boolean updateGenreFromDB(Genre genre) {
-        String sql = "UPDATE Genre SET genreName = ? WHERE genreId = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, genre.getGenreName());
-            preparedStatement.setString(2, genre.getId());
-            
-            return preparedStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public boolean deleteGenreFromDB(String genreID) {
-        String sql = "DELETE FROM Genre WHERE genreId = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, genreID);
-            return preparedStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public void getAllGenre() {
-        String sql = "SELECT * FROM Genre";
-        try (Connection connection = DatabaseUtil.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-
-            while (resultSet.next()) {
-                Genre genre = new Genre(
-                    resultSet.getString("genreID"),
-                    resultSet.getString("genreName")
-                );
-                list.add(genre);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }

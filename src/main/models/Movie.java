@@ -1,33 +1,36 @@
 package main.models;
 
 import base.Model;
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Movie extends Model {
 
+public class Movie extends Model {
     private String title;
     private String description;
     private double rating;
     private List<Genre> genres;
     private List<Actor> actors;
     private String language;
-    private String releaseYear;
+    private Date releaseYear;  
     private double rentalPrice;
     private int available_copies;
 
-    //Constructor
-    public Movie(String id, String title, String description, double rating, String language, String releaseYear, double rentalPrice, int available_copies) {
+    public Movie(String id, String title, String description, double rating, List<Genre> genres, List<Actor> actors, String language, Date releaseYear, double rentalPrice, int available_copies ) {
         super(id);
         this.title = title;
         this.description = description;
         this.rating = rating;
+        this.genres = genres;
+        this.actors = actors;
         this.language = language;
         this.releaseYear = releaseYear;
         this.rentalPrice = rentalPrice;
         this.available_copies = available_copies;
     }
 
+   
     public Movie(Movie other) {
         super(other.getId());
         this.title = other.title;
@@ -58,8 +61,10 @@ public class Movie extends Model {
                 releaseYear,
                 rentalPrice,
                 available_copies
+
         );
     }
+
 
     @Override
     public Object[] getDatabaseValues() {
@@ -79,6 +84,7 @@ public class Movie extends Model {
         return "Movie";
     }
 
+    // Getters and setters
     public String getTitle() {
         return title;
     }
@@ -118,7 +124,7 @@ public class Movie extends Model {
     public void setActors(List<Actor> actors) {
         this.actors = actors;
     }
-
+    
     public String getLanguage() {
         return language;
     }
@@ -127,11 +133,11 @@ public class Movie extends Model {
         this.language = language;
     }
 
-    public String getReleaseYear() {
+    public Date getReleaseYear() {
         return releaseYear;
     }
 
-    public void setReleaseYear(String releaseYear) {
+    public void setReleaseYear(Date releaseYear) {
         this.releaseYear = releaseYear;
     }
 
@@ -143,7 +149,7 @@ public class Movie extends Model {
         this.rentalPrice = rentalPrice;
     }
 
-    public int getAvailable_copies() {
+      public int getAvailable_copies() {
         return available_copies;
     }
 
