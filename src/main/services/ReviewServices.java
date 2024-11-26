@@ -9,10 +9,6 @@ import constants.Constants;
 import main.utils.Menu;
 import static main.services.Services.getMS;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +16,6 @@ import java.util.List;
 import main.DAO.ReviewDAO;
 import main.models.Movie;
 import main.models.Review;
-import static main.utils.DatabaseUtil.getConnection;
 import main.utils.IDGenerator;
 import main.utils.Menu.MenuOption;
 import static main.utils.Menu.showSuccess;
@@ -193,21 +188,5 @@ public final class ReviewServices extends ListManager<Review> {
         }
 
         return result;
-    }
-
-    public static double calculateAverageRating(String movieId) throws SQLException {
-        String query = "SELECT AVG(rating) AS average_rating FROM Review WHERE movie_id = ?";
-
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            preparedStatement.setString(1, movieId);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getDouble("average_rating");
-                }
-            }
-        }
-        return 0; // dont have rating
     }
 }
