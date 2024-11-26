@@ -57,7 +57,7 @@ public class UserServices extends ListManager<Users> {
                 new MenuOption("Display Users", () -> display(list, DISPLAY_TITLE)),
                 new MenuOption("Back", () -> { /* Exit action */ })
             },
-            new MenuAction[] { () -> Menu.getSaveMessage(isNotSaved) },
+            new MenuAction[] { () -> {} },
             true
         );
     }

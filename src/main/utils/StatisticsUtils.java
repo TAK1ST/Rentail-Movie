@@ -4,7 +4,6 @@ import java.sql.*;
 
 public class StatisticsUtils {
 
-    // Hàm lấy kết nối cơ sở dữ liệu
     private static Connection getConnection() throws SQLException {
         return DatabaseUtil.getConnection();
     }
@@ -50,7 +49,7 @@ public class StatisticsUtils {
         }
     }
 
-    // Tính tổng doanh thu từ rentals
+    // SUM doanh thu
     public static void printTotalRevenue() {
         String query = "SELECT SUM(r.charges) AS total_revenue "
                 + "FROM Rental r";

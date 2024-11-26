@@ -1,29 +1,28 @@
 package main.models;
 
 import base.Model;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class Movie extends Model {
     private String title;
     private String description;
     private double rating;
-    private List<Genre> genres;
-    private List<Actor> actors;
+    private List<String> genreIds;
+    private List<String> actorIds;
     private String language;
-    private Date releaseYear;  
+    private LocalDate releaseYear;  
     private double rentalPrice;
     private int available_copies;
 
-    public Movie(String id, String title, String description, double rating, List<Genre> genres, List<Actor> actors, String language, Date releaseYear, double rentalPrice, int available_copies ) {
+    public Movie(String id, String title, String description, double rating, List<String> genreIds, List<String> actorIds, String language, LocalDate releaseYear, double rentalPrice, int available_copies ) {
         super(id);
         this.title = title;
         this.description = description;
         this.rating = rating;
-        this.genres = genres;
-        this.actors = actors;
+        this.genreIds = genreIds;
+        this.actorIds = actorIds;
         this.language = language;
         this.releaseYear = releaseYear;
         this.rentalPrice = rentalPrice;
@@ -36,8 +35,8 @@ public class Movie extends Model {
         this.title = other.title;
         this.description = other.description;
         this.rating = other.rating;
-        this.genres = other.genres;
-        this.actors = other.actors;
+        this.genreIds = other.genreIds;
+        this.actorIds = other.actorIds;
         this.language = other.language;
         this.releaseYear = other.releaseYear;
         this.rentalPrice = other.rentalPrice;
@@ -48,8 +47,8 @@ public class Movie extends Model {
     //Methods
     @Override
     public String toString() {
-        String genreNames = genres != null ? genres.stream().map(Genre::getGenreName).collect(Collectors.joining(", ")) : "No genres";
-        String actorNames = actors != null ? actors.stream().map(Actor::getActorName).collect(Collectors.joining(", ")) : "No actors";
+         String genreNames = genreIds != null ? String.join(", ", genreIds) : "No genres";
+         String actorNames = actorIds != null ? String.join(", ", actorIds) : "No actors";
         return String.format("Movie: %s, %s, %s, %.5f, %s, %s, %s, %s, %.5f, %d.",
                 super.getId(),
                 title,
@@ -109,21 +108,23 @@ public class Movie extends Model {
         this.rating = rating;
     }
 
-    public List<Genre> getGenres() {
-        return genres;
+    public List<String> getGenreIds() {
+        return genreIds;
     }
 
-    public void setGenres(List<Genre> genres) {
-        this.genres = genres;
+    public void setGenreIds(List<String> genreIds) {
+        this.genreIds = genreIds;
     }
 
-    public List<Actor> getActors() {
-        return actors;
+    public List<String> getActorIds() {
+        return actorIds;
     }
 
-    public void setActors(List<Actor> actors) {
-        this.actors = actors;
+    public void setActorIds(List<String> actorIds) {
+        this.actorIds = actorIds;
     }
+
+    
     
     public String getLanguage() {
         return language;
@@ -133,11 +134,11 @@ public class Movie extends Model {
         this.language = language;
     }
 
-    public Date getReleaseYear() {
+    public LocalDate getReleaseYear() {
         return releaseYear;
     }
 
-    public void setReleaseYear(Date releaseYear) {
+    public void setReleaseYear(LocalDate releaseYear) {
         this.releaseYear = releaseYear;
     }
 

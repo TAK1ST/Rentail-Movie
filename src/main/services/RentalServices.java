@@ -2,6 +2,9 @@ package main.services;
 import base.ListManager;
 import constants.Constants;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -12,11 +15,13 @@ import static main.services.Services.getUS;
 import main.models.Movie;
 import main.models.Rental;
 import main.models.Users;
+import static main.utils.DatabaseUtil.getConnection;
 import main.utils.IDGenerator;
 import main.utils.Menu;
 import static main.utils.Menu.showSuccess;
 import static main.utils.Utility.Console.getInteger;
 import static main.utils.Utility.Console.getString;
+import static main.utils.Utility.errorLog;
 import static main.utils.Validator.getDate;
 /**
  *
@@ -42,26 +47,63 @@ public class RentalServices extends ListManager<Rental> {
                 new Menu.MenuOption("Show all rental", () -> display(list, DISPLAY_TITLE)),
                 new Menu.MenuOption("Back", () -> { /* Exit action */ })
             },
-            new Menu.MenuAction[] { () -> Menu.getSaveMessage(isNotSaved) },
+            new Menu.MenuAction[] { () -> {} },
             true
         );
     }
-    
+
     public boolean addRental(String userID) {
-        Users foundUser = (Users) getUS().searchById(userID);
-        if (getUS().checkNull(foundUser)) return false;
-        
-        String input = getString("Enter movie' id to rent: ", false);
-        Movie foundMovie = (Movie) getMS().searchById(input);
-        if (getMS().checkNull(foundMovie)) return false;
-        
-        int numberOfRentDate = getInteger("How many days to rent: ", 1, 1000, false);
-        LocalDate rentalDate = LocalDate.now();
-        LocalDate returnDate = rentalDate.plusDays(numberOfRentDate);
-        double charge = foundMovie.getRentalPrice() * numberOfRentDate;
-        
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "RT");
-        
+    String rentalSql = "INSERT INTO Rental (user_id, movie_id, rental_date, charges) VALUES (?, ?, ?, ?)";
+    String reduceCopiesSql = "UPDATE Movie SET available_copies = available_copies - 1 WHERE movie_id = ? AND available_copies > 0";
+    
+    Users foundUser = (Users) getUS().searchById(userID);
+    if (getUS().checkNull(foundUser)) {
+        errorLog("User not found!");
+        return false;
+    }
+
+    String input = getString("Enter movie' id to rent: ", false);
+    Movie foundMovie = (Movie) getMS().searchById(input);
+    if (getMS().checkNull(foundMovie)) {
+        errorLog("Movie not found!");
+        return false;
+    }
+
+    if (foundMovie.getAvailable_copies() <= 0) {
+        errorLog("No available copies for this movie!");
+        return false;
+    }
+
+    int numberOfRentDate = getInteger("How many days to rent: ", 1, 1000, false);
+    LocalDate rentalDate = LocalDate.now();
+    LocalDate returnDate = rentalDate.plusDays(numberOfRentDate);
+    double charge = foundMovie.getRentalPrice() * numberOfRentDate;
+
+    String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "RT");
+
+    try (Connection connection = getConnection()) {
+        connection.setAutoCommit(false); // Bắt đầu giao dịch
+
+        // Thêm bản ghi vào bảng Rental
+        try (PreparedStatement rentalStmt = connection.prepareStatement(rentalSql)) {
+            rentalStmt.setString(1, userID);
+            rentalStmt.setString(2, foundMovie.getId());
+            rentalStmt.setString(3, rentalDate.toString());
+            rentalStmt.setDouble(4, charge);
+            rentalStmt.executeUpdate();
+        }
+
+        // Cập nhật số lượng bản sao khả dụng
+        try (PreparedStatement updateStmt = connection.prepareStatement(reduceCopiesSql)) {
+            updateStmt.setString(1, foundMovie.getId());
+            int rowsAffected = updateStmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Failed to update available copies. Movie might be out of stock.");
+            }
+        }
+
+        connection.commit(); // Xác nhận giao dịch
+
         list.add(new Rental(
             id,
             userID, 
@@ -69,10 +111,18 @@ public class RentalServices extends ListManager<Rental> {
             rentalDate, 
             returnDate, 
             charge, 
-            0));
-        RentalDAO.addRentalToDB(list.getLast());
+            0
+        ));
+
+        System.out.println("Rental created successfully!");
         return true;
+
+    } catch (SQLException ex) {
+        errorLog("Error while creating rental: " + ex.getMessage());
+        }
+        return false;
     }
+
     
     public boolean updateRental() {
         if (checkEmpty(list)) return false;

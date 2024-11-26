@@ -5,6 +5,7 @@
 package main.DAO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,18 +19,18 @@ import main.utils.DatabaseUtil;
  * @author trann
  */
 public class MovieDAO {
-    
+
     public static boolean addMovieToDB(Movie movie) {
-        String sql = "INSERT INTO Movie (movieId, title, description, language, releaseYear, rentalPrice, availableCopies) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DatabaseUtil.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        String sql = "INSERT INTO Movie (movie_id, title, description, language, release_year, rental_price, available_copies) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, movie.getId());
             preparedStatement.setString(2, movie.getTitle());
             preparedStatement.setString(3, movie.getDescription());
-            preparedStatement.setString(4, movie.getLanguage());
-            preparedStatement.setDate(5, movie.getReleaseYear()); // Sử dụng Date.valueOf() để chuyển LocalDate thành java.sql.Date
-            preparedStatement.setDouble(6, movie.getRentalPrice());
-            preparedStatement.setInt(7, movie.getAvailable_copies());
+            preparedStatement.setDouble(4, movie.getRating());
+            preparedStatement.setString(5, movie.getLanguage());
+            preparedStatement.setDate(6, Date.valueOf(movie.getReleaseYear()));
+            preparedStatement.setDouble(7, movie.getRentalPrice());
+            preparedStatement.setInt(8, movie.getAvailable_copies());
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -44,7 +45,7 @@ public class MovieDAO {
             preparedStatement.setString(1, movie.getTitle());
             preparedStatement.setString(2, movie.getDescription());
             preparedStatement.setString(3, movie.getLanguage());
-            preparedStatement.setDate(4, movie.getReleaseYear()); // Chuyển LocalDate thành java.sql.Date
+            preparedStatement.setDate(4, Date.valueOf(movie.getReleaseYear()));  // Chuyển LocalDate thành java.sql.Date
             preparedStatement.setDouble(5, movie.getRentalPrice());
             preparedStatement.setInt(6, movie.getAvailable_copies());
             preparedStatement.setString(7, movie.getId());
@@ -74,6 +75,10 @@ public class MovieDAO {
         List<Movie> list = new ArrayList<>();
         try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
+                // Lấy danh sách genres và actors từ bảng trung gian
+                List<String> genres = getGenresByMovieId(resultSet.getString("movie_id"));
+                List<String> actors = getActorsByMovieId(resultSet.getString("movie_id"));
+
                 Movie movie = new Movie(
                         resultSet.getString("movie_id"),
                         resultSet.getString("title"),
@@ -93,4 +98,35 @@ public class MovieDAO {
         }
         return list;
     }
+
+    private static List<String> getGenresByMovieId(String movieId) {
+        List<String> genres = new ArrayList<>();
+        String sql = "SELECT genre_id FROM Movie_Genre WHERE movie_id = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, movieId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                genres.add(rs.getString("genre_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return genres;
+    }
+
+    private static List<String> getActorsByMovieId(String movieId) {
+        List<String> actors = new ArrayList<>();
+        String sql = "SELECT actor_id FROM Movie_Actor WHERE movie_id = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, movieId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                actors.add(rs.getString("actor_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return actors;
+    }
+
 }

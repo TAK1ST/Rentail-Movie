@@ -53,7 +53,7 @@ public final class ReviewServices extends ListManager<Review> {
                 new MenuOption("Show all review", () -> display(list, DISPLAY_TITLE)),
                 new MenuOption("Back", () -> { /* Exit action */ })
             },
-            new Menu.MenuAction[] { () -> Menu.getSaveMessage(isNotSaved) },
+            new Menu.MenuAction[] { () -> {} },
             true
         );
   
@@ -141,7 +141,7 @@ public final class ReviewServices extends ListManager<Review> {
     public List<Review> getReviewBy(String message) {
         return searchBy(getString(message, false));
     }  
-    
+
     public void sortBy(String propety) {
         if (checkEmpty(list)) {
             return;
@@ -158,17 +158,27 @@ public final class ReviewServices extends ListManager<Review> {
     }
 
     @Override
-    public List<Review> searchBy(String propety) {
+    public List<Review> searchBy(String property) {
         List<Review> result = new ArrayList<>();
+
         for (Review item : list) {
-            if (item.getMovieID().equals(propety)
-                    || item.getReviewText().equalsIgnoreCase(propety)
-                    || item.getReviewDate().equals(propety)
-                    || item.getUserID().equals(propety)
-                    || String.valueOf(item.getRating()).equals(propety)) {
+            if (item.getMovieID().equalsIgnoreCase(property)
+                    || item.getReviewText().toLowerCase().contains(property.toLowerCase())
+                    || item.getReviewDate().equals(property)
+                    || item.getUserID().equalsIgnoreCase(property)
+                    || String.valueOf(item.getRating()).equals(property)) {
                 result.add(item);
             }
         }
+
+        // Automatically display the results
+        if (result.isEmpty()) {
+            System.out.println("No reviews found matching the given property.");
+        } else {
+            System.out.println(DISPLAY_TITLE);
+            result.forEach(System.out::println);
+        }
+
         return result;
     }
 
