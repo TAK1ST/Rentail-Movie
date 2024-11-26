@@ -1,5 +1,5 @@
 -- drop schema movierentalsystemdb;
--- create schema movierentalsystemdb;-- 
+create schema movierentalsystemdb; 
 
 USE movierentalsystemdb;
 
@@ -22,9 +22,7 @@ CREATE TABLE IF NOT EXISTS Movie
     	title NVARCHAR(100) NOT NULL,
 	description TEXT,
     	rating ENUM('G', 'PG', 'PG-13', 'R', 'NC-17', 'NR'),
-	genre_id char(8) NOT NULL,
-	actor_id CHAR(8) NOT NULL,
-    	language varchar(20),
+	language varchar(20),
     	release_year date,
     	rental_price DECIMAL(10,2) NOT NULL,
     -- track the number of available copies for rent
