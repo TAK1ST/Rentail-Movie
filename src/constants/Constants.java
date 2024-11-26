@@ -4,10 +4,13 @@
  */
 package constants;
 
+import main.utils.IDGenerator;
+
 /**
  *
  * @author trann
  */
 public class Constants {
     public static final int ID_LENGTH = 8;   
+    public static final String DEFAULT_ADMIN_ID = IDGenerator.generateID("", "U");
 }

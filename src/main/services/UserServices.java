@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.services;
 
 import base.ListManager;
+import constants.Constants;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +13,7 @@ import main.utils.Menu;
 import main.utils.Menu.MenuAction;
 import main.utils.Menu.MenuOption;
 import static main.utils.Menu.showSuccess;
+import static main.utils.PassEncryptor.encryptPassword;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.Console.yesOrNo;
 import main.utils.Validator;
@@ -37,9 +35,9 @@ public class UserServices extends ListManager<Users> {
     
     private void setDefaultUsers() throws IOException {
         list.add(new Users(
-                IDGenerator.generateID("", "U"), 
+                Constants.DEFAULT_ADMIN_ID, 
                 "admin", 
-                "1", 
+                encryptPassword("1"), 
                 Role.ADMIN,  
                 null, 
                 null, 
@@ -65,7 +63,7 @@ public class UserServices extends ListManager<Users> {
     }
     
     public boolean registorUser() {
-        String id = !list.isEmpty() ? IDGenerator.generateID(list.getLast().getId(), "U") : "U00000";
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
         String username = Validator.getUsername("Enter username: ", false, list);
         String password = Validator.getPassword("Enter password: ", false);
         
@@ -82,7 +80,7 @@ public class UserServices extends ListManager<Users> {
         list.add(new Users(
                 id, 
                 username, 
-                password, 
+                encryptPassword(password), 
                 Role.USER, 
                 fullName, 
                 address, 
@@ -92,9 +90,8 @@ public class UserServices extends ListManager<Users> {
         return true;
     }
 
-    public boolean addUser(Role registorRole) throws IOException {
-        
-        String id = !list.isEmpty() ? IDGenerator.generateID(list.getLast().getId(), "U") : "U00000";
+    public boolean addUser(Role registorRole) throws IOException {   
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
         list.add(new Users(
                 id, 
                 Validator.getUsername("Enter username: ", false, list), 
@@ -123,7 +120,7 @@ public class UserServices extends ListManager<Users> {
         String newEmail = Validator.getEmail("Enter your email: ", true);
 
         if (!newUsername.isEmpty()) foundUser.setUsername(newUsername);
-        if (!newPassword.isEmpty()) foundUser.setPassword(newPassword);
+        if (!newPassword.isEmpty()) foundUser.setPassword(encryptPassword(newPassword));
         if (newRole != Role.NONE) foundUser.setRole(newRole.getValue());
         if (!newFullName.isEmpty()) foundUser.setFullName(newFullName);
         if (!newAddress.isEmpty()) foundUser.setAddress(newAddress);

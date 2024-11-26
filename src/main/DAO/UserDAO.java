@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import main.models.Users;
 import main.utils.DatabaseUtil;
+import static main.utils.PassEncryptor.encryptPassword;
 
 /**
  *
@@ -25,7 +26,7 @@ public class UserDAO {
 
             preparedStatement.setString(1, user.getId());
             preparedStatement.setString(2, user.getUsername());
-            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(3, encryptPassword(user.getPassword()));
             preparedStatement.setInt(4, user.getRole());
             preparedStatement.setString(5, user.getFullName());
             preparedStatement.setString(6, user.getAddress());
@@ -45,7 +46,7 @@ public class UserDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(2, encryptPassword(user.getPassword()));
             preparedStatement.setInt(3, user.getRole());
             preparedStatement.setString(4, user.getFullName());
             preparedStatement.setString(5, user.getAddress());

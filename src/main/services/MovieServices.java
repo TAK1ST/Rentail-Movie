@@ -1,6 +1,7 @@
 package main.services;
 
 import base.ListManager;
+import constants.Constants;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,7 +21,6 @@ import static main.utils.Menu.showSuccess;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.Console.getDouble;
 import static main.utils.Utility.Console.getInteger;
-import static main.utils.Utility.Console.selectInfo;
 import static main.utils.Validator.getDate;
 
 public class MovieServices extends ListManager<Movie> {
@@ -37,7 +37,7 @@ public class MovieServices extends ListManager<Movie> {
                 "Movie Management",
                 null,
                 new Menu.MenuOption[]{
-                    new Menu.MenuOption("Add movie", () -> showSuccess(addMovie("U00000"))),
+                    new Menu.MenuOption("Add movie", () -> showSuccess(addMovie(Constants.DEFAULT_ADMIN_ID))),
                     new Menu.MenuOption("Delete movie", () -> showSuccess(deleteMovie())),
                     new Menu.MenuOption("Update movie", () -> showSuccess(updateMovie())),
                     new Menu.MenuOption("Search movie", () -> searchMovie()),
@@ -51,7 +51,7 @@ public class MovieServices extends ListManager<Movie> {
     }
 
     public boolean addMovie(String userID) {
-        String id = list.isEmpty() ? "M00001" : IDGenerator.generateID(list.getLast().getId(), "M");
+         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "M");
         String title = getString("Enter title: ", false);
         String description = getString("Enter description: ", false);
         Double rating = getDouble("Enter rating (1-5): ", 1, 5, false);
@@ -200,6 +200,9 @@ public class MovieServices extends ListManager<Movie> {
         }
         if (!description.isEmpty()) {
             foundMovie.setDescription(description);
+        }
+        if (rating > 0) {
+            foundMovie.setRating(rating);
         }
         if (!language.isEmpty()) {
             foundMovie.setLanguage(language);
