@@ -34,30 +34,27 @@ public class Users extends Model {
     private String username;
     private String password;
     private int role;
-    private String status;
     private String fullName;
     private String address;
     private String phoneNumber;
     private String email;
 
-    public Users(String id, String username, String password, int role, String status, String fullName, String address, String phoneNumber, String email) {
+    public Users(String id, String username, String password, int role, String fullName, String address, String phoneNumber, String email) {
         super(id);
         this.username = username;
         this.password = password;
         this.role = role;
-        this.status = status;
         this.fullName = fullName;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
     
-    public Users(String id, String username, String password, Role role, String status, String fullName, String address, String phoneNumber, String email) {
+    public Users(String id, String username, String password, Role role, String fullName, String address, String phoneNumber, String email) {
         super(id);
         this.username = username;
         this.password = password;
         this.role = role.getValue();
-        this.status = status;
         this.fullName = fullName;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -69,7 +66,6 @@ public class Users extends Model {
         this.username = other.username;
         this.password = other.password;
         this.role = other.role;
-        this.status = other.status;
         this.fullName = other.fullName;
         this.address = other.address;
         this.phoneNumber = other.phoneNumber;
@@ -78,12 +74,11 @@ public class Users extends Model {
     
     @Override
     public String toString() {
-        return String.format("User: %s, %s, %s, %d, %s, %s, %s, %s, %s.", 
+        return String.format("User: %s, %s, %s, %d, %s, %s, %s, %s.", 
                 super.getId(),
                 username,
                 password,
                 role,
-                status,
                 fullName,
                 address,
                 phoneNumber,
@@ -97,7 +92,6 @@ public class Users extends Model {
             username,
             password,
             role,
-            status,
             fullName,
             address,
             phoneNumber,
@@ -131,14 +125,6 @@ public class Users extends Model {
 
     public void setRole(int role) {
         this.role = role;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getFullName() {

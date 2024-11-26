@@ -19,7 +19,7 @@ import main.utils.DatabaseUtil;
  */
 public class UserDAO {
     public static boolean addUserToDB(Users user) {
-        String sql = "INSERT INTO Users (user_id, username, password_hash, role, full_name, address, phone_number, email, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (user_id, username, password_hash, role, full_name, address, phone_number, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -31,7 +31,6 @@ public class UserDAO {
             preparedStatement.setString(6, user.getAddress());
             preparedStatement.setString(7, user.getPhoneNumber());
             preparedStatement.setString(8, user.getEmail());
-            preparedStatement.setString(9, user.getStatus());
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -41,19 +40,18 @@ public class UserDAO {
     }
     
     public static boolean updateUserFromDB(Users user) {
-        String sql = "UPDATE Users SET username = ?, password = ?, role = ?, status = ?, fullname = ?, address = ?, phoneNumber = ?, email = ? WHERE userId = ?";
+        String sql = "UPDATE Users SET username = ?, password = ?, role = ?, fullname = ?, address = ?, phoneNumber = ?, email = ? WHERE userId = ?";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setInt(3, user.getRole());
-            preparedStatement.setString(4, user.getStatus());
-            preparedStatement.setString(5, user.getFullName());
-            preparedStatement.setString(6, user.getAddress());
-            preparedStatement.setString(7, user.getPhoneNumber());
-            preparedStatement.setString(8, user.getEmail());
-            preparedStatement.setString(9, user.getId());
+            preparedStatement.setString(4, user.getFullName());
+            preparedStatement.setString(5, user.getAddress());
+            preparedStatement.setString(6, user.getPhoneNumber());
+            preparedStatement.setString(7, user.getEmail());
+            preparedStatement.setString(8, user.getId());
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -91,8 +89,7 @@ public class UserDAO {
                     resultSet.getString("full_name"),
                     resultSet.getString("address"),
                     resultSet.getString("phone_number"),
-                    resultSet.getString("email"),
-                    resultSet.getString("status")
+                    resultSet.getString("email")
                 );
                 list.add(user);
             }

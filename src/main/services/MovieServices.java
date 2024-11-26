@@ -52,6 +52,9 @@ public class MovieServices extends ListManager<Movie> {
         LocalDate releaseYear = getDate("Enter release date: ", false);
         Double rentalPrice = getDouble("Enter rental price: ", 0, 1000, false);
         int availableCopies = getInteger("Enter available copies: ", 0, 100, false);
+        
+        String[] actornames= fuction();
+        
 
         Movie newMovie = new Movie(
                 id,

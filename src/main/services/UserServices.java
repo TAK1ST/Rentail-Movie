@@ -36,7 +36,15 @@ public class UserServices extends ListManager<Users> {
     }
     
     private void setDefaultUsers() throws IOException {
-        list.add(new Users("U00000", "admin", "1", Role.ADMIN, "None", null, null, null, null));
+        list.add(new Users(
+                IDGenerator.generateID("", "U"), 
+                "admin", 
+                "1", 
+                Role.ADMIN,  
+                null, 
+                null, 
+                null, 
+                null));
     }
       
     public void adminMenu() throws IOException {
@@ -61,15 +69,14 @@ public class UserServices extends ListManager<Users> {
         String username = Validator.getUsername("Enter username: ", false, list);
         String password = Validator.getPassword("Enter password: ", false);
         
-        String status, fullName, address, phoneNumber, email;
+        String fullName, address, phoneNumber, email;
         if (yesOrNo("Fill in all infomation? (y/n): ")) {
-            status = getString("Enter status: ", false);
             fullName = getString("Enter full name: ", false);
             address = getString("Enter your address: ", false);
             phoneNumber = Validator.getPhoneNumber("Enter your phone number: ", false);
             email = Validator.getEmail("Enter your email: ", false);
         } else {
-            status = fullName = address = phoneNumber = email = null;
+            fullName = address = phoneNumber = email = null;
         }
         
         list.add(new Users(
@@ -77,7 +84,6 @@ public class UserServices extends ListManager<Users> {
                 username, 
                 password, 
                 Role.USER, 
-                status, 
                 fullName, 
                 address, 
                 phoneNumber, 
@@ -93,8 +99,7 @@ public class UserServices extends ListManager<Users> {
                 id, 
                 Validator.getUsername("Enter username: ", false, list), 
                 Validator.getPassword("Enter password: ", false), 
-                (registorRole == Role.ADMIN) ? Validator.getRole("Choose a role: ", false): registorRole, 
-                getString("Enter status: ", false), 
+                (registorRole == Role.ADMIN) ? Validator.getRole("Choose a role: ", false): registorRole,  
                 getString("Enter full name: ", false), 
                 getString("Enter your address: ", false), 
                 Validator.getPhoneNumber("Enter your phone number: ", false), 
@@ -112,7 +117,6 @@ public class UserServices extends ListManager<Users> {
         String newUsername = Validator.getUsername("Enter new username: ", true, list);
         String newPassword = Validator.getPassword("Enter new password: ", true);
         Role newRole = Validator.getRole("Enter new role: ", true);
-        String newStatus = getString("Enter status: ", true);
         String newFullName = getString("Enter full name: ", true);
         String newAddress = getString("Enter your address: ", true); 
         String newPhoneNumber = Validator.getPhoneNumber("Enter your phone number: ", true);
@@ -121,7 +125,6 @@ public class UserServices extends ListManager<Users> {
         if (!newUsername.isEmpty()) foundUser.setUsername(newUsername);
         if (!newPassword.isEmpty()) foundUser.setPassword(newPassword);
         if (newRole != Role.NONE) foundUser.setRole(newRole.getValue());
-        if (!newStatus.isEmpty()) foundUser.setStatus(newStatus);
         if (!newFullName.isEmpty()) foundUser.setFullName(newFullName);
         if (!newAddress.isEmpty()) foundUser.setAddress(newAddress);
         if (!newPhoneNumber.isEmpty()) foundUser.setPhoneNumber(newPhoneNumber);
@@ -164,7 +167,6 @@ public class UserServices extends ListManager<Users> {
         List<Users> result = new ArrayList<>();
         for (Users item : list) 
             if (item.getUsername().equals(propety) 
-                    || item.getStatus().equals(propety)
                     || String.valueOf(item.getRole()).equals(propety)
                     || item.getFullName().equals(propety)
                     || item.getPhoneNumber().equals(propety)
