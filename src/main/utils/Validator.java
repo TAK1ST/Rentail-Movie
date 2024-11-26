@@ -43,9 +43,9 @@ public class Validator {
             if (input.isEmpty() && enterToPass) 
                 return "";
 
-            if (input.isBlank()) 
+            if (input.isEmpty()) 
                 errorLog("Username must not be empty");
-            
+   
             if (input.length() < 5) 
                 errorLog("Accountname must be at least 5 character");         
  
@@ -113,13 +113,13 @@ public class Validator {
             if (input.isEmpty() && enterToPass) 
                return "";
             
-            if (input.isBlank()) 
+            if (input.isEmpty()) 
                 errorLog("Name must not be empty");
 
             if (!Validator.isValidName(input)) 
                 errorLog("Name must not have special characters");
             
-        } while (input.isBlank() || !Validator.isValidName(input));
+        } while (input.isEmpty() || !Validator.isValidName(input));
 
         return input;
     }
@@ -132,7 +132,7 @@ public class Validator {
             if (input.isEmpty() && enterToPass) 
                return null;
             
-            if (input.isBlank()) 
+            if (input.isEmpty()) 
                 errorLog("Date must not be empty");
 
             if (!Validator.isValidDate(input)) 
@@ -182,7 +182,7 @@ public class Validator {
             if (input.isEmpty() && enterToPass) 
                 return "";
 
-            if (input.isBlank()) 
+            if (input.isEmpty()) 
                 errorLog("Phone number must not be empty");
 
             if (!Validator.isValidPhoneNumber(input)) 
@@ -200,7 +200,7 @@ public class Validator {
             if (input.isEmpty() && enterToPass) 
                 return "";
 
-            if (input.isBlank()) 
+            if (input.isEmpty()) 
                 errorLog("Email must not be empty");
 
             if (!Validator.isValidEmail(input)) 

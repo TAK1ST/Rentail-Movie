@@ -5,7 +5,6 @@
 package main.CRUD;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,14 +21,15 @@ public class MovieCRUD {
     
     public static boolean addMovieToDB(Movie movie) {
         String sql = "INSERT INTO Movie (movieId, title, description, language, releaseYear, rentalPrice, availableCopies) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DatabaseUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, movie.getId());
             preparedStatement.setString(2, movie.getTitle());
             preparedStatement.setString(3, movie.getDescription());
             preparedStatement.setString(4, movie.getLanguage());
-            preparedStatement.setDate(5, Date.valueOf(movie.getReleaseYear())); // Sử dụng Date.valueOf() để chuyển LocalDate thành java.sql.Date
+            preparedStatement.setDate(5, movie.getReleaseYear()); // Sử dụng Date.valueOf() để chuyển LocalDate thành java.sql.Date
             preparedStatement.setDouble(6, movie.getRentalPrice());
-            preparedStatement.setInt(7, movie.getAvailableCopies());
+            preparedStatement.setInt(7, movie.getAvailable_copies());
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -44,9 +44,9 @@ public class MovieCRUD {
             preparedStatement.setString(1, movie.getTitle());
             preparedStatement.setString(2, movie.getDescription());
             preparedStatement.setString(3, movie.getLanguage());
-            preparedStatement.setDate(4, Date.valueOf(movie.getReleaseYear())); // Chuyển LocalDate thành java.sql.Date
+            preparedStatement.setDate(4, movie.getReleaseYear()); // Chuyển LocalDate thành java.sql.Date
             preparedStatement.setDouble(5, movie.getRentalPrice());
-            preparedStatement.setInt(6, movie.getAvailableCopies());
+            preparedStatement.setInt(6, movie.getAvailable_copies());
             preparedStatement.setString(7, movie.getId());
 
             return preparedStatement.executeUpdate() > 0;
@@ -75,13 +75,16 @@ public class MovieCRUD {
         try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 Movie movie = new Movie(
-                        resultSet.getString("movieId"),
+                        resultSet.getString("movie_id"),
                         resultSet.getString("title"),
                         resultSet.getString("description"),
+                        resultSet.getDouble("rating"),
+                        genres,
+                        actors,
                         resultSet.getString("language"),
-                        resultSet.getDate("releaseYear").toLocalDate(),
-                        resultSet.getDouble("rentalPrice"),
-                        resultSet.getInt("availableCopies")
+                        resultSet.getDate("release_year").toLocalDate(),
+                        resultSet.getDouble("rental_price"),
+                        resultSet.getInt("available_copies")
                 );
                 list.add(movie);
             }

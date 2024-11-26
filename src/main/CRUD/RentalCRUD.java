@@ -20,15 +20,15 @@ import main.utils.DatabaseUtil;
 public class RentalCRUD {
     
     public static boolean addRentalToDB(Rental rental) {
-        String sql = "INSERT INTO Rental (rentalId, userId, movieId, retalDate, returnDate, charges, overdueFines) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Rental (rental_id, user_id, movie_id, retal_date, return_date, charges, overdue_fines) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, rental.getId());
             preparedStatement.setString(2, rental.getUserId());
             preparedStatement.setString(3, rental.getMovieId());
-            preparedStatement.setString(4, rental.getRentalDate());
-            preparedStatement.setString(5, rental.getReturnDate());
+            preparedStatement.setLocalDate(4, rental.getRentalDate());
+            preparedStatement.setLocalDate(5, rental.getReturnDate());
             preparedStatement.setDouble(6, rental.getCharges());
             preparedStatement.setDouble(7, rental.getOverdueFines());
 
