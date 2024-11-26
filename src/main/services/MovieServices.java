@@ -68,6 +68,7 @@ public class MovieServices extends ListManager<Movie> {
         if (!selectedActor.isEmpty()) {
             selectedActorIds.add(selectedActor);  // Lưu ID diễn viên
         }
+        
         Movie newMovie = new Movie(
                 id,
                 title,
@@ -85,7 +86,15 @@ public class MovieServices extends ListManager<Movie> {
         MovieCRUD.addMovieToDB(newMovie);
         return true;
     }
+public static String[] getAllGenres() {
+        // Trả về danh sách thể loại từ cơ sở dữ liệu, ví dụ như "Action", "Comedy", "Drama"
+        return new String[] { "Action", "Comedy", "Drama", "Horror", "Sci-Fi" };
+    }
 
+    public static String[] getAllActors() {
+        // Trả về danh sách diễn viên từ cơ sở dữ liệu, ví dụ như "Tom Hanks", "Scarlett Johansson"
+        return new String[] { "Tom Hanks", "Scarlett Johansson", "Brad Pitt", "Angelina Jolie" };
+    }
     public boolean updateMovie() {
         if (checkEmpty(list)) {
             return false;
