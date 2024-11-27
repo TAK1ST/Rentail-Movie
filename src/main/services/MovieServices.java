@@ -69,7 +69,7 @@ public class MovieServices extends ListManager<Movie> {
         boolean movieSaved = MovieDAO.addMovieToDB(list.getLast());
         if (movieSaved) {
             MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds());  
-            MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getGenreIds()); 
+            MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds()); 
             return true;
         }
         return false;
@@ -80,7 +80,7 @@ public class MovieServices extends ListManager<Movie> {
         boolean movieSaved = MovieDAO.addMovieToDB(list.getLast());
         if (movieSaved) {
             MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds());  
-            MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getGenreIds()); 
+            MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds()); 
             return true;
         }
         return false;
@@ -92,7 +92,7 @@ public class MovieServices extends ListManager<Movie> {
         String input = getString(message, false); 
         String[] genreIDs = input.split(","); 
         for (String item : genreIDs) item = item.trim();
-        
+        for (String itemTest : genreIDs) System.out.println(itemTest);
         return List.of(genreIDs);  
     }
 

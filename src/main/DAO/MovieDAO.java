@@ -74,7 +74,7 @@ public class MovieDAO {
     }
 
     public static boolean updateMovieFromDB(Movie movie) {
-        String sql = "UPDATE Movie SET title = ?, description = ?, language = ?, releaseYear = ?, rentalPrice = ?, availableCopies = ? WHERE movieId = ?";
+        String sql = "UPDATE Movie SET title = ?, description = ?, language = ?, release_year = ?, rental_price = ?, available_copies = ? WHERE movie_id = ?";
         try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, movie.getTitle());
             preparedStatement.setString(2, movie.getDescription());
