@@ -8,7 +8,7 @@ import java.util.List;
 public class Movie extends Model {
     private String title;
     private String description;
-    private double rating;
+    private double avgRating;
     private List<String> genreIds;
     private List<String> actorIds;
     private String language;
@@ -16,11 +16,11 @@ public class Movie extends Model {
     private double rentalPrice;
     private int available_copies;
 
-    public Movie(String id, String title, String description, double rating, List<String> genreIds, List<String> actorIds, String language, LocalDate releaseYear, double rentalPrice, int available_copies ) {
+    public Movie(String id, String title, String description, double avgRating, List<String> genreIds, List<String> actorIds, String language, LocalDate releaseYear, double rentalPrice, int available_copies ) {
         super(id);
         this.title = title;
         this.description = description;
-        this.rating = rating;
+        this.avgRating = avgRating;
         this.genreIds = genreIds;
         this.actorIds = actorIds;
         this.language = language;
@@ -34,7 +34,7 @@ public class Movie extends Model {
         super(other.getId());
         this.title = other.title;
         this.description = other.description;
-        this.rating = other.rating;
+        this.avgRating = other.avgRating;
         this.genreIds = other.genreIds;
         this.actorIds = other.actorIds;
         this.language = other.language;
@@ -53,7 +53,7 @@ public class Movie extends Model {
                 super.getId(),
                 title,
                 description,
-                rating,
+                avgRating,
                 genreNames,
                 actorNames,
                 language,
@@ -71,7 +71,7 @@ public class Movie extends Model {
             super.getId(),
             title,
             description,
-            rating,
+            avgRating,
             language,
             releaseYear,
             rentalPrice,
@@ -101,11 +101,11 @@ public class Movie extends Model {
     }
 
     public double getRating() {
-        return rating;
+        return avgRating;
     }
 
-    public void setRating(double rating) {
-        this.rating = rating;
+    public void setRating(double avgRating) {
+        this.avgRating = avgRating;
     }
 
     public List<String> getGenreIds() {

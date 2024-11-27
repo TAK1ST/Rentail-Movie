@@ -117,7 +117,7 @@ public class MovieDAO {
                         resultSet.getString("movie_id"),
                         resultSet.getString("title"),
                         resultSet.getString("description"),
-                        resultSet.getDouble("rating"),
+                        resultSet.getDouble("avg_rating"),
                         genres,
                         actors,
                         resultSet.getString("language"),
