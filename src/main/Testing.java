@@ -5,10 +5,7 @@
 package main;
 
 import java.io.IOException;
-import main.services.Services;
-import static main.utils.DatabaseUtil.connect;
-import test.FakeData;
-
+import main.utils.Utility;
 
 
 /**
@@ -18,12 +15,8 @@ import test.FakeData;
 public class Testing {
     
     public static void main(String args[]) throws IOException {
-        connect();
-        Services.initAll();
-        if (FakeData.makeAllFakeData()) 
-        System.out.println("Success");;
-        
-        App.run();
+        int x = Utility.Console.getInteger("Testing", 0, 100, true);
+        System.out.println(x);
     }
     
 }

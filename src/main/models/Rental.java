@@ -39,8 +39,8 @@ public class Rental extends Model {
                 super.getId(), 
                 userID, 
                 movieID, 
-                rentalDate, 
-                returnDate,
+                rentalDate.toString(), 
+                returnDate.toString(),
                 charges,
                 overdueFines);
     }

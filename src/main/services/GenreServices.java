@@ -89,9 +89,11 @@ public class GenreServices extends ListManager<Genre> {
     public List<Genre> searchBy(String propety) {
         List<Genre> result = new ArrayList<>();
         for (Genre item : list) 
-            if (item.getGenreName().equals(propety)
-                || item.getId().equals(propety)) 
+            if (item.getId().equals(propety) 
+                || item.getGenreName().contains(propety.trim().toLowerCase())) 
+            {
                 result.add(item);
+            }   
         return result;
     }
     

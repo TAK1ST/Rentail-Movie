@@ -1,15 +1,16 @@
 package main.models;
 
 import base.Model;
+import java.time.LocalDate;
 
 public class Review extends Model {
     private String movieID;
     private String userID;
     private double rating;
     private String reviewText;
-    private String reviewDate;
+    private LocalDate reviewDate;
 
-    public Review(String id, String movieID, String userID, double rating, String reviewText, String reviewDate) {
+    public Review(String id, String movieID, String userID, double rating, String reviewText, LocalDate reviewDate) {
         super(id);
         this.movieID = movieID;
         this.userID = userID;
@@ -34,7 +35,7 @@ public class Review extends Model {
                 movieID,
                 userID,
                 rating,
-                reviewDate,
+                reviewDate.toString(),
                 reviewText);
     }
     
@@ -87,11 +88,11 @@ public class Review extends Model {
         this.reviewText = reviewText;
     }
 
-    public String getReviewDate() {
+    public LocalDate getReviewDate() {
         return reviewDate;
     }
 
-    public void setReviewDate(String reviewDate) {
+    public void setReviewDate(LocalDate reviewDate) {
         this.reviewDate = reviewDate;
     }
     
