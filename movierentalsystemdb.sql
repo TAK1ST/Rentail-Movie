@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS Actor (
 CREATE TABLE IF NOT EXISTS Movie_Actor (
     movie_id CHAR(8),
     actor_id CHAR(8),
-    role VARCHAR(100),
     PRIMARY KEY (movie_id, actor_id),
     FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
     FOREIGN KEY (actor_id) REFERENCES Actor(actor_id)
