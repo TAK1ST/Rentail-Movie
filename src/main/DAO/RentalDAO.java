@@ -1,13 +1,19 @@
 package main.DAO;
 
+import static com.sun.tools.javac.util.Assert.checkNull;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import static java.util.Collections.list;
 import java.util.List;
+import main.models.Movie;
 import main.models.Rental;
+import static main.services.Services.getMS;
 import main.utils.DatabaseUtil;
 
 /**
@@ -94,4 +100,5 @@ public class RentalDAO {
         }
         return list;
     }
+    
 }
