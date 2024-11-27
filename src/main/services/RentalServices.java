@@ -84,9 +84,9 @@ public class RentalServices extends ListManager<Rental> {
             0
         ));
         boolean isSuccess = RentalDAO.addRentalToDB(list.getLast());
-        if (isSuccess) {
-            getMS().adjustAvailableCopy(list.getLast().getMovieId(), -1);
-        }
+        if (isSuccess) 
+            if (getMS().adjustAvailableCopy(list.getLast().getMovieId(), -1))
+                return false;
         return true;
     }
     
@@ -127,9 +127,10 @@ public class RentalServices extends ListManager<Rental> {
         }
 
         boolean isSuccess = RentalDAO.updateRentalFromDB(foundRental);
-        if (isSuccess) {
-            getMS().adjustAvailableCopy(list.getLast().getMovieId(), + 1);
-        }  
+        if (isSuccess) 
+            if (getMS().adjustAvailableCopy(list.getLast().getMovieId(), + 1))
+                return false;
+        
         return true;
     }
     
