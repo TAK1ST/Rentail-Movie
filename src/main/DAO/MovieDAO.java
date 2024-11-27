@@ -38,6 +38,40 @@ public class MovieDAO {
         }
         return false;
     }
+    
+    public static boolean addMovieGenres(String movieID, List<String> genreIDs) {
+        String sql = "INSERT INTO Movie_Genre (movie_id, genre_id) VALUES (?, ?)";
+        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            for (String genreId : genreIDs) {
+                ps.setString(1, movieID);
+                ps.setString(2, genreId);
+                ps.addBatch();  // Thêm vào batch để giảm số lần truy vấn
+            }
+            ps.executeBatch();  // Thực thi tất cả các câu lệnh batch
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean addMovieActors(String movieID, List<String> actorIDs) {
+        String sql = "INSERT INTO Movie_Actor (movie_id, actor_id) VALUES (?, ?)";
+        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            for (String actorId : actorIDs) {
+                ps.setString(1, movieID);
+                ps.setString(2, actorId);
+                ps.addBatch(); 
+            }
+            ps.executeBatch(); 
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public static boolean updateMovieFromDB(Movie movie) {
         String sql = "UPDATE Movie SET title = ?, description = ?, language = ?, releaseYear = ?, rentalPrice = ?, availableCopies = ? WHERE movieId = ?";

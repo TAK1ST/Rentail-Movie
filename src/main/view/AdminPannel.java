@@ -25,16 +25,15 @@ public class AdminPannel {
             "Movie Rental (Admin)",
             null,
             new MenuOption[]{
-                new MenuOption("User managment", () -> getUS().adminMenu()),
-                new MenuOption("Actor managment", () -> getAS().adminMenu()),
-                new MenuOption("Genre managment", () -> getGS().adminMenu()),
-                new MenuOption("Movie managment", () -> getMS().adminMenu()),
-                new MenuOption("Review managment", () -> getRS().adminMenu()),
-                new MenuOption("Rental managment", () -> getRTS().adminMenu()),
-                new MenuOption("Log Out", () -> {}),
+                new MenuOption("User managment", () -> getUS().adminMenu(), false),
+                new MenuOption("Actor managment", () -> getAS().adminMenu(), false),
+                new MenuOption("Genre managment", () -> getGS().adminMenu(), false),
+                new MenuOption("Movie managment", () -> getMS().adminMenu(), false),
+                new MenuOption("Review managment", () -> getRS().adminMenu(), false),
+                new MenuOption("Rental managment", () -> getRTS().adminMenu(), false),
+                new MenuOption("Log Out", () -> {}, false),
             },
-            new Menu.MenuAction[] { () -> {} },
-            true
+            null
         );
     }
     

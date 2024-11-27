@@ -23,7 +23,6 @@ public class Menu {
                                         MenuAction[] actionsBefore,
                                         MenuOption[] options, 
                                         MenuAction[] actionsAfter,
-                                        boolean askToContinue,
                                         Object... params) throws IOException {
         if (options == null) {
             errorLog("Please add option to menu");
@@ -48,7 +47,7 @@ public class Menu {
                 for (MenuAction action : actionsAfter) 
                     action.performAction();
         
-            int choice = Menu.getChoice("Enter choice: ", options.length + INIT_NUM - 1);
+            int choice = Menu.getChoice("Enter choice", options.length + INIT_NUM - 1);
             do {
                 if (choice >= INIT_NUM && choice < options.length + INIT_NUM - 1) 
                     options[choice - INIT_NUM].action.performAction();
@@ -56,7 +55,7 @@ public class Menu {
                 else if (choice == options.length + INIT_NUM - 1) 
                     return;
                 
-            } while (askToContinue && Menu.askContinue());
+            } while (options[choice - INIT_NUM].askToContinue && Menu.askContinue());
         } while (true);
     }
 
@@ -69,10 +68,12 @@ public class Menu {
     public static class MenuOption {
         String optionText;
         MenuAction action;
+        boolean askToContinue;
 
-        public MenuOption(String optionText, MenuAction action) {
+        public MenuOption(String optionText, MenuAction action, boolean askToContinue) {
             this.optionText = optionText;
             this.action = action;
+            this.askToContinue = askToContinue;
         }
     }
     
@@ -122,14 +123,14 @@ public class Menu {
     
     public static boolean askContinue() {
         System.out.println();
-        return yesOrNo("Do you want to continue? ");
+        return yesOrNo("Continue?");
     }
     
     public static void showSuccess(boolean isSuccess) {
         if (isSuccess) 
-            System.out.println("[MENU] Success");
+            System.out.println("[MENU] Success.");
         else 
-            System.out.println("[MENU] Fail");
+            System.out.println("[MENU] Fail.");
     }
     
 }
@@ -138,7 +139,6 @@ public class Menu {
     
 //        Menu.showManagerMenu(
 //            "TITLE",
-//            false,
 //            new MenuAction[] {
 //                () -> null,
 //            },
@@ -150,7 +150,9 @@ public class Menu {
 //                new MenuOption( null,  () -> null),
 //                new MenuOption("Exit", () -> {}),
 //            },
-//            false
+//            new MenuAction[] {
+//                () -> null,
+//            },
 //        );
             
 
