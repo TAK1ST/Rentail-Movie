@@ -80,8 +80,8 @@ public class MovieServices extends ListManager<Movie> {
 
     public boolean addMovie(Movie movie) {
         list.add(movie);
-        boolean movieSaved = MovieDAO.addMovieToDB(list.getLast());
-        if (movieSaved) {
+        boolean isSuccess = MovieDAO.addMovieToDB(list.getLast());
+        if (isSuccess) {
             MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds());
             MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds());
             return true;
@@ -204,7 +204,7 @@ public class MovieServices extends ListManager<Movie> {
         return result;
     }
 
-    public static double calculateAverageRating(String movieID) throws SQLException {
+    public double calculateAverageRating(String movieID) throws SQLException {
         String query = "SELECT AVG(rating) AS average_rating FROM Review WHERE movie_id = ?";
 
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -220,8 +220,8 @@ public class MovieServices extends ListManager<Movie> {
         return 0; // dont have rating
     }
 
-    public static boolean getReduceAvailableCopy(String movieId) {
-        String reduceCopiesSql = "UPDATE Movie SET available_copies = available_copies - 1 WHERE movie_id = ? AND available_copies > 0";
+    public boolean adjustAvailableCopy(String movieId, int amount) {
+        String reduceCopiesSql = "UPDATE Movie SET available_copies = available_copies - " + amount + " WHERE movie_id = ? AND available_copies > 0";
 
         try (Connection conn = getConnection(); // Assuming you have a utility method for DB connection
                  PreparedStatement stmt = conn.prepareStatement(reduceCopiesSql)) {

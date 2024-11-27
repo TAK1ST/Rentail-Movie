@@ -3,9 +3,6 @@ package main.services;
 import base.ListManager;
 import constants.Constants;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -16,11 +13,10 @@ import static main.services.Services.getUS;
 import main.models.Movie;
 import main.models.Rental;
 import main.models.User;
-import main.utils.DatabaseUtil;
 import main.utils.IDGenerator;
 import main.utils.Menu;
 import static main.utils.Menu.showSuccess;
-import main.utils.Utility;
+import static main.utils.Utility.Console.getInteger;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.errorLog;
 import main.utils.Validator;
@@ -39,46 +35,39 @@ public class RentalServices extends ListManager<Rental> {
 
     public void adminMenu() throws IOException {
         Menu.showManagerMenu(
-            "Rental Management",
-            null,
-            new Menu.MenuOption[]{
-                new Menu.MenuOption("Add rental", () -> showSuccess(addRental(Constants.DEFAULT_ADMIN_ID)), true),
-                new Menu.MenuOption("Delete rental", () -> showSuccess(deleteRental()), true),
-                new Menu.MenuOption("Update rental", () -> showSuccess(updateRental()), true),
-                new Menu.MenuOption("Search rental", () -> searchRental(), true),
-                new Menu.MenuOption("Show all rental", () -> display(list, "List of Rental"), false),
-                new Menu.MenuOption("Back", () -> { /* Exit action */ }, false)
-            },
-            null
+                "Rental Management",
+                null,
+                new Menu.MenuOption[]{
+                    new Menu.MenuOption("Add rental", () -> showSuccess(addRental(Constants.DEFAULT_ADMIN_ID)), true),
+                    new Menu.MenuOption("Delete rental", () -> showSuccess(deleteRental()), true),
+                    new Menu.MenuOption("Update rental", () -> showSuccess(updateRental()), true),
+                    new Menu.MenuOption("Search rental", () -> searchRental(), true),
+                    new Menu.MenuOption("Return movie", () -> returnMovie(), true),
+                    new Menu.MenuOption("Extend return date", () -> extendReturnDate(), true),
+                    new Menu.MenuOption("Show all rental", () -> display(list, "List of Rental"), false),
+                    new Menu.MenuOption("Back", () -> {
+                        /* Exit action */ }, false)
+                },
+                null
         );
     }
 
     public boolean addRental(String userID) {
         
+        if (checkEmpty(list)) return false;
+        
         User foundUser = (User) getUS().searchById(userID);
-        if (getUS().checkNull(foundUser)) {
-            return false; // User not found
-        }
+        if (getUS().checkNull(foundUser)) return false;
 
-        String input = getString("Enter movie' id to rent", false);
-        Movie foundMovie = (Movie) getMS().searchById(input);
-        if (getMS().checkNull(foundMovie)) {
-            return false; // Movie not found
-        }
-
+        Movie foundMovie = (Movie) getMS().getById("Enter movie' id to rent");
+        if (getMS().checkNull(foundMovie)) return false;
+        
         if (foundMovie.getAvailable_copies() <= 0) {
             errorLog("No available copies for this movie!");
             return false; // No available copies
         }
 
-        int numberOfRentDate = Utility.Console.getInteger("How many days to rent", 1, 365, false);
-
-        // Check if user entered a valid rental period
-        if (numberOfRentDate == Integer.MIN_VALUE) {
-            errorLog("Invalid rental duration. Operation cancelled.");
-            return false;
-        }
-
+        int numberOfRentDate = getInteger("How many days to rent", 1, 365, false);
         LocalDate rentalDate = LocalDate.now();
         LocalDate returnDate = rentalDate.plusDays(numberOfRentDate);
         double charge = foundMovie.getRentalPrice() * numberOfRentDate;
@@ -94,7 +83,10 @@ public class RentalServices extends ListManager<Rental> {
             charge, 
             0
         ));
-        RentalDAO.addRentalToDB(list.getLast());
+        boolean isSuccess = RentalDAO.addRentalToDB(list.getLast());
+        if (isSuccess) {
+            getMS().adjustAvailableCopy(list.getLast().getMovieId(), -1);
+        }
         return true;
     }
     
@@ -109,79 +101,82 @@ public class RentalServices extends ListManager<Rental> {
         
         return null;
     }
+    
+    public double calculateOverdueFine(LocalDate returnDate, double movieRentalPrice) {
+        long overdueDays = ChronoUnit.DAYS.between(returnDate, LocalDate.now()); 
+        return (overdueDays > 0) ? 
+                overdueDays * 2 * movieRentalPrice 
+                : 
+                0f; 
+    }
 
     public boolean returnMovie(String userID) {
- 
-        if (checkEmpty(list)) 
-            return false; 
+        if (checkEmpty(list)) return false; 
         
         Rental foundRental = getRentalByUserMovie(userID);
         if (checkNull(foundRental)) return false;
+        
+        Movie foundMovie = getMS().searchById(foundRental.getMovieId());
+        if (getMS().checkNull(foundMovie)) return false;
+        
+        double overdueFine = calculateOverdueFine(foundRental.getReturnDate(), foundMovie.getRentalPrice());
 
-        LocalDate returnDate = LocalDate.now();  
-        foundRental.setReturnDate(returnDate);  
-
-        long overdueDays = ChronoUnit.DAYS.between(foundRental.getRentalDate(), returnDate) - 7;  // được thuê tối đa 7 ngày
-        double overdueFines = overdueDays > 0 ? overdueDays * 2.0 : 0.0;  // Phí quá hạn 2 đồng/ngày 
-
-        foundRental.setOverdueFines(overdueFines);  
-        foundRental.setCharges(foundRental.getCharges() + overdueFines);  
-
-        RentalDAO.updateRentalFromDB(foundRental);
-
-        //tăng 1 khi trả phim)
-        String sqlUpdateCopies = "UPDATE Movie SET available_copies = available_copies + 1 WHERE movie_id = ?";
-        try (Connection connection = DatabaseUtil.getConnection(); 
-             PreparedStatement preparedStatement = connection.prepareStatement(sqlUpdateCopies)) {
-            preparedStatement.setString(1, foundMovie.getId());  
-            preparedStatement.executeUpdate(); 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (overdueFine > 0) {
+            foundRental.setOverdueFines(foundRental.getOverdueFines() + overdueFine);  
+            foundRental.setCharges(foundRental.getCharges() + foundRental.getOverdueFines()); 
         }
 
-
-        System.out.println("Movie returned successfully!");
+        boolean isSuccess = RentalDAO.updateRentalFromDB(foundRental);
+        if (isSuccess) {
+            getMS().adjustAvailableCopy(list.getLast().getMovieId(), + 1);
+        }  
         return true;
     }
     
     public boolean updateRental() {
-        if (checkEmpty(list)) {
-            return false;
-        }
-
-        Rental foundRental = (Rental) getById("Enter rental's id");
-        if (checkNull(foundRental)) {
-            return false;
-        }
+        if (checkEmpty(list)) return false;
+        
+        Rental foundRental = (Rental)getById("Enter rental's id");
 
         Movie foundMovie = null;
         String input = getString("Enter rental' id to rent", true);
-        if (!input.isEmpty()) {
-            foundMovie = (Movie) getMS().searchById(input);
-        }
-        if (getMS().checkNull(foundMovie)) {
+        if (!input.isEmpty()) 
+            foundMovie = (Movie) getMS().searchById(input);  
+        if (getMS().checkNull(foundMovie)) 
             foundMovie = (Movie) getMS().searchById(foundRental.getMovieId());
-        }
-        if (getMS().checkNull(foundMovie)) {
+        if (getMS().checkNull(foundMovie)) 
             return false;
-        }
 
         LocalDate rentalDate = getDate("Change rental date (dd/MS/yyyy)", true);
         LocalDate returnDate = getDate("Change return date (dd/MS/yyyy)", true);
 
-        if (rentalDate != null) {
+        if (rentalDate != null) 
             foundRental.setRentalDate(rentalDate);
-        }
-
-        if (returnDate != null) {
+        
+        if (returnDate != null) 
             foundRental.setReturnDate(returnDate);
-        }
 
-        if (rentalDate != null && returnDate != null) {
-            foundRental.setCharges(ChronoUnit.DAYS.between(rentalDate, returnDate) * foundMovie.getRentalPrice());
-        }
+        if (rentalDate != null && returnDate != null) 
+            foundRental.setCharges(ChronoUnit.DAYS.between(rentalDate, returnDate) * foundMovie.getRentalPrice());   
 
         RentalDAO.updateRentalFromDB(foundRental);
+        return true;
+    }
+    
+    public boolean extendReturnDate(String userID) {
+        Rental foundRental = getRentalByUserMovie(userID);
+        if (checkNull(foundRental)) return false;
+        
+        Movie foundMovie = getMS().searchById(foundRental.getMovieId());
+        if (getMS().checkNull(foundMovie)) return false;
+        
+        int extraDate = getInteger("How many days to rent", 1, 365, false);
+        double overdueFine = calculateOverdueFine(foundRental.getReturnDate(), foundMovie.getRentalPrice());
+
+        if (overdueFine > 0) {
+            foundRental.setOverdueFines(overdueFine);  
+        }
+        foundRental.setReturnDate(foundRental.getReturnDate().plusDays(extraDate));
         return true;
     }
 
@@ -224,6 +219,48 @@ public class RentalServices extends ListManager<Rental> {
     public void myHistoryRental(String userID) {
         List<Rental> rentalList = searchBy(userID);
         display(rentalList, "My Rental History");
+    }
+    
+    // admin test logic
+    
+    public boolean returnMovie() {
+        if (checkEmpty(list)) return false; 
+        
+        Rental foundRental = getRentalByUserMovie(Constants.DEFAULT_ADMIN_ID);
+        if (checkNull(foundRental)) return false;
+        
+        Movie foundMovie = getMS().searchById(foundRental.getMovieId());
+        if (getMS().checkNull(foundMovie)) return false;
+        
+        double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
+
+        if (overdueFine > 0) {
+            foundRental.setOverdueFines(foundRental.getOverdueFines() + overdueFine);  
+            foundRental.setCharges(foundRental.getCharges() + foundRental.getOverdueFines()); 
+        }
+
+        boolean isSuccess = RentalDAO.updateRentalFromDB(foundRental);
+        if (isSuccess) {
+            getMS().adjustAvailableCopy(list.getLast().getMovieId(), + 1);
+        }  
+        return true;
+    }
+    
+    public boolean extendReturnDate() {
+        Rental foundRental = getRentalByUserMovie(Constants.DEFAULT_ADMIN_ID);
+        if (checkNull(foundRental)) return false;
+        
+        Movie foundMovie = getMS().searchById(foundRental.getMovieId());
+        if (getMS().checkNull(foundMovie)) return false;
+        
+        int extraDate = getInteger("How many days to rent", 1, 365, false);
+        double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
+
+        if (overdueFine > 0) {
+            foundRental.setOverdueFines(overdueFine);  
+        }
+        foundRental.setReturnDate(foundRental.getReturnDate().plusDays(extraDate));
+        return true;
     }
 
 }
