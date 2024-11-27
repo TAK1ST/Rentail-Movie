@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS Review (
     movie_id char(8),
     user_id char(8),
     review_text TEXT,
-    rating DOUBLE(5,1) DEFAULT 0,
+    rating INT DEFAULT 0,
     review_date DATE,
     FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)

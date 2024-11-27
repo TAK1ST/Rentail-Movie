@@ -48,10 +48,7 @@ public class RentalServices extends ListManager<Rental> {
         );
     }
 
-    public boolean addRental(String userID) {
-        
-        if (checkEmpty(list)) return false;
-        
+    public boolean addRental(String userID) {    
         User foundUser = (User) getUS().searchById(userID);
         if (getUS().checkNull(foundUser)) return false;
 
@@ -82,8 +79,8 @@ public class RentalServices extends ListManager<Rental> {
         boolean isSuccess = RentalDAO.addRentalToDB(list.getLast());
         if (isSuccess) 
             if (getMS().adjustAvailableCopy(list.getLast().getMovieId(), -1))
-                return false;
-        return true;
+                return true;
+        return false;
     }
     
     public Rental getRentalByUserMovie(String userID) {
@@ -125,9 +122,9 @@ public class RentalServices extends ListManager<Rental> {
         boolean isSuccess = RentalDAO.updateRentalFromDB(foundRental);
         if (isSuccess) 
             if (getMS().adjustAvailableCopy(list.getLast().getMovieId(), + 1))
-                return false;
+                return true;
         
-        return true;
+        return false;
     }
     
     public boolean updateRental() {
