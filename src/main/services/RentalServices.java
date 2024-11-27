@@ -11,23 +11,17 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import main.DAO.RentalDAO;
-import main.DAO.UserDAO;
 import static main.services.Services.getMS;
 import static main.services.Services.getUS;
 import main.models.Movie;
 import main.models.Rental;
 import main.models.User;
-<<<<<<< HEAD
 import static main.services.MovieServices.getReduceAvailableCopy;
-=======
 import main.utils.DatabaseUtil;
->>>>>>> 5282417d3cceb452500bc88fe1fc347623e243d7
-import static main.utils.DatabaseUtil.getConnection;
 import main.utils.IDGenerator;
 import main.utils.Menu;
 import static main.utils.Menu.showSuccess;
 import main.utils.Utility;
-import static main.utils.Utility.Console.getInteger;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.errorLog;
 import main.utils.Validator;
@@ -57,9 +51,7 @@ public class RentalServices extends ListManager<Rental> {
                     new Menu.MenuOption("Back", () -> {
                         /* Exit action */ }, false)
                 },
-                new Menu.MenuAction[]{() -> {
-                    }},
-                true
+                null
         );
     }
 
@@ -113,8 +105,6 @@ public class RentalServices extends ListManager<Rental> {
         return true;
     }
 
-<<<<<<< HEAD
-=======
     public boolean returnMovie() {
  
         if (checkEmpty(list)) 
@@ -160,7 +150,6 @@ public class RentalServices extends ListManager<Rental> {
         return true;
     }
     
->>>>>>> 5282417d3cceb452500bc88fe1fc347623e243d7
     public boolean updateRental() {
         if (checkEmpty(list)) {
             return false;
@@ -226,24 +215,15 @@ public class RentalServices extends ListManager<Rental> {
     @Override
     public List<Rental> searchBy(String propety) {
         List<Rental> result = new ArrayList<>();
-<<<<<<< HEAD
-        for (Rental item : list) {
-            if (item.getUserId().equals(propety)
-                    || item.getId().equals(propety)
-                    || item.getRentalDate().format(Validator.DATE).equals(propety)
-                    || item.getReturnDate().format(Validator.DATE).equals(propety)
-=======
         for (Rental item : list) 
             if (item.getId().equals(propety)
                     || item.getUserId().equals(propety)
                     || item.getRentalDate().format(Validator.DATE).contains(propety.trim())
                     || item.getReturnDate().format(Validator.DATE).contains(propety.trim())
->>>>>>> 5282417d3cceb452500bc88fe1fc347623e243d7
                     || String.valueOf(item.getCharges()).equals(propety)
                     || String.valueOf(item.getOverdueFines()).equals(propety)) {
                 result.add(item);
             }
-        }
         return result;
     }
 
