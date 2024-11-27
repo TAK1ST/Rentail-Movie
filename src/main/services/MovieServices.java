@@ -25,6 +25,7 @@ import static main.utils.Menu.showSuccess;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.Console.getDouble;
 import static main.utils.Utility.Console.getInteger;
+import static main.utils.Utility.toInt;
 import static main.utils.Validator.getDate;
 
 public class MovieServices extends ListManager<Movie> {
@@ -58,8 +59,8 @@ public class MovieServices extends ListManager<Movie> {
                 getString("Enter title", false),
                 getString("Enter description", false),
                 0,
-                selectGenres("Enter genre's ids (Comma-separated)", GenreDAO.getAllGenre()),
-                selectActors("Enter actor's ids (Comma-separated)", ActorDAO.getAllActor()),
+                selectGenres("Enter genres (Comma-separated)", GenreDAO.getAllGenre()),
+                selectActors("Enter actors (Comma-separated)", ActorDAO.getAllActor()),
                 getString("Enter language", false),
                 getDate("Enter release date", false),
                 getDouble("Enter rental price", 0, Double.MAX_VALUE, false),
@@ -88,22 +89,38 @@ public class MovieServices extends ListManager<Movie> {
 
     private List<String> selectGenres(String message, List<Genre> options) {
         getGS().display(options, "");
+        List<String> genreIDs = new ArrayList<>();
         
         String input = getString(message, false); 
-        String[] genreIDs = input.split(","); 
-        for (String item : genreIDs) item = item.trim();
-        for (String itemTest : genreIDs) System.out.println(itemTest);
-        return List.of(genreIDs);  
+        String[] genreNames = input.split(","); 
+        
+        for (String item : genreNames) {
+            item = item.trim();
+            int index = toInt(item);
+            if (index > 0 && index <= options.size()) {
+                genreIDs.add(options.get(index).getId());
+            }
+        }
+
+        return genreIDs;  
     }
 
     private List<String> selectActors(String message, List<Actor> options) {
         getAS().display(options, "");
+        List<String> actorIDs = new ArrayList<>();
         
         String input = getString(message, false); 
-        String[] actorIDs = input.split(","); 
-        for (String item : actorIDs) item = item.trim();
+        String[] actorNames = input.split(","); 
         
-        return List.of(actorIDs);  
+        for (String item : actorNames) {
+            item = item.trim();
+            int index = toInt(item);
+            if (index > 0 && index <= options.size()) {
+                actorIDs.add(options.get(index).getId());
+            }
+        }
+        
+        return actorIDs;  
     }
 
     public boolean updateMovie() {
