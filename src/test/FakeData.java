@@ -13,7 +13,10 @@ import main.models.Actor;
 import main.models.Genre;
 import main.models.Movie;
 import main.models.User;
+import static main.services.Services.getAS;
+import static main.services.Services.getGS;
 import static main.services.Services.getMS;
+import static main.services.Services.getUS;
 import static main.utils.Utility.toDate;
 
 /**
@@ -43,8 +46,10 @@ public class FakeData {
         temp.add(new User("U0000010", "tttt", "newPass567", 2, "T Tran", "369 Spruce St", "1098765432", "tttt@example.com"));
         temp.add(new User("U0000011", "kkkk", "newPass890", 2, "KK Tran", "741 Cherry St", "0987654321", "kkkk@example.com"));
         
-        for (User item : temp) 
+        for (User item : temp) {
             UserDAO.addUserToDB(item);
+            getUS().getList().add(item);
+        }
         
         return true;
     }
@@ -62,8 +67,10 @@ public class FakeData {
         temp.add(new Actor("A0000009", "Tom Cruise"));
         temp.add(new Actor("A0000010", "Margot Robbie"));   
         
-        for (Actor item : temp) 
+        for (Actor item : temp) {
             ActorDAO.addActorToDB(item);
+            getAS().getList().add(item);
+        }
         
         return true;
     }
@@ -81,9 +88,11 @@ public class FakeData {
         temp.add(new Genre("G0000009", "Mystery"));
         temp.add(new Genre("G0000010", "Adventure"));
         
-        for (Genre item : temp) 
+        for (Genre item : temp) {
             GenreDAO.addGenreToDB(item);
-                    
+            getGS().getList().add(item);
+        }
+        
         return true;
     }
     

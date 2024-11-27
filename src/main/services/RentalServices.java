@@ -16,7 +16,6 @@ import main.models.Movie;
 import main.models.Rental;
 import main.models.User;
 import main.utils.DatabaseUtil;
-import static main.utils.DatabaseUtil.getConnection;
 import main.utils.IDGenerator;
 import main.utils.Menu;
 import static main.utils.Menu.showSuccess;
@@ -48,15 +47,12 @@ public class RentalServices extends ListManager<Rental> {
                 new Menu.MenuOption("Show all rental", () -> display(list, "List of Rental"), false),
                 new Menu.MenuOption("Back", () -> { /* Exit action */ }, false)
             },
-            new Menu.MenuAction[] { () -> {} },
-            true
+            null
         );
     }
 
     public boolean addRental(String userID) {
-        String rentalSql = "INSERT INTO Rental (user_id, movie_id, rental_date, charges) VALUES (?, ?, ?, ?)";
-        String reduceCopiesSql = "UPDATE Movie SET available_copies = available_copies - 1 WHERE movie_id = ? AND available_copies > 0";
-
+        
         User foundUser = (User) getUS().searchById(userID);
         if (getUS().checkNull(foundUser)) return false;
         
@@ -76,69 +72,40 @@ public class RentalServices extends ListManager<Rental> {
 
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "RT");
 
-        try (Connection connection = getConnection()) {
-            connection.setAutoCommit(false); // Bắt đầu giao dịch
-
-            // Thêm bản ghi vào bảng Rental
-            try (PreparedStatement rentalStmt = connection.prepareStatement(rentalSql)) {
-                rentalStmt.setString(1, userID);
-                rentalStmt.setString(2, foundMovie.getId());
-                rentalStmt.setString(3, rentalDate.toString());
-                rentalStmt.setDouble(4, charge);
-                rentalStmt.executeUpdate();
-            }
-
-            // Cập nhật số lượng bản sao khả dụng
-            try (PreparedStatement updateStmt = connection.prepareStatement(reduceCopiesSql)) {
-                updateStmt.setString(1, foundMovie.getId());
-                int rowsAffected = updateStmt.executeUpdate();
-                if (rowsAffected == 0) {
-                    throw new SQLException("Failed to update available copies. Movie might be out of stock.");
-                }
-            }
-
-            connection.commit(); // Xác nhận giao dịch
-
-            list.add(new Rental(
-                id,
-                userID, 
-                foundMovie.getId(), 
-                rentalDate, 
-                returnDate, 
-                charge, 
-                0
-            ));
-
-            System.out.println("Rental created successfully!");
-            return true;
-
-        } catch (SQLException ex) {
-            errorLog("Error while creating rental" + ex.getMessage());
-        }
-        return false;
+        list.add(new Rental(
+            id,
+            userID, 
+            foundMovie.getId(), 
+            rentalDate, 
+            returnDate, 
+            charge, 
+            0
+        ));
+        RentalDAO.addRentalToDB(list.getLast());
+        return true;
+    }
+    
+    public Rental getRentalByUserMovie(String userID) {
+        Movie foundMovie = (Movie) getMS().getById("Enter movie's id");  
+        if (getMS().checkNull(foundMovie)) return null;
+        
+        List<Rental> temp = searchBy(userID);
+        for (Rental item : temp) 
+            if (item.getMovieId().equals(foundMovie.getId()))
+                return item;
+        
+        return null;
     }
 
-    public boolean returnMovie() {
- 
+    public boolean returnMovie(String userID) {
         if (checkEmpty(list)) 
-            return false;
-
-        Rental foundRental = (Rental) getById("Enter rental's id to return the movie");
-        if (checkNull(foundRental)) 
-            return false;  
-
-        if (foundRental.getReturnDate() != null) {
-            System.out.println("This movie has already been returned.");
-            return false;
-        }
-
-        Movie foundMovie = (Movie) getMS().searchById(foundRental.getMovieId());  
-        if (getMS().checkNull(foundMovie)) return false;
-
+            return false; 
+        
+        Rental foundRental = getRentalByUserMovie(userID);
+        if (checkNull(foundRental)) return false;
 
         LocalDate returnDate = LocalDate.now();  
         foundRental.setReturnDate(returnDate);  
-
 
         long overdueDays = ChronoUnit.DAYS.between(foundRental.getRentalDate(), returnDate) - 7;  // được thuê tối đa 7 ngày
         double overdueFines = overdueDays > 0 ? overdueDays * 2.0 : 0.0;  // Phí quá hạn 2 đồng/ngày 
