@@ -16,7 +16,7 @@ import static main.services.Services.getUS;
 import main.models.Movie;
 import main.models.Rental;
 import main.models.User;
-import static main.services.MovieServices.getReduceAvailableCopy;
+import static main.services.MovieServices.adjustAvailableCopy;
 import main.utils.DatabaseUtil;
 import main.utils.IDGenerator;
 import main.utils.Menu;
@@ -97,7 +97,7 @@ public class RentalServices extends ListManager<Rental> {
         ));
         RentalDAO.addRentalToDB(list.getLast());
 
-        if (!getReduceAvailableCopy((String) foundMovie.getId())) {
+        if (!adjustAvailableCopy((String) foundMovie.getId())) {
             errorLog("Failed to update movie available copies.");
             return false; // Return false if the update fails
         }
