@@ -21,8 +21,8 @@ public class Services {
                 initRS() &&
                 initRTS()&&
                 initAS() &&
-                initGS() ;
-//                && initMS();
+                initGS()
+                && initMS();
     }
     
     public static boolean initUS() throws IOException {

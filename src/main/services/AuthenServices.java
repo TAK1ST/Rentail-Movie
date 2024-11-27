@@ -22,7 +22,7 @@ public class AuthenServices {
         String password = getString("Enter password: ", false);
 
         for (User item : getUS().getList()) 
-            if (item.getUsername().equals(username) && item.getPassword().equals(encryptPassword(password))) {
+            if (item.getUsername().equals(username) && item.getPassword().equals(password)) {
                 account = new User(item);
                 break;
             }                
