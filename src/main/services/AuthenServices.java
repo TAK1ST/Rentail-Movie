@@ -18,8 +18,8 @@ public class AuthenServices {
         User account = null;
 
         Menu.showTitle("Login");
-        String username = getString("Enter username: ", false);
-        String password = getString("Enter password: ", false);
+        String username = getString("Enter username", false);
+        String password = getString("Enter password", false);
 
         for (User item : getUS().getList()) 
             if (item.getUsername().equals(username) && item.getPassword().equals(password)) {
@@ -39,7 +39,7 @@ public class AuthenServices {
         Menu.showTitle("Registor");
         String[] options = { "Registor new account", "Back" };
         Menu.showOptions(options, 1);
-        int input = Menu.getChoice("Enter choice: ", options.length);
+        int input = Menu.getChoice("Enter choice", options.length);
         switch(input) {
             case 1: 
                 checkCreate = checkCreate && getUS().registorUser();

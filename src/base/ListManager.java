@@ -73,13 +73,13 @@ public abstract class ListManager<T extends Model> {
     
     public void display(T item, String title) {
         if (checkNull(item)) return;
-        if (!title.isBlank()) Menu.showTitle(title);
+        if (!title.isBlank()) Menu.showTitle(title + ": ");
         System.out.println(item);
     }
     
     public void display(List<T> list, String title) {
         if (checkEmpty(list)) return;
-        if (!title.isBlank()) Menu.showTitle(title);
+        if (!title.isBlank()) Menu.showTitle(title + ": ");
         list.forEach(item -> System.out.println(item));
     }
     

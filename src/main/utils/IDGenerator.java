@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 
 public class IDGenerator {
+    
     public static synchronized String generateIDByTime(String typeCode) {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter year = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");

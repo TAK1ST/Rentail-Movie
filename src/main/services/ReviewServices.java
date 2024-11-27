@@ -9,10 +9,6 @@ import constants.Constants;
 import main.utils.Menu;
 import static main.services.Services.getMS;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,12 +16,12 @@ import java.util.List;
 import main.DAO.ReviewDAO;
 import main.models.Movie;
 import main.models.Review;
-import main.utils.DatabaseUtil;
 import main.utils.IDGenerator;
 import main.utils.Menu.MenuOption;
 import static main.utils.Menu.showSuccess;
 import static main.utils.Utility.Console.getInteger;
 import static main.utils.Utility.Console.getString;
+import static main.utils.Utility.Console.selectInfo;
 import static main.utils.Utility.errorLog;
 
 /**
@@ -33,8 +29,6 @@ import static main.utils.Utility.errorLog;
  * @author trann
  */
 public final class ReviewServices extends ListManager<Review> {
-
-    private static final String DISPLAY_TITLE = "List of Reviews:";
 
     public ReviewServices() throws IOException {
         super(Review.className());
@@ -46,37 +40,33 @@ public final class ReviewServices extends ListManager<Review> {
             "Review Management",
             null,
             new MenuOption[]{
-                new MenuOption("Add review", () -> showSuccess(addReview(Constants.DEFAULT_ADMIN_ID))),
-                new MenuOption("Delete review", () -> showSuccess(deleteReview())),
-                new MenuOption("Update review", () -> showSuccess(updateReview())),
-                new MenuOption("Search review", () -> searchReview()),
-                new MenuOption("Show all review", () -> display(list, DISPLAY_TITLE)),
-                new MenuOption("Back", () -> { /* Exit action */ })
+                new MenuOption("Add review", () -> showSuccess(makeReview(Constants.DEFAULT_ADMIN_ID)), true),
+                new MenuOption("Delete review", () -> showSuccess(deleteReview()), true),
+                new MenuOption("Update review", () -> showSuccess(updateReview()), true),
+                new MenuOption("Search review", () -> searchReview(), true),
+                new MenuOption("Show all review", () -> display(list, "List of Reviews"), false),
+                new MenuOption("Back", () -> { /* Exit action */ }, false)
             },
-            new Menu.MenuAction[] { () -> {} },
-            true
+            null
         );
   
     }
 
-    public boolean addReview(String userID) {
+    public boolean makeReview(String userID) {
         List<Review> foundReview = searchBy(userID);
-        for (Review item : foundReview) {
+        for (Review item : foundReview) 
             if (item.getUserID().equals(userID)) {
                 errorLog("Already review this movie");
                 return false;
             }
-        }
-
-        String input = getString("Enter movie' id to make review: ", false);
+        
+        String input = getString("Enter movie'id", false);
         Movie foundMovie = (Movie) getMS().searchById(input);
-        if (getMS().checkNull(foundMovie)) {
-            return false;
-        }
+        if (getMS().checkNull(foundMovie)) return false;
 
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "R");
-        double rating = getInteger("Enter rating (1-5): ", 1, 5, false);
-        String reviewText = getString("Enter comment: ", true);
+        double rating = getInteger("Enter rating (1-5)", 1, 5, false);
+        String reviewText = getString("Enter comment", true);
 
         list.add(new Review(
                 id,
@@ -90,125 +80,95 @@ public final class ReviewServices extends ListManager<Review> {
     }
 
     public boolean updateReview() {
-        if (checkEmpty(list)) {
-            return false;
-        }
-
-        String input = getString("Enter Movie'id to search: ", false);
+        if (checkEmpty(list)) return false;
+        
+        String input = getString("Enter movie'id", false);
         Review foundReview = searchBy(input).getFirst();
-        Movie foundProduct = (Movie) getMS().searchById(input);
-        if (checkNull(foundReview) || getMS().checkNull(foundProduct)) {
+        Movie foundMovie = (Movie) getMS().searchById(input);
+        if (checkNull(foundReview) || getMS().checkNull(foundMovie)) 
             return false;
-        }
+        
+        double rating = getInteger("Enter rating (1-5)", 1, 5, true);
+        String reviewText = getString("Enter comment", true);
 
-        double rating = getInteger("Enter rating (1-5): ", 1, 5, true);
-        String reviewText = getString("Enter comment: ", true);
-
-        if (rating > 0) {
+        if (rating > 0) 
             foundReview.setRating(rating);
-        }
-        if (!reviewText.isEmpty()) {
+        
+        if (!reviewText.isEmpty()) 
             foundReview.setReviewText(reviewText);
-        }
-
+        
         ReviewDAO.updateReviewFromDB(foundReview);
         return true;
     }
 
     public boolean deleteReview() {
-        if (checkEmpty(list)) {
-            return false;
-        }
-
-        Review foundReview = (Review) getById("Enter review' id to delete: ");
-        if (checkNull(foundReview)) {
-            return false;
-        }
-
+        if (checkEmpty(list)) return false;
+        
+        Review foundReview = (Review) getById("Enter review' id");
+        if (checkNull(foundReview)) return false;
+        
         list.remove(foundReview);
         ReviewDAO.deleteReviewFromDB(foundReview.getId());
         return true;
     }
 
     public void searchReview() {
-        if (checkEmpty(list)) {
-            return;
-        }
-
-        display(getReviewBy("Enter review's propety to search: "), DISPLAY_TITLE);
+        display(getReviewBy("Enter review's propety to search"), "Search Results");
     }
-
+    
     public List<Review> getReviewBy(String message) {
         return searchBy(getString(message, false));
-    }  
-
-    public void sortBy(String propety) {
-        if (checkEmpty(list)) {
-            return;
-        }
-        switch (propety) {
-            case "id":
-                sortById();
-                break;
-            case "rating":
-                Collections.sort(list, (item1, item2) -> Double.compare(item1.getRating(), item2.getRating()));
-                break;
-            default:
-        }
     }
-
+    
     @Override
     public List<Review> searchBy(String property) {
         List<Review> result = new ArrayList<>();
 
         for (Review item : list) {
-            if (item.getMovieID().equalsIgnoreCase(property)
+            if (item.getId().equals(property)
+                    || item.getMovieID().equals(property)
                     || item.getReviewText().toLowerCase().contains(property.toLowerCase())
                     || item.getReviewDate().equals(property)
-                    || item.getUserID().equalsIgnoreCase(property)
+                    || item.getUserID().equals(property)
                     || String.valueOf(item.getRating()).equals(property)) {
                 result.add(item);
             }
         }
-
-        // Automatically display the results
-        if (result.isEmpty()) {
-            System.out.println("No reviews found matching the given property.");
-        } else {
-            System.out.println(DISPLAY_TITLE);
-            result.forEach(System.out::println);
-        }
-
         return result;
     }
-
-    public static double calculateAverageRating(String movieID) throws SQLException {
-        String query = "SELECT AVG(rating) AS average_rating FROM Review WHERE movie_id = ?";
-
-        try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            preparedStatement.setString(1, movieID);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getDouble("average_rating");
-                }
-            }
+    
+    public void sortBy(String propety) {
+        if (checkEmpty(list)) return;
+        
+        switch (propety) {
+            case "rating":
+                Collections.sort(list, (item1, item2) -> Double.compare(item1.getRating(), item2.getRating()));
+                break;
+            default:
+                sortById();
+                break;
         }
-        return 0;
-    }
+    }  
     
     public void displayAMovieReviews() {
-        Movie foundMovie = (Movie) getMS().getById("Enter movie's id to update: ");
+        Movie foundMovie = (Movie) getMS().getById("Enter movie's id");
         if (getMS().checkNull(foundMovie)) return;
         
         List<Review> movieReviews = searchBy(foundMovie.getId());
-        display(movieReviews, foundMovie.getTitle() + " 's reviews:");
+        
+        String[] options = new String[] { "id", "rating" };
+        sortBy(selectInfo("Sort review by", options, true));
+        
+        display(movieReviews, foundMovie.getTitle() + " 's reviews");    
     }
     
     public void myReviews(String userID) {
         List<Review> movieReviews = searchBy(userID);
-        display(movieReviews, "My reviews:");
+        
+        String[] options = new String[] { "id", "rating" };
+        sortBy(selectInfo("Sort review by", options, true));
+        
+        display(movieReviews, "My Review History");
     }
     
 }
