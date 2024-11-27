@@ -165,12 +165,12 @@ public class UserServices extends ListManager<User> {
         List<User> result = new ArrayList<>();
         for (User item : list) 
             if (item.getId().equals(propety)
-                    || item.getUsername().equals(propety) 
                     || String.valueOf(item.getRole()).equals(propety)
-                    || item.getFullName().equals(propety)
-                    || item.getPhoneNumber().equals(propety)
-                    || item.getEmail().equals(propety)
-                    || item.getAddress().equals(propety)
+                    || (item.getUsername()      != null && item.getUsername().equals(propety)) 
+                    || (item.getFullName()      != null && item.getFullName().equals(propety))
+                    || (item.getPhoneNumber()   != null && item.getPhoneNumber().equals(propety))
+                    || (item.getEmail()         != null && item.getEmail().equals(propety))
+                    || (item.getAddress()       != null && item.getAddress().equals(propety))
             ) result.add(item);
         
         return result;

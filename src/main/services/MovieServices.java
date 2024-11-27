@@ -25,6 +25,7 @@ import static main.utils.Menu.showSuccess;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.Console.getDouble;
 import static main.utils.Utility.Console.getInteger;
+import static main.utils.Utility.toInt;
 import static main.utils.Validator.getDate;
 
 public class MovieServices extends ListManager<Movie> {
@@ -95,8 +96,10 @@ public class MovieServices extends ListManager<Movie> {
         
         for (String item : genreNames) {
             item = item.trim();
-            String ID = getGS().searchBy(item).getFirst().getId();
-            genreIDs.add(ID);
+            int index = toInt(item);
+            if (index > 0 && index <= options.size()) {
+                genreIDs.add(options.get(index).getId());
+            }
         }
 
         return genreIDs;  
@@ -108,10 +111,13 @@ public class MovieServices extends ListManager<Movie> {
         
         String input = getString(message, false); 
         String[] actorNames = input.split(","); 
+        
         for (String item : actorNames) {
             item = item.trim();
-            String ID = getAS().searchBy(item).getFirst().getId();
-            actorIDs.add(ID);
+            int index = toInt(item);
+            if (index > 0 && index <= options.size()) {
+                actorIDs.add(options.get(index).getId());
+            }
         }
         
         return actorIDs;  
