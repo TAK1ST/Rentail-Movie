@@ -6,11 +6,11 @@ import java.time.LocalDate;
 public class Review extends Model {
     private String movieID;
     private String userID;
-    private double rating;
+    private int rating;
     private String reviewText;
     private LocalDate reviewDate;
 
-    public Review(String id, String movieID, String userID, double rating, String reviewText, LocalDate reviewDate) {
+    public Review(String id, String movieID, String userID, int rating, String reviewText, LocalDate reviewDate) {
         super(id);
         this.movieID = movieID;
         this.userID = userID;
@@ -30,7 +30,7 @@ public class Review extends Model {
     
     @Override
     public String toString() {
-        return String.format("Rental: %s, %s, %s, %.2f, %s, %s.", 
+        return String.format("Rental: %s, %s, %s, %d, %s, %s.", 
                 super.getId(),
                 movieID,
                 userID,
@@ -72,11 +72,11 @@ public class Review extends Model {
         this.userID = userID;
     }
 
-    public double getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 

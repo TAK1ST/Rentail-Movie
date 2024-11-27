@@ -66,7 +66,7 @@ public final class ReviewServices extends ListManager<Review> {
         if (getMS().checkNull(foundMovie)) return false;
 
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "R");
-        double rating = getInteger("Enter rating (1-5)", 1, 5, false);
+        int rating = getInteger("Enter rating (1-5)", 1, 5, false);
         String reviewText = getString("Enter comment", true);
 
         list.add(new Review(
@@ -89,7 +89,7 @@ public final class ReviewServices extends ListManager<Review> {
         if (checkNull(foundReview) || getMS().checkNull(foundMovie)) 
             return false;
         
-        double rating = getInteger("Enter rating (1-5)", 1, 5, true);
+        int rating = getInteger("Enter rating (1-5)", 1, 5, true);
         String reviewText = getString("Enter comment", true);
 
         if (rating > 0) 
