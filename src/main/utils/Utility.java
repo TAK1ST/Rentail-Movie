@@ -1,0 +1,136 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package main.utils;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Scanner;
+import main.models.User.Role;
+
+/**
+ *
+ * @author trann
+ */
+public class Utility {
+    private static final Scanner scanner = new Scanner(System.in);
+    
+    public static boolean isDateInRange(LocalDate startDate, LocalDate endDate, LocalDate targetDate) {
+        return (targetDate.isEqual(startDate) || targetDate.isAfter(startDate)) &&
+               (targetDate.isEqual(endDate) || targetDate.isBefore(endDate));
+    }
+    
+    public static boolean isDateTimeInRange(LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime targetDateTime) {
+        return (targetDateTime.isEqual(startDateTime) || targetDateTime.isAfter(startDateTime)) &&
+               (targetDateTime.isEqual(endDateTime) || targetDateTime.isBefore(endDateTime));
+    }
+    
+    public static long extractNumber(String str) {
+        String number = str.replaceAll("\\D+", "");
+        return Long.parseLong(number);
+    }
+    
+    public static int getRandomNumber(int min, int max) {
+        return (int) (Math.random() * ((max - min) + 1)) + min;
+    }
+    
+    public static void errorLog(String message) {
+        System.out.printf("[ERROR] %s.\n", message);
+    }
+    
+    public static LocalDate toDate(String date){
+        return LocalDate.parse(date, Validator.DATE);
+    }
+    
+    public static class Console {
+        
+        public static String getString(String message, boolean enterToPass) {
+            String result = "";
+            do {
+                System.out.print(message + ": ");
+                result = scanner.nextLine();
+                if(result.isEmpty() && enterToPass) 
+                    return "";
+                
+                if(result.isEmpty())
+                    errorLog("Please input");
+                
+            } while (result.isEmpty());
+
+            return result;
+        }
+
+        public static int getInteger(String message, int min, int max, boolean enterToPass) {
+            int number;
+            while (true) {
+                System.out.print(message + ": ");
+                String input = scanner.nextLine();
+                if (input.isEmpty() && enterToPass) {
+                    return Integer.MIN_VALUE;
+                }
+                try {
+                    number = Integer.parseInt(input);
+                    if (number >= min && number <= max) {
+                        return number;
+                    } else {
+                        errorLog("Number not in range");
+                    }
+                } catch (NumberFormatException e) {
+                    errorLog("Please enter an integer");
+                }
+            }
+        }
+
+        public static double getDouble(String message, double min, double max, boolean enterToPass) {
+            double number;
+            while (true) {
+                System.out.print(message + ": ");
+                String input = scanner.nextLine();
+                if (input.isEmpty() && enterToPass) {
+                    return Double.MIN_VALUE;
+                }
+                try {
+                    number = Double.parseDouble(input);
+                    if (number >= min && number <= max) {
+                        return number;
+                    } else {
+                        errorLog("Number not in range");
+                    }
+                } catch (NumberFormatException e) {
+                    errorLog("Please enter an integer");
+                }
+            }
+        }
+
+        public static boolean yesOrNo(String message) {
+            System.out.print(message + "(Y): ");
+            return scanner.nextLine().equalsIgnoreCase("y");
+        }
+     
+        public static void rolesListing(String message) {
+            Role list[] = Role.values();
+            System.out.println(message + ": ");
+            for(int index = 1; index < list.length; index++) {
+                if (index % 3 == 0)
+                    System.out.println();
+                System.out.printf("%2d.%-25s", index, list[index]);
+            }
+            System.out.println("\n");
+        }
+        
+	public static String selectInfo(String message, String[] infoLists, boolean enterToPass) {
+		System.out.println("\n" + message + ": ");
+		for (int index = 0; index < infoLists.length; index++) {
+			if (index % 4 == 0) System.out.println();
+			System.out.printf("%2d. %-25s ", index, infoLists[index]);
+		}
+		System.out.println("\n");
+		if (!enterToPass) 
+                    return infoLists[getInteger("Enter an option", 0, infoLists.length - 1, enterToPass)];
+                else 
+                    return "";
+	}
+        
+    }
+}
