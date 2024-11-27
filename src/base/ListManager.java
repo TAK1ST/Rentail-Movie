@@ -10,13 +10,9 @@ import static main.utils.Utility.extractNumber;
 
 public abstract class ListManager<T extends Model> {
 
-    public final List<T> list = new ArrayList<>();
+    public List<T> list = new ArrayList<>();
     protected boolean isNotSaved = false;
     private final String className;
-
-    private static final String URL = "jdbc:mysql://localhost:3306/your_database";
-    private static final String USER = "root";
-    private static final String PASSWORD = "1";
 
     public ListManager(String className) throws IOException {
         this.className = className;
@@ -77,13 +73,13 @@ public abstract class ListManager<T extends Model> {
     
     public void display(T item, String title) {
         if (checkNull(item)) return;
-        if (!title.isBlank()) Menu.showTitle(title);
+        if (!title.isBlank()) Menu.showTitle(title + ": ");
         System.out.println(item);
     }
     
     public void display(List<T> list, String title) {
         if (checkEmpty(list)) return;
-        if (!title.isBlank()) Menu.showTitle(title);
+        if (!title.isBlank()) Menu.showTitle(title + ": ");
         list.forEach(item -> System.out.println(item));
     }
     

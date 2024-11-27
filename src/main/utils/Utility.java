@@ -6,7 +6,6 @@ package main.utils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import main.models.User.Role;
 
@@ -49,7 +48,7 @@ public class Utility {
         public static String getString(String message, boolean enterToPass) {
             String result = "";
             do {
-                System.out.print(message);
+                System.out.print(message + ": ");
                 result = scanner.nextLine();
                 if(result.isEmpty() && enterToPass) 
                     return "";
@@ -65,20 +64,20 @@ public class Utility {
         public static int getInteger(String message, int min, int max, boolean enterToPass) {
             int number;
             while (true) {
-                System.out.print(message);
+                System.out.print(message + ": ");
                 String input = scanner.nextLine();
                 if (input.isEmpty() && enterToPass) {
-                    return -999999999;
+                    return Integer.MIN_VALUE;
                 }
                 try {
                     number = Integer.parseInt(input);
                     if (number >= min && number <= max) {
                         return number;
                     } else {
-                        Utility.errorLog("Number not in range");
+                        errorLog("Number not in range");
                     }
                 } catch (NumberFormatException e) {
-                    Utility.errorLog("Please enter an integer");
+                    errorLog("Please enter an integer");
                 }
             }
         }
@@ -86,38 +85,32 @@ public class Utility {
         public static double getDouble(String message, double min, double max, boolean enterToPass) {
             double number;
             while (true) {
-                System.out.print(message);
+                System.out.print(message + ": ");
                 String input = scanner.nextLine();
                 if (input.isEmpty() && enterToPass) {
-                    return -99999999f;
+                    return Double.MIN_VALUE;
                 }
                 try {
                     number = Double.parseDouble(input);
                     if (number >= min && number <= max) {
                         return number;
                     } else {
-                        Utility.errorLog("Number not in range");
+                        errorLog("Number not in range");
                     }
                 } catch (NumberFormatException e) {
-                    Utility.errorLog("Please enter an integer");
+                    errorLog("Please enter an integer");
                 }
             }
         }
 
         public static boolean yesOrNo(String message) {
-            String input = null;
-            do {
-                System.out.print("(Y/N) " + message);
-                input = scanner.nextLine();
-
-                if(!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n")) errorLog("Wrong syntax");
-            } while(!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n"));
-            return input.equalsIgnoreCase("y");
+            System.out.print(message + "(Y): ");
+            return scanner.nextLine().equalsIgnoreCase("y");
         }
      
         public static void rolesListing(String message) {
             Role list[] = Role.values();
-            System.out.println(message);
+            System.out.println(message + ": ");
             for(int index = 1; index < list.length; index++) {
                 if (index % 3 == 0)
                     System.out.println();
@@ -127,14 +120,14 @@ public class Utility {
         }
         
 	public static String selectInfo(String message, String[] infoLists, boolean enterToPass) {
-		System.out.println("\n" + message);
+		System.out.println("\n" + message + ": ");
 		for (int index = 0; index < infoLists.length; index++) {
 			if (index % 4 == 0) System.out.println();
 			System.out.printf("%2d. %-25s ", index, infoLists[index]);
 		}
 		System.out.println("\n");
 		if (!enterToPass) 
-                    return infoLists[getInteger("Enter an option: ", 0, infoLists.length - 1, enterToPass)];
+                    return infoLists[getInteger("Enter an option", 0, infoLists.length - 1, enterToPass)];
                 else 
                     return "";
 	}

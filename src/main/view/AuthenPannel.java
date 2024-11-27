@@ -18,7 +18,7 @@ public class AuthenPannel {
     public static User getUsers() throws IOException {
         User account;
         do {
-            if(yesOrNo("Do you have an account? "))  
+            if(yesOrNo("Have account?"))  
                 account = login();
             else 
                 account = registor();

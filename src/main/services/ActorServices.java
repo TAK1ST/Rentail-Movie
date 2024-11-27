@@ -16,11 +16,10 @@ import static main.utils.Utility.Console.getString;
  * @author trann
  */
 public class ActorServices extends ListManager<Actor> {
-    private static final String DISPLAY_TITLE = "List of Actor:";
     
     public ActorServices() throws IOException {
         super(Actor.className());
-        ActorDAO.getAllActor();
+        list = ActorDAO.getAllActor();
     }
     
     public void adminMenu() throws IOException {  
@@ -28,21 +27,20 @@ public class ActorServices extends ListManager<Actor> {
             "Actor Management",
             null,
             new Menu.MenuOption[]{
-                new Menu.MenuOption("Add actor", () -> showSuccess(addActor())),
-                new Menu.MenuOption("Delete actor", () -> showSuccess(deleteActor())),
-                new Menu.MenuOption("Update actor", () -> showSuccess(updateActor())),
-                new Menu.MenuOption("Search actor", () -> searchActor()),
-                new Menu.MenuOption("Show all actor", () -> display(list, DISPLAY_TITLE)),
-                new Menu.MenuOption("Back", () -> { /* Exit action */ })
+                new Menu.MenuOption("Add actor", () -> showSuccess(addActor()), true),
+                new Menu.MenuOption("Delete actor", () -> showSuccess(deleteActor()), true),
+                new Menu.MenuOption("Update actor", () -> showSuccess(updateActor()), true),
+                new Menu.MenuOption("Search actor", () -> searchActor(), true),
+                new Menu.MenuOption("Show all actor", () -> display(list, "List of Actor"), false),
+                new Menu.MenuOption("Back", () -> { /* Exit action */ }, false)
             },
-            new Menu.MenuAction[] { () -> Menu.getSaveMessage(isNotSaved) },
-            true
+            null
         );
     }
     
     public boolean addActor() {
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "A");
-        String name = getString("Enter actor's name: ", false);
+        String name = getString("Enter actor's name", false);
     
         list.add(new Actor(id, name));
         ActorDAO.addActorToDB(list.getLast());
@@ -52,11 +50,12 @@ public class ActorServices extends ListManager<Actor> {
     public boolean updateActor() {
         if (checkEmpty(list)) return false;
 
-        Actor foundActor = (Actor)getById("Enter user's id to update: ");
+        Actor foundActor = (Actor)getById("Enter user's id");
         if (checkNull(foundActor)) return false;
         
-        String name = getString("Enter actor's name: ", true);     
-        if (!name.isEmpty()) foundActor.setActorName(name);
+        String name = getString("Enter actor's name", true);     
+        if (!name.isEmpty()) 
+            foundActor.setActorName(name);
         
         ActorDAO.updateActorFromDB(foundActor);
         return true;
@@ -65,7 +64,7 @@ public class ActorServices extends ListManager<Actor> {
     public boolean deleteActor() { 
         if (checkEmpty(list)) return false;       
 
-        Actor foundActor = (Actor)getById("Enter user's id to update: ");
+        Actor foundActor = (Actor)getById("Enter user's id");
         if (checkNull(foundActor)) return false;
 
         list.remove(foundActor);
@@ -74,9 +73,7 @@ public class ActorServices extends ListManager<Actor> {
     }
 
     public void searchActor() {
-        if (checkEmpty(list)) return;
-
-        display(getActorBy("Enter actor's propety to search: "), DISPLAY_TITLE);
+        display(getActorBy("Enter actor's propety"), "List of Actor");
     }
 
     public List<Actor> getActorBy(String message) {
@@ -87,8 +84,11 @@ public class ActorServices extends ListManager<Actor> {
     public List<Actor> searchBy(String propety) {
         List<Actor> result = new ArrayList<>();
         for (Actor item : list) 
-            if (item.getActorName().equals(propety)
-            ) result.add(item);
+            if (
+                    item.getId().equals(propety)
+                || item.getActorName().equals(propety)
+            ) 
+            result.add(item);
         return result;
     }
     

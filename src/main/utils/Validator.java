@@ -38,7 +38,7 @@ public class Validator {
         boolean isUnique;
         do {
             isUnique = true;
-            System.out.print(message);
+            System.out.print(message + ": ");
             input = scanner.nextLine();   
             if (input.isEmpty() && enterToPass) 
                 return "";
@@ -46,15 +46,15 @@ public class Validator {
             if (input.isEmpty()) 
                 errorLog("Username must not be empty");
    
-            if (input.length() < 5) 
-                errorLog("Accountname must be at least 5 character");         
+            if (input.length() < 4) 
+                errorLog("Accountname must be at least 4 character");         
  
             for(T item : list) 
                 if (item.getUsername().equals(input)) {
                     errorLog("Accountname has already exist");
                     isUnique = false;
                 }
-        } while (input.length() < 5 || !isUnique);
+        } while (input.length() < 4 || !isUnique);
         return input;
     }
 
@@ -72,7 +72,7 @@ public class Validator {
     public static String getPassword(String message, boolean enterToPass) {
         String input = "";
         do {
-            System.out.print(message);
+            System.out.print(message + ": ");
             input = scanner.nextLine();
 
             if (input.isEmpty() && enterToPass) 
@@ -80,15 +80,15 @@ public class Validator {
             
             if (input.isEmpty()) 
                 errorLog("Password must not be empty");
-           
-            confirmPassword("Confirm password: ", input);
-
+            
             if (input.length() < 6) 
                 errorLog("Password must be at least 6 character");
 
             if (input.contains(" ")) 
                 errorLog("Password must contain no space");
-         
+           
+            confirmPassword("Confirm password: ", input);
+
         } while (input.length() < 6 || input.contains(" ")); 
         return input;
     }
@@ -96,7 +96,7 @@ public class Validator {
     public static void confirmPassword(String message, String password) {
         String confirm;
         do {
-            System.out.print(message);
+            System.out.print(message + ": ");
             confirm = scanner.nextLine();
 
             if(!confirm.equals(password)) 
@@ -108,7 +108,7 @@ public class Validator {
     public static String getName(String message, boolean enterToPass) {
         String input = "";
         do {
-            System.out.print(message);
+            System.out.print(message + ": ");
             input = scanner.nextLine(); 
             if (input.isEmpty() && enterToPass) 
                return "";
@@ -127,7 +127,7 @@ public class Validator {
     public static LocalDate getDate(String message, boolean enterToPass) {
         String input = "";
         do {
-            System.out.print(message);
+            System.out.print(message + ": ");
             input = scanner.nextLine(); 
             if (input.isEmpty() && enterToPass) 
                return null;
@@ -169,7 +169,7 @@ public class Validator {
     }
     
     public static LocalDateTime getDateTime() {
-        LocalDate date = getDate("Enter date: ", false);
+        LocalDate date = getDate("Enter date", false);
         LocalTime time = getTime();
  
         return date.atTime(time);
@@ -207,22 +207,6 @@ public class Validator {
                 errorLog("Email must has format ...@gmail.com");
 
         } while (!Validator.isValidEmail(input));
-
-        return input;
-    }
-    
-    public static double getProductPrice(String message, boolean enterToPass) {
-        double input = 0f;
-        do {
-            input = getDouble(message, 0, 100000000, enterToPass);
-
-            if (input <= -9999999 && enterToPass)
-                return -9999999f;
-
-            if (!isValidProductPrice(input)) 
-                errorLog("Product's price must be in range 0 -> 1000000");
-
-        } while (!isValidProductPrice(input));
 
         return input;
     }
