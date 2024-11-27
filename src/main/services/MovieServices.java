@@ -202,7 +202,6 @@ public class MovieServices extends ListManager<Movie> {
         return 0; // dont have rating
     }
 
-
     public boolean adjustAvailableCopy(String movieId, int amount) {
         String reduceCopiesSql = "UPDATE Movie SET available_copies = available_copies - " + amount + " WHERE movie_id = ? AND available_copies > 0";
 

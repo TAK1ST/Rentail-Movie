@@ -30,6 +30,7 @@ public class UserPannel {
                 new MenuOption("Search movie", () -> getMS().searchMovie(), true),
                 new MenuOption("Rent movie", () -> getRTS().addRental(account.getId()), true),
                 new MenuOption("Renturn movie", () -> getRTS().addRental(account.getId()), true),
+                new MenuOption("Extend return date", () -> getRTS().extendReturnDate(account.getId()), true),
                 new MenuOption("See the movie's reviews", () -> getRS().displayAMovieReviews(), false),
                 new MenuOption("Make reviews", () -> getRS().makeReview(account.getId()), true),
                 new MenuOption("Display my reviews history", () -> getRS().myReviews(account.getId()), false), 

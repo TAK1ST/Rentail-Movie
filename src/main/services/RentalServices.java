@@ -52,10 +52,7 @@ public class RentalServices extends ListManager<Rental> {
         );
     }
 
-    public boolean addRental(String userID) {
-        
-        if (checkEmpty(list)) return false;
-        
+    public boolean addRental(String userID) {    
         User foundUser = (User) getUS().searchById(userID);
         if (getUS().checkNull(foundUser)) return false;
 
