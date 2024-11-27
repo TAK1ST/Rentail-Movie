@@ -23,6 +23,7 @@ import static main.utils.Utility.Console.getInteger;
 import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.Console.selectInfo;
 import static main.utils.Utility.errorLog;
+import main.utils.Validator;
 
 /**
  *
@@ -73,8 +74,8 @@ public final class ReviewServices extends ListManager<Review> {
                 userID,
                 foundMovie.getId(),
                 rating,
-                LocalDate.now().toString(),
-                reviewText));
+                reviewText,
+                LocalDate.now()));
         ReviewDAO.addReviewToDB(list.getLast());
         return true;
     }
@@ -127,8 +128,8 @@ public final class ReviewServices extends ListManager<Review> {
         for (Review item : list) {
             if (item.getId().equals(property)
                     || item.getMovieID().equals(property)
-                    || item.getReviewText().toLowerCase().contains(property.toLowerCase())
-                    || item.getReviewDate().equals(property)
+                    || item.getReviewText().trim().toLowerCase().contains(property.trim().toLowerCase())
+                    || item.getReviewDate().format(Validator.DATE).contains(property.trim())
                     || item.getUserID().equals(property)
                     || String.valueOf(item.getRating()).equals(property)) {
                 result.add(item);

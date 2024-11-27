@@ -26,6 +26,7 @@ import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.Console.getDouble;
 import static main.utils.Utility.Console.getInteger;
 import static main.utils.Utility.toInt;
+import main.utils.Validator;
 import static main.utils.Validator.getDate;
 
 public class MovieServices extends ListManager<Movie> {
@@ -178,10 +179,10 @@ public class MovieServices extends ListManager<Movie> {
         List<Movie> result = new ArrayList<>();
         for (Movie item : list) {
             if (item.getId().equals(property)
-                    || item.getTitle().equalsIgnoreCase(property)
-                    || item.getDescription().contains(property)
-                    || item.getLanguage().equalsIgnoreCase(property)
-                    || item.getReleaseYear().toString().contains(property)
+                    || item.getTitle().contains(property.trim().toLowerCase())
+                    || item.getDescription().contains(property.trim().toLowerCase())
+                    || item.getLanguage().contains(property.trim().toLowerCase())
+                    || item.getReleaseYear().format(Validator.DATE).contains(property)
                     || String.valueOf(item.getRentalPrice()).contains(property)) {
                 result.add(item);
             }

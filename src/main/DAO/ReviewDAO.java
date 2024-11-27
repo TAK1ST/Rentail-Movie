@@ -5,6 +5,7 @@
 package main.DAO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,7 +29,7 @@ public class ReviewDAO {
             preparedStatement.setString(2, review.getUserID());
             preparedStatement.setString(3, review.getMovieID());
             preparedStatement.setDouble(4, review.getRating());
-            preparedStatement.setString(5, review.getReviewDate());
+            preparedStatement.setDate(5, Date.valueOf(review.getReviewDate()));
             preparedStatement.setString(6, review.getReviewText());
 
             return preparedStatement.executeUpdate() > 0;
@@ -46,7 +47,7 @@ public class ReviewDAO {
             preparedStatement.setString(1, review.getUserID());
             preparedStatement.setString(2, review.getMovieID());
             preparedStatement.setDouble(3, review.getRating());
-            preparedStatement.setString(4, review.getReviewDate());
+            preparedStatement.setDate(4, Date.valueOf(review.getReviewDate()));
             preparedStatement.setString(5, review.getReviewText());
             preparedStatement.setString(6, review.getId());
             
@@ -83,8 +84,8 @@ public class ReviewDAO {
                     resultSet.getString("user_id"),
                     resultSet.getString("movie_id"),
                     resultSet.getDouble("rating"),
-                    resultSet.getString("review_date"),
-                    resultSet.getString("review_text")
+                    resultSet.getString("review_text"),
+                    resultSet.getDate("review_date").toLocalDate()
                 );
                 list.add(review);
             }

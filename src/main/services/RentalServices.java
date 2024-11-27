@@ -169,10 +169,10 @@ public class RentalServices extends ListManager<Rental> {
     public List<Rental> searchBy(String propety) {
         List<Rental> result = new ArrayList<>();
         for (Rental item : list) 
-            if (item.getUserId().equals(propety)
-                    || item.getId().equals(propety)
-                    || item.getRentalDate().format(Validator.DATE).equals(propety)
-                    || item.getReturnDate().format(Validator.DATE).equals(propety)
+            if (item.getId().equals(propety)
+                    || item.getUserId().equals(propety)
+                    || item.getRentalDate().format(Validator.DATE).contains(propety.trim())
+                    || item.getReturnDate().format(Validator.DATE).contains(propety.trim())
                     || String.valueOf(item.getCharges()).equals(propety)
                     || String.valueOf(item.getOverdueFines()).equals(propety)
             ) result.add(item);
