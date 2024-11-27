@@ -9,23 +9,22 @@ CREATE TABLE IF NOT EXISTS Users
     username NVARCHAR(50) NOT NULL,
     password_hash VARCHAR(255) NOT NULL ,
     email VARCHAR(100) ,
--- role use integer help flexible and can expand more. 
     role INTEGER NOT NULL,	
     full_name VARCHAR(255),
     address VARCHAR(255),
     phone_number VARCHAR(20)
    );
+-- role use integer help flexible and can expand more. 
 
 CREATE TABLE IF NOT EXISTS Movie
 (
 	movie_id CHAR(8) PRIMARY KEY,
     	title NVARCHAR(100) NOT NULL,
 	description TEXT,
-	-- ENUM('G', 'PG', 'PG-13', 'R', 'NC-17', 'NR')
+	avg_rating DOUBLE(5,1),
 	language varchar(20),
     	release_year date,
     	rental_price DECIMAL(10,2) NOT NULL,
-    -- track the number of available copies for rent
     	available_copies INT DEFAULT 1 
 );
 -- American rating standard 
@@ -84,6 +83,16 @@ CREATE TABLE IF NOT EXISTS Rental (
 -- charges (calculated from rental duration and price)
 -- overdue_fines (calculated if the return is late)
 
+CREATE TABLE IF NOT EXISTS Review (
+    review_id INT AUTO_INCREMENT PRIMARY KEY,
+    movie_id char(8),
+    user_id char(8),
+    review_text TEXT,
+    rating DOUBLE(5,1) DEFAULT 0,
+    review_date DATE,
+    FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
 
 -- CREATE TABLE IF NOT EXISTS Payment (
 --     payment_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -101,16 +110,6 @@ CREATE TABLE IF NOT EXISTS Rental (
 --     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 -- );
 
-CREATE TABLE IF NOT EXISTS Review (
-    review_id INT AUTO_INCREMENT PRIMARY KEY,
-    movie_id char(8),
-    user_id char(8),
-    review_text TEXT,
-    rating DOUBLE(5,1) DEFAULT 0,
-    review_date DATE,
-    FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-);
 
 -- CREATE TABLE IF NOT EXISTS Wishlist (
 --     wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
