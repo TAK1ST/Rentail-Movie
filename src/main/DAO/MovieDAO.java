@@ -26,7 +26,7 @@ public class MovieDAO {
             preparedStatement.setString(1, movie.getId());
             preparedStatement.setString(2, movie.getTitle());
             preparedStatement.setString(3, movie.getDescription());
-            preparedStatement.setDouble(4, movie.getRating());
+            preparedStatement.setDouble(4, movie.getAvgRating());
             preparedStatement.setString(5, movie.getLanguage());
             preparedStatement.setDate(6, Date.valueOf(movie.getReleaseYear()));
             preparedStatement.setDouble(7, movie.getRentalPrice());

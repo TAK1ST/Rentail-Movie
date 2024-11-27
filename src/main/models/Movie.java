@@ -83,7 +83,6 @@ public class Movie extends Model {
         return "Movie";
     }
 
-    // Getters and setters
     public String getTitle() {
         return title;
     }
@@ -100,11 +99,11 @@ public class Movie extends Model {
         this.description = description;
     }
 
-    public double getRating() {
+    public double getAvgRating() {
         return avgRating;
     }
 
-    public void setRating(double avgRating) {
+    public void setAvgRating(double avgRating) {
         this.avgRating = avgRating;
     }
 
@@ -123,8 +122,6 @@ public class Movie extends Model {
     public void setActorIds(List<String> actorIds) {
         this.actorIds = actorIds;
     }
-
-    
     
     public String getLanguage() {
         return language;
