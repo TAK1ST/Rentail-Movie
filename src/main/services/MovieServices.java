@@ -69,7 +69,7 @@ public class MovieServices extends ListManager<Movie> {
         boolean movieSaved = MovieDAO.addMovieToDB(newMovie);
         if (movieSaved) {
             MovieDAO.addMovieGenres(newMovie.getId(), newMovie.getGenreIds());  
-            MovieDAO.addMovieActors(newMovie.getId(), newMovie.getGenreIds()); 
+            MovieDAO.addMovieActors(newMovie.getId(), newMovie.getActorIds()); 
             return true;
         }
         return false;
@@ -81,7 +81,7 @@ public class MovieServices extends ListManager<Movie> {
         String input = getString(message, false); 
         String[] genreIDs = input.split(","); 
         for (String item : genreIDs) item = item.trim();
-        
+        for (String itemTest : genreIDs) System.out.println(itemTest);
         return List.of(genreIDs);  
     }
 

@@ -21,12 +21,12 @@ import main.utils.DatabaseUtil;
 public class MovieDAO {
 
     public static boolean addMovieToDB(Movie movie) {
-        String sql = "INSERT INTO Movie (movie_id, title, description, language, release_year, rental_price, available_copies) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Movie (movie_id, title, description, avg_rating, language, release_year, rental_price, available_copies) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, movie.getId());
             preparedStatement.setString(2, movie.getTitle());
             preparedStatement.setString(3, movie.getDescription());
-            preparedStatement.setDouble(4, movie.getRating());
+            preparedStatement.setDouble(4, movie.getAVGRating());
             preparedStatement.setString(5, movie.getLanguage());
             preparedStatement.setDate(6, Date.valueOf(movie.getReleaseYear()));
             preparedStatement.setDouble(7, movie.getRentalPrice());
@@ -74,7 +74,7 @@ public class MovieDAO {
     }
 
     public static boolean updateMovieFromDB(Movie movie) {
-        String sql = "UPDATE Movie SET title = ?, description = ?, language = ?, releaseYear = ?, rentalPrice = ?, availableCopies = ? WHERE movieId = ?";
+        String sql = "UPDATE Movie SET title = ?, description = ?, language = ?, release_year = ?, rental_price = ?, available_copies = ? WHERE movie_id = ?";
         try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, movie.getTitle());
             preparedStatement.setString(2, movie.getDescription());

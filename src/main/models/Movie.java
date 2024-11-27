@@ -100,11 +100,11 @@ public class Movie extends Model {
         this.description = description;
     }
 
-    public double getRating() {
+    public double getAVGRating() {
         return avgRating;
     }
 
-    public void setRating(double avgRating) {
+    public void setAVGRating(double avgRating) {
         this.avgRating = avgRating;
     }
 
