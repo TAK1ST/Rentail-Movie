@@ -27,10 +27,6 @@ import static main.utils.Utility.errorLog;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
 
-/**
- *
- * @author trann
- */
 public class RentalServices extends ListManager<Rental> {
 
     public RentalServices() throws IOException {
