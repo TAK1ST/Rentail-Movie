@@ -38,7 +38,7 @@ public class MovieDAO {
         }
         return false;
     }
-    
+
     public static boolean addMovieGenres(String movieID, List<String> genreIDs) {
         String sql = "INSERT INTO Movie_Genre (movie_id, genre_id) VALUES (?, ?)";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -63,9 +63,9 @@ public class MovieDAO {
             for (String actorId : actorIDs) {
                 ps.setString(1, movieID);
                 ps.setString(2, actorId);
-                ps.addBatch(); 
+                ps.addBatch();
             }
-            ps.executeBatch(); 
+            ps.executeBatch();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,12 +92,28 @@ public class MovieDAO {
     }
 
     public static boolean deleteMovieFromDB(String movieID) {
-        String sql = "DELETE FROM Movie WHERE movie_id = ?";
-        try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        // Use individual SQL statements for each delete operation
+        String sql1 = "DELETE FROM Movie_Actor WHERE movie_id = ?;";
+        String sql2 = "DELETE FROM Movie_Genre WHERE movie_id = ?;";
+        String sql3 = "DELETE FROM Movie WHERE movie_id = ?;";
 
-            preparedStatement.setString(1, movieID);
+        try (Connection connection = DatabaseUtil.getConnection()) {
+            // Prepare the statements individually
+            try (PreparedStatement pstmt1 = connection.prepareStatement(sql1); PreparedStatement pstmt2 = connection.prepareStatement(sql2); PreparedStatement pstmt3 = connection.prepareStatement(sql3)) {
 
-            return preparedStatement.executeUpdate() > 0;
+                // Set the parameter for each statement
+                pstmt1.setString(1, movieID);
+                pstmt2.setString(1, movieID);
+                pstmt3.setString(1, movieID);
+
+                // Execute the updates
+                int rowsAffected1 = pstmt1.executeUpdate();
+                int rowsAffected2 = pstmt2.executeUpdate();
+                int rowsAffected3 = pstmt3.executeUpdate();
+
+                // Return true if all deletes were successful
+                return (rowsAffected1 > 0) && (rowsAffected2 > 0) && (rowsAffected3 > 0);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

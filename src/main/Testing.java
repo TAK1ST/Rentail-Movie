@@ -5,6 +5,7 @@
 package main;
 
 import java.io.IOException;
+import main.services.Services;
 import static main.utils.DatabaseUtil.connect;
 import test.FakeData;
 
@@ -18,8 +19,9 @@ public class Testing {
     
     public static void main(String args[]) throws IOException {
         connect();
-        
-        FakeData.makeAllFakeData();
+        Services.initAll();
+        if (FakeData.makeAllFakeData()) 
+        System.out.println("Success");;
         
         App.run();
     }
