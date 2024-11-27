@@ -220,7 +220,7 @@ public class MovieServices extends ListManager<Movie> {
         return 0; // dont have rating
     }
 
-    public static boolean getReduceAvailableCopy(String movieId) {
+    public static boolean adjustAvailableCopy(String movieId) {
         String reduceCopiesSql = "UPDATE Movie SET available_copies = available_copies - 1 WHERE movie_id = ? AND available_copies > 0";
 
         try (Connection conn = getConnection(); // Assuming you have a utility method for DB connection

@@ -16,6 +16,7 @@ import static main.services.Services.getUS;
 import main.models.Movie;
 import main.models.Rental;
 import main.models.User;
+import static main.services.MovieServices.adjustAvailableCopy;
 import main.utils.DatabaseUtil;
 import main.utils.IDGenerator;
 import main.utils.Menu;
