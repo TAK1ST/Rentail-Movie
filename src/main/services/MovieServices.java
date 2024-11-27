@@ -53,7 +53,7 @@ public class MovieServices extends ListManager<Movie> {
     public boolean addMovie(String userID) {
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "M");
 
-        Movie newMovie = new Movie(
+        list.add(new Movie(
                 id,
                 getString("Enter title", false),
                 getString("Enter description", false),
@@ -64,12 +64,23 @@ public class MovieServices extends ListManager<Movie> {
                 getDate("Enter release date", false),
                 getDouble("Enter rental price", 0, Double.MAX_VALUE, false),
                 getInteger("Enter available copies", 0, Integer.MAX_VALUE, false)
-        );
-
-        boolean movieSaved = MovieDAO.addMovieToDB(newMovie);
+        ));
+        
+        boolean movieSaved = MovieDAO.addMovieToDB(list.getLast());
         if (movieSaved) {
-            MovieDAO.addMovieGenres(newMovie.getId(), newMovie.getGenreIds());  
-            MovieDAO.addMovieActors(newMovie.getId(), newMovie.getGenreIds()); 
+            MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds());  
+            MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getGenreIds()); 
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean addMovie(Movie movie) {
+        list.add(movie);
+        boolean movieSaved = MovieDAO.addMovieToDB(list.getLast());
+        if (movieSaved) {
+            MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds());  
+            MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getGenreIds()); 
             return true;
         }
         return false;
