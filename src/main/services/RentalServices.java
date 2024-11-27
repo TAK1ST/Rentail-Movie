@@ -17,7 +17,11 @@ import static main.services.Services.getUS;
 import main.models.Movie;
 import main.models.Rental;
 import main.models.User;
+<<<<<<< HEAD
 import static main.services.MovieServices.getReduceAvailableCopy;
+=======
+import main.utils.DatabaseUtil;
+>>>>>>> 5282417d3cceb452500bc88fe1fc347623e243d7
 import static main.utils.DatabaseUtil.getConnection;
 import main.utils.IDGenerator;
 import main.utils.Menu;
@@ -109,6 +113,54 @@ public class RentalServices extends ListManager<Rental> {
         return true;
     }
 
+<<<<<<< HEAD
+=======
+    public boolean returnMovie() {
+ 
+        if (checkEmpty(list)) 
+            return false;
+
+        Rental foundRental = (Rental) getById("Enter rental's id to return the movie");
+        if (checkNull(foundRental)) 
+            return false;  
+
+        if (foundRental.getReturnDate() != null) {
+            System.out.println("This movie has already been returned.");
+            return false;
+        }
+
+        Movie foundMovie = (Movie) getMS().searchById(foundRental.getMovieId());  
+        if (getMS().checkNull(foundMovie)) return false;
+
+
+        LocalDate returnDate = LocalDate.now();  
+        foundRental.setReturnDate(returnDate);  
+
+
+        long overdueDays = ChronoUnit.DAYS.between(foundRental.getRentalDate(), returnDate) - 7;  // được thuê tối đa 7 ngày
+        double overdueFines = overdueDays > 0 ? overdueDays * 2.0 : 0.0;  // Phí quá hạn 2 đồng/ngày 
+
+        foundRental.setOverdueFines(overdueFines);  
+        foundRental.setCharges(foundRental.getCharges() + overdueFines);  
+
+        RentalDAO.updateRentalFromDB(foundRental);
+
+        //tăng 1 khi trả phim)
+        String sqlUpdateCopies = "UPDATE Movie SET available_copies = available_copies + 1 WHERE movie_id = ?";
+        try (Connection connection = DatabaseUtil.getConnection(); 
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlUpdateCopies)) {
+            preparedStatement.setString(1, foundMovie.getId());  
+            preparedStatement.executeUpdate(); 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("Movie returned successfully!");
+        return true;
+    }
+    
+>>>>>>> 5282417d3cceb452500bc88fe1fc347623e243d7
     public boolean updateRental() {
         if (checkEmpty(list)) {
             return false;
@@ -174,11 +226,19 @@ public class RentalServices extends ListManager<Rental> {
     @Override
     public List<Rental> searchBy(String propety) {
         List<Rental> result = new ArrayList<>();
+<<<<<<< HEAD
         for (Rental item : list) {
             if (item.getUserId().equals(propety)
                     || item.getId().equals(propety)
                     || item.getRentalDate().format(Validator.DATE).equals(propety)
                     || item.getReturnDate().format(Validator.DATE).equals(propety)
+=======
+        for (Rental item : list) 
+            if (item.getId().equals(propety)
+                    || item.getUserId().equals(propety)
+                    || item.getRentalDate().format(Validator.DATE).contains(propety.trim())
+                    || item.getReturnDate().format(Validator.DATE).contains(propety.trim())
+>>>>>>> 5282417d3cceb452500bc88fe1fc347623e243d7
                     || String.valueOf(item.getCharges()).equals(propety)
                     || String.valueOf(item.getOverdueFines()).equals(propety)) {
                 result.add(item);

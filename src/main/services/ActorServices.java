@@ -84,9 +84,8 @@ public class ActorServices extends ListManager<Actor> {
     public List<Actor> searchBy(String propety) {
         List<Actor> result = new ArrayList<>();
         for (Actor item : list) 
-            if (
-                    item.getId().equals(propety)
-                || item.getActorName().equals(propety)
+            if (item.getId().equals(propety)
+                || item.getActorName().contains(propety.trim().toLowerCase())
             ) 
             result.add(item);
         return result;
