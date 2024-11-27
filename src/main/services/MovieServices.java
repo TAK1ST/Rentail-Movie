@@ -46,8 +46,7 @@ public class MovieServices extends ListManager<Movie> {
                     new Menu.MenuOption("Update movie", () -> showSuccess(updateMovie()), true),
                     new Menu.MenuOption("Search movie", () -> searchMovie(), true),
                     new Menu.MenuOption("Show all movie", () -> display(list, "List of Movie"), false),
-                    new Menu.MenuOption("Back", () -> {
-                        /* Exit action */ }, false)
+                    new Menu.MenuOption("Back", () -> {/* Exit action */ }, false)
                 },
                 null
         );
@@ -69,23 +68,19 @@ public class MovieServices extends ListManager<Movie> {
                 getInteger("Enter available copies", 0, Integer.MAX_VALUE, false)
         ));
 
-        boolean movieSaved = MovieDAO.addMovieToDB(list.getLast());
-        if (movieSaved) {
-            MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds());
-            MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds());
-            return true;
-        }
+        boolean isSuccess = MovieDAO.addMovieToDB(list.getLast());
+        if (isSuccess) 
+            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds()) &&
+                    MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds());
         return false;
     }
 
     public boolean addMovie(Movie movie) {
         list.add(movie);
-        boolean movieSaved = MovieDAO.addMovieToDB(list.getLast());
-        if (movieSaved) {
-            MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds());
-            MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds());
-            return true;
-        }
+        boolean isSuccess = MovieDAO.addMovieToDB(list.getLast());
+        if (isSuccess) 
+            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds()) &&
+                    MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds());
         return false;
     }
 
@@ -126,14 +121,10 @@ public class MovieServices extends ListManager<Movie> {
     }
 
     public boolean updateMovie() {
-        if (checkEmpty(list)) {
-            return false;
-        }
+        if (checkEmpty(list)) return false;    
 
         Movie foundMovie = (Movie) getById("Enter movie's id");
-        if (checkNull(foundMovie)) {
-            return false;
-        }
+        if (checkNull(foundMovie)) return false;
 
         String title = getString("Enter title", true);
         String description = getString("Enter description", true);
@@ -141,39 +132,30 @@ public class MovieServices extends ListManager<Movie> {
         LocalDate releaseYear = getDate("Enter release date", true);
         Double rentalPrice = getDouble("Enter rental price", 0, Double.MAX_VALUE, true);
 
-        if (!title.isEmpty()) {
+        if (!title.isEmpty()) 
             foundMovie.setTitle(title);
-        }
 
-        if (!description.isEmpty()) {
+        if (!description.isEmpty()) 
             foundMovie.setDescription(description);
-        }
 
-        if (!language.isEmpty()) {
+        if (!language.isEmpty()) 
             foundMovie.setLanguage(language);
-        }
 
-        if (releaseYear != null) {
+        if (releaseYear != null) 
             foundMovie.setReleaseYear(releaseYear);
-        }
 
-        if (rentalPrice > 0) {
+        if (rentalPrice > 0) 
             foundMovie.setRentalPrice(rentalPrice);
-        }
 
         MovieDAO.updateMovieFromDB(foundMovie);
         return true;
     }
 
     public boolean deleteMovie() {
-        if (checkEmpty(list)) {
-            return false;
-        }
+        if (checkEmpty(list)) return false;
 
         Movie foundMovie = (Movie) getById("Enter movie's id");
-        if (checkNull(foundMovie)) {
-            return false;
-        }
+        if (checkNull(foundMovie)) return false;
 
         list.remove(foundMovie);
         MovieDAO.deleteMovieFromDB(foundMovie.getId());
@@ -204,7 +186,7 @@ public class MovieServices extends ListManager<Movie> {
         return result;
     }
 
-    public static double calculateAverageRating(String movieID) throws SQLException {
+    public double calculateAverageRating(String movieID) throws SQLException {
         String query = "SELECT AVG(rating) AS average_rating FROM Review WHERE movie_id = ?";
 
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -220,8 +202,9 @@ public class MovieServices extends ListManager<Movie> {
         return 0; // dont have rating
     }
 
-    public static boolean adjustAvailableCopy(String movieId) {
-        String reduceCopiesSql = "UPDATE Movie SET available_copies = available_copies - 1 WHERE movie_id = ? AND available_copies > 0";
+
+    public boolean adjustAvailableCopy(String movieId, int amount) {
+        String reduceCopiesSql = "UPDATE Movie SET available_copies = available_copies - " + amount + " WHERE movie_id = ? AND available_copies > 0";
 
         try (Connection conn = getConnection(); // Assuming you have a utility method for DB connection
                  PreparedStatement stmt = conn.prepareStatement(reduceCopiesSql)) {
