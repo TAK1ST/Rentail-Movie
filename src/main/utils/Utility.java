@@ -43,6 +43,15 @@ public class Utility {
         return LocalDate.parse(date, Validator.DATE);
     }
     
+    public static int toInt(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            errorLog("Can not convert to Number");
+            return 0;
+        }
+    }
+    
     public static class Console {
         
         public static String getString(String message, boolean enterToPass) {

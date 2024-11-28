@@ -123,8 +123,6 @@ public class Movie extends Model {
     public void setActorIds(List<String> actorIds) {
         this.actorIds = actorIds;
     }
-
-    
     
     public String getLanguage() {
         return language;
