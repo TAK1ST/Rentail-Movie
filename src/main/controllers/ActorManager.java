@@ -4,7 +4,7 @@ import main.base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import main.DAO.ActorDAO;
+import main.dao.ActorDAO;
 import main.dto.Actor;
 import main.utils.IDGenerator;
 import static main.utils.Input.getString;

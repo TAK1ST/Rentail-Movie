@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import main.DAO.ReviewDAO;
+import main.dao.ReviewDAO;
 import static main.controllers.Managers.getMM;
 import main.dto.Movie;
 import main.dto.Review;
