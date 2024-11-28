@@ -26,8 +26,6 @@ public class ActorDAO {
 
             preparedStatement.setString(1, actor.getId());
             preparedStatement.setString(2, actor.getActorName());
-
-            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }

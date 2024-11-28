@@ -33,7 +33,7 @@ public class UserDAO {
             preparedStatement.setString(7, user.getPhoneNumber());
             preparedStatement.setString(8, user.getEmail());
 
-            return preparedStatement.executeUpdate() > 0;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

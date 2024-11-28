@@ -45,7 +45,7 @@ public class MovieServices extends ListManager<Movie> {
                     new Menu.MenuOption("Delete movie", () -> showSuccess(deleteMovie()), true),
                     new Menu.MenuOption("Update movie", () -> showSuccess(updateMovie()), true),
                     new Menu.MenuOption("Search movie", () -> searchMovie(), true),
-                    new Menu.MenuOption("Show all movie", () -> display(list, "List of Movie"), false),
+                    new Menu.MenuOption("Show all movie", () -> displayMovies(list, "List of Movie"), false),
                     new Menu.MenuOption("Back", () -> {/* Exit action */ }, false)
                 },
                 null
