@@ -13,10 +13,10 @@ import static main.controllers.Managers.getAM;
 import static main.controllers.Managers.getGM;
 import static main.controllers.Managers.getMM;
 import static main.controllers.Managers.getUM;
-import main.models.Actor;
-import main.models.Genre;
-import main.models.Movie;
-import main.models.User;
+import main.dto.Actor;
+import main.dto.Genre;
+import main.dto.Movie;
+import main.dto.User;
 import static main.utils.Utility.toDate;
 
 /**
@@ -139,4 +139,5 @@ public class FakeData {
         
         return true;
     }
+    
 }

@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import main.models.Actor;
+import main.dto.Actor;
 import main.config.Database;
 
 /**

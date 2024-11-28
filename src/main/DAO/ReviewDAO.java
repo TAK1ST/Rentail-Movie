@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import main.models.Review;
+import main.dto.Review;
 import main.config.Database;
 
 /**

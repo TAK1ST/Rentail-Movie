@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import main.models.Rental;
+import main.dto.Rental;
 import main.config.Database;
 
 /**

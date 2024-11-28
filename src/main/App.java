@@ -1,7 +1,7 @@
 package main;
 
 import java.io.IOException;
-import main.models.User;
+import main.dto.User;
 import main.config.Database;
 import main.controllers.Managers;
 import static main.utils.Input.yesOrNo;
