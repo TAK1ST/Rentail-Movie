@@ -4,9 +4,9 @@
  */
 package main.utils;
 
-import constants.Constants;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import main.constants.Constants;
 
 
 public class IDGenerator {

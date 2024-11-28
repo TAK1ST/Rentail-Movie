@@ -3,9 +3,8 @@ package main.services;
 import java.io.IOException;
 import main.models.User;
 import static main.services.Services.getUS;
+import static main.utils.Input.getString;
 import main.utils.Menu;
-import static main.utils.PassEncryptor.encryptPassword;
-import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.errorLog;
 
 /**

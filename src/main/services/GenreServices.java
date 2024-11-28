@@ -4,16 +4,16 @@
  */
 package main.services;
 
-import base.ListManager;
+import main.base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import main.DAO.GenreDAO;
 import main.models.Genre;
 import main.utils.IDGenerator;
+import static main.utils.Input.getString;
 import main.utils.Menu;
 import static main.utils.Menu.showSuccess;
-import static main.utils.Utility.Console.getString;
 import static main.utils.Validator.getName;
 
 /**

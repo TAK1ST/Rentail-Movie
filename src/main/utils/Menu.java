@@ -6,9 +6,9 @@ package main.utils;
 
 import java.io.IOException;
 import java.util.List;
+import static main.utils.Input.getInteger;
+import static main.utils.Input.yesOrNo;
 
-import static main.utils.Utility.Console.getInteger;
-import static main.utils.Utility.Console.yesOrNo;
 import static main.utils.Utility.errorLog;
 /**
  *

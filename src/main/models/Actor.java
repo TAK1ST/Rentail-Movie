@@ -2,7 +2,7 @@
 package main.models;
 
 
-import base.Model;
+import main.base.Model;
 
 public class Actor extends Model {
     private String actorName;

@@ -4,8 +4,7 @@
  */
 package main.services;
 
-import base.ListManager;
-import constants.Constants;
+import main.base.ListManager;
 import main.utils.Menu;
 import static main.services.Services.getMS;
 import java.io.IOException;
@@ -14,14 +13,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import main.DAO.ReviewDAO;
+import main.constants.Constants;
 import main.models.Movie;
 import main.models.Review;
 import main.utils.IDGenerator;
+import static main.utils.Input.getInteger;
+import static main.utils.Input.getString;
+import static main.utils.Input.selectInfo;
 import main.utils.Menu.MenuOption;
 import static main.utils.Menu.showSuccess;
-import static main.utils.Utility.Console.getInteger;
-import static main.utils.Utility.Console.getString;
-import static main.utils.Utility.Console.selectInfo;
 import static main.utils.Utility.errorLog;
 import main.utils.Validator;
 

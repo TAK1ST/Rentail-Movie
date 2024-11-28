@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/D:/Java/Rental-Movie/src/main/services/ReviewServices.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/DAO/ReviewDAO.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/DAO/MovieDAO.java</file>
@@ -28,5 +29,45 @@
             <file>file:/D:/Java/Rental-Movie/src/main/utils/Menu.java</file>
             <file>file:/D:/Java/Rental-Movie/src/test/FakeData.java</file>
         </group>
+=======
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/App.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/services/MovieServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/models/Movie.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/base/ListManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/models/Review.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/view/UserPannel.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/models/Rental.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/DAO/RentalDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/DAO/ReviewDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/Main.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/utils/DatabaseUtil.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/services/UserServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/services/ActorServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/services/Services.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/utils/Validator.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/test/FakeData.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/view/AdminPannel.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/view/AuthenPannel.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/services/ReviewServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/utils/PassEncryptor.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/DAO/UserDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/services/AuthenServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/DAO/ActorDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/models/User.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/services/GenreServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/Testing.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/DAO/MovieDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/constants/Constants.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/utils/Menu.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/models/Actor.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/utils/Utility.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/services/RentalServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/main/utils/IDGenerator.java</file>
+            <file>file:/C:/Users/trann/Downloads/newcode/Rentail-Movie/src/base/Model.java</file>
+        </group>
+        <group>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/DatabaseUtil.java</file>
+        </group>
+>>>>>>> 099b50e9189d7f802622321a43a72799dbf3201f
     </open-files>
 </project-private>

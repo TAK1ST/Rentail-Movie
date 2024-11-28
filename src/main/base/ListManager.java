@@ -1,11 +1,11 @@
-package base;
+package main.base;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import static main.utils.Input.getString;
 import main.utils.Menu;
-import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.extractNumber;
 
 public abstract class ListManager<T extends Model> {
