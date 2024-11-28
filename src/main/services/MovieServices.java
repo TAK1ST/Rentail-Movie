@@ -1,7 +1,6 @@
 package main.services;
 
 import main.base.ListManager;
-import constants.Constants;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +12,7 @@ import java.util.List;
 import main.DAO.ActorDAO;
 import main.DAO.GenreDAO;
 import main.DAO.MovieDAO;
+import main.constants.Constants;
 import main.models.Actor;
 import main.models.Genre;
 import main.models.Movie;

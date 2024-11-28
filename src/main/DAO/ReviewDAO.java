@@ -21,18 +21,17 @@ import main.utils.DatabaseUtil;
 public class ReviewDAO {
     
     public static boolean addReviewToDB(Review review) {
-        String sql = "INSERT INTO Review (review_id, user_id, movie_id, rating, review_date, review_text) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Review (review_id,movie_id ,user_id ,review_text ,rating , review_date) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseUtil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
             preparedStatement.setString(1, review.getId());
-            preparedStatement.setString(2, review.getUserID());
-            preparedStatement.setString(3, review.getMovieID());
-            preparedStatement.setDouble(4, review.getRating());
-            preparedStatement.setDate(5, Date.valueOf(review.getReviewDate()));
-            preparedStatement.setString(6, review.getReviewText());
+            preparedStatement.setString(2, review.getMovieID());
+            preparedStatement.setString(3, review.getUserID());
+            preparedStatement.setString(4, review.getReviewText());
+            preparedStatement.setInt(5, review.getRating());
+            preparedStatement.setDate(6, Date.valueOf(review.getReviewDate()));
 
-            return preparedStatement.executeUpdate() > 0;
+//            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -46,12 +45,12 @@ public class ReviewDAO {
 
             preparedStatement.setString(1, review.getUserID());
             preparedStatement.setString(2, review.getMovieID());
-            preparedStatement.setDouble(3, review.getRating());
+            preparedStatement.setInt(3, review.getRating());
             preparedStatement.setDate(4, Date.valueOf(review.getReviewDate()));
             preparedStatement.setString(5, review.getReviewText());
             preparedStatement.setString(6, review.getId());
             
-            return preparedStatement.executeUpdate() > 0;
+//            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -83,7 +82,7 @@ public class ReviewDAO {
                     resultSet.getString("review_id"),
                     resultSet.getString("user_id"),
                     resultSet.getString("movie_id"),
-                    resultSet.getDouble("rating"),
+                    resultSet.getInt("rating"),
                     resultSet.getString("review_text"),
                     resultSet.getDate("review_date").toLocalDate()
                 );

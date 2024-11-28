@@ -1,11 +1,11 @@
 package main.services;
 
 import main.base.ListManager;
-import constants.Constants;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import main.DAO.UserDAO;
+import main.constants.Constants;
 import main.models.User;
 import main.models.User.Role;
 import main.utils.IDGenerator;
