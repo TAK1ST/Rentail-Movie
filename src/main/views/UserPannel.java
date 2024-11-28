@@ -9,7 +9,7 @@ import static main.controllers.Managers.getMM;
 import static main.controllers.Managers.getRM;
 import static main.controllers.Managers.getRTM;
 import static main.controllers.Managers.getUM;
-import main.models.User;
+import main.dto.User;
 import main.services.RentalServices;
 import main.utils.Menu;
 import main.utils.Menu.MenuOption;

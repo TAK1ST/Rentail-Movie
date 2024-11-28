@@ -5,24 +5,20 @@
 package main.controllers;
 
 import main.base.ListManager;
-import main.utils.Menu;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import main.DAO.ReviewDAO;
-import main.constants.Constants;
+import main.dao.ReviewDAO;
 import static main.controllers.Managers.getMM;
-import main.models.Movie;
-import main.models.Review;
+import main.dto.Movie;
+import main.dto.Review;
 import main.utils.IDGenerator;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.Input.selectInfo;
 import static main.utils.Log.errorLog;
-import main.utils.Menu.MenuOption;
-import static main.utils.Menu.showSuccess;
 import main.utils.Validator;
 
 /**

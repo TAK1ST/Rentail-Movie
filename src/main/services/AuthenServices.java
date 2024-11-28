@@ -2,7 +2,7 @@ package main.services;
 
 import java.io.IOException;
 import static main.controllers.Managers.getUM;
-import main.models.User;
+import main.dto.User;
 import static main.utils.Input.getString;
 import static main.utils.Log.errorLog;
 import main.utils.Menu;

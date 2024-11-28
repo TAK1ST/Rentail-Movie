@@ -1,4 +1,4 @@
-package main.models;
+package main.dto;
 
 import main.base.Model;
 

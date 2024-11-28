@@ -7,12 +7,12 @@ package main.services;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import main.DAO.RentalDAO;
+import main.dao.RentalDAO;
 import main.constants.Constants;
 import static main.controllers.Managers.getMM;
 import static main.controllers.Managers.getRTM;
-import main.models.Movie;
-import main.models.Rental;
+import main.dto.Movie;
+import main.dto.Rental;
 import static main.utils.Input.getInteger;
 import static main.utils.Validator.getDate;
 
