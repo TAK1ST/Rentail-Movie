@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import main.models.Actor;
-import main.utils.DatabaseUtil;
+import main.config.Database;
 
 /**
  *
@@ -21,7 +21,7 @@ public class ActorDAO {
     
     public static boolean addActorToDB(Actor actor) {
         String sql = "INSERT INTO Actor (actor_id, actor_name) VALUES (?, ?)";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actor.getId());
@@ -36,7 +36,7 @@ public class ActorDAO {
     
     public static boolean updateActorFromDB(Actor actor) {
         String sql = "UPDATE Actor SET actor_name = ? WHERE actor_id = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actor.getActorName());
@@ -51,7 +51,7 @@ public class ActorDAO {
     
     public static boolean deleteActorFromDB(String actor_id) {
         String sql = "DELETE FROM Actor WHERE actor_id = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actor_id);
@@ -65,7 +65,7 @@ public class ActorDAO {
     public static List<Actor> getAllActor() {
         String sql = "SELECT * FROM Actor";
         List<Actor> list = new ArrayList<>();
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 

@@ -11,8 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import main.models.User;
-import main.utils.DatabaseUtil;
-import static main.utils.PassEncryptor.encryptPassword;
+import main.config.Database;
 
 /**
  *
@@ -21,7 +20,7 @@ import static main.utils.PassEncryptor.encryptPassword;
 public class UserDAO {
     public static boolean addUserToDB(User user) {
         String sql = "INSERT INTO Users (user_id, username, password_hash, role, full_name, address, phone_number, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, user.getId());
@@ -42,7 +41,7 @@ public class UserDAO {
     
     public static boolean updateUserFromDB(User user) {
         String sql = "UPDATE Users SET username = ?, password_hash = ?, role = ?, full_name = ?, address = ?, phone_number = ?, email = ? WHERE user_id = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, user.getUsername());
@@ -63,7 +62,7 @@ public class UserDAO {
     
     public static boolean deleteUserFromDB(String userID) {
         String sql = "DELETE FROM Users WHERE user_id = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, userID);
@@ -77,7 +76,7 @@ public class UserDAO {
     public static List<User> getAllUser() {
         String sql = "SELECT * FROM Users";
         List<User> list = new ArrayList<>();
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
