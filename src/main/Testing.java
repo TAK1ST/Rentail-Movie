@@ -15,8 +15,6 @@ import main.utils.Utility;
 public class Testing {
     
     public static void main(String args[]) throws IOException {
-        int x = Utility.Console.getInteger("Testing", 0, 100, true);
-        System.out.println(x);
     }
     
 }

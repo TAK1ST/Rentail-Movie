@@ -8,7 +8,7 @@ import java.io.IOException;
 import main.models.User;
 import static main.services.AuthenServices.login;
 import static main.services.AuthenServices.registor;
-import static main.utils.Utility.Console.yesOrNo;
+import static main.utils.Input.yesOrNo;
 
 /**
  *

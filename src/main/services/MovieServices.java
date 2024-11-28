@@ -1,6 +1,6 @@
 package main.services;
 
-import base.ListManager;
+import main.base.ListManager;
 import constants.Constants;
 import java.io.IOException;
 import java.sql.Connection;
@@ -20,11 +20,11 @@ import static main.services.Services.getAS;
 import static main.services.Services.getGS;
 import static main.utils.DatabaseUtil.getConnection;
 import main.utils.IDGenerator;
+import static main.utils.Input.getDouble;
+import static main.utils.Input.getInteger;
+import static main.utils.Input.getString;
 import main.utils.Menu;
 import static main.utils.Menu.showSuccess;
-import static main.utils.Utility.Console.getString;
-import static main.utils.Utility.Console.getDouble;
-import static main.utils.Utility.Console.getInteger;
 import static main.utils.Utility.toInt;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;

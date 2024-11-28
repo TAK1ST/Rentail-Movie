@@ -1,6 +1,6 @@
 package main.services;
 
-import base.ListManager;
+import main.base.ListManager;
 import constants.Constants;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -14,10 +14,10 @@ import main.models.Movie;
 import main.models.Rental;
 import main.models.User;
 import main.utils.IDGenerator;
+import static main.utils.Input.getInteger;
+import static main.utils.Input.getString;
 import main.utils.Menu;
 import static main.utils.Menu.showSuccess;
-import static main.utils.Utility.Console.getInteger;
-import static main.utils.Utility.Console.getString;
 import static main.utils.Utility.errorLog;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;

@@ -1,4 +1,4 @@
-package base;
+package main.base;
 
 public abstract class Model {
     private String id;

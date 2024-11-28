@@ -3,7 +3,7 @@ package main;
 import java.io.IOException;
 import main.models.User;
 import main.services.Services;
-import static main.utils.Utility.Console.yesOrNo;
+import static main.utils.Input.yesOrNo;
 import main.view.AdminPannel;
 import main.view.AuthenPannel;
 import main.view.UserPannel;

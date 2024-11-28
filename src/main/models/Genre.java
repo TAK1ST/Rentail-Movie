@@ -1,6 +1,6 @@
 package main.models;
 
-import base.Model;
+import main.base.Model;
 
 public class Genre extends Model {
     private String genreName;

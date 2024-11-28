@@ -1,6 +1,6 @@
 package main.services;
 
-import base.ListManager;
+import main.base.ListManager;
 import constants.Constants;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,12 +9,12 @@ import main.DAO.UserDAO;
 import main.models.User;
 import main.models.User.Role;
 import main.utils.IDGenerator;
+import static main.utils.Input.getString;
+import static main.utils.Input.yesOrNo;
 import main.utils.Menu;
 import main.utils.Menu.MenuOption;
 import static main.utils.Menu.showSuccess;
 import static main.utils.PassEncryptor.encryptPassword;
-import static main.utils.Utility.Console.getString;
-import static main.utils.Utility.Console.yesOrNo;
 import main.utils.Validator;
 
 /**
