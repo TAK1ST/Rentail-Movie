@@ -7,7 +7,7 @@ package main.services;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import main.DAO.RentalDAO;
+import main.dao.RentalDAO;
 import main.constants.Constants;
 import static main.controllers.Managers.getMM;
 import static main.controllers.Managers.getRTM;

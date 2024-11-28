@@ -6,9 +6,9 @@ package test;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.DAO.ActorDAO;
-import main.DAO.GenreDAO;
-import main.DAO.UserDAO;
+import main.dao.ActorDAO;
+import main.dao.GenreDAO;
+import main.dao.UserDAO;
 import static main.controllers.Managers.getAM;
 import static main.controllers.Managers.getGM;
 import static main.controllers.Managers.getMM;
@@ -16,6 +16,7 @@ import static main.controllers.Managers.getUM;
 import main.dto.Actor;
 import main.dto.Genre;
 import main.dto.Movie;
+import main.dto.Rental;
 import main.dto.User;
 import static main.utils.Utility.toDate;
 
@@ -140,4 +141,11 @@ public class FakeData {
         return true;
     }
     
+    public static boolean makeFakeRental() {
+        List<Rental> temp = new ArrayList<>();
+        
+        temp.add(new Rental("RT000001", "U00000002", "M00000004", toDate("12/04/2023"), toDate("16/04/2023"), 100.15, 0));
+        
+        return true;
+    }
 }
