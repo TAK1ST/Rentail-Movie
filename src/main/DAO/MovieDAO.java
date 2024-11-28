@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package main.DAO;
 
 import java.sql.Connection;
@@ -14,10 +11,6 @@ import java.util.List;
 import main.models.Movie;
 import main.utils.DatabaseUtil;
 
-/**
- *
- * @author trann
- */
 public class MovieDAO {
 
     public static boolean addMovieToDB(Movie movie) {

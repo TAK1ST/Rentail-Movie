@@ -218,5 +218,5 @@ public class MovieServices extends ListManager<Movie> {
             return false;  // Returns false if there was an issue executing the update
         }
     }
-
+    public void displayMovie(List<Movie> movies, String title)
 }
