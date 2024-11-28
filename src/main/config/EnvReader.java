@@ -1,5 +1,4 @@
-package main.utils;
-
+package main.config;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

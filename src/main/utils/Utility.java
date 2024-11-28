@@ -6,22 +6,13 @@ package main.utils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import static main.utils.Log.errorLog;
 
 /**
  *
  * @author trann
  */
 public class Utility {
-    
-    public static boolean isDateInRange(LocalDate startDate, LocalDate endDate, LocalDate targetDate) {
-        return (targetDate.isEqual(startDate) || targetDate.isAfter(startDate)) &&
-               (targetDate.isEqual(endDate) || targetDate.isBefore(endDate));
-    }
-    
-    public static boolean isDateTimeInRange(LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime targetDateTime) {
-        return (targetDateTime.isEqual(startDateTime) || targetDateTime.isAfter(startDateTime)) &&
-               (targetDateTime.isEqual(endDateTime) || targetDateTime.isBefore(endDateTime));
-    }
     
     public static long extractNumber(String str) {
         String number = str.replaceAll("\\D+", "");
@@ -30,10 +21,6 @@ public class Utility {
     
     public static int getRandomNumber(int min, int max) {
         return (int) (Math.random() * ((max - min) + 1)) + min;
-    }
-    
-    public static void errorLog(String message) {
-        System.out.printf("[ERROR] %s.\n", message);
     }
     
     public static LocalDate toDate(String date){

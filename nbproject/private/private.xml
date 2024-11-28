@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/DatabaseUtil.java</file>
         </group>
         <group>
@@ -16,6 +17,42 @@
             <file>file:/home/tak/Code/Rentail-Movie/src/main/base/ListManager.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/Main.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/services/ActorServices.java</file>
+=======
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/Services.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/Main.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/UserServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/ActorServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/GenreController.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/ReviewServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/MovieServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/RentalServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/App.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/services/AuthenServices.java</file>
+        </group>
+        <group>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/Main.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/UserDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/ActorDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/EnvReader.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/services/AuthenServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Validator.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Log.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/RentalDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/Managers.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/ReviewDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Input.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/App.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Menu.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/PassEncryptor.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/MovieManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/RentalManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/GenreDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Utility.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/MovieDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/ActorServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/config/Database.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/IDGenerator.java</file>
+>>>>>>> 99e6242757dab5052c0ad8faaed5db9496098037
         </group>
     </open-files>
 </project-private>

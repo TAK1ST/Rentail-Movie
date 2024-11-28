@@ -2,16 +2,18 @@ package main;
 
 import java.io.IOException;
 import main.models.User;
-import main.services.Services;
+import main.config.Database;
+import main.controllers.Managers;
 import static main.utils.Input.yesOrNo;
-import main.view.AdminPannel;
-import main.view.AuthenPannel;
-import main.view.UserPannel;
+import main.views.AdminPannel;
+import main.views.AuthenPannel;
+import main.views.UserPannel;
 
 
 public class App {
     public static void run() throws IOException {
-        Services.initAll();
+        Database.connect();
+        Managers.initAll();
         do {
             redirect(AuthenPannel.getUsers());
         } 

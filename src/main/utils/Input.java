@@ -6,7 +6,7 @@ package main.utils;
 
 import java.util.Scanner;
 import main.models.User;
-import static main.utils.Utility.errorLog;
+import static main.utils.Log.errorLog;
 
 /**
  *
@@ -75,7 +75,7 @@ public class Input {
         }
 
         public static boolean yesOrNo(String message) {
-            System.out.print(message + "(Y): ");
+            System.out.print(message + " (Y): ");
             return scanner.nextLine().equalsIgnoreCase("y");
         }
      
@@ -91,16 +91,16 @@ public class Input {
         }
         
 	public static String selectInfo(String message, String[] infoLists, boolean enterToPass) {
-		System.out.println("\n" + message + ": ");
-		for (int index = 0; index < infoLists.length; index++) {
-			if (index % 4 == 0) System.out.println();
-			System.out.printf("%2d. %-25s ", index, infoLists[index]);
-		}
-		System.out.println("\n");
-		if (!enterToPass) 
-                    return infoLists[getInteger("Enter an option", 0, infoLists.length - 1, enterToPass)];
-                else 
-                    return "";
+            System.out.println("\n" + message + ": ");
+            for (int index = 0; index < infoLists.length; index++) {
+                    if (index % 4 == 0) System.out.println();
+                    System.out.printf("%2d. %-25s ", index, infoLists[index]);
+            }
+            System.out.println("\n");
+            if (!enterToPass) 
+                return infoLists[getInteger("Enter an option", 0, infoLists.length - 1, enterToPass)];
+            else 
+                return "";
 	}
     
 }
