@@ -9,14 +9,14 @@ import java.util.List;
 import main.DAO.ActorDAO;
 import main.DAO.GenreDAO;
 import main.DAO.UserDAO;
+import static main.controllers.Managers.getAM;
+import static main.controllers.Managers.getGM;
+import static main.controllers.Managers.getMM;
+import static main.controllers.Managers.getUM;
 import main.models.Actor;
 import main.models.Genre;
 import main.models.Movie;
 import main.models.User;
-import static main.services.Services.getAS;
-import static main.services.Services.getGS;
-import static main.services.Services.getMS;
-import static main.services.Services.getUS;
 import static main.utils.Utility.toDate;
 
 /**
@@ -48,7 +48,7 @@ public class FakeData {
         
         for (User item : temp) {
             UserDAO.addUserToDB(item);
-            getUS().getList().add(item);
+            getUM().getList().add(item);
         }
         
         return true;
@@ -69,7 +69,7 @@ public class FakeData {
         
         for (Actor item : temp) {
             ActorDAO.addActorToDB(item);
-            getAS().getList().add(item);
+            getAM().getList().add(item);
         }
         
         return true;
@@ -90,49 +90,49 @@ public class FakeData {
         
         for (Genre item : temp) {
             GenreDAO.addGenreToDB(item);
-            getGS().getList().add(item);
+            getGM().getList().add(item);
         }
         
         return true;
     }
     
     public static boolean makeFakeMovie() {
-        getMS().addMovie(new Movie("M0000001", "The Substance", "A horror movie about a mysterious entity.", 4.5, 
+        getMM().addMovie(new Movie("M0000001", "The Substance", "A horror movie about a mysterious entity.", 4.5, 
                    List.of("G0000001", "G0000005", "G0000008"), 
                    List.of("A0000001", "A0000005", "A0000010"), 
                    "English", toDate("10/10/2024"), 100, 20));
 
-        getMS().addMovie(new Movie("M0000002", "Laugh Out Loud", "A hilarious comedy that will leave you in stitches.", 4.8, 
+        getMM().addMovie(new Movie("M0000002", "Laugh Out Loud", "A hilarious comedy that will leave you in stitches.", 4.8, 
                            List.of("G0000002", "G0000006"), 
                            List.of("A0000002", "A0000007", "A0000008", "A0000009"), 
                            "English", toDate("01/01/2023"), 80, 15));
 
-        getMS().addMovie(new Movie("M0000003", "Cosmic Wars", "An epic space adventure to save the galaxy.", 4.9, 
+        getMM().addMovie(new Movie("M0000003", "Cosmic Wars", "An epic space adventure to save the galaxy.", 4.9, 
                            List.of("G0000003", "G0000006", "G0000005"), 
                            List.of("A0000003", "A0000008", "A0000001", "A0000005"), 
                            "English", toDate("05/05/2022"), 120, 25));
 
-        getMS().addMovie(new Movie("M0000004", "Love in Paris", "A romantic drama set in the City of Love.", 4.6, 
+        getMM().addMovie(new Movie("M0000004", "Love in Paris", "A romantic drama set in the City of Love.", 4.6, 
                            List.of("G0000007", "G0000004", "G0000009", "G0000006"), 
                            List.of("A0000004", "A0000009", "A0000010"), 
                            "French", toDate("14/02/2023"), 90, 18));
 
-        getMS().addMovie(new Movie("M0000005", "Mysterious Island", "A thriller about survival and secrets.", 4.7, 
+        getMM().addMovie(new Movie("M0000005", "Mysterious Island", "A thriller about survival and secrets.", 4.7, 
                            List.of("G0000008", "G0000009", "G0000003", "G0000005", "G0000006"), 
                            List.of("A0000005", "A0000010", "A0000002", "A0000008"), 
                            "English", toDate("12/12/2023"), 95, 10));
 
-        getMS().addMovie(new Movie("M0000006", "The Enchanted Forest", "A magical tale of courage and friendship.", 4.5, 
+        getMM().addMovie(new Movie("M0000006", "The Enchanted Forest", "A magical tale of courage and friendship.", 4.5, 
                            List.of("G0000006", "G0000010", "G0000001"), 
                            List.of("A0000001", "A0000006", "A0000007", "A0000003"), 
                            "English", toDate("20/03/2023"), 110, 12));
 
-        getMS().addMovie(new Movie("M0000007", "Robot Revolution", "A science fiction movie about AI gone rogue.", 4.3, 
+        getMM().addMovie(new Movie("M0000007", "Robot Revolution", "A science fiction movie about AI gone rogue.", 4.3, 
                            List.of("G0000003", "G0000005", "G0000008"), 
                            List.of("A0000003", "A0000008", "A0000001"), 
                            "English", toDate("10/10/2022"), 85, 8));
 
-        getMS().addMovie(new Movie("M0000008", "The Haunted Mansion", "A classic horror tale in a cursed house.", 4.2, 
+        getMM().addMovie(new Movie("M0000008", "The Haunted Mansion", "A classic horror tale in a cursed house.", 4.2, 
                            List.of("G0000001", "G0000009", "G0000004", "G0000002"), 
                            List.of("A0000002", "A0000007", "A0000006"), 
                            "English", toDate("31/10/2022"), 70, 5));
