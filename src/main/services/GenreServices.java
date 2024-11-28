@@ -36,7 +36,7 @@ public class GenreServices extends ListManager<Genre> {
                     new Menu.MenuOption("Delete genre", () -> showSuccess(deleteGenre()), true),
                     new Menu.MenuOption("Update genre", () -> showSuccess(updateGenre()), true),
                     new Menu.MenuOption("Search genre", () -> searchGenre(), true),
-                    new Menu.MenuOption("Show all genre", () -> display(list, "List of Genre"), false),
+                    new Menu.MenuOption("Show all genre", () -> displayGenres(list, "List of Genre"), false),
                     new Menu.MenuOption("Back", () -> {
                         /* Exit action */ }, false)
                 },

@@ -56,7 +56,7 @@ public class UserServices extends ListManager<User> {
                 new MenuOption("Delete User", () -> showSuccess(deleteUser()), true),
                 new MenuOption("Update User", () -> showSuccess(updateUser("")), true),
                 new MenuOption("Search User", () -> searchUser(), true),
-                new MenuOption("Display Users", () -> display(list, "List of Users"), false),
+                new MenuOption("Display Users", () -> displayUsers(list, "List of Users"), false),
                 new MenuOption("Back", () -> { /* Exit action */ }, false)
             },
             null
@@ -179,5 +179,29 @@ public class UserServices extends ListManager<User> {
     public void showMyProfile(String userID) {
         display(searchById(userID), "My Profile");
     }
-    
+    public void displayUsers(List<User> users, String title) {
+    System.out.println(title);
+     System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+    if (users.isEmpty()) {
+        System.out.println("No users available.");
+        return;
+    }
+
+    System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
+            "User ID", "Username","Password", "Role", "Full Name", "Address", "Phone Number", "Email");
+     System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+    for (User user : users) {
+        String role = user.getRole() == 1 ? "Admin" : "User";  // Chuyển đổi số vai trò thành tên vai trò
+         System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
+                user.getId(),
+                user.getUsername(),
+                user.getPassword(),
+                role,
+                user.getFullName() != null ? user.getFullName() : "N/A",
+                user.getAddress() != null ? user.getAddress() : "N/A",
+                user.getPhoneNumber() != null ? user.getPhoneNumber() : "N/A",
+                user.getEmail() != null ? user.getEmail() : "N/A"); 
+    }
+System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+}
 }

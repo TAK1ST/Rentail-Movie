@@ -31,7 +31,7 @@ public class ActorServices extends ListManager<Actor> {
                     new Menu.MenuOption("Delete actor", () -> showSuccess(deleteActor()), true),
                     new Menu.MenuOption("Update actor", () -> showSuccess(updateActor()), true),
                     new Menu.MenuOption("Search actor", () -> searchActor(), true),
-                    new Menu.MenuOption("Show all actor", () -> display(list, "List of Actor"), false),
+                    new Menu.MenuOption("Show all actor", () -> displayActors(list, "List of Actor"), false),
                     new Menu.MenuOption("Back", () -> {
                         /* Exit action */ }, false)
                 },
@@ -104,14 +104,14 @@ public class ActorServices extends ListManager<Actor> {
 
     public void displayActors(List<Actor> actors, String title) {
         System.out.println(title);
-        System.out.println("----------------------------------------------------");
+        System.out.println("|----------------------------------------------------");
 
         if (actors.isEmpty()) {
             System.out.println("No actors available.");
             return;
         }
-        System.out.printf("%-15s | %-30s\n", "Actor ID", "Actor Name");
-        System.out.println("----------------------------------------------------");
+        System.out.printf("|%-15s | %-30s\n |", "Actor ID", "Actor Name");
+        System.out.println("|----------------------------------------------------");
 
         for (Actor actor : actors) {
             System.out.printf("%-15s | %-30s\n",
@@ -119,6 +119,6 @@ public class ActorServices extends ListManager<Actor> {
                     actor.getActorName());
         }
 
-        System.out.println("----------------------------------------------------");
+        System.out.println("|----------------------------------------------------");
     }
 }
