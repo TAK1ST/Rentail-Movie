@@ -3,21 +3,32 @@ package main.utils;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
+import static main.utils.Utility.errorLog;
 
 public class DatabaseUtil {
 
+<<<<<<< HEAD
     private static final String URL = "jdbc:mysql://mysql:3307/movierentalsystemdb";
     private static final String USER = "root";
     private static final String PASSWORD = "1";
 
+=======
+>>>>>>> ab5b0abf2aeffc2a2ad4bbfcca42519554fd3984
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        Map<String, String> envVariables = EnvReader.readEnvFile();
+
+        String dbUrl = envVariables.get("DB_URL");
+        String dbUser = envVariables.get("DB_USER");
+        String dbPassword = envVariables.get("DB_PASSWORD");
+        
+        return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
     }
 
-    public static void closeConnection(Connection conn) {
-        if (conn != null) {
+    public static void closeConnection(Connection connection) {
+        if (connection != null) {
             try {
-                conn.close();
+                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -30,11 +41,10 @@ public class DatabaseUtil {
             connection = DatabaseUtil.getConnection();
             if (connection != null) {
                 System.out.println("Connect Databases sucessfully!");
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Connect Fail!");
+            errorLog("Connect Fail!");
         }
         return connection;
     }

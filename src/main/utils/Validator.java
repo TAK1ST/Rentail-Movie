@@ -14,10 +14,9 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 import main.models.User;
 import main.models.User.Role;
-import static main.utils.Utility.Console.getDouble;
-import static main.utils.Utility.Console.getInteger;
-import static main.utils.Utility.Console.getString;
-import static main.utils.Utility.Console.rolesListing;
+import static main.utils.Input.getInteger;
+import static main.utils.Input.getString;
+import static main.utils.Input.rolesListing;
 import static main.utils.Utility.errorLog;
 
 /**
