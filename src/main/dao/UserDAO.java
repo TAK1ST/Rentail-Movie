@@ -1,4 +1,7 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package main.dao;
 
 import java.sql.Connection;
@@ -10,7 +13,10 @@ import java.util.List;
 import main.dto.User;
 import main.config.Database;
 
-
+/**
+ *
+ * @author trann
+ */
 public class UserDAO {
     public static boolean addUserToDB(User user) {
         String sql = "INSERT INTO Users (user_id, username, password_hash, role, full_name, address, phone_number, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
