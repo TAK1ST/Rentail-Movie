@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package main.DAO;
+package main.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,8 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import main.models.Actor;
-import main.utils.DatabaseUtil;
+import main.dto.Actor;
+import main.config.Database;
 
 /**
  *
@@ -21,11 +21,13 @@ public class ActorDAO {
     
     public static boolean addActorToDB(Actor actor) {
         String sql = "INSERT INTO Actor (actor_id, actor_name) VALUES (?, ?)";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actor.getId());
             preparedStatement.setString(2, actor.getActorName());
+
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -34,7 +36,7 @@ public class ActorDAO {
     
     public static boolean updateActorFromDB(Actor actor) {
         String sql = "UPDATE Actor SET actor_name = ? WHERE actor_id = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actor.getActorName());
@@ -49,7 +51,7 @@ public class ActorDAO {
     
     public static boolean deleteActorFromDB(String actor_id) {
         String sql = "DELETE FROM Actor WHERE actor_id = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actor_id);
@@ -63,7 +65,7 @@ public class ActorDAO {
     public static List<Actor> getAllActor() {
         String sql = "SELECT * FROM Actor";
         List<Actor> list = new ArrayList<>();
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
@@ -79,5 +81,4 @@ public class ActorDAO {
         }
         return list;
     }
-   
 }

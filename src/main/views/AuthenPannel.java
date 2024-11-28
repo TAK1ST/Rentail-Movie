@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package main.view;
+package main.views;
 
 import java.io.IOException;
-import main.models.User;
+import main.dto.User;
 import static main.services.AuthenServices.login;
 import static main.services.AuthenServices.registor;
 import static main.utils.Input.yesOrNo;

@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.List;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.yesOrNo;
+import static main.utils.Log.errorLog;
 
-import static main.utils.Utility.errorLog;
 /**
  *
  * @author trann
@@ -49,9 +49,9 @@ public class Menu {
         
             int choice = Menu.getChoice("Enter choice", options.length + INIT_NUM - 1);
             do {
-                if (choice >= INIT_NUM && choice < options.length + INIT_NUM - 1) 
+                if (choice >= INIT_NUM && choice < options.length + INIT_NUM - 1) {
                     options[choice - INIT_NUM].action.performAction();
-               
+                }
                 else if (choice == options.length + INIT_NUM - 1) 
                     return;
                 
@@ -69,6 +69,12 @@ public class Menu {
         String optionText;
         MenuAction action;
         boolean askToContinue;
+        
+        public MenuOption(String optionText, MenuAction action) {
+            this.optionText = optionText;
+            this.action = action;
+            this.askToContinue = false;
+        }
 
         public MenuOption(String optionText, MenuAction action, boolean askToContinue) {
             this.optionText = optionText;
@@ -76,8 +82,7 @@ public class Menu {
             this.askToContinue = askToContinue;
         }
     }
-    
-    
+     
     public static void showTitle(String title) {
         System.out.printf("\n%s\n\n", title);
     }

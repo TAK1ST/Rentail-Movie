@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package main.DAO;
+
+package main.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,15 +7,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import main.models.User;
-import main.utils.DatabaseUtil;
-
+import main.dto.User;
+import main.config.Database;
 
 
 public class UserDAO {
     public static boolean addUserToDB(User user) {
         String sql = "INSERT INTO Users (user_id, username, password_hash, role, full_name, address, phone_number, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, user.getId());
@@ -30,7 +26,7 @@ public class UserDAO {
             preparedStatement.setString(7, user.getPhoneNumber());
             preparedStatement.setString(8, user.getEmail());
 
-
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -39,7 +35,7 @@ public class UserDAO {
     
     public static boolean updateUserFromDB(User user) {
         String sql = "UPDATE Users SET username = ?, password_hash = ?, role = ?, full_name = ?, address = ?, phone_number = ?, email = ? WHERE user_id = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, user.getUsername());
@@ -60,7 +56,7 @@ public class UserDAO {
     
     public static boolean deleteUserFromDB(String userID) {
         String sql = "DELETE FROM Users WHERE user_id = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, userID);
@@ -74,7 +70,7 @@ public class UserDAO {
     public static List<User> getAllUser() {
         String sql = "SELECT * FROM Users";
         List<User> list = new ArrayList<>();
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 

@@ -1,11 +1,11 @@
 package main.services;
 
 import java.io.IOException;
-import main.models.User;
-import static main.services.Services.getUS;
+import static main.controllers.Managers.getUM;
+import main.dto.User;
 import static main.utils.Input.getString;
+import static main.utils.Log.errorLog;
 import main.utils.Menu;
-import static main.utils.Utility.errorLog;
 
 /**
  *
@@ -20,7 +20,7 @@ public class AuthenServices {
         String username = getString("Enter username", false);
         String password = getString("Enter password", false);
 
-        for (User item : getUS().getList()) 
+        for (User item : getUM().getList()) 
             if (item.getUsername().equals(username) && item.getPassword().equals(password)) {
                 account = new User(item);
                 break;
@@ -41,7 +41,7 @@ public class AuthenServices {
         int input = Menu.getChoice("Enter choice", options.length);
         switch(input) {
             case 1: 
-                checkCreate = checkCreate && getUS().registorUser();
+                checkCreate = checkCreate && getUM().registorUser();
                 break;
             case 2: 
                 return null;
@@ -53,7 +53,7 @@ public class AuthenServices {
         } 
         else System.out.println("Registor success!!");
 
-        return getUS().getList().getLast();
+        return getUM().getList().getLast();
     }
   
 }

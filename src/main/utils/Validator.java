@@ -12,12 +12,12 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-import main.models.User;
-import main.models.User.Role;
+import main.dto.User;
+import main.dto.User.Role;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.Input.rolesListing;
-import static main.utils.Utility.errorLog;
+import static main.utils.Log.errorLog;
 
 /**
  *
@@ -32,7 +32,7 @@ public class Validator {
     
     private static final Scanner scanner = new Scanner(System.in);
     
-    public static <T extends User> String getUsername(String message, boolean enterToPass, List<T> list) {
+    public static String getUsername(String message, boolean enterToPass, List<User> list) {
         String input = "";
         boolean isUnique;
         do {
@@ -48,7 +48,7 @@ public class Validator {
             if (input.length() < 4) 
                 errorLog("Accountname must be at least 4 character");         
  
-            for(T item : list) 
+            for(User item : list) 
                 if (item.getUsername().equals(input)) {
                     errorLog("Accountname has already exist");
                     isUnique = false;
@@ -77,14 +77,20 @@ public class Validator {
             if (input.isEmpty() && enterToPass) 
                 return "";
             
-            if (input.isEmpty()) 
+            if (input.isEmpty()) {
                 errorLog("Password must not be empty");
+                continue;
+            }
             
-            if (input.length() < 6) 
+            if (input.length() < 6) {
                 errorLog("Password must be at least 6 character");
+                continue;
+            }
 
-            if (input.contains(" ")) 
+            if (input.contains(" ")) {
                 errorLog("Password must contain no space");
+                continue;
+            }
            
             confirmPassword("Confirm password: ", input);
 
@@ -210,9 +216,19 @@ public class Validator {
         return input;
     }
     
+    public static boolean isDateInRange(LocalDate startDate, LocalDate endDate, LocalDate targetDate) {
+        return (targetDate.isEqual(startDate) || targetDate.isAfter(startDate)) &&
+               (targetDate.isEqual(endDate) || targetDate.isBefore(endDate));
+    }
+    
+    public static boolean isDateTimeInRange(LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime targetDateTime) {
+        return (targetDateTime.isEqual(startDateTime) || targetDateTime.isAfter(startDateTime)) &&
+               (targetDateTime.isEqual(endDateTime) || targetDateTime.isBefore(endDateTime));
+    }
+    
     public static boolean isValidDate(String dateStr) {
         try {
-            LocalDate date = LocalDate.parse(dateStr, DATE);
+            LocalDate.parse(dateStr, DATE);
             return true; 
         } catch (DateTimeParseException e) {
             return false;

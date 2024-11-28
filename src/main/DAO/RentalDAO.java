@@ -1,4 +1,4 @@
-package main.DAO;
+package main.dao;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import main.models.Rental;
-import main.utils.DatabaseUtil;
+import main.dto.Rental;
+import main.config.Database;
 
 /**
  *
@@ -18,7 +18,7 @@ public class RentalDAO {
     
     public static boolean addRentalToDB(Rental rental) {
         String sql = "INSERT INTO Rental (rental_id, user_id, movie_id, rental_date, return_date, charges, overdue_fines) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, rental.getId());
@@ -38,7 +38,7 @@ public class RentalDAO {
     
     public static boolean updateRentalFromDB(Rental rental) {
         String sql = "UPDATE Rental SET user_id = ?, movie_id = ?, rental_date = ?, return_date = ?, charges = ?, overdue_fines = ? WHERE rental_id = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             
             preparedStatement.setString(1, rental.getUserId());
@@ -58,7 +58,7 @@ public class RentalDAO {
     
     public static boolean deleteRentalFromDB(String rentalID) {
         String sql = "DELETE FROM Rental WHERE rental_id = ?";
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, rentalID);
@@ -73,7 +73,7 @@ public class RentalDAO {
     public static List<Rental> getAllRental() {
         String sql = "SELECT * FROM Rental";
         List<Rental> list = new ArrayList<>();
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
