@@ -8,13 +8,6 @@ import static main.utils.Utility.errorLog;
 
 public class DatabaseUtil {
 
-<<<<<<< HEAD
-    private static final String URL = "jdbc:mysql://mysql:3307/movierentalsystemdb";
-    private static final String USER = "root";
-    private static final String PASSWORD = "1";
-
-=======
->>>>>>> ab5b0abf2aeffc2a2ad4bbfcca42519554fd3984
     public static Connection getConnection() throws SQLException {
         Map<String, String> envVariables = EnvReader.readEnvFile();
 

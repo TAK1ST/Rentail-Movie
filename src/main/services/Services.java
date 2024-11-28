@@ -3,10 +3,6 @@ package main.services;
 
 import java.io.IOException;
 
-/**
- *
- * @author trann
- */
 public class Services {
     
     private static UserServices US = null;
