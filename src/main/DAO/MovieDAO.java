@@ -15,7 +15,8 @@ public class MovieDAO {
 
     public static boolean addMovieToDB(Movie movie) {
         String sql = "INSERT INTO Movie (movie_id, title, description, avg_rating, language, release_year, rental_price, available_copies) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DatabaseUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DatabaseUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, movie.getId());
             preparedStatement.setString(2, movie.getTitle());
             preparedStatement.setString(3, movie.getDescription());

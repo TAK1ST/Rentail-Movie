@@ -12,12 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import main.models.User;
 import main.utils.DatabaseUtil;
-import static main.utils.PassEncryptor.encryptPassword;
 
-/**
- *
- * @author trann
- */
+
+
 public class UserDAO {
     public static boolean addUserToDB(User user) {
         String sql = "INSERT INTO Users (user_id, username, password_hash, role, full_name, address, phone_number, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

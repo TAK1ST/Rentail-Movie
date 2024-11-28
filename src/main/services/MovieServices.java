@@ -69,18 +69,20 @@ public class MovieServices extends ListManager<Movie> {
         ));
 
         boolean isSuccess = MovieDAO.addMovieToDB(list.getLast());
-        if (isSuccess) 
-            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds()) &&
-                    MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds());
+        if (isSuccess) {
+            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds())
+                    && MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds());
+        }
         return false;
     }
 
     public boolean addMovie(Movie movie) {
         list.add(movie);
         boolean isSuccess = MovieDAO.addMovieToDB(list.getLast());
-        if (isSuccess) 
-            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds()) &&
-                    MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds());
+        if (isSuccess) {
+            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds())
+                    && MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds());
+        }
         return false;
     }
 
@@ -121,10 +123,14 @@ public class MovieServices extends ListManager<Movie> {
     }
 
     public boolean updateMovie() {
-        if (checkEmpty(list)) return false;    
+        if (checkEmpty(list)) {
+            return false;
+        }
 
         Movie foundMovie = (Movie) getById("Enter movie's id");
-        if (checkNull(foundMovie)) return false;
+        if (checkNull(foundMovie)) {
+            return false;
+        }
 
         String title = getString("Enter title", true);
         String description = getString("Enter description", true);
@@ -132,30 +138,39 @@ public class MovieServices extends ListManager<Movie> {
         LocalDate releaseYear = getDate("Enter release date", true);
         Double rentalPrice = getDouble("Enter rental price", 0, Double.MAX_VALUE, true);
 
-        if (!title.isEmpty()) 
+        if (!title.isEmpty()) {
             foundMovie.setTitle(title);
+        }
 
-        if (!description.isEmpty()) 
+        if (!description.isEmpty()) {
             foundMovie.setDescription(description);
+        }
 
-        if (!language.isEmpty()) 
+        if (!language.isEmpty()) {
             foundMovie.setLanguage(language);
+        }
 
-        if (releaseYear != null) 
+        if (releaseYear != null) {
             foundMovie.setReleaseYear(releaseYear);
+        }
 
-        if (rentalPrice > 0) 
+        if (rentalPrice > 0) {
             foundMovie.setRentalPrice(rentalPrice);
+        }
 
         MovieDAO.updateMovieFromDB(foundMovie);
         return true;
     }
 
     public boolean deleteMovie() {
-        if (checkEmpty(list)) return false;
+        if (checkEmpty(list)) {
+            return false;
+        }
 
         Movie foundMovie = (Movie) getById("Enter movie's id");
-        if (checkNull(foundMovie)) return false;
+        if (checkNull(foundMovie)) {
+            return false;
+        }
 
         list.remove(foundMovie);
         MovieDAO.deleteMovieFromDB(foundMovie.getId());
@@ -218,37 +233,37 @@ public class MovieServices extends ListManager<Movie> {
             return false;  // Returns false if there was an issue executing the update
         }
     }
-   public void displayMovies(List<Movie> movies, String title) {
-    System.out.println(title);
-    System.out.println("------------------------------------------------------------");
 
-    // Kiểm tra nếu danh sách bộ phim trống
-    if (movies.isEmpty()) {
-        System.out.println("No movies available.");
-        return;
+    public void displayMovies(List<Movie> movies, String title) {
+        System.out.println(title);
+        System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+
+        if (movies.isEmpty()) {
+            System.out.println("No movies available.");
+            return;
+        }
+
+        System.out.printf("|%-10s | %-30s | %-30s | %-10s | %-15s | %-20s | %-10s | %-10s |\n",
+                "Movie ID", "Title", "Description", "Avg Rating", "Genres", "Actors", "Language", "Release Year", "Available Copies");
+
+        System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+
+        for (Movie movie : movies) {
+            String genres = String.join(", ", movie.getGenreIds());
+            String actors = String.join(", ", movie.getActorIds());
+            System.out.printf("|%-10s | %-30s | %-30s | %-10s | %-15s | %-20s | %-10s | %-10s | %-10s |\n",
+                    movie.getId(),
+                    movie.getTitle(),
+                    movie.getDescription().isEmpty() ? "N/A" : movie.getDescription() ,
+                    movie.getAVGRating(),
+                    genres.isEmpty() ? "N/A" : genres,
+                    actors.isEmpty() ? "N/A" : actors,
+                    movie.getLanguage(),
+                    movie.getReleaseYear(),
+                    movie.getAvailable_copies());
+        }
+
+        System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+
     }
-
-    // In tiêu đề cột
-    System.out.printf("%-10s %-30s %-20s %-15s %-15s %-20s %-10s %-10s\n",
-            "Movie ID", "Title", "Description", "Avg Rating", "Genres", "Actors", "Language", "Release Year");
-
-    System.out.println("------------------------------------------------------------");
-
-    // Duyệt qua từng bộ phim và in thông tin
-    for (Movie movie : movies) {
-        String genres = String.join(", ", movie.getGenreIds());
-        String actors = String.join(", ", movie.getActorIds());
-        System.out.printf("%-10s %-30s %-20s %-15.1f %-15s %-20s %-10s %-10s\n",
-                movie.getId(), 
-                movie.getTitle(),
-                movie.getDescription().length() > 20 ? movie.getDescription().substring(0, 20) + "..." : movie.getDescription(), // Cắt ngắn mô tả
-                movie.getAVGRating(),
-                genres.isEmpty() ? "N/A" : genres,
-                actors.isEmpty() ? "N/A" : actors,
-                movie.getLanguage(),
-                movie.getReleaseYear());
-    }
-
-    System.out.println("------------------------------------------------------------");
-}
 }
