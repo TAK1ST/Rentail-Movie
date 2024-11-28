@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import main.DAO.GenreDAO;
-import main.models.Genre;
+import main.dto.Genre;
 import main.utils.IDGenerator;
 import static main.utils.Input.getString;
 import static main.utils.Validator.getName;

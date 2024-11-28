@@ -5,7 +5,7 @@
 package main.utils;
 
 import java.util.Scanner;
-import main.models.User;
+import main.dto.User;
 import static main.utils.Log.errorLog;
 
 /**
