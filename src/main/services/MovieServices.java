@@ -218,5 +218,37 @@ public class MovieServices extends ListManager<Movie> {
             return false;  // Returns false if there was an issue executing the update
         }
     }
-  
+   public void displayMovies(List<Movie> movies, String title) {
+    System.out.println(title);
+    System.out.println("------------------------------------------------------------");
+
+    // Kiểm tra nếu danh sách bộ phim trống
+    if (movies.isEmpty()) {
+        System.out.println("No movies available.");
+        return;
+    }
+
+    // In tiêu đề cột
+    System.out.printf("%-10s %-30s %-20s %-15s %-15s %-20s %-10s %-10s\n",
+            "Movie ID", "Title", "Description", "Avg Rating", "Genres", "Actors", "Language", "Release Year");
+
+    System.out.println("------------------------------------------------------------");
+
+    // Duyệt qua từng bộ phim và in thông tin
+    for (Movie movie : movies) {
+        String genres = String.join(", ", movie.getGenreIds());
+        String actors = String.join(", ", movie.getActorIds());
+        System.out.printf("%-10s %-30s %-20s %-15.1f %-15s %-20s %-10s %-10s\n",
+                movie.getId(), 
+                movie.getTitle(),
+                movie.getDescription().length() > 20 ? movie.getDescription().substring(0, 20) + "..." : movie.getDescription(), // Cắt ngắn mô tả
+                movie.getAVGRating(),
+                genres.isEmpty() ? "N/A" : genres,
+                actors.isEmpty() ? "N/A" : actors,
+                movie.getLanguage(),
+                movie.getReleaseYear());
+    }
+
+    System.out.println("------------------------------------------------------------");
+}
 }
