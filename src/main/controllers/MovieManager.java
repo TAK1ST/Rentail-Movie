@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import static main.constants.Constants.MOVIE_PREFIX;
 import main.dao.ActorDAO;
 import main.dao.GenreDAO;
 import main.dao.MovieDAO;
@@ -33,10 +34,8 @@ public class MovieManager extends ListManager<Movie> {
     }
 
     public boolean addMovie(String userID) {
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "M");
-
         list.add(new Movie(
-                id,
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), MOVIE_PREFIX),
                 getString("Enter title", false),
                 getString("Enter description", false),
                 0,
@@ -47,9 +46,7 @@ public class MovieManager extends ListManager<Movie> {
                 getDouble("Enter rental price", 0, Double.MAX_VALUE, false),
                 getInteger("Enter available copies", 0, Integer.MAX_VALUE, false)
         ));
-
-        boolean isSuccess = MovieDAO.addMovieToDB(list.getLast());
-        if (isSuccess) 
+        if (MovieDAO.addMovieToDB(list.getLast())) 
             return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIDs()) &&
                     MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIDs());
         return false;
@@ -57,8 +54,7 @@ public class MovieManager extends ListManager<Movie> {
 
     public boolean addMovie(Movie movie) {
         list.add(movie);
-        boolean isSuccess = MovieDAO.addMovieToDB(list.getLast());
-        if (isSuccess) 
+        if (MovieDAO.addMovieToDB(list.getLast())) 
             return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIDs()) &&
                     MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIDs());
         return false;
@@ -152,8 +148,7 @@ public class MovieManager extends ListManager<Movie> {
         if (checkNull(foundMovie)) return false;
 
         list.remove(foundMovie);
-        MovieDAO.deleteMovieFromDB(foundMovie.getId());
-        return true;
+        return MovieDAO.deleteMovieFromDB(foundMovie.getId());
     }
 
     public void searchMovie() {
