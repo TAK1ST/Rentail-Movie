@@ -11,7 +11,6 @@ USE movierentalsystemdb;
     email VARCHAR(50) NOT NULL,
     status ENUM('NONE', 'ONLINE', 'BANNED', 'OFFLINE') NOT NULL
 );
-	-- role use integer help flexible and can expand more. 
 	CREATE TABLE IF NOT EXISTS Profiles (
     account_id CHAR(8),
     full_name NVARCHAR(60),
@@ -67,7 +66,6 @@ CREATE TABLE IF NOT EXISTS Actors (
     actor_rank ENUM('NONE', 'A', 'B', 'C', 'D') NOT NULL
 );
 
--- change M-N Movie and Actor to 1-N thought Movie_Actor
 CREATE TABLE IF NOT EXISTS Movie_Actor (
     movie_id CHAR(8),
     actor_id CHAR(8),
