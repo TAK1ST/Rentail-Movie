@@ -1,0 +1,41 @@
+services:
+  # Dịch vụ MySQL
+  mysql:
+    image: mysql:latest
+    container_name: rental-movie-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: movierentalsystemdb
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - rental-movie-network
+
+  # Dịch vụ ứng dụng Java (Rental-Movie)
+  rental-movie:
+    build:
+      context: .
+    container_name: rental-movie-app
+    environment:
+      DB_HOST: mysql                       
+      DB_PORT: 3307
+      DB_NAME: rental_movie
+      DB_USER: rental_user
+      DB_PASSWORD: rental_password
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - rental-movie-network
+
+networks:
+  rental-movie-network:
+
+volumes:
+  mysql-data:
+

@@ -6,7 +6,7 @@ package main.views;
 
 import java.io.IOException;
 import main.constants.Constants;
-import main.constants.Role;
+import main.constants.AccRole;
 import static main.controllers.Managers.getAM;
 import static main.controllers.Managers.getGM;
 import static main.controllers.Managers.getMM;
@@ -122,11 +122,10 @@ public class AdminPannel {
     }
     
     private static void userMenu() throws IOException {
-        Menu.showManagerMenu(
-            "User Managment",
+        Menu.showManagerMenu("User Managment",
             null,
             new MenuOption[]{
-                new MenuOption("Add User", () -> showSuccess(getUM().addUser(Role.ADMIN)), true),
+                new MenuOption("Add User", () -> showSuccess(getUM().addUser(AccRole.ADMIN)), true),
                 new MenuOption("Delete User", () -> showSuccess(getUM().deleteUser()), true),
                 new MenuOption("Update User", () -> showSuccess(getUM().updateUser("")), true),
                 new MenuOption("Search User", () -> getUM().searchUser(), true),

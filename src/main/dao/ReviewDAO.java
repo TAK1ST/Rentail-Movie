@@ -21,36 +21,34 @@ import main.config.Database;
 public class ReviewDAO {
     
     public static boolean addReviewToDB(Review review) {
-        String sql = "INSERT INTO Review (review_id,movie_id ,user_id ,review_text ,rating , review_date) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Reviews (review_id, movie_id, customer_id, review_text, rating, review_date) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, review.getId());
             preparedStatement.setString(2, review.getMovieID());
-            preparedStatement.setString(3, review.getUserID());
+            preparedStatement.setString(3, review.getCustomerID());
             preparedStatement.setString(4, review.getReviewText());
             preparedStatement.setInt(5, review.getRating());
             preparedStatement.setDate(6, Date.valueOf(review.getReviewDate()));
 
-//            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
     
-    public static boolean updateReviewFromDB(Review review) {
-        String sql = "UPDATE Review SET user_id = ?, movie_id = ?, rating = ?, review_date = ?, review_text = ? WHERE review_id = ?";
+    public static boolean updateReviewInDB(Review review) {
+        String sql = "UPDATE Reviews SET customer_id = ?, movie_id = ?, rating = ?, review_date = ?, review_text = ? WHERE review_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, review.getUserID());
+            preparedStatement.setString(1, review.getCustomerID());
             preparedStatement.setString(2, review.getMovieID());
             preparedStatement.setInt(3, review.getRating());
             preparedStatement.setDate(4, Date.valueOf(review.getReviewDate()));
             preparedStatement.setString(5, review.getReviewText());
             preparedStatement.setString(6, review.getId());
             
-//            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -58,7 +56,7 @@ public class ReviewDAO {
     }
     
     public static boolean deleteReviewFromDB(String reviewID) {
-        String sql = "DELETE FROM Review WHERE review_id = ?";
+        String sql = "DELETE FROM Reviews WHERE review_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -71,7 +69,7 @@ public class ReviewDAO {
     }
     
     public static List<Review> getAllReview() {
-        String sql = "SELECT * FROM Review";
+        String sql = "SELECT * FROM Reviews";
         List<Review> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);

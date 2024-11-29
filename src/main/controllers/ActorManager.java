@@ -24,7 +24,7 @@ public class ActorManager extends ListManager<Actor> {
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "A");
         String name = getString("Enter actor's name", false);
     
-        list.add(new Actor(id, name));
+        list.add(new Actor(id, name,description,rank));
         ActorDAO.addActorToDB(list.getLast());
         return true;
     }

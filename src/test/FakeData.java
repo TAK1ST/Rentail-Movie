@@ -6,10 +6,10 @@ package test;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.constants.Role;
+import main.constants.AccRole;
 import main.dao.ActorDAO;
 import main.dao.GenreDAO;
-import main.dao.UserDAO;
+import main.dao.AccountDAO;
 import static main.controllers.Managers.getAM;
 import static main.controllers.Managers.getGM;
 import static main.controllers.Managers.getMM;
@@ -46,19 +46,19 @@ public class FakeData {
     public static boolean makeFakeUser() {
         
         List<User> temp = new ArrayList<>();
-        temp.add(new User("U0000002", "thien", "newPass123", Role.STAFF, "Thien Tran", "123 Main St", "9876543210", "thien@example.com"));
-        temp.add(new User("U0000003", "kiet", "newPass456", Role.CUSTOMER, "Kiet Tran", "456 Elm St", "8765432109", "kiet@example.com"));
-        temp.add(new User("U0000004", "kietse", "newPass789", Role.CUSTOMER, "Ngoc Thien", "789 Oak St", "7654321098", "kietse@example.com"));
-        temp.add(new User("U0000005", "duongngo", "newPass012", Role.STAFF, "Duong Ngo", "321 Pine St", "6543210987", "duongngo@example.com"));
-        temp.add(new User("U0000006", "duongbingo", "newPass345", Role.ADMIN, "Bingo Duong", "654 Cedar St", "5432109876", "duongbingo@example.com"));
-        temp.add(new User("U0000007", "thiendepzai", "newPass678", Role.PREMIUM, "Thien Depzai", "987 Maple St", "4321098765", "thiendepzai@example.com"));
-        temp.add(new User("U0000008", "3changlinh", "newPass901", Role.CUSTOMER, "Chang Linh", "147 Birch St", "3210987654", "3changlinh@example.com"));
-        temp.add(new User("U0000009", "success", "newPass234", Role.CUSTOMER, "Successful Tran", "258 Walnut St", "2109876543", "success@example.com"));
-        temp.add(new User("U0000010", "tttt", "newPass567", Role.STAFF, "T Tran", "369 Spruce St", "1098765432", "tttt@example.com"));
-        temp.add(new User("U0000011", "kkkk", "newPass890", Role.PREMIUM, "KK Tran", "741 Cherry St", "0987654321", "kkkk@example.com"));
+        temp.add(new User("U0000002", "thien", "newPass123", AccRole.STAFF, "Thien Tran", "123 Main St", "9876543210", "thien@example.com"));
+        temp.add(new User("U0000003", "kiet", "newPass456", AccRole.CUSTOMER, "Kiet Tran", "456 Elm St", "8765432109", "kiet@example.com"));
+        temp.add(new User("U0000004", "kietse", "newPass789", AccRole.CUSTOMER, "Ngoc Thien", "789 Oak St", "7654321098", "kietse@example.com"));
+        temp.add(new User("U0000005", "duongngo", "newPass012", AccRole.STAFF, "Duong Ngo", "321 Pine St", "6543210987", "duongngo@example.com"));
+        temp.add(new User("U0000006", "duongbingo", "newPass345", AccRole.ADMIN, "Bingo Duong", "654 Cedar St", "5432109876", "duongbingo@example.com"));
+        temp.add(new User("U0000007", "thiendepzai", "newPass678", AccRole.PREMIUM, "Thien Depzai", "987 Maple St", "4321098765", "thiendepzai@example.com"));
+        temp.add(new User("U0000008", "3changlinh", "newPass901", AccRole.CUSTOMER, "Chang Linh", "147 Birch St", "3210987654", "3changlinh@example.com"));
+        temp.add(new User("U0000009", "success", "newPass234", AccRole.CUSTOMER, "Successful Tran", "258 Walnut St", "2109876543", "success@example.com"));
+        temp.add(new User("U0000010", "tttt", "newPass567", AccRole.STAFF, "T Tran", "369 Spruce St", "1098765432", "tttt@example.com"));
+        temp.add(new User("U0000011", "kkkk", "newPass890", AccRole.PREMIUM, "KK Tran", "741 Cherry St", "0987654321", "kkkk@example.com"));
         
         for (User item : temp) {
-            UserDAO.addUserToDB(item);
+            AccountDAO.addUserToDB(item);
             getUM().getList().add(item);
         }
         

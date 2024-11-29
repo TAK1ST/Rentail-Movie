@@ -2,7 +2,7 @@ package main.services;
 
 import java.io.IOException;
 import static main.controllers.Managers.getUM;
-import main.dto.User;
+import main.dto.Account;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
 import main.utils.Menu;
@@ -13,18 +13,19 @@ import main.utils.Menu;
  */
 public class AuthenServices {
     
-    public static User login() {
-        User account = null;
+    public static Account login() {
+        Account account = null;
 
         Menu.showTitle("Login");
-        String username = getString("Enter username", false);
+        String input = getString("Enter username or email", false);
         String password = getString("Enter password", false);
 
-        for (User item : getUM().getList()) 
-            if (item.getUsername().equals(username) && item.getPassword().equals(password)) {
-                account = new User(item);
-                break;
-            }                
+        for (Account item : getUM().getList()) 
+            if(item.getUsername().equals(input) || item.getEmail().equals(input))
+                if (item.getPassword().equals(password)) {
+                    account = new User(item);
+                    break;
+                }                
 
         if(account == null)
             errorLog("Wrong username or pasword");
@@ -32,7 +33,7 @@ public class AuthenServices {
         return account;
     }
 
-    public static User registor() throws IOException {
+    public static Account registor() throws IOException {
         boolean checkCreate = true;
 
         Menu.showTitle("Registor");
@@ -42,6 +43,7 @@ public class AuthenServices {
         switch(input) {
             case 1: 
                 checkCreate = checkCreate && getUM().registorCustomer();
+
                 break;
             case 2: 
                 return null;

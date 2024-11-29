@@ -29,24 +29,23 @@ public class MovieServices {
                 }
             }
         }
-        return 0; // dont have rating
+        return 0; 
     }
 
     public static boolean adjustAvailableCopy(String movieID, int amount) {
         String reduceCopiesSql = "UPDATE Movie SET available_copies = available_copies - " + amount + " WHERE movie_id = ? AND available_copies > 0";
 
-        try (Connection conn = getConnection(); // Assuming you have a utility method for DB connection
+        try (Connection conn = getConnection();
                  PreparedStatement stmt = conn.prepareStatement(reduceCopiesSql)) {
 
             stmt.setString(1, movieID);
 
             int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0; // Returns true if the update was successful (i.e., at least one row affected)
+            return affectedRows > 0;
 
         } catch (SQLException e) {
-            e.printStackTrace();  // Add proper logging or handle the exception as needed
-            return false;  // Returns false if there was an issue executing the update
+            e.printStackTrace(); 
+            return false;  
         }
     }
-    
 }

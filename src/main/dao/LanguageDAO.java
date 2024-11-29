@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.dao;
 
 import java.sql.Connection;
@@ -10,22 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import main.dto.Genre;
+import main.dto.Language;
 import main.config.Database;
 
 /**
- *
- * @author trann
+ * LanguageDAO - Data Access Object for Language entity.
+ * Provides CRUD operations to interact with the Language table in the database.
+ * 
+ * @author kiet
  */
-public class GenreDAO {
+public class LanguageDAO {
     
-    public static boolean addGenreToDB(Genre genre) {
-        String sql = "INSERT INTO Genres (genre_name, description) VALUES (?, ?)";
+    public static boolean addLanguageToDB(Language language) {
+        String sql = "INSERT INTO Languages (language_code, laguage_name) VALUES (?, ?)";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, genre.getId());
-            preparedStatement.setString(2, genre.getGenreName());
+  
+            preparedStatement.setString(1, language.getCode());  
+            preparedStatement.setString(2, language.getName());  
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -34,14 +32,14 @@ public class GenreDAO {
         return false;
     }
     
-    public static boolean updateGenreInDB(Genre genre) {
-        String sql = "UPDATE Genres SET description = ? WHERE genre_name = ?";
+    public static boolean updateLanguageInDB(Language language) {
+        String sql = "UPDATE Languages SET name = ? WHERE language_code = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, genre.getDescription());
-            preparedStatement.setString(2, genre.getGenreName());
-            
+            preparedStatement.setString(1, language.getName());  
+            preparedStatement.setString(2, language.getCode());  
+
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -49,12 +47,12 @@ public class GenreDAO {
         return false;
     }
     
-    public static boolean deleteGenreFromDB(String genre_id) {
-        String sql = "DELETE FROM Genres WHERE genre_name = ?";
+    public static boolean deleteLanguageFromDB(String languageId) {
+        String sql = "DELETE FROM Languages WHERE language_code = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, genre_id);
+            preparedStatement.setString(1, languageId);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,23 +60,24 @@ public class GenreDAO {
         return false;
     }
     
-    public static List<Genre> getAllGenre() {
-        String sql = "SELECT * FROM Genres";
-        List<Genre> list = new ArrayList<>();
+    public static List<Language> getAllLanguages() {
+        String sql = "SELECT * FROM Languages";
+        List<Language> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                Genre genre = new Genre(
-                    resultSet.getString("genre_name"),
-                    resultSet.getString("description")
+                Language language = new Language(
+                    resultSet.getString("language_code"),  
+                    resultSet.getString("languaeg_name")
                 );
-                list.add(genre);
+                list.add(language);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
     }
+   
 }

@@ -5,7 +5,7 @@
 package main.views;
 
 import java.io.IOException;
-import main.dto.User;
+import main.dto.Account;
 import static main.services.AuthenServices.login;
 import static main.services.AuthenServices.registor;
 import static main.utils.Input.yesOrNo;
@@ -15,8 +15,8 @@ import static main.utils.Input.yesOrNo;
  * @author trann
  */
 public class AuthenPannel {
-    public static User getUsers() throws IOException {
-        User account;
+    public static Account getAccounts() throws IOException {
+        Account account;
         do {
             if(yesOrNo("Have account?"))  
                 account = login();
