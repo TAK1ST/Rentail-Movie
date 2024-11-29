@@ -19,7 +19,7 @@ import main.utils.IDGenerator;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.Input.selectInfo;
-import static main.utils.Log.errorLog;
+import static main.utils.LogMessage.errorLog;
 import main.utils.Validator;
 
 /**

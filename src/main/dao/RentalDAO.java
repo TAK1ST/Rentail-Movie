@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dto.Rental;
 import main.config.Database;
+import main.constants.RentalStatus;
 
 /**
  *
@@ -17,20 +18,20 @@ import main.config.Database;
 public class RentalDAO {
     
     public static boolean addRentalToDB(Rental rental) {
-        String sql = "INSERT INTO Rental (rental_id, user_id, movie_id, staff_id, rental_date, return_date, late_fee, due_date, total_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Rentals (rental_id, user_id, movie_id, staff_id, rental_date, return_date, due_date, late_fee, total_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, rental.getId());
-            preparedStatement.setString(2, rental.getUserID());
+            preparedStatement.setString(2, rental.getCustomerID());
             preparedStatement.setString(3, rental.getMovieID());
             preparedStatement.setString(4, rental.getStaffID());
             preparedStatement.setDate(5, Date.valueOf(rental.getRentalDate()));
             preparedStatement.setDate(6, Date.valueOf(rental.getReturnDate()));
-            preparedStatement.setDouble(7, rental.getLate_fee());
-            preparedStatement.setDouble(8, rental.getDue_date());
-            preparedStatement.setDouble(9, rental.getTotal_amount());
-            preparedStatement.setString(10, rental.getStatus());
+            preparedStatement.setDate(8, Date.valueOf(rental.getDueDate()));
+            preparedStatement.setDouble(7, rental.getLateFee());
+            preparedStatement.setDouble(9, rental.getTotalAmount());
+            preparedStatement.setString(10, rental.getStatus().name());
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -39,20 +40,20 @@ public class RentalDAO {
         return false;
     }
     
-    public static boolean updateRentalFromDB(Rental rental) {
-        String sql = "UPDATE Rental SET user_id = ?, movie_id = ?, staff_id = ?, rental_date = ?, return_date = ?, late_fee = ?, due_date = ?, total_amount = ?, status = ? WHERE rental_id = ?";
+    public static boolean updateRentalInDB(Rental rental) {
+        String sql = "UPDATE Rentals SET user_id = ?, movie_id = ?, staff_id = ?, rental_date = ?, return_date = ?, late_fee = ?, due_date = ?, total_amount = ?, status = ? WHERE rental_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             
-            preparedStatement.setString(1, rental.getUserID());
+            preparedStatement.setString(1, rental.getCustomerID());
             preparedStatement.setString(2, rental.getMovieID());
             preparedStatement.setString(3, rental.getStaffID());
             preparedStatement.setDate(4, Date.valueOf(rental.getRentalDate()));
             preparedStatement.setDate(5, Date.valueOf(rental.getReturnDate()));
-            preparedStatement.setDouble(6, rental.getLate_fee());
-            preparedStatement.setDouble(7, rental.getDue_date());
-            preparedStatement.setDouble(8, rental.getTotal_amount());
-            preparedStatement.setString(9, rental.getStatus());
+            preparedStatement.setDate(6, Date.valueOf(rental.getDueDate()));
+            preparedStatement.setDouble(7, rental.getLateFee());
+            preparedStatement.setDouble(8, rental.getTotalAmount());
+            preparedStatement.setString(9, rental.getStatus().name());
             preparedStatement.setString(10, rental.getId());
             
             return preparedStatement.executeUpdate() > 0;
@@ -63,7 +64,7 @@ public class RentalDAO {
     }
     
     public static boolean deleteRentalFromDB(String rentalID) {
-        String sql = "DELETE FROM Rental WHERE rental_id = ?";
+        String sql = "DELETE FROM Rentals WHERE rental_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -77,7 +78,7 @@ public class RentalDAO {
     }
     
     public static List<Rental> getAllRental() {
-        String sql = "SELECT * FROM Rental";
+        String sql = "SELECT * FROM Rentals";
         List<Rental> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -91,10 +92,10 @@ public class RentalDAO {
                     resultSet.getString("staff_id"),
                     resultSet.getDate("rental_date").toLocalDate(),
                     resultSet.getDate("return_date").toLocalDate(),
+                    resultSet.getDate("due_date").toLocalDate(),
                     resultSet.getDouble("late_fee"),
-                    resultSet.getDouble("due_date"),
                     resultSet.getDouble("total_amount"),
-                    resultSet.getString("status")
+                    RentalStatus.valueOf(resultSet.getString("status"))
                 );
                 list.add(rental);
             }

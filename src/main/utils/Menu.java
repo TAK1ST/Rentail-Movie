@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.yesOrNo;
-import static main.utils.Log.errorLog;
+import static main.utils.LogMessage.errorLog;
 
 /**
  *
@@ -17,8 +17,7 @@ import static main.utils.Log.errorLog;
 public class Menu {
     
     private static final int INIT_NUM = 1;
-    
-    
+       
     public static void showManagerMenu(String title, 
                                         MenuAction[] actionsBefore,
                                         MenuOption[] options, 
@@ -69,6 +68,12 @@ public class Menu {
         String optionText;
         MenuAction action;
         boolean askToContinue;
+        
+        public MenuOption(String optionText) {
+            this.optionText = optionText;
+            this.action = null;
+            this.askToContinue = false;
+        }
         
         public MenuOption(String optionText, MenuAction action) {
             this.optionText = optionText;

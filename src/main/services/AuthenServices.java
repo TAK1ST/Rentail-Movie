@@ -4,7 +4,7 @@ import java.io.IOException;
 import static main.controllers.Managers.getUM;
 import main.dto.Account;
 import static main.utils.Input.getString;
-import static main.utils.Log.errorLog;
+import static main.utils.LogMessage.errorLog;
 import main.utils.Menu;
 
 /**
@@ -17,14 +17,15 @@ public class AuthenServices {
         Account account = null;
 
         Menu.showTitle("Login");
-        String username = getString("Enter username", false);
+        String input = getString("Enter username or email", false);
         String password = getString("Enter password", false);
 
         for (Account item : getUM().getList()) 
-            if (item.getAccountName().equals(username) && item.getPassword().equals(password)) {
-                account = new Account(item);
-                break;
-            }                
+            if(item.getUsername().equals(input) || item.getEmail().equals(input))
+                if (item.getPassword().equals(password)) {
+                    account = new User(item);
+                    break;
+                }                
 
         if(account == null)
             errorLog("Wrong username or pasword");
@@ -41,7 +42,8 @@ public class AuthenServices {
         int input = Menu.getChoice("Enter choice", options.length);
         switch(input) {
             case 1: 
-                checkCreate = checkCreate && getUM().registorAccount();
+                checkCreate = checkCreate && getUM().registorCustomer();
+
                 break;
             case 2: 
                 return null;

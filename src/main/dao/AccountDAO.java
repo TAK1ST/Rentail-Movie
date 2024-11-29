@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dto.Account;
 import main.config.Database;
+import main.constants.AccRole;
+import main.constants.AccStatus;
 
 /**
  *
@@ -15,16 +17,16 @@ import main.config.Database;
  */
 public class AccountDAO {
     public static boolean addAccountToDB(Account account) {
-        String sql = "INSERT INTO Accounts (user_id, email, password, username, role, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Accounts (account_id, email, password, username, role, status) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, account.getId());  
             preparedStatement.setString(2, account.getEmail());  
             preparedStatement.setString(3, account.getPassword());  
-            preparedStatement.setString(4, account.getAccountName());  
-            preparedStatement.setInt(5, account.getRole());  
-            preparedStatement.setInt(6, account.getStatus());  
+            preparedStatement.setString(4, account.getUsername());  
+            preparedStatement.setString(5, account.getRole().name());  
+            preparedStatement.setString(6, account.getStatus().name());  
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -33,16 +35,16 @@ public class AccountDAO {
         return false;
     }
     
-    public static boolean updateAccountFromDB(Account account) {
-        String sql = "UPDATE Accounts SET email = ?, password = ?, username = ?, role = ?, status = ? WHERE user_id = ?";
+    public static boolean updateAccountInDB(Account account) {
+        String sql = "UPDATE Accounts SET email = ?, password = ?, username = ?, role = ?, status = ? WHERE account_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, account.getEmail());  
             preparedStatement.setString(2, account.getPassword());  
-            preparedStatement.setString(3, account.getAccountName());  
-            preparedStatement.setInt(4, account.getRole());  
-            preparedStatement.setInt(5, account.getStatus());  
+            preparedStatement.setString(3, account.getUsername());  
+            preparedStatement.setString(4, account.getRole().name());  
+            preparedStatement.setString(5, account.getStatus().name());  
             preparedStatement.setString(6, account.getId());  
 
             return preparedStatement.executeUpdate() > 0;
@@ -53,7 +55,7 @@ public class AccountDAO {
     }
     
     public static boolean deleteAccountFromDB(String userID) {
-        String sql = "DELETE FROM Accounts WHERE user_id = ?";
+        String sql = "DELETE FROM Accounts WHERE account_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -74,12 +76,12 @@ public class AccountDAO {
 
             while (resultSet.next()) {
                 Account account = new Account(
-                    resultSet.getString("user_id"),  
+                    resultSet.getString("account_id"),  
                     resultSet.getString("email"),  
                     resultSet.getString("password"),  
                     resultSet.getString("username"),  
-                    resultSet.getInt("role"),  
-                    resultSet.getInt("status")  
+                    AccRole.valueOf(resultSet.getString("role")),  
+                    AccStatus.valueOf(resultSet.getString("status"))  
                 );
                 list.add(account);
             }

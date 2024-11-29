@@ -2,22 +2,19 @@ package main.dto;
 
 import java.time.LocalDate;
 import main.base.Model;
+import main.constants.DiscountType;
 
 public class Discount extends Model {
 
-    private String code;
     private LocalDate startDate;
     private LocalDate endDate;
-    private String type;
+    private DiscountType type;
     private int usageAvailable;
     private boolean isActive;
     private double value;
 
-    // Constructor
-    public Discount(String id, String code, LocalDate startDate, LocalDate endDate, String type,
-            int usageAvailable, boolean isActive, double value) {
-        super(id);
-        this.code = code;
+    public Discount(String code, LocalDate startDate, LocalDate endDate, DiscountType type, int usageAvailable, boolean isActive, double value) {
+        super(code);
         this.startDate = startDate;
         this.endDate = endDate;
         this.type = type;
@@ -26,10 +23,8 @@ public class Discount extends Model {
         this.value = value;
     }
 
-    // Copy constructor
     public Discount(Discount other) {
-        super(other.getId());
-        this.code = other.code;
+        super(other.getCode());
         this.startDate = other.startDate;
         this.endDate = other.endDate;
         this.type = other.type;
@@ -38,20 +33,16 @@ public class Discount extends Model {
         this.value = other.value;
     }
 
-    // toString method
     @Override
     public String toString() {
-        return String.format("Discount [ID: %s, Code: %s, Start Date: %s, End Date: %s, Type: %s, "
-                + "Usage Available: %d, Active: %b, Value: %.2f]",
-                super.getId(), code, startDate, endDate, type, usageAvailable, isActive, value);
+        return String.format("Discount: %s, %s, %s, %s, %d, %b, %.2f.",
+                this.getCode(), startDate, endDate, type, usageAvailable, isActive, value);
     }
 
-    // Method to get the values for database operations
     @Override
     public Object[] getDatabaseValues() {
         return new Object[]{
-            super.getId(),
-            code,
+            this.getCode(),
             startDate,
             endDate,
             type,
@@ -61,18 +52,16 @@ public class Discount extends Model {
         };
     }
 
-    // Static method to return class name
     public static String className() {
         return "Discount";
     }
 
-    // Getters and Setters
     public String getCode() {
-        return code;
+        return super.getId();
     }
 
     public void setCode(String code) {
-        this.code = code;
+        super.setId(code);
     }
 
     public LocalDate getStartDate() {
@@ -91,11 +80,11 @@ public class Discount extends Model {
         this.endDate = endDate;
     }
 
-    public String getType() {
+    public DiscountType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(DiscountType type) {
         this.type = type;
     }
 

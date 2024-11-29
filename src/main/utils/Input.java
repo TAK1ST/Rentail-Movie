@@ -6,8 +6,7 @@
 package main.utils;
 
 import java.util.Scanner;
-import main.dto.User;
-import static main.utils.Log.errorLog;
+import static main.utils.LogMessage.errorLog;
 
 /**
  *
@@ -33,75 +32,64 @@ public class Input {
             return result;
         }
 
-        public static int getInteger(String message, int min, int max, boolean enterToPass) {
-            int number;
-            while (true) {
-                System.out.print(message + ": ");
-                String input = scanner.nextLine();
-                if (input.isEmpty() && enterToPass) {
-                    return Integer.MIN_VALUE;
+    public static int getInteger(String message, int min, int max, boolean enterToPass) {
+        int number;
+        while (true) {
+            System.out.printf("%s (%d -> %d): ", message, min, max);
+            String input = scanner.nextLine();
+            if (input.isEmpty() && enterToPass) {
+                return Integer.MIN_VALUE;
+            }
+            try {
+                number = Integer.parseInt(input);
+                if (number >= min && number <= max) {
+                    return number;
+                } else {
+                    errorLog("Number not in range");
                 }
-                try {
-                    number = Integer.parseInt(input);
-                    if (number >= min && number <= max) {
-                        return number;
-                    } else {
-                        errorLog("Number not in range");
-                    }
-                } catch (NumberFormatException e) {
-                    errorLog("Please enter an integer");
-                }
+            } catch (NumberFormatException e) {
+                errorLog("Please enter an integer");
             }
         }
+    }
 
-        public static double getDouble(String message, double min, double max, boolean enterToPass) {
-            double number;
-            while (true) {
-                System.out.print(message + ": ");
-                String input = scanner.nextLine();
-                if (input.isEmpty() && enterToPass) {
-                    return Double.MIN_VALUE;
+    public static double getDouble(String message, double min, double max, boolean enterToPass) {
+        double number;
+        while (true) {
+            System.out.printf("%s (%.2f -> %.2f): ", message, min, max);
+            String input = scanner.nextLine();
+            if (input.isEmpty() && enterToPass) {
+                return Double.MIN_VALUE;
+            }
+            try {
+                number = Double.parseDouble(input);
+                if (number >= min && number <= max) {
+                    return number;
+                } else {
+                    errorLog("Number not in range");
                 }
-                try {
-                    number = Double.parseDouble(input);
-                    if (number >= min && number <= max) {
-                        return number;
-                    } else {
-                        errorLog("Number not in range");
-                    }
-                } catch (NumberFormatException e) {
-                    errorLog("Please enter an integer");
-                }
+            } catch (NumberFormatException e) {
+                errorLog("Please enter an integer");
             }
         }
+    }
 
-        public static boolean yesOrNo(String message) {
-            System.out.print(message + " (Y): ");
-            return scanner.nextLine().equalsIgnoreCase("y");
+    public static boolean yesOrNo(String message) {
+        System.out.print(message + " (Y): ");
+        return scanner.nextLine().equalsIgnoreCase("y");
+    }
+
+    public static String selectInfo(String message, String[] infoLists, boolean enterToPass) {
+        System.out.println("\n" + message + ": ");
+        for (int index = 0; index < infoLists.length; index++) {
+                if (index % 4 == 0) System.out.println();
+                System.out.printf("%2d. %-25s ", index, infoLists[index]);
         }
-     
-        public static void rolesListing(String message) {
-            User.Role list[] = User.Role.values();
-            System.out.println(message + ": ");
-            for(int index = 1; index < list.length; index++) {
-                if (index % 3 == 0)
-                    System.out.println();
-                System.out.printf("%2d.%-25s", index, list[index]);
-            }
-            System.out.println("\n");
-        }
-        
-	public static String selectInfo(String message, String[] infoLists, boolean enterToPass) {
-            System.out.println("\n" + message + ": ");
-            for (int index = 0; index < infoLists.length; index++) {
-                    if (index % 4 == 0) System.out.println();
-                    System.out.printf("%2d. %-25s ", index, infoLists[index]);
-            }
-            System.out.println("\n");
-            if (!enterToPass) 
-                return infoLists[getInteger("Enter an option", 0, infoLists.length - 1, enterToPass)];
-            else 
-                return "";
-	}
+        System.out.println("\n");
+        if (!enterToPass) 
+            return infoLists[getInteger("Enter an option", 0, infoLists.length - 1, enterToPass)];
+        else 
+            return "";
+    }
     
 }

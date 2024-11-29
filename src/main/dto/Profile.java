@@ -3,19 +3,16 @@ package main.dto;
 import main.base.Model;
 
 public class Profile extends Model {
-
-    private String user_id;
+    
     private String fullName;
-    private String phone_number;
+    private String phoneNumber;
     private String address;
     private String credit;
 
-    //Constructors
-    public Profile(String id, String user_id, String fullName, String phone_number, String address, String credit) {
-        super(id);
-        this.user_id = user_id;
+    public Profile(String accountID, String fullName, String phoneNumber, String address, String credit) {
+        super(accountID);
         this.fullName = fullName;
-        this.phone_number = phone_number;
+        this.phoneNumber = phoneNumber;
         this.address = address;
         this.credit = credit;
     }
@@ -23,20 +20,18 @@ public class Profile extends Model {
 
     public Profile(Profile other) {
         super(other.getId());
-        this.user_id = other.user_id;
         this.fullName = other.fullName;
-        this.phone_number = other.phone_number;
+        this.phoneNumber = other.phoneNumber;
         this.address = other.address;
         this.credit = other.credit;
     }
 
-    //Methods
     @Override
     public String toString() {
         return String.format("User: %s, %s, %s, %s, %s.",
                 super.getId(),
                 fullName,
-                phone_number,
+                phoneNumber,
                 address,
                 credit);
     }
@@ -46,7 +41,7 @@ public class Profile extends Model {
         return new Object[]{
             super.getId(),
             fullName,
-            phone_number,
+            phoneNumber,
             address,
             credit
         };
@@ -54,14 +49,6 @@ public class Profile extends Model {
 
     public static String className() {
         return "User";
-    }
-
-    public String getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
     }
 
     public String getFullName() {
@@ -72,12 +59,12 @@ public class Profile extends Model {
         this.fullName = fullName;
     }
 
-    public String getPhone_number() {
-        return phone_number;
+    public String getphoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
+    public void setphoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getAddress() {

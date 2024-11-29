@@ -3,32 +3,28 @@ package main.dto;
 import main.base.Model;
 
 public class Language extends Model {
-    private String code;  
+    
     private String name;  
 
-    // Constructor
-    public Language(String languageId, String code, String name) {
-        super(languageId);
-        this.code = code;
+    public Language(String code, String name) {
+        super(code);
         this.name = name;
     }
 
     public Language(Language other) {
-        super(other.getId());
-        this.code = other.code;
+        super(other.getCode());
         this.name = other.name;
     }
 
     @Override
     public String toString() {
-        return String.format("Language: %s, %s, %s.", super.getId(), code, name);
+        return String.format("Language: %s, %s.", this.getCode(), name);
     }
 
     @Override
     public Object[] getDatabaseValues() {
         return new Object[]{
-                super.getId(),
-                code,
+                this.getCode(),
                 name
         };
     }
@@ -38,11 +34,11 @@ public class Language extends Model {
     }
 
     public String getCode() {
-        return code;
+        return super.getId();
     }
 
     public void setCode(String code) {
-        this.code = code;
+        super.setId(code);
     }
 
     public String getName() {

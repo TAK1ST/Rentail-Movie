@@ -1,59 +1,54 @@
 package main.dto;
 
 import main.base.Model;
+import main.constants.PaymentMethod;
 
 public class Payment extends Model {
-    private String paymentMethods;
-    private String rentalId;
+    private PaymentMethod method;
+    private String rentalID;
 
-    // Constructor
-    public Payment(String paymentId, String paymentMethods, String rentalId) {
-        super(paymentId);  // Assuming paymentId is the unique identifier
-        this.paymentMethods = paymentMethods;
-        this.rentalId = rentalId;
+    public Payment(String id, PaymentMethod method, String rentalID) {
+        super(id); 
+        this.method = method;
+        this.rentalID = rentalID;
     }
 
-    // Copy constructor
     public Payment(Payment other) {
         super(other.getId());
-        this.paymentMethods = other.paymentMethods;
-        this.rentalId = other.rentalId;
+        this.method = other.method;
+        this.rentalID = other.rentalID;
     }
 
-    // toString method to display the object as a string
     @Override
     public String toString() {
-        return String.format("Payment: %s, %s, %s, %s.", super.getId(), paymentMethods, rentalId);
+        return String.format("Payment: %s, %s, %s.", super.getId(), method, rentalID);
     }
 
-    // Method to return database values as an array of objects
     @Override
     public Object[] getDatabaseValues() {
         return new Object[]{
                 super.getId(),
-                paymentMethods,
-                rentalId
+                method,
+                rentalID
         };
     }
 
-    // Static method to return the class name
     public static String className() {
         return "Payment";
     }
 
-    // Getters and Setters
-    public String getPaymentMethods() {
-        return paymentMethods;
+    public PaymentMethod getPaymentMethods() {
+        return method;
     }
 
-    public void setPaymentMethods(String paymentMethods) {
-        this.paymentMethods = paymentMethods;
+    public void setPaymentMethods(PaymentMethod method) {
+        this.method = method;
     }
     public String getRentalId() {
-        return rentalId;
+        return rentalID;
     }
 
-    public void setRentalId(String rentalId) {
-        this.rentalId = rentalId;
+    public void setRentalId(String rentalID) {
+        this.rentalID = rentalID;
     }
 }

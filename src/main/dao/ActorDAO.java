@@ -8,18 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dto.Actor;
 import main.config.Database;
+import main.constants.ActorRank;
 
 public class ActorDAO {
 
-    // Add actor to the database with all fields
     public static boolean addActorToDB(Actor actor) {
-        String sql = "INSERT INTO Actor (actor_id, actor_name, description, rank) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Actors (actor_id, actor_name, description, rank) VALUES (?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actor.getId());
             preparedStatement.setString(2, actor.getActorName());
             preparedStatement.setString(3, actor.getDescription());
-            preparedStatement.setString(4, String.valueOf(actor.getRank()));  // Rank is stored as a String in DB
+            preparedStatement.setString(4, actor.getRank().name()); 
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -28,14 +28,13 @@ public class ActorDAO {
         return false;
     }
 
-    // Update an actor's information in the database
-    public static boolean updateActorFromDB(Actor actor) {
-        String sql = "UPDATE Actor SET actor_name = ?, description = ?, rank = ? WHERE actor_id = ?";
+    public static boolean updateActorInDB(Actor actor) {
+        String sql = "UPDATE Actors SET actor_name = ?, description = ?, rank = ? WHERE actor_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actor.getActorName());
             preparedStatement.setString(2, actor.getDescription());
-            preparedStatement.setString(3, String.valueOf(actor.getRank()));  // Rank as String
+            preparedStatement.setString(3, actor.getRank().name()); 
             preparedStatement.setString(4, actor.getId());
 
             return preparedStatement.executeUpdate() > 0;
@@ -44,10 +43,9 @@ public class ActorDAO {
         }
         return false;
     }
-
-    // Delete actor from the database by actor ID
+    
     public static boolean deleteActorFromDB(String actorId) {
-        String sql = "DELETE FROM Actor WHERE actor_id = ?";
+        String sql = "DELETE FROM Actors WHERE actor_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actorId);
@@ -57,17 +55,20 @@ public class ActorDAO {
         }
         return false;
     }
+    
 
-    public static List<Actor> getAllActor() {
-        String sql = "SELECT * FROM Actor";
+
+    public static List<Actor> getAllActorFromDB() {
+        String sql = "SELECT * FROM Actors";
         List<Actor> list = new ArrayList<>();
         try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 Actor actor = new Actor(
                         resultSet.getString("actor_id"),
                         resultSet.getString("actor_name"),
-                        resultSet.getString("description"),
-                        resultSet.getString("rank").charAt(0),
+                        ActorRank.valueOf(resultSet.getString("rank")),
+                        resultSet.getString("description")
+                );
                 list.add(actor);
             }
         } catch (SQLException e) {

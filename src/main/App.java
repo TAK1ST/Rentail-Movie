@@ -8,7 +8,10 @@ import main.dto.Account;
 import static main.utils.Input.yesOrNo;
 import main.views.AdminPannel;
 import main.views.AuthenPannel;
-import main.views.UserPannel;
+import main.views.CustomerPannel;
+import static main.utils.LogMessage.errorLog;
+import main.views.PremiumPannel;
+import main.views.StaffPannel;
 
 
 public class App {
@@ -23,11 +26,20 @@ public class App {
     
     private static void redirect(Account account) throws IOException {
         switch(account.getRole()) {
-            case 1: 
+            case ADMIN:
                 AdminPannel.show();
                 break;
-            case 2:
-                UserPannel.show(account);
+            case CUSTOMER:
+                CustomerPannel.show(account);
+                break;
+            case STAFF:
+                StaffPannel.show();
+                break;
+            case PREMIUM:
+                PremiumPannel.show();
+                break;
+            default:
+                errorLog("User role is undefine");
         }
     }
 }

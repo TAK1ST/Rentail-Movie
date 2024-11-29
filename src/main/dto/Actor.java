@@ -1,16 +1,24 @@
 package main.dto;
 
 import main.base.Model;
+import main.constants.ActorRank;
 
 public class Actor extends Model {
 
     private String actorName;
     private String description;
+<<<<<<< HEAD
     private char rank;
 //Constructor
 
     public Actor(String actorId, String actorName, char rank, String description) {
         super(actorId);
+=======
+    private ActorRank rank;
+
+    public Actor(String id, String actorName, ActorRank rank, String description) {
+        super(id);
+>>>>>>> 877fd9282d72c8206daca25888b6b36210884ae6
         this.actorName = actorName;
         this.rank = rank;
         this.description = description;
@@ -59,11 +67,11 @@ public class Actor extends Model {
         this.description = description;
     }
 
-    public char getRank() {
+    public ActorRank getRank() {
         return rank;
     }
 
-    public void setRank(char rank) {
+    public void setRank(ActorRank rank) {
         this.rank = rank;
     }
 }

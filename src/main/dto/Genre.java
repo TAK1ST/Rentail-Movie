@@ -3,32 +3,30 @@ package main.dto;
 import main.base.Model;
 
 public class Genre extends Model {
-    private String genreName;
+    
     private String description;
-    public Genre(String genreId, String genreName, String description) {
-        super(genreId);
-        this.genreName = genreName;
+    
+    public Genre(String genreName, String description) {
+        super(genreName);
         this.description = description;
     }
     
     public Genre(Genre other) {
-        super(other.getId());
-        this.genreName = other.genreName;
-        this.description = description;
+        super(other.getGenreName());
+        this.description = other.description;
     }
     
     @Override
     public String toString() {
-        return String.format("Genre: %s, %s, %s.", super.getId(), genreName,description);
+        return String.format("Genre: %s, %s.", this.getGenreName(), description);
     }
     
     @Override
     public Object[] getDatabaseValues() {
         return new Object[]
                 {
-                        super.getId(),
-                        genreName,
-                        description
+                    this.getGenreName(),
+                    description
                 };
     }
     
@@ -37,11 +35,11 @@ public class Genre extends Model {
     }
 
     public String getGenreName() {
-        return genreName;
+        return super.getId();
     }
 
     public void setGenreName(String genreName) {
-        this.genreName = genreName;
+        super.setId(genreName);
     }
 
     public String getDescription() {

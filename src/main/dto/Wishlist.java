@@ -2,42 +2,38 @@ package main.dto;
 
 import main.base.Model;
 import java.time.LocalDate;
+import main.constants.WishlistPriority;
 
 public class Wishlist extends Model {
-    private String wishlistId;
-    private String movieId;
-    private String customerId;
+    private String wishlistID;
+    private String movieID;
+    private String customerID;
     private LocalDate addedDate;
-    private int priority;
+    private WishlistPriority priority;
 
-    // Constructor
-    public Wishlist(String id, String wishlistId, String movieId, String customerId, LocalDate addedDate, int priority) {
+    public Wishlist(String id, String movieID, String customerID, LocalDate addedDate, WishlistPriority priority) {
         super(id);
-        this.wishlistId = wishlistId;
-        this.movieId = movieId;
-        this.customerId = customerId;
+        this.movieID = movieID;
+        this.customerID = customerID;
         this.addedDate = addedDate;
         this.priority = priority;
     }
 
-    // Copy constructor
     public Wishlist(Wishlist other) {
         super(other.getId());
-        this.wishlistId = other.wishlistId;
-        this.movieId = other.movieId;
-        this.customerId = other.customerId;
+        this.movieID = other.movieID;
+        this.customerID = other.customerID;
         this.addedDate = other.addedDate;
         this.priority = other.priority;
     }
 
-    // Methods
     @Override
     public String toString() {
-        return String.format("Wishlist: %s, %s, %s, %s, %d.",
+        return String.format("Wishlist: %s, %s, %s, %s, %s.",
                 super.getId(),
-                wishlistId,
-                movieId,
-                customerId,
+                movieID,
+                customerID,
+                addedDate,
                 priority
         );
     }
@@ -46,9 +42,8 @@ public class Wishlist extends Model {
     public Object[] getDatabaseValues() {
         return new Object[]{
             super.getId(),
-            wishlistId,
-            movieId,
-            customerId,
+            movieID,
+            customerID,
             addedDate,
             priority
         };
@@ -58,29 +53,20 @@ public class Wishlist extends Model {
         return "Wishlist";
     }
 
-    // Getters and setters
-    public String getWishlistId() {
-        return wishlistId;
-    }
-
-    public void setWishlistId(String wishlistId) {
-        this.wishlistId = wishlistId;
-    }
-
     public String getMovieId() {
-        return movieId;
+        return movieID;
     }
 
-    public void setMovieId(String movieId) {
-        this.movieId = movieId;
+    public void setMovieId(String movieID) {
+        this.movieID = movieID;
     }
 
     public String getCustomerId() {
-        return customerId;
+        return customerID;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setCustomerId(String customerID) {
+        this.customerID = customerID;
     }
 
     public LocalDate getAddedDate() {
@@ -91,11 +77,11 @@ public class Wishlist extends Model {
         this.addedDate = addedDate;
     }
 
-    public int getPriority() {
+    public WishlistPriority getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(WishlistPriority priority) {
         this.priority = priority;
     }
 }

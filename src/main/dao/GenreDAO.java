@@ -20,7 +20,7 @@ import main.config.Database;
 public class GenreDAO {
     
     public static boolean addGenreToDB(Genre genre) {
-        String sql = "INSERT INTO Genre (genre_id, genre_name) VALUES (?, ?)";
+        String sql = "INSERT INTO Genres (genre_name, description) VALUES (?, ?)";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -34,13 +34,13 @@ public class GenreDAO {
         return false;
     }
     
-    public static boolean updateGenreFromDB(Genre genre) {
-        String sql = "UPDATE Genre SET genre_name = ? WHERE genre_id = ?";
+    public static boolean updateGenreInDB(Genre genre) {
+        String sql = "UPDATE Genres SET description = ? WHERE genre_name = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, genre.getGenreName());
-            preparedStatement.setString(2, genre.getId());
+            preparedStatement.setString(1, genre.getDescription());
+            preparedStatement.setString(2, genre.getGenreName());
             
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -50,7 +50,7 @@ public class GenreDAO {
     }
     
     public static boolean deleteGenreFromDB(String genre_id) {
-        String sql = "DELETE FROM Genre WHERE genre_id = ?";
+        String sql = "DELETE FROM Genres WHERE genre_name = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -63,7 +63,7 @@ public class GenreDAO {
     }
     
     public static List<Genre> getAllGenre() {
-        String sql = "SELECT * FROM Genre";
+        String sql = "SELECT * FROM Genres";
         List<Genre> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -71,7 +71,6 @@ public class GenreDAO {
 
             while (resultSet.next()) {
                 Genre genre = new Genre(
-                    resultSet.getString("genre_id"),
                     resultSet.getString("genre_name"),
                     resultSet.getString("description")
                 );

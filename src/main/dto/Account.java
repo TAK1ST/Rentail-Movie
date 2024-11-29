@@ -1,68 +1,18 @@
 package main.dto;
 
 import main.base.Model;
+import main.constants.AccRole;
+import main.constants.AccStatus;
 
 public class Account extends Model {
-
-    public static enum Role {
-        NONE(0),
-        ADMIN(1),
-        USER(2);
-
-        private final int value;
-
-        Role(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public static Role fromValue(int value) {
-            for (Role item : Role.values()) {
-                if (item.value == value) {
-                    return item;
-                }
-            }
-            throw new IllegalArgumentException("Invalid value: " + value);
-        }
-    }
-    
-    public static enum Status {
-        NONE(0),
-        BANNED(1),
-        OFFLINE(2),
-        ONLINE(3);
-
-        private final int value;
-
-        Status(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public static Status fromValue(int value) {
-            for (Status item : Status.values()) {
-                if (item.value == value) {
-                    return item;
-                }
-            }
-            throw new IllegalArgumentException("Invalid value: " + value);
-        }
-    }
     
     private String username;
     private String password;
-    private int role;
     private String email;
-    private int status;
+    private AccRole role;
+    private AccStatus status;
 
-    //Constructors
-    public Account(String id, String email, String password, String username,int role, int status) {
+    public Account(String id, String username, String password, String email, AccRole role, AccStatus status) {
         super(id);
         this.username = username;
         this.password = password;
@@ -71,25 +21,15 @@ public class Account extends Model {
         this.status = status;
     }
 
-    public Account(String id, String username, String password, String email,Role role, Status status) {
-        super(id);
-        this.username = username;
-        this.password = password;
-        this.role = role.getValue();
-        this.email = email;
-        this.status = status.getValue();
-    }
-
     public Account(Account other) {
         super(other.getId());
         this.username = other.username;
         this.password = other.password;
-        this.role = other.role;
         this.email = other.email;
+        this.role = other.role;
         this.status = other.status;
     }
 
-    //Methods
     @Override
     public String toString() {
         return String.format("Account: %s, %s, %s, %s, %s, %s.",
@@ -117,11 +57,11 @@ public class Account extends Model {
         return "Account";
     }
 
-    public String getAccountName() {
+    public String getUsername() {
         return username;
     }
 
-    public void setAccountName(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -133,11 +73,11 @@ public class Account extends Model {
         this.password = password;
     }
 
-    public int getRole() {
+    public AccRole getRole() {
         return role;
     }
 
-    public void setRole(int role) {
+    public void setRole(AccRole role) {
         this.role = role;
     }
 
@@ -149,11 +89,11 @@ public class Account extends Model {
         this.email = email;
     }
 
-    public int getStatus() {
+    public AccStatus getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(AccStatus status) {
         this.status = status;
     }
 }
