@@ -18,6 +18,7 @@ import static main.controllers.Managers.getRTM;
 import static main.controllers.Managers.getACM;
 import main.dao.RentalDAO;
 import main.dao.ReviewDAO;
+import main.dto.Account;
 import main.dto.Actor;
 import main.dto.Genre;
 import main.dto.Movie;

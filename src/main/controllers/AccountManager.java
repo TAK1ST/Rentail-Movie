@@ -48,7 +48,8 @@ public class AccountManager extends ListManager<Account> {
                 "1",
                 "admin@gmail.com",
                 AccRole.ADMIN,
-                AccStatus.OFF));
+                AccStatus.OFF
+        ));
         AccountDAO.addAccountToDB(list.getLast());
     }
 
@@ -68,21 +69,32 @@ public class AccountManager extends ListManager<Account> {
         list.add(new Account(
                 id,
                 username,
-                password,
+                encryptPassword(password),
                 email,
                 AccRole.CUSTOMER,
-                AccStatus.OFF));
-        AccountDAO.addAccountToDB(list.getLast());
-        return true;
+                AccStatus.OFF
+        ));
+        return AccountDAO.addAccountToDB(list.getLast());
     }
 
     public boolean addAccount(AccRole registorRole) throws IOException {
+        
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), ACCOUNT_PREFIX);
+        String username = getUsername("Enter username", false, list);
+        String password = getPassword("Enter password", false);
+        String email = getEmail("Enter your email", false);
+        AccRole role = (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole;
+        if (getPFM().addProfile(id)) {
+            errorLog("Cannot registor info");
+            return false;
+        }
+        
         list.add(new Account(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), ACCOUNT_PREFIX),
-                getUsername("Enter username", false, list),
-                getPassword("Enter password", false),
-                getEmail("Enter your email", false),
-                (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole,
+                id,
+                username,
+                password,
+                email,
+                role,
                 AccStatus.OFF
         ));
         return AccountDAO.addAccountToDB(list.getLast());
@@ -168,10 +180,10 @@ public class AccountManager extends ListManager<Account> {
         if (checkEmpty(list)) return;
         
         System.out.println(title);
-        System.out.println("|----------------------------------------------------------------------------------------------------------------------------|");
+        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
         System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s |\n",
                 "Account ID", "Accountname", "Password", "Role", "Email");
-        System.out.println("|----------------------------------------------------------------------------------------------------------------------------|");
+        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
         for (Account user : users) {
             String role = user.getRole() == AccRole.ADMIN ? "Admin" : "Account";  // Chuyển đổi số vai trò thành tên vai trò
             System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s |\n",
@@ -181,7 +193,7 @@ public class AccountManager extends ListManager<Account> {
                     role,
                     user.getEmail() != null ? user.getEmail() : "N/A");
         }
-        System.out.println("|----------------------------------------------------------------------------------------------------------------------------|");
+        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
     }
 
 }

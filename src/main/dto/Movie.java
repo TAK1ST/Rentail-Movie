@@ -49,7 +49,7 @@ public class Movie extends Model {
     @Override
     public String toString() {
          String genreNames = genreName != null ? String.join(", ", genreName) : "No genres";
-         String actorID = actorIDs != null ? String.join(", ", actorIDs) : "No actors";
+         String actorNames = actorIDs != null ? String.join(", ", actorIDs) : "No actors";
          String languages = languageCodes != null ? String.join(", ", languageCodes) : "No languages";
         return String.format("Movie: %s, %s, %s, %.5f, %s, %s, %s, %s, %.5f, %d.",
                 super.getId(),
@@ -57,7 +57,7 @@ public class Movie extends Model {
                 description,
                 avgRating,
                 genreNames,
-                actorID,
+                actorNames,
                 languages,
                 releaseYear.format(Validator.DATE),
                 rentalPrice,
@@ -113,6 +113,7 @@ public class Movie extends Model {
 
     public void setGenreIDs(List<String> genreName) {
         this.genreName = genreName;
+
     }
 
     public List<String> getActorIDs() {

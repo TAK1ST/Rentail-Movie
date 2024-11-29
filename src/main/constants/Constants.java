@@ -12,7 +12,7 @@ import main.utils.IDGenerator;
  */
 public class Constants {
     public static final int ID_LENGTH = 8;   
-    public static final String DEFAULT_ADMIN_ID = IDGenerator.generateID("", "U");
+    public static final String DEFAULT_ADMIN_ID = IDGenerator.generateID("", "EC");
     
     public static final String ACCOUNT_PREFIX =     "AC";
     public static final String ACTOR_PREFIX =       "AT";

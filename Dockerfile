@@ -1,4 +1,4 @@
-FROM openjdk:23-jdk-slim as build
+FROM openjdk:23 as build
 
 RUN apt-get update && apt-get install -y ant
 
@@ -8,7 +8,7 @@ COPY . /app
 
 RUN ant clean jar  
 
-FROM openjdk:23-jdk-slim
+FROM openjdk:23
 
 WORKDIR /app
 

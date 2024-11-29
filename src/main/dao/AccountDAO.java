@@ -27,7 +27,8 @@ public class AccountDAO {
             preparedStatement.setString(4, account.getUsername());  
             preparedStatement.setString(5, account.getRole().name());  
             preparedStatement.setString(6, account.getStatus().name());  
-
+            
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
