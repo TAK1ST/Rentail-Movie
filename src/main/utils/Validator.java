@@ -36,7 +36,7 @@ public class Validator {
     
     private static final Scanner scanner = new Scanner(System.in);
     
-    public static String getAccountName(String message, boolean enterToPass, List<Account> list) {
+    public static String getUsername(String message, boolean enterToPass, List<Account> list) {
         String input = "";
         boolean isUnique = false;
         do {

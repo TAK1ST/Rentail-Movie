@@ -1,5 +1,5 @@
 -- drop schema movierentalsystemdb;
-create schema movierentalsystemdb; 
+-- create schema movierentalsystemdb; 
 
 USE movierentalsystemdb;
 
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS Movie_Actor (
     FOREIGN KEY (movie_id)
         REFERENCES Movies (movie_id),
     FOREIGN KEY (actor_id)
-        REFERENCES Actor (actor_id)
+        REFERENCES Actors (actor_id)
 );
 
 CREATE TABLE IF NOT EXISTS Rentals (
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS Payments (
     rental_id CHAR(8) NOT NULL,
     payment_method ENUM('NONE', 'CARD', 'ONLINE', 'BANKING') NOT NULL,
     FOREIGN KEY (rental_id)
-        REFERENCES Rental (rental_id)
+        REFERENCES Rentals (rental_id)
 );
 
 CREATE TABLE IF NOT EXISTS Wishlists (
@@ -140,4 +140,4 @@ CREATE TABLE IF NOT EXISTS Discounts (
     usage_available INT DEFAULT 1,
     is_active BOOLEAN DEFAULT TRUE,
     foreign key (customer_id) references Accounts (account_id)
-)
+
