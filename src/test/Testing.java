@@ -5,7 +5,7 @@
 package test;
 
 import java.io.IOException;
-import main.constants.Role;
+import main.constants.AccRole;
 import main.controllers.Managers;
 import static main.controllers.Managers.getUM;
 
@@ -19,7 +19,7 @@ public class Testing {
         
         Managers.initUM();
         
-        getUM().addUser(Role.ADMIN);
+        getUM().addUser(AccRole.ADMIN);
     }
     
 }
