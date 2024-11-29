@@ -162,7 +162,8 @@ public class UserManager extends ListManager<User> {
         display(searchById(userID), "My Profile");
     }
     
-    public void displayUsers(List<User> users, String title) {
+    @Override
+    public void display(List<User> users, String title) {
         if (checkEmpty(list)) return;
         
         System.out.println(title);
