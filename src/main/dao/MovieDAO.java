@@ -137,7 +137,7 @@ public class MovieDAO {
         return false;
     }
 
-    public static List<Movie> getAllMovie() {
+    public static List<Movie> getAllMovies() {
         String sql = "SELECT * FROM Movies";
         List<Movie> list = new ArrayList<>();
         try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {

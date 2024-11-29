@@ -56,7 +56,7 @@ public class WishlistDAO {
         return false;
     }
 
-    public static List<Wishlist> getAllWishlist() {
+    public static List<Wishlist> getAllWishlists() {
         String sql = "SELECT * FROM Wishlists";
         List<Wishlist> list = new ArrayList<>();
         try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {

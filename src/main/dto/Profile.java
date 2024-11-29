@@ -1,20 +1,24 @@
 package main.dto;
 
+import java.time.LocalDate;
 import main.base.Model;
+import main.utils.Validator;
 
 public class Profile extends Model {
     
     private String fullName;
     private String phoneNumber;
     private String address;
-    private String credit;
+    private double credit;
+    private LocalDate birthday;
 
-    public Profile(String accountID, String fullName, String phoneNumber, String address, String credit) {
+    public Profile(String accountID, String fullName, String phoneNumber, String address, double credit, LocalDate birthday) {
         super(accountID);
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.credit = credit;
+        this.birthday = birthday;
     }
 
 
@@ -24,16 +28,18 @@ public class Profile extends Model {
         this.phoneNumber = other.phoneNumber;
         this.address = other.address;
         this.credit = other.credit;
+        this.birthday = other.birthday;
     }
 
     @Override
     public String toString() {
-        return String.format("User: %s, %s, %s, %s, %s.",
+        return String.format("User: %s, %s, %s, %s, %s, %s.",
                 super.getId(),
                 fullName,
                 phoneNumber,
                 address,
-                credit);
+                credit,
+                birthday.format(Validator.DATE));
     }
 
     @Override
@@ -43,7 +49,8 @@ public class Profile extends Model {
             fullName,
             phoneNumber,
             address,
-            credit
+            credit,
+            birthday
         };
     }
 
@@ -59,11 +66,11 @@ public class Profile extends Model {
         this.fullName = fullName;
     }
 
-    public String getphoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setphoneNumber(String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -75,12 +82,20 @@ public class Profile extends Model {
         this.address = address;
     }
 
-    public String getCredit() {
+    public double getCredit() {
         return credit;
     }
 
-    public void setCredit(String credit) {
+    public void setCredit(double credit) {
         this.credit = credit;
     }
 
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+    
 }
