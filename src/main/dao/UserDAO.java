@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dto.User;
 import main.config.Database;
+import main.constants.Role;
 
 /**
  *
@@ -26,7 +27,7 @@ public class UserDAO {
             preparedStatement.setString(1, user.getId());
             preparedStatement.setString(2, user.getUsername());
             preparedStatement.setString(3, user.getPassword());
-            preparedStatement.setInt(4, user.getRole());
+            preparedStatement.setString(4, user.getRole().name());
             preparedStatement.setString(5, user.getFullName());
             preparedStatement.setString(6, user.getAddress());
             preparedStatement.setString(7, user.getPhoneNumber());
@@ -46,7 +47,7 @@ public class UserDAO {
 
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setInt(3, user.getRole());
+            preparedStatement.setString(3, user.getRole().name());
             preparedStatement.setString(4, user.getFullName());
             preparedStatement.setString(5, user.getAddress());
             preparedStatement.setString(6, user.getPhoneNumber());
@@ -85,7 +86,7 @@ public class UserDAO {
                     resultSet.getString("user_id"),
                     resultSet.getString("username"),
                     resultSet.getString("password_hash"),
-                    resultSet.getInt("role"),
+                    Role.valueOf(resultSet.getString("role")),
                     resultSet.getString("full_name"),
                     resultSet.getString("address"),
                     resultSet.getString("phone_number"),

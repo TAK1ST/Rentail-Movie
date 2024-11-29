@@ -11,13 +11,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
+import main.constants.Role;
 import main.dto.User;
-import main.dto.User.Role;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
-import static main.utils.Input.rolesListing;
-import static main.utils.Log.errorLog;
+import static main.utils.LogMessage.errorLog;
+import static main.utils.LogMessage.infoLog;
+import static main.utils.Utility.enumListing;
 
 /**
  *
@@ -25,55 +25,60 @@ import static main.utils.Log.errorLog;
  */
 public class Validator {
     
-    private static final String EMAIL_PATTERN = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
-    private static final String PHONE_PATTERN = "^\\d{10}$";
-    private static final long MAX_PRODUCT_PRICE = 100000000;
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    
+    private static final String PASSWORD_PATTERN = "^[a-zA-Z0-9!@#$%&*+\\-_]+$";
+    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    private static final String NAME_SPECIAL_CHAR_PATTERN = ".*[^a-zA-Z0-9_\\-#+].*";
+    private static final String FULLNAME_SPECIAL_CHAR_PATTERN = "[^a-zA-Z ]";
     
     private static final Scanner scanner = new Scanner(System.in);
     
     public static String getUsername(String message, boolean enterToPass, List<User> list) {
         String input = "";
-        boolean isUnique;
+        boolean isUnique = false;
         do {
-            isUnique = true;
-            System.out.print(message + ": ");
+            System.out.printf("%s: ", message);
             input = scanner.nextLine();   
             if (input.isEmpty() && enterToPass) 
                 return "";
 
-            if (input.isEmpty()) 
+            if (input.isEmpty()) {
                 errorLog("Username must not be empty");
-   
-            if (input.length() < 4) 
-                errorLog("Accountname must be at least 4 character");         
- 
+                continue;
+            }
+            if (input.length() < 4) {
+                errorLog("Username must be at least 4 character");      
+                continue;
+            }
+            if (input.contains(" ")) {
+                errorLog("Username must not contain space");      
+                continue;
+            }
+            if (Character.isDigit(input.charAt(0))) {
+                errorLog("Username must not begin with number");      
+                continue;
+            }
+            if (input.matches(".*" + NAME_SPECIAL_CHAR_PATTERN + ".*")) {
+                errorLog("Username contains special characters");
+                continue;
+            } 
+            isUnique = true;
             for(User item : list) 
                 if (item.getUsername().equals(input)) {
-                    errorLog("Accountname has already exist");
+                    errorLog("Username has already exist");
                     isUnique = false;
                 }
-        } while (input.length() < 4 || !isUnique);
+        } while (!isUnique);
         return input;
-    }
-
-    public static Role getRole(String message, boolean enterToPass) {
-        Role[] listRole = Role.values();
-        rolesListing(message);
-        int input = getInteger("Choose an option: ", 0, listRole.length - 1, enterToPass);
-
-        if (input <= -1) 
-            return Role.NONE;
-        else 
-            return listRole[input];
     }
     
     public static String getPassword(String message, boolean enterToPass) {
         String input = "";
+        boolean pass = false;
         do {
-            System.out.print(message + ": ");
+            System.out.printf("%s: ", message);
             input = scanner.nextLine();
-
             if (input.isEmpty() && enterToPass) 
                 return "";
             
@@ -81,27 +86,30 @@ public class Validator {
                 errorLog("Password must not be empty");
                 continue;
             }
-            
             if (input.length() < 6) {
                 errorLog("Password must be at least 6 character");
                 continue;
             }
-
             if (input.contains(" ")) {
-                errorLog("Password must contain no space");
+                errorLog("Password must not contain space");
                 continue;
             }
-           
-            confirmPassword("Confirm password: ", input);
-
-        } while (input.length() < 6 || input.contains(" ")); 
+            if (!input.matches(PASSWORD_PATTERN)) {
+                errorLog("Password contains forbidden characters");
+                infoLog("!,@,#,$,%,&,*,-,_,+ are allowed");
+                continue;
+            }
+            confirmPassword("Confirm password", input);
+            pass = true;
+            
+        } while (!pass); 
         return input;
     }
 
     public static void confirmPassword(String message, String password) {
         String confirm;
         do {
-            System.out.print(message + ": ");
+            System.out.printf("%s: ", message);
             confirm = scanner.nextLine();
 
             if(!confirm.equals(password)) 
@@ -112,27 +120,123 @@ public class Validator {
     
     public static String getName(String message, boolean enterToPass) {
         String input = "";
+        boolean pass = false;
         do {
-            System.out.print(message + ": ");
+            System.out.printf("%s: ", message);
             input = scanner.nextLine(); 
             if (input.isEmpty() && enterToPass) 
                return "";
             
-            if (input.isEmpty()) 
+            if (input.isEmpty()) {
                 errorLog("Name must not be empty");
-
-            if (!Validator.isValidName(input)) 
+                continue;
+            }
+            if (input.matches(".*" + FULLNAME_SPECIAL_CHAR_PATTERN + ".*")) {
                 errorLog("Name must not have special characters");
+                continue;
+            }
+            pass = true;
             
-        } while (input.isEmpty() || !Validator.isValidName(input));
+        } while (!pass);
+
+        return input.trim();
+    }
+    
+    public static String getFullName(String message, boolean enterToPass) {
+        String input = "";
+        boolean pass = false;
+        do {
+            System.out.printf("%s: ", message);
+            input = scanner.nextLine(); 
+            if (input.isEmpty() && enterToPass) 
+               return "";
+            
+            if (input.isEmpty()) {
+                errorLog("Full name must not be empty");
+                continue;
+            }
+            if (input.matches(".*\\d.*")) {
+                errorLog("Full name must not contain number");
+                continue;
+            }
+            if (input.matches(".*" + FULLNAME_SPECIAL_CHAR_PATTERN + ".*")) {
+                errorLog("Full name must not have special characters");
+                continue;
+            }
+            pass = true;
+            
+        } while (!pass);
+        
+        return input.trim();
+    }
+    
+    public static String getPhoneNumber(String message, boolean enterToPass) {
+        String input = "";
+        boolean pass = false;
+        do {
+            input = getString(message, enterToPass);
+            if (input.isEmpty() && enterToPass) 
+                return "";
+
+            if (input.isEmpty()) {
+                errorLog("Phone number must not be empty");
+                continue;
+            }
+            if (input.contains(" ")) {
+                errorLog("Contains space");      
+                continue;
+            }
+            if (input.replaceAll("\\D", "").length() != 10) {
+                errorLog("Phone number must be 10 digit");
+                continue;
+            }
+            pass = true;
+        } while (!pass);
+
+        return input.replaceAll("\\D", "");
+    }
+
+    public static String getEmail(String message, boolean enterToPass) {
+        String input = "";
+        boolean pass = false;
+        do {
+            input = getString(message, enterToPass);
+            if (input.isEmpty() && enterToPass) 
+                return "";
+
+            if (input.isEmpty()) {
+                errorLog("Email must not be empty");
+                continue;
+            }
+            if (input.contains(" ")) {
+                errorLog("Contains space");      
+                continue;
+            }
+            if (!input.matches(EMAIL_PATTERN)) {
+                errorLog("Email format is wrong");
+                continue;
+            }
+            pass = true;
+        } while (!pass);
 
         return input;
     }
-          
+    
+    public static Role getRole(String message, boolean enterToPass) {
+        Role[] listRole = Role.values();
+        enumListing("Choose role", Role.class);
+        int input = getInteger("Choose an option", 0, listRole.length - 1, enterToPass);
+
+        if (input <= -1) 
+            return Role.NONE;
+        else 
+            return listRole[input];
+    }
+    
     public static LocalDate getDate(String message, boolean enterToPass) {
         String input = "";
         do {
-            System.out.print(message + ": ");
+            System.out.printf("%s (%s): ", message, DATE);
             input = scanner.nextLine(); 
             if (input.isEmpty() && enterToPass) 
                return null;
@@ -167,8 +271,8 @@ public class Validator {
                 }
 
                 return LocalTime.of(hours, minutes, seconds);
-            } catch (Exception e) {
-                System.out.println("Invalid input. Please enter valid numbers for hours, minutes, and seconds.");
+            } catch (IllegalArgumentException e) {
+                errorLog("Invalid input. Please enter valid numbers for hours, minutes, and seconds.");
             }
         }
     }
@@ -180,41 +284,7 @@ public class Validator {
         return date.atTime(time);
     }
     
-    public static String getPhoneNumber(String message, boolean enterToPass) {
-        String input = "";
-        do {
-            input = getString(message, enterToPass);
-            if (input.isEmpty() && enterToPass) 
-                return "";
-
-            if (input.isEmpty()) 
-                errorLog("Phone number must not be empty");
-
-            if (!Validator.isValidPhoneNumber(input)) 
-                errorLog("Phone number must be 10 digit");
-
-        } while (!Validator.isValidPhoneNumber(input));
-
-        return input;
-    }
-
-    public static String getEmail(String message, boolean enterToPass) {
-        String input = "";
-        do {
-            input = getString(message, enterToPass);
-            if (input.isEmpty() && enterToPass) 
-                return "";
-
-            if (input.isEmpty()) 
-                errorLog("Email must not be empty");
-
-            if (!Validator.isValidEmail(input)) 
-                errorLog("Email must has format ...@gmail.com");
-
-        } while (!Validator.isValidEmail(input));
-
-        return input;
-    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////
     
     public static boolean isDateInRange(LocalDate startDate, LocalDate endDate, LocalDate targetDate) {
         return (targetDate.isEqual(startDate) || targetDate.isAfter(startDate)) &&
@@ -233,34 +303,6 @@ public class Validator {
         } catch (DateTimeParseException e) {
             return false;
         }
-    }
-    
-    public static boolean isValidName(String name) {
-        return name.matches("[a-zA-Z0-9 ]+");
-    }
-    
-    public static boolean isValidProductPrice(double price) {
-        return price >= 0 && price <= MAX_PRODUCT_PRICE;
-    }
-    
-    public static boolean isValidUsername(String username) {
-        return username != null && username.length() >= 5 && !username.contains(" ");
-    }
-
-    public static boolean isValidPassword(String password) {
-        return password != null && password.length() >= 6 && !password.contains(" ");
-    }
-
-    public static boolean isPasswordConfirmed(String password, String confirmPassword) {
-        return password != null && password.equals(confirmPassword);
-    }
-
-    public static boolean isValidPhoneNumber(String phoneNumber) {
-        return phoneNumber != null && Pattern.matches(PHONE_PATTERN, phoneNumber);
-    }
-
-    public static boolean isValidEmail(String email) {
-        return email != null && Pattern.matches(EMAIL_PATTERN, email);
     }
 
 }

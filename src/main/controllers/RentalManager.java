@@ -7,7 +7,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import main.dao.RentalDAO;
-import main.constants.Constants;
 import static main.controllers.Managers.getMM;
 import static main.controllers.Managers.getUM;
 import main.dto.Movie;
@@ -18,8 +17,7 @@ import main.services.RentalServices;
 import main.utils.IDGenerator;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
-import static main.utils.Log.errorLog;
-import main.utils.Menu;
+import static main.utils.LogMessage.errorLog;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
 
@@ -32,23 +30,6 @@ public class RentalManager extends ListManager<Rental> {
     public RentalManager() throws IOException {
         super(Rental.className());
         list = RentalDAO.getAllRental();
-    }
-
-    public void adminMenu() throws IOException {
-        Menu.showManagerMenu(
-                "Rental Management",
-                null,
-                new Menu.MenuOption[]{
-                    new Menu.MenuOption("Add rental", () -> addRental(Constants.DEFAULT_ADMIN_ID), true),
-                    new Menu.MenuOption("Delete rental", () -> deleteRental(), true),
-                    new Menu.MenuOption("Update rental", () -> updateRental(), true),
-                    new Menu.MenuOption("Search rental", () -> searchRental(), true),
-                    new Menu.MenuOption("Show all rental", () -> display(list, "List of Rental")),
-                    new Menu.MenuOption("Back", () -> {
-                        /* Exit action */ }, false)
-                },
-                null
-        );
     }
 
     public boolean addRental(String userID) {    
@@ -136,8 +117,8 @@ public class RentalManager extends ListManager<Rental> {
         if (getMM().checkNull(foundMovie)) 
             return false;
 
-        LocalDate rentalDate = getDate("Change rental date (dd/MM/yyyy)", true);
-        LocalDate returnDate = getDate("Change return date (dd/MM/yyyy)", true);
+        LocalDate rentalDate = getDate("Change rental date", true);
+        LocalDate returnDate = getDate("Change return date", true);
 
         if (rentalDate != null) 
             foundRental.setRentalDate(rentalDate);

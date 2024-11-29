@@ -1,0 +1,46 @@
+[33m8e3785b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mthien[m[33m)[m HEAD@{0}: commit (merge): fix display
+[33me32ef67[m HEAD@{1}: commit: fix role and fix validator
+[33m1cc4507[m[33m ([m[1;31morigin/thien[m[33m)[m HEAD@{2}: commit: extend user role and upgrade utils
+[33md3d07aa[m HEAD@{3}: commit: fix bug import
+[33m07a438d[m HEAD@{4}: checkout: moving from thien to thien
+[33m07a438d[m HEAD@{5}: pull: Fast-forward
+[33m6051d07[m HEAD@{6}: commit: fix import
+[33m99e6242[m HEAD@{7}: commit: upgrade project structure
+[33mbca1acb[m HEAD@{8}: commit: Stop tracking .env file
+[33m8c7428a[m HEAD@{9}: pull: Fast-forward
+[33m2909907[m HEAD@{10}: checkout: moving from main to thien
+[33m1eb8c75[m[33m ([m[1;32mmain[m[33m)[m HEAD@{11}: commit (merge): fix bug structure
+[33m4f2588b[m HEAD@{12}: checkout: moving from thien to main
+[33m2909907[m HEAD@{13}: checkout: moving from main to thien
+[33m4f2588b[m HEAD@{14}: commit: fix project structure and add .env file
+[33m3175fd0[m HEAD@{15}: commit: fix bug
+[33m6688807[m HEAD@{16}: commit: messy commit
+[33m019d554[m HEAD@{17}: commit (merge): fix to push
+[33ma4644c8[m HEAD@{18}: commit (merge): fix to merge
+[33mcf83f53[m HEAD@{19}: commit (merge): add more rental services
+[33m10eca69[m HEAD@{20}: commit (merge): fix to merge
+[33mc973b77[m HEAD@{21}: commit: fix rental service
+[33m5282417[m HEAD@{22}: commit (merge): commit to merge
+[33ma323ca5[m HEAD@{23}: commit: fix all service search function and review date
+[33maafb49c[m HEAD@{24}: commit: fix user and movie service
+[33m87e3af1[m HEAD@{25}: pull: Fast-forward
+[33mbe9ca6c[m HEAD@{26}: commit: fix add genre and actor function in movieservice
+[33m2583f65[m HEAD@{27}: commit (merge): commit to merge
+[33me6849de[m HEAD@{28}: commit (merge): fix to merge
+[33m62ed460[m HEAD@{29}: commit (merge): add fakedata function
+[33m608627d[m HEAD@{30}: commit (merge): fix movie
+[33m30a3781[m HEAD@{31}: commit: fix movie rating to avgrating
+[33m8a39fe9[m HEAD@{32}: pull: Fast-forward
+[33m4ea81af[m HEAD@{33}: commit: fix some function
+[33m3397dba[m HEAD@{34}: commit (merge): fix Service to read data
+[33m1f0b42e[m HEAD@{35}: commit: fix movie service
+[33m45bc83e[m HEAD@{36}: commit (merge): fix service to merge
+[33m34d1056[m HEAD@{37}: commit: fix services and compact the listmanager
+[33m101f25a[m HEAD@{38}: pull: Fast-forward
+[33m0940092[m HEAD@{39}: commit (merge): fix id genarate in service
+[33m23360dd[m HEAD@{40}: commit: fix registor
+[33mbc509c4[m HEAD@{41}: commit: fix id generator
+[33m01b3e75[m HEAD@{42}: pull: Fast-forward
+[33me018ce7[m HEAD@{43}: commit: complete app and authen fix rentalCRUD
+[33mf527a1b[m HEAD@{44}: commit (merge): fix rentalCRUD
+[33m2fa2906[m HEAD@{45}: clone: from https://github.com/TAK1ST/Rentail-Movie

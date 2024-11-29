@@ -18,7 +18,7 @@ import main.utils.Menu.MenuOption;
  *
  * @author trann
  */
-public class UserPannel {
+public class CustomerPannel {
     
     public static void show(User account) throws IOException {
         Menu.showManagerMenu(

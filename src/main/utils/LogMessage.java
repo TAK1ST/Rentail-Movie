@@ -8,7 +8,7 @@ package main.utils;
  *
  * @author trann
  */
-public class Log {
+public class LogMessage {
     
     public static void errorLog(String message) {
         System.out.printf("[ERROR] %s.\n", message);

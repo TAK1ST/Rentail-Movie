@@ -72,14 +72,13 @@ public class ActorManager extends ListManager<Actor> {
             result.add(item);
         return result;
     }
-    public void displayActors(List<Actor> actors, String title) {
+    
+    @Override
+    public void display(List<Actor> actors, String title) {
+        if (checkEmpty(list)) return; 
         System.out.println(title);
+        
         System.out.println("|----------------------------------------------------");
-
-        if (actors.isEmpty()) {
-            System.out.println("No actors available.");
-            return;
-        }
         System.out.printf("|%-15s | %-30s\n |", "Actor ID", "Actor Name");
         System.out.println("|----------------------------------------------------");
 

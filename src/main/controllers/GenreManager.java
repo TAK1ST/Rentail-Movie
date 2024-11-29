@@ -33,25 +33,6 @@ public class GenreManager extends ListManager<Genre> {
         GenreDAO.addGenreToDB(list.getLast());
         return true;
     }
- public void displayGenres(List<Genre> genres, String title) {
-        System.out.println(title);
-        System.out.println("----------------------------------------------------");
-
-        if (genres.isEmpty()) {
-            System.out.println("No genres available.");
-            return;
-        }
-        System.out.printf("%-15s | %-30s\n", "Genre ID", "Genre Name");
-        System.out.println("----------------------------------------------------");
-
-        for (Genre genre : genres) {
-            System.out.printf("%-15s | %-30s\n",
-                    genre.getId(),
-                    genre.getGenreName());
-        }
-
-        System.out.println("----------------------------------------------------");
-    }
 
     public boolean updateGenre() {
         if (checkEmpty(list)) return false;
@@ -96,6 +77,24 @@ public class GenreManager extends ListManager<Genre> {
                 result.add(item);
             }   
         return result;
+    }
+    
+    @Override
+    public void display(List<Genre> genres, String title) {
+        if (checkEmpty(list)) return;
+        
+        System.out.println(title);
+        System.out.println("----------------------------------------------------");
+        System.out.printf("%-15s | %-30s\n", "Genre ID", "Genre Name");
+        System.out.println("----------------------------------------------------");
+
+        for (Genre genre : genres) {
+            System.out.printf("%-15s | %-30s\n",
+                    genre.getId(),
+                    genre.getGenreName());
+        }
+
+        System.out.println("----------------------------------------------------");
     }
     
 }

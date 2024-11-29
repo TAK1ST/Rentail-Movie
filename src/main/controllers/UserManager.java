@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dao.UserDAO;
 import main.constants.Constants;
+import main.constants.Role;
 import main.dto.User;
-import main.dto.User.Role;
 import main.utils.IDGenerator;
 import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
 import static main.utils.PassEncryptor.encryptPassword;
 import main.utils.Validator;
+import static main.utils.Validator.getFullName;
 
 /**
  *
@@ -29,7 +30,7 @@ public class UserManager extends ListManager<User> {
     private void setAdmin() throws IOException {
         if(!list.isEmpty())
             for (User item : list) 
-                if (item.getRole() == 1)
+                if (item.getRole() == Role.ADMIN)
                     return;
         
         list.add(new User(
@@ -44,14 +45,14 @@ public class UserManager extends ListManager<User> {
         UserDAO.addUserToDB(list.getLast());
     }
     
-    public boolean registorUser() {
+    public boolean registorCustomer() {
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
         String username = Validator.getUsername("Enter username", false, list);
         String password = Validator.getPassword("Enter password", false);
         
         String fullName, address, phoneNumber, email;
         if (yesOrNo("Fill in all infomation?")) {
-            fullName = getString("Enter full name", false);
+            fullName = getFullName("Enter full name", false);
             address = getString("Enter your address", false);
             phoneNumber = Validator.getPhoneNumber("Enter your phone number", false);
             email = Validator.getEmail("Enter your email", false);
@@ -63,7 +64,7 @@ public class UserManager extends ListManager<User> {
                 id, 
                 username, 
                 password, 
-                Role.USER, 
+                Role.CUSTOMER, 
                 fullName, 
                 address, 
                 phoneNumber, 
@@ -71,32 +72,6 @@ public class UserManager extends ListManager<User> {
         UserDAO.addUserToDB(list.getLast());
         return true;
     }
-public void displayUsers(List<User> users, String title) {
-    System.out.println(title);
-     System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-    if (users.isEmpty()) {
-        System.out.println("No users available.");
-        return;
-    }
-
-    System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
-            "User ID", "Username","Password", "Role", "Full Name", "Address", "Phone Number", "Email");
-     System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-    for (User user : users) {
-        String role = user.getRole() == 1 ? "Admin" : "User";  // Chuyển đổi số vai trò thành tên vai trò
-         System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                role,
-                user.getFullName() != null ? user.getFullName() : "N/A",
-                user.getAddress() != null ? user.getAddress() : "N/A",
-                user.getPhoneNumber() != null ? user.getPhoneNumber() : "N/A",
-                user.getEmail() != null ? user.getEmail() : "N/A"); 
-    }
-System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-}
-
 
     public boolean addUser(Role registorRole) throws IOException {   
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
@@ -105,7 +80,7 @@ System.out.println("|-----------------------------------------------------------
                 Validator.getUsername("Enter username", false, list), 
                 Validator.getPassword("Enter password", false), 
                 (registorRole == Role.ADMIN) ? Validator.getRole("Choose a role", false): registorRole,  
-                getString("Enter full name", false), 
+                getFullName("Enter full name", false), 
                 getString("Enter your address", false), 
                 Validator.getPhoneNumber("Enter your phone number", false), 
                 Validator.getEmail("Enter your email", false)));
@@ -128,7 +103,7 @@ System.out.println("|-----------------------------------------------------------
         String newPassword = Validator.getPassword("Enter new password", true);
         
         Role newRole = Role.NONE;
-        if (foundUser.getRole() == Role.ADMIN.getValue())
+        if (foundUser.getRole() == Role.ADMIN)
             newRole = Validator.getRole("Enter new role", true);
         
         String newFullName = getString("Enter full name", true);
@@ -138,7 +113,7 @@ System.out.println("|-----------------------------------------------------------
 
         if (!newUsername.isEmpty()) foundUser.setUsername(newUsername);
         if (!newPassword.isEmpty()) foundUser.setPassword(encryptPassword(newPassword));
-        if (newRole != Role.NONE) foundUser.setRole(newRole.getValue());
+        if (newRole != Role.NONE) foundUser.setRole(newRole);
         if (!newFullName.isEmpty()) foundUser.setFullName(newFullName);
         if (!newAddress.isEmpty()) foundUser.setAddress(newAddress);
         if (!newPhoneNumber.isEmpty()) foundUser.setPhoneNumber(newPhoneNumber);
@@ -185,6 +160,30 @@ System.out.println("|-----------------------------------------------------------
     
     public void showMyProfile(String userID) {
         display(searchById(userID), "My Profile");
+    }
+    
+    @Override
+    public void display(List<User> users, String title) {
+        if (checkEmpty(list)) return;
+        
+        System.out.println(title);
+        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+        System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
+                "User ID", "Username","Password", "Role", "Full Name", "Address", "Phone Number", "Email");
+        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+        for (User user : users) {
+            String role = user.getRole() == Role.ADMIN ? "Admin" : "User";
+             System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
+                    user.getId(),
+                    user.getUsername(),
+                    user.getPassword(),
+                    role,
+                    user.getFullName() != null ? user.getFullName() : "N/A",
+                    user.getAddress() != null ? user.getAddress() : "N/A",
+                    user.getPhoneNumber() != null ? user.getPhoneNumber() : "N/A",
+                    user.getEmail() != null ? user.getEmail() : "N/A"); 
+        }
+        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
     }
     
 }
