@@ -53,7 +53,7 @@ public class RentalServices {
             foundRental.setCharges(foundRental.getCharges() + foundRental.getOverdueFines()); 
         }
 
-        boolean isSuccess = RentalDAO.updateRentalFromDB(foundRental);
+        boolean isSuccess = RentalDAO.updateRentalInDB(foundRental);
         if (isSuccess) {
             MovieServices.adjustAvailableCopy(getRTM().getList().getLast().getMovieId(), 1);
         }  

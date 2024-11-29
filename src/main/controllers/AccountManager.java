@@ -8,6 +8,7 @@ import main.constants.AccRole;
 import main.constants.AccStatus;
 import main.dao.AccountDAO;
 import main.constants.Constants;
+import static main.constants.Constants.ACCOUNT_PREFIX;
 import main.dto.Account;
 import main.utils.IDGenerator;
 import static main.utils.Input.getString;
@@ -73,17 +74,14 @@ public class AccountManager extends ListManager<Account> {
     }
 
     public boolean addAccount(AccRole registorRole) throws IOException {
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
-        
         list.add(new Account(
-                id,
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), ACCOUNT_PREFIX),
                 Validator.getAccountName("Enter username", false, list),
                 Validator.getPassword("Enter password", false),
                 Validator.getEmail("Enter your email", false),
                 (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole,
                 AccStatus.OFF
         ));
-        
         return AccountDAO.addAccountToDB(list.getLast());
     }
 

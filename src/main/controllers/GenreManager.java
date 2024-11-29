@@ -5,6 +5,7 @@ import main.base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import static main.constants.Constants.GENRE_PREFIX;
 import main.dao.GenreDAO;
 import main.dto.Genre;
 import main.utils.IDGenerator;
@@ -24,7 +25,7 @@ public class GenreManager extends ListManager<Genre> {
 
     public boolean addGenre() {
         list.add(new Genre(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "G"), 
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), GENRE_PREFIX), 
                 getName("Enter genre", false)
         ));
         return GenreDAO.addGenreToDB(list.getLast());

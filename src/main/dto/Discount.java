@@ -7,6 +7,7 @@ import main.utils.Validator;
 
 public class Discount extends Model {
 
+    private String customerID;
     private LocalDate startDate;
     private LocalDate endDate;
     private DiscountType type;
@@ -14,8 +15,9 @@ public class Discount extends Model {
     private boolean isActive;
     private double value;
 
-    public Discount(String code, LocalDate startDate, LocalDate endDate, DiscountType type, int usageAvailable, boolean isActive, double value) {
+    public Discount(String code, String customerID, LocalDate startDate, LocalDate endDate, DiscountType type, int usageAvailable, boolean isActive, double value) {
         super(code);
+        this.customerID = customerID;
         this.startDate = startDate;
         this.endDate = endDate;
         this.type = type;
@@ -26,6 +28,7 @@ public class Discount extends Model {
 
     public Discount(Discount other) {
         super(other.getCode());
+        this.customerID = other.customerID;
         this.startDate = other.startDate;
         this.endDate = other.endDate;
         this.type = other.type;
@@ -36,14 +39,15 @@ public class Discount extends Model {
 
     @Override
     public String toString() {
-        return String.format("Discount: %s, %s, %s, %s, %d, %b, %.2f.",
-                this.getCode(), startDate, endDate, type, usageAvailable, isActive, value);
+        return String.format("Discount: %s, %s, %s, %s, %s, %d, %b, %.2f.",
+                this.getCode(), customerID, startDate, endDate, type, usageAvailable, isActive, value);
     }
 
     @Override
     public Object[] getDatabaseValues() {
         return new Object[]{
             this.getCode(),
+            customerID,
             startDate.format(Validator.DATE),
             endDate.format(Validator.DATE),
             type,
@@ -63,6 +67,14 @@ public class Discount extends Model {
 
     public void setCode(String code) {
         super.setId(code);
+    }
+
+    public String getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
     }
 
     public LocalDate getStartDate() {
