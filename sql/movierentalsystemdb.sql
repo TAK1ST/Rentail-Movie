@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS Movie_Language (
     FOREIGN KEY (movie_id)
         REFERENCES Movie (movie_id),
     FOREIGN KEY (language_code)
-        REFERENCES Language (language_code),
+        REFERENCES Languages (language_code),
     PRIMARY KEY (movie_id , language_code)
 );
 
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS Movie_Genre (
 CREATE TABLE IF NOT EXISTS Actor (
     actor_id CHAR(8) PRIMARY KEY,
     actor_name NVARCHAR(255) NOT NULL,
-    rank ENUM('NONE', 'A', 'B', 'C', 'D') NOT NULL
+    actor_rank ENUM('NONE', 'A', 'B', 'C', 'D') NOT NULL
 );
 
 -- change M-N Movie and Actor to 1-N thought Movie_Actor
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS Review (
     FOREIGN KEY (movie_id)
         REFERENCES Movie (movie_id),
     FOREIGN KEY (customer_id)
-        REFERENCES Accounts (customer_id)
+        REFERENCES Accounts (account_id)
 );
 
 CREATE TABLE IF NOT EXISTS Payment (
