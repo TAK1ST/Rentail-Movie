@@ -6,17 +6,18 @@ package test;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.DAO.ActorDAO;
-import main.DAO.GenreDAO;
-import main.DAO.UserDAO;
+import main.dao.ActorDAO;
+import main.dao.GenreDAO;
+import main.dao.UserDAO;
 import static main.controllers.Managers.getAM;
 import static main.controllers.Managers.getGM;
 import static main.controllers.Managers.getMM;
 import static main.controllers.Managers.getUM;
-import main.models.Actor;
-import main.models.Genre;
-import main.models.Movie;
-import main.models.User;
+import main.dto.Actor;
+import main.dto.Genre;
+import main.dto.Movie;
+import main.dto.Rental;
+import main.dto.User;
 import static main.utils.Utility.toDate;
 
 /**
@@ -136,6 +137,14 @@ public class FakeData {
                            List.of("G0000001", "G0000009", "G0000004", "G0000002"), 
                            List.of("A0000002", "A0000007", "A0000006"), 
                            "English", toDate("31/10/2022"), 70, 5));
+        
+        return true;
+    }
+    
+    public static boolean makeFakeRental() {
+        List<Rental> temp = new ArrayList<>();
+        
+        temp.add(new Rental("RT000001", "U00000002", "M00000004", toDate("12/04/2023"), toDate("16/04/2023"), 100.15, 0));
         
         return true;
     }

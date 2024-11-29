@@ -1,3 +1,4 @@
+
 package main.controllers;
 
 import main.base.ListManager;
@@ -71,6 +72,32 @@ public class UserManager extends ListManager<User> {
         UserDAO.addUserToDB(list.getLast());
         return true;
     }
+public void displayUsers(List<User> users, String title) {
+    System.out.println(title);
+     System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+    if (users.isEmpty()) {
+        System.out.println("No users available.");
+        return;
+    }
+
+    System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
+            "User ID", "Username","Password", "Role", "Full Name", "Address", "Phone Number", "Email");
+     System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+    for (User user : users) {
+        String role = user.getRole() == 1 ? "Admin" : "User";  // Chuyển đổi số vai trò thành tên vai trò
+         System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
+                user.getId(),
+                user.getUsername(),
+                user.getPassword(),
+                role,
+                user.getFullName() != null ? user.getFullName() : "N/A",
+                user.getAddress() != null ? user.getAddress() : "N/A",
+                user.getPhoneNumber() != null ? user.getPhoneNumber() : "N/A",
+                user.getEmail() != null ? user.getEmail() : "N/A"); 
+    }
+System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+}
+
 
     public boolean addUser(Role registorRole) throws IOException {   
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
