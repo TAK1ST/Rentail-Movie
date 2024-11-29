@@ -14,6 +14,7 @@ import main.dto.Genre;
 import main.dto.Movie;
 import static main.controllers.Managers.getAM;
 import static main.controllers.Managers.getGM;
+import main.dto.Language;
 import main.utils.IDGenerator;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
@@ -80,6 +81,24 @@ public class MovieManager extends ListManager<Movie> {
     }
 
     private List<String> selectActors(String message, List<Actor> options) {
+        getAM().display(options, "");
+        List<String> actorIDs = new ArrayList<>();
+
+        String input = getString(message, false);
+        String[] actorNames = input.split(",");
+
+        for (String item : actorNames) {
+            item = item.trim();
+            int index = toInt(item);
+            if (index > 0 && index <= options.size()) {
+                actorIDs.add(options.get(index).getId());
+            }
+        }
+
+        return actorIDs;
+    }
+    
+    private List<String> selectLanguages(String message, List<Language> options) {
         getAM().display(options, "");
         List<String> actorIDs = new ArrayList<>();
 
