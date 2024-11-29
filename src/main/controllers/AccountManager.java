@@ -84,10 +84,6 @@ public class AccountManager extends ListManager<Account> {
         String password = getPassword("Enter password", false);
         String email = getEmail("Enter your email", false);
         AccRole role = (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole;
-        if (getPFM().addProfile(id)) {
-            errorLog("Cannot registor info");
-            return false;
-        }
         
         list.add(new Account(
                 id,
@@ -97,7 +93,14 @@ public class AccountManager extends ListManager<Account> {
                 role,
                 AccStatus.OFF
         ));
-        return AccountDAO.addAccountToDB(list.getLast());
+        if(AccountDAO.addAccountToDB(list.getLast())) {
+            if (!getPFM().addProfile(id)) {
+                errorLog("Cannot registor info");
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean updateAccount(String userID) {

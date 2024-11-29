@@ -22,17 +22,18 @@ import main.dto.Profile;
 public class ProfileDAO {
     
     public static boolean addProfileToDB(Profile account) {
-        String sql = "INSERT INTO Profiles (account_id, full_name, phone_number, address, credit, birthday) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Profiles (account_id, full_name, birth_day, address, phone_number, credit) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, account.getId());  
             preparedStatement.setString(2, account.getFullName());  
-            preparedStatement.setString(3, account.getPhoneNumber());  
-            preparedStatement.setString(4, account.getAddress());  
-            preparedStatement.setDouble(5, account.getCredit());  
-            preparedStatement.setDate(6, Date.valueOf(account.getBirthday())); 
-
+            preparedStatement.setDate(3, Date.valueOf(account.getBirthday()));
+            preparedStatement.setString(4, account.getAddress());
+            preparedStatement.setString(5, account.getPhoneNumber());  
+            preparedStatement.setDouble(6, account.getCredit());  
+            
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
