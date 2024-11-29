@@ -3,9 +3,11 @@ package main.dto;
 import main.base.Model;
 import java.time.LocalDate;
 import java.util.List;
+import main.utils.Validator;
 
 
 public class Movie extends Model {
+    
     private String title;
     private String description;
     private double avgRating;
@@ -57,7 +59,7 @@ public class Movie extends Model {
                 genreNames,
                 actorNames,
                 languages,
-                releaseYear,
+                releaseYear.format(Validator.DATE),
                 rentalPrice,
                 availableCopies
 

@@ -2,6 +2,7 @@ package main.dto;
 
 import main.base.Model;
 import java.time.LocalDate;
+import main.utils.Validator;
 
 public class Review extends Model {
     private String movieID;
@@ -35,7 +36,7 @@ public class Review extends Model {
                 movieID,
                 customerID,
                 rating,
-                reviewDate.toString(),
+                reviewDate.format(Validator.DATE),
                 reviewText);
     }
     

@@ -58,11 +58,15 @@ public class ActorDAO {
     
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     public static List<Actor> getAllActorFromDB() {
 =======
     public static List<Actor> getAllActor() {
 >>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
+=======
+    public static List<Actor> getAllActors() {
+>>>>>>> 0e27071236bd8733c57014037059c15ad6cbef83
         String sql = "SELECT * FROM Actors";
         List<Actor> list = new ArrayList<>();
         try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {

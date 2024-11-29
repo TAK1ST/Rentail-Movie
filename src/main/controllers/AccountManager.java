@@ -35,7 +35,7 @@ public class AccountManager extends ListManager<Account> {
 
     public AccountManager() throws IOException {
         super(Account.className());
-        list = AccountDAO.getAllAccount();
+        list = AccountDAO.getAllAccounts();
         setAdmin();
     }
 
@@ -57,13 +57,17 @@ public class AccountManager extends ListManager<Account> {
 >>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
         list.add(new Account(
                 Constants.DEFAULT_ADMIN_ID,
-                "admin@gmail.com",
+                "admin",
                 "1",
+<<<<<<< HEAD
                 null,
 <<<<<<< HEAD
                 Role.ADMIN,
                 Status.ONLINE));
 =======
+=======
+                "admin@gmail.com",
+>>>>>>> 0e27071236bd8733c57014037059c15ad6cbef83
                 AccRole.ADMIN,
                 AccStatus.OFF));
 >>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
@@ -113,6 +117,7 @@ public class AccountManager extends ListManager<Account> {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     public void displayAccounts(List<Account> users, String title) {
         System.out.println(title);
         System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
@@ -140,6 +145,9 @@ public class AccountManager extends ListManager<Account> {
 =======
     public boolean addAccount(AccRole registorRole, AccStatus registorStatus) throws IOException {
 >>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
+=======
+    public boolean addAccount(AccRole registorRole) throws IOException {
+>>>>>>> 0e27071236bd8733c57014037059c15ad6cbef83
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
         
         list.add(new Account(

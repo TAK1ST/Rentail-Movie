@@ -7,12 +7,12 @@ package main.views;
 import java.io.IOException;
 import main.constants.Constants;
 import main.constants.AccRole;
-import static main.controllers.Managers.getAM;
-import static main.controllers.Managers.getGM;
-import static main.controllers.Managers.getMM;
-import static main.controllers.Managers.getRM;
+import static main.controllers.Managers.getATM;
+import static main.controllers.Managers.getGRM;
+import static main.controllers.Managers.getMVM;
+import static main.controllers.Managers.getRVM;
 import static main.controllers.Managers.getRTM;
-import static main.controllers.Managers.getUM;
+import static main.controllers.Managers.getACM;
 import main.utils.Menu;
 import main.utils.Menu.MenuOption;
 import static main.utils.Menu.showSuccess;
@@ -28,7 +28,7 @@ public class AdminPannel {
             "Movie Rental (Admin)",
             null,
             new MenuOption[]{
-                new MenuOption("User managment",    () -> userMenu()),
+                new MenuOption("Account managment",    () -> userMenu()),
                 new MenuOption("Actor managment",   () -> actorMenu()),
                 new MenuOption("Genre managment",   () -> genreMenu()),
                 new MenuOption("Movie managment",   () -> movieMenu()),
@@ -45,11 +45,11 @@ public class AdminPannel {
             "Actor Management",
             null,
             new MenuOption[]{
-                new MenuOption("Add actor", () -> showSuccess(getAM().addActor()), true),
-                new MenuOption("Delete actor", () -> showSuccess(getAM().deleteActor()), true),
-                new MenuOption("Update actor", () -> showSuccess(getAM().updateActor()), true),
-                new MenuOption("Search actor", () -> getAM().searchActor(), true),
-                new MenuOption("Show all actor", () -> getAM().display(getAM().getList(), "List of Actor")),
+                new MenuOption("Add actor", () -> showSuccess(getATM().addActor()), true),
+                new MenuOption("Delete actor", () -> showSuccess(getATM().deleteActor()), true),
+                new MenuOption("Update actor", () -> showSuccess(getATM().updateActor()), true),
+                new MenuOption("Search actor", () -> getATM().searchActor(), true),
+                new MenuOption("Show all actor", () -> getATM().display(getATM().getList(), "List of Actor")),
                 new MenuOption("Back", () -> {})
             },
             null
@@ -61,11 +61,11 @@ public class AdminPannel {
             "Genre Management",
             null,
             new MenuOption[]{
-                new MenuOption("Add genre",    () -> showSuccess(getGM().addGenre()), true),
-                new MenuOption("Delete genre", () -> showSuccess(getGM().deleteGenre()), true),
-                new MenuOption("Update genre", () -> showSuccess(getGM().updateGenre()), true),
-                new MenuOption("Search genre", () -> getGM().searchGenre(), true),
-                new MenuOption("Show all genre", () -> getGM().display(getGM().getList(), "List of Genre")),
+                new MenuOption("Add genre",    () -> showSuccess(getGRM().addGenre()), true),
+                new MenuOption("Delete genre", () -> showSuccess(getGRM().deleteGenre()), true),
+                new MenuOption("Update genre", () -> showSuccess(getGRM().updateGenre()), true),
+                new MenuOption("Search genre", () -> getGRM().searchGenre(), true),
+                new MenuOption("Show all genre", () -> getGRM().display(getGRM().getList(), "List of Genre")),
                 new MenuOption("Back")
             },
             null
@@ -77,11 +77,11 @@ public class AdminPannel {
                 "Movie Management",
                 null,
                 new MenuOption[]{
-                    new MenuOption("Add movie", () -> showSuccess(getMM().addMovie(Constants.DEFAULT_ADMIN_ID)), true),
-                    new MenuOption("Delete movie", () -> showSuccess(getMM().deleteMovie()), true),
-                    new MenuOption("Update movie", () -> showSuccess(getMM().updateMovie()), true),
-                    new MenuOption("Search movie", () -> getMM().searchMovie(), true),
-                    new MenuOption("Show all movie", () -> getMM().display(getMM().getList(), "List of Movie")),
+                    new MenuOption("Add movie", () -> showSuccess(getMVM().addMovie(Constants.DEFAULT_ADMIN_ID)), true),
+                    new MenuOption("Delete movie", () -> showSuccess(getMVM().deleteMovie()), true),
+                    new MenuOption("Update movie", () -> showSuccess(getMVM().updateMovie()), true),
+                    new MenuOption("Search movie", () -> getMVM().searchMovie(), true),
+                    new MenuOption("Show all movie", () -> getMVM().display(getMVM().getList(), "List of Movie")),
                     new MenuOption("Back")
                 },
                 null
@@ -109,11 +109,11 @@ public class AdminPannel {
             "Review Management",
             null,
             new MenuOption[]{
-                new MenuOption("Add review", () -> showSuccess(getRM().makeReview(Constants.DEFAULT_ADMIN_ID)), true),
-                new MenuOption("Delete review", () -> showSuccess(getRM().deleteReview()), true),
-                new MenuOption("Update review", () -> showSuccess(getRM().updateReview()), true),
-                new MenuOption("Search review", () -> getRM().searchReview(), true),
-                new MenuOption("Show all review", () -> getRM().display(getRM().getList(), "List of Reviews")),
+                new MenuOption("Add review", () -> showSuccess(getRVM().makeReview(Constants.DEFAULT_ADMIN_ID)), true),
+                new MenuOption("Delete review", () -> showSuccess(getRVM().deleteReview()), true),
+                new MenuOption("Update review", () -> showSuccess(getRVM().updateReview()), true),
+                new MenuOption("Search review", () -> getRVM().searchReview(), true),
+                new MenuOption("Show all review", () -> getRVM().display(getRVM().getList(), "List of Reviews")),
                 new MenuOption("Back")
             },
             null
@@ -122,14 +122,14 @@ public class AdminPannel {
     }
     
     private static void userMenu() throws IOException {
-        Menu.showManagerMenu("User Managment",
+        Menu.showManagerMenu("Account Managment",
             null,
             new MenuOption[]{
-                new MenuOption("Add User", () -> showSuccess(getUM().addUser(AccRole.ADMIN)), true),
-                new MenuOption("Delete User", () -> showSuccess(getUM().deleteUser()), true),
-                new MenuOption("Update User", () -> showSuccess(getUM().updateUser("")), true),
-                new MenuOption("Search User", () -> getUM().searchUser(), true),
-                new MenuOption("Display Users", () -> getUM().display(getUM().getList(), "List of Users")),
+                new MenuOption("Add Account", () -> showSuccess(getACM().addAccount(AccRole.ADMIN)), true),
+                new MenuOption("Delete Account", () -> showSuccess(getACM().deleteAccount()), true),
+                new MenuOption("Update Account", () -> showSuccess(getACM().updateAccount("")), true),
+                new MenuOption("Search Account", () -> getACM().searchAccount(), true),
+                new MenuOption("Display Accounts", () -> getACM().display(getACM().getList(), "List of Accounts")),
                 new MenuOption("Back", () -> {})
             },
             null

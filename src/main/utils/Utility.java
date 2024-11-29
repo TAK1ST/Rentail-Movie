@@ -5,7 +5,6 @@
 package main.utils;
 
 import java.time.LocalDate;
-import java.util.Scanner;
 import static main.utils.Input.getInteger;
 import static main.utils.LogMessage.errorLog;
 

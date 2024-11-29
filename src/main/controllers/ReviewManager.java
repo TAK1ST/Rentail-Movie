@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import main.dao.ReviewDAO;
-import static main.controllers.Managers.getMM;
+import static main.controllers.Managers.getMVM;
 import main.dto.Movie;
 import main.dto.Review;
 import main.utils.IDGenerator;
@@ -30,7 +30,7 @@ public final class ReviewManager extends ListManager<Review> {
 
     public ReviewManager() throws IOException {
         super(Review.className());
-        list = ReviewDAO.getAllReview();
+        list = ReviewDAO.getAllReviews();
     }
 
     public boolean makeReview(String customID) {
@@ -41,23 +41,18 @@ public final class ReviewManager extends ListManager<Review> {
                 return false;
             }
         
-        String input = getString("Enter movie'id", false);
-        Movie foundMovie = (Movie) getMM().searchById(input);
-        if (getMM().checkNull(foundMovie)) return false;
-
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "R");
-        int rating = getInteger("Enter rating (1-5)", 1, 5, false);
-        String reviewText = getString("Enter comment", true);
+        Movie foundMovie = (Movie) getMVM().getById("Enter movie'id");
+        if (getMVM().checkNull(foundMovie)) return false;
 
         list.add(new Review(
-                id,
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "R"),
                 customID,
                 foundMovie.getId(),
-                rating,
-                reviewText,
+                getInteger("Enter rating", 1, 5, false),
+                getString("Enter comment", true),
                 LocalDate.now()));
-        ReviewDAO.addReviewToDB(list.getLast());
-        return true;
+        
+        return ReviewDAO.addReviewToDB(list.getLast());
     }
 
     public boolean updateReview() {
@@ -65,11 +60,11 @@ public final class ReviewManager extends ListManager<Review> {
         
         String input = getString("Enter movie'id", false);
         Review foundReview = searchBy(input).getFirst();
-        Movie foundMovie = (Movie) getMM().searchById(input);
-        if (checkNull(foundReview) || getMM().checkNull(foundMovie)) 
+        Movie foundMovie = (Movie) getMVM().searchById(input);
+        if (checkNull(foundReview) || getMVM().checkNull(foundMovie)) 
             return false;
         
-        int rating = getInteger("Enter rating (1-5)", 1, 5, true);
+        int rating = getInteger("Enter rating", 1, 5, true);
         String reviewText = getString("Enter comment", true);
 
         if (rating > 0) 
@@ -78,8 +73,7 @@ public final class ReviewManager extends ListManager<Review> {
         if (!reviewText.isEmpty()) 
             foundReview.setReviewText(reviewText);
         
-        ReviewDAO.updateReviewFromDB(foundReview);
-        return true;
+        return ReviewDAO.updateReviewInDB(foundReview);
     }
 
     public boolean deleteReview() {
@@ -89,8 +83,7 @@ public final class ReviewManager extends ListManager<Review> {
         if (checkNull(foundReview)) return false;
         
         list.remove(foundReview);
-        ReviewDAO.deleteReviewFromDB(foundReview.getId());
-        return true;
+        return ReviewDAO.deleteReviewFromDB(foundReview.getId());
     }
 
     public void searchReview() {
@@ -102,16 +95,16 @@ public final class ReviewManager extends ListManager<Review> {
     }
     
     @Override
-    public List<Review> searchBy(String property) {
+    public List<Review> searchBy(String propety) {
         List<Review> result = new ArrayList<>();
 
         for (Review item : list) {
-            if (item.getId().equals(property)
-                    || item.getMovieID().equals(property)
-                    || item.getReviewText().trim().toLowerCase().contains(property.trim().toLowerCase())
-                    || item.getReviewDate().format(Validator.DATE).contains(property.trim())
-                    || item.getUserID().equals(property)
-                    || String.valueOf(item.getRating()).equals(property)) {
+            if (item.getId().equals(propety)
+                    || item.getMovieID().equals(propety)
+                    || item.getReviewText().trim().toLowerCase().contains(propety.trim().toLowerCase())
+                    || item.getReviewDate().format(Validator.DATE).contains(propety.trim())
+                    || item.getCustomerID().equals(propety)
+                    || String.valueOf(item.getRating()).equals(propety)) {
                 result.add(item);
             }
         }
@@ -132,8 +125,8 @@ public final class ReviewManager extends ListManager<Review> {
     }  
     
     public void displayAMovieReviews() {
-        Movie foundMovie = (Movie) getMM().getById("Enter movie's id");
-        if (getMM().checkNull(foundMovie)) return;
+        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
+        if (getMVM().checkNull(foundMovie)) return;
         
         List<Review> movieReviews = searchBy(foundMovie.getId());
         

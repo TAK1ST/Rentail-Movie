@@ -132,10 +132,12 @@ CREATE TABLE IF NOT EXISTS Wishlists (
 );
 CREATE TABLE IF NOT EXISTS Discounts (
     discount_code VARCHAR(50) PRIMARY KEY,
+    customer_id CHAR(8) NOT NULL,
     discount_type ENUM('NONE', 'PERCENT', 'FITED_AMOUNT', 'BUY_X_GET_Y_FREE') NOT NULL,
     discount_value DECIMAL(10 , 2) NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     usage_available INT DEFAULT 1,
-    is_active BOOLEAN DEFAULT TRUE
+    is_active BOOLEAN DEFAULT TRUE,
+    foreign key (customer_id) references Accounts (account_id)
 )

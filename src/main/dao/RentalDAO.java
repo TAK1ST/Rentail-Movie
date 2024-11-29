@@ -81,7 +81,7 @@ public class RentalDAO {
         return false;
     }
     
-    public static List<Rental> getAllRental() {
+    public static List<Rental> getAllRentals() {
         String sql = "SELECT * FROM Rentals";
         List<Rental> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();

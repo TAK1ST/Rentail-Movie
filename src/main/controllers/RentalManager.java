@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import main.constants.RentalStatus;
 import main.dao.RentalDAO;
-import static main.controllers.Managers.getMM;
-import static main.controllers.Managers.getUM;
+import static main.controllers.Managers.getMVM;
+import static main.controllers.Managers.getACM;
 import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Rental;
@@ -36,7 +36,7 @@ public class RentalManager extends ListManager<Rental> {
 
     public RentalManager() throws IOException {
         super(Rental.className());
-        list = RentalDAO.getAllRental();
+        list = RentalDAO.getAllRentals();
     }
 
 <<<<<<< HEAD
@@ -44,19 +44,24 @@ public class RentalManager extends ListManager<Rental> {
         Account foundAccount = (Account) getUM().searchById(userID);
 =======
     public boolean addRental(String customerID) {    
+<<<<<<< HEAD
         Account foundAccount = (Account) getUM().searchById(customerID);
 >>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
         if (getUM().checkNull(foundAccount)) return false;
+=======
+        Account foundAccount = (Account) getACM().searchById(customerID);
+        if (getACM().checkNull(foundAccount)) return false;
+>>>>>>> 0e27071236bd8733c57014037059c15ad6cbef83
 
-        Movie foundMovie = (Movie) getMM().getById("Enter movie' id to rent");
-        if (getMM().checkNull(foundMovie)) return false;
+        Movie foundMovie = (Movie) getMVM().getById("Enter movie' id to rent");
+        if (getMVM().checkNull(foundMovie)) return false;
         
         if (foundMovie.getAvailableCopies() <= 0) {
             errorLog("No available copies for this movie!");
             return false; 
         }
         
-        Account foundStaff = (Account) getUM().searchById(assignStaff());
+        Account foundStaff = (Account) getACM().searchById(assignStaff());
         if (foundStaff == null) {
             errorLog("No staff is assigned to approve your rental");
             return false;
@@ -111,8 +116,8 @@ public class RentalManager extends ListManager<Rental> {
     
 >>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
     public Rental getRentalByAccountMovie(String userID) {
-        Movie foundMovie = (Movie) getMM().getById("Enter movie's id");  
-        if (getMM().checkNull(foundMovie)) return null;
+        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");  
+        if (getMVM().checkNull(foundMovie)) return null;
         
         List<Rental> temp = searchBy(userID);
         for (Rental item : temp) 
@@ -128,8 +133,8 @@ public class RentalManager extends ListManager<Rental> {
         Rental foundRental = getRentalByAccountMovie(userID);
         if (checkNull(foundRental)) return false;
         
-        Movie foundMovie = getMM().searchById(foundRental.getMovieId());
-        if (getMM().checkNull(foundMovie)) return false;
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
+        if (getMVM().checkNull(foundMovie)) return false;
         
         double lateFee = RentalServices.calculateOverdueFine(foundRental.getReturnDate(), foundMovie.getRentalPrice());
 
@@ -157,10 +162,10 @@ public class RentalManager extends ListManager<Rental> {
         Movie foundMovie = null;
         String input = getString("Enter rental' id to rent", true);
         if (!input.isEmpty()) 
-            foundMovie = (Movie) getMM().searchById(input);  
-        if (getMM().checkNull(foundMovie)) 
-            foundMovie = (Movie) getMM().searchById(foundRental.getMovieId());
-        if (getMM().checkNull(foundMovie)) 
+            foundMovie = (Movie) getMVM().searchById(input);  
+        if (getMVM().checkNull(foundMovie)) 
+            foundMovie = (Movie) getMVM().searchById(foundRental.getMovieId());
+        if (getMVM().checkNull(foundMovie)) 
             return false;
 
         LocalDate rentalDate = getDate("Change rental date", true);
@@ -187,8 +192,8 @@ public class RentalManager extends ListManager<Rental> {
         Rental foundRental = getRentalByAccountMovie(userID);
         if (checkNull(foundRental)) return false;
         
-        Movie foundMovie = getMM().searchById(foundRental.getMovieId());
-        if (getMM().checkNull(foundMovie)) return false;
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
+        if (getMVM().checkNull(foundMovie)) return false;
         
         int extraDate = getInteger("How many days to rent", 1, 365, false);
         double lateFee = RentalServices.calculateOverdueFine(foundRental.getReturnDate(), foundMovie.getRentalPrice());

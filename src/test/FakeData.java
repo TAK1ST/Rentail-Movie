@@ -10,12 +10,12 @@ import main.constants.AccRole;
 import main.dao.ActorDAO;
 import main.dao.GenreDAO;
 import main.dao.AccountDAO;
-import static main.controllers.Managers.getAM;
-import static main.controllers.Managers.getGM;
-import static main.controllers.Managers.getMM;
-import static main.controllers.Managers.getRM;
+import static main.controllers.Managers.getATM;
+import static main.controllers.Managers.getGRM;
+import static main.controllers.Managers.getMVM;
+import static main.controllers.Managers.getRVM;
 import static main.controllers.Managers.getRTM;
-import static main.controllers.Managers.getUM;
+import static main.controllers.Managers.getACM;
 import main.dao.RentalDAO;
 import main.dao.ReviewDAO;
 import main.dto.Actor;
@@ -23,7 +23,6 @@ import main.dto.Genre;
 import main.dto.Movie;
 import main.dto.Rental;
 import main.dto.Review;
-import main.dto.User;
 import static main.utils.Utility.toDate;
 
 /**
@@ -37,29 +36,29 @@ public class FakeData {
     }
     
     public static boolean makeAllFakeData() {
-        return makeFakeUser() 
+        return makeFakeAccount() 
                 && makeFakeActor() 
                 && makeFakeGenre() 
                 && makeFakeMovie();
     }
     
-    public static boolean makeFakeUser() {
+    public static boolean makeFakeAccount() {
         
-        List<User> temp = new ArrayList<>();
-        temp.add(new User("U0000002", "thien", "newPass123", AccRole.STAFF, "Thien Tran", "123 Main St", "9876543210", "thien@example.com"));
-        temp.add(new User("U0000003", "kiet", "newPass456", AccRole.CUSTOMER, "Kiet Tran", "456 Elm St", "8765432109", "kiet@example.com"));
-        temp.add(new User("U0000004", "kietse", "newPass789", AccRole.CUSTOMER, "Ngoc Thien", "789 Oak St", "7654321098", "kietse@example.com"));
-        temp.add(new User("U0000005", "duongngo", "newPass012", AccRole.STAFF, "Duong Ngo", "321 Pine St", "6543210987", "duongngo@example.com"));
-        temp.add(new User("U0000006", "duongbingo", "newPass345", AccRole.ADMIN, "Bingo Duong", "654 Cedar St", "5432109876", "duongbingo@example.com"));
-        temp.add(new User("U0000007", "thiendepzai", "newPass678", AccRole.PREMIUM, "Thien Depzai", "987 Maple St", "4321098765", "thiendepzai@example.com"));
-        temp.add(new User("U0000008", "3changlinh", "newPass901", AccRole.CUSTOMER, "Chang Linh", "147 Birch St", "3210987654", "3changlinh@example.com"));
-        temp.add(new User("U0000009", "success", "newPass234", AccRole.CUSTOMER, "Successful Tran", "258 Walnut St", "2109876543", "success@example.com"));
-        temp.add(new User("U0000010", "tttt", "newPass567", AccRole.STAFF, "T Tran", "369 Spruce St", "1098765432", "tttt@example.com"));
-        temp.add(new User("U0000011", "kkkk", "newPass890", AccRole.PREMIUM, "KK Tran", "741 Cherry St", "0987654321", "kkkk@example.com"));
+        List<Account> temp = new ArrayList<>();
+        temp.add(new Account("U0000002", "thien", "newPass123", AccRole.STAFF, "Thien Tran", "123 Main St", "9876543210", "thien@example.com"));
+        temp.add(new Account("U0000003", "kiet", "newPass456", AccRole.CUSTOMER, "Kiet Tran", "456 Elm St", "8765432109", "kiet@example.com"));
+        temp.add(new Account("U0000004", "kietse", "newPass789", AccRole.CUSTOMER, "Ngoc Thien", "789 Oak St", "7654321098", "kietse@example.com"));
+        temp.add(new Account("U0000005", "duongngo", "newPass012", AccRole.STAFF, "Duong Ngo", "321 Pine St", "6543210987", "duongngo@example.com"));
+        temp.add(new Account("U0000006", "duongbingo", "newPass345", AccRole.ADMIN, "Bingo Duong", "654 Cedar St", "5432109876", "duongbingo@example.com"));
+        temp.add(new Account("U0000007", "thiendepzai", "newPass678", AccRole.PREMIUM, "Thien Depzai", "987 Maple St", "4321098765", "thiendepzai@example.com"));
+        temp.add(new Account("U0000008", "3changlinh", "newPass901", AccRole.CUSTOMER, "Chang Linh", "147 Birch St", "3210987654", "3changlinh@example.com"));
+        temp.add(new Account("U0000009", "success", "newPass234", AccRole.CUSTOMER, "Successful Tran", "258 Walnut St", "2109876543", "success@example.com"));
+        temp.add(new Account("U0000010", "tttt", "newPass567", AccRole.STAFF, "T Tran", "369 Spruce St", "1098765432", "tttt@example.com"));
+        temp.add(new Account("U0000011", "kkkk", "newPass890", AccRole.PREMIUM, "KK Tran", "741 Cherry St", "0987654321", "kkkk@example.com"));
         
-        for (User item : temp) {
-            AccountDAO.addUserToDB(item);
-            getUM().getList().add(item);
+        for (Account item : temp) {
+            AccountDAO.addAccountToDB(item);
+            getACM().getList().add(item);
         }
         
         return true;
@@ -80,7 +79,7 @@ public class FakeData {
         
         for (Actor item : temp) {
             ActorDAO.addActorToDB(item);
-            getAM().getList().add(item);
+            getATM().getList().add(item);
         }
         
         return true;
@@ -101,49 +100,49 @@ public class FakeData {
         
         for (Genre item : temp) {
             GenreDAO.addGenreToDB(item);
-            getGM().getList().add(item);
+            getGRM().getList().add(item);
         }
         
         return true;
     }
     
     public static boolean makeFakeMovie() {
-        getMM().addMovie(new Movie("M0000001", "The Substance", "A horror movie about a mysterious entity.", 4.5, 
+        getMVM().addMovie(new Movie("M0000001", "The Substance", "A horror movie about a mysterious entity.", 4.5, 
                    List.of("G0000001", "G0000005", "G0000008"), 
                    List.of("A0000001", "A0000005", "A0000010"), 
                    "English", toDate("10/10/2024"), 100, 20));
 
-        getMM().addMovie(new Movie("M0000002", "Laugh Out Loud", "A hilarious comedy that will leave you in stitches.", 4.8, 
+        getMVM().addMovie(new Movie("M0000002", "Laugh Out Loud", "A hilarious comedy that will leave you in stitches.", 4.8, 
                            List.of("G0000002", "G0000006"), 
                            List.of("A0000002", "A0000007", "A0000008", "A0000009"), 
                            "English", toDate("01/01/2023"), 80, 15));
 
-        getMM().addMovie(new Movie("M0000003", "Cosmic Wars", "An epic space adventure to save the galaxy.", 4.9, 
+        getMVM().addMovie(new Movie("M0000003", "Cosmic Wars", "An epic space adventure to save the galaxy.", 4.9, 
                            List.of("G0000003", "G0000006", "G0000005"), 
                            List.of("A0000003", "A0000008", "A0000001", "A0000005"), 
                            "English", toDate("05/05/2022"), 120, 25));
 
-        getMM().addMovie(new Movie("M0000004", "Love in Paris", "A romantic drama set in the City of Love.", 4.6, 
+        getMVM().addMovie(new Movie("M0000004", "Love in Paris", "A romantic drama set in the City of Love.", 4.6, 
                            List.of("G0000007", "G0000004", "G0000009", "G0000006"), 
                            List.of("A0000004", "A0000009", "A0000010"), 
                            "French", toDate("14/02/2023"), 90, 18));
 
-        getMM().addMovie(new Movie("M0000005", "Mysterious Island", "A thriller about survival and secrets.", 4.7, 
+        getMVM().addMovie(new Movie("M0000005", "Mysterious Island", "A thriller about survival and secrets.", 4.7, 
                            List.of("G0000008", "G0000009", "G0000003", "G0000005", "G0000006"), 
                            List.of("A0000005", "A0000010", "A0000002", "A0000008"), 
                            "English", toDate("12/12/2023"), 95, 10));
 
-        getMM().addMovie(new Movie("M0000006", "The Enchanted Forest", "A magical tale of courage and friendship.", 4.5, 
+        getMVM().addMovie(new Movie("M0000006", "The Enchanted Forest", "A magical tale of courage and friendship.", 4.5, 
                            List.of("G0000006", "G0000010", "G0000001"), 
                            List.of("A0000001", "A0000006", "A0000007", "A0000003"), 
                            "English", toDate("20/03/2023"), 110, 12));
 
-        getMM().addMovie(new Movie("M0000007", "Robot Revolution", "A science fiction movie about AI gone rogue.", 4.3, 
+        getMVM().addMovie(new Movie("M0000007", "Robot Revolution", "A science fiction movie about AI gone rogue.", 4.3, 
                            List.of("G0000003", "G0000005", "G0000008"), 
                            List.of("A0000003", "A0000008", "A0000001"), 
                            "English", toDate("10/10/2022"), 85, 8));
 
-        getMM().addMovie(new Movie("M0000008", "The Haunted Mansion", "A classic horror tale in a cursed house.", 4.2, 
+        getMVM().addMovie(new Movie("M0000008", "The Haunted Mansion", "A classic horror tale in a cursed house.", 4.2, 
                            List.of("G0000001", "G0000009", "G0000004", "G0000002"), 
                            List.of("A0000002", "A0000007", "A0000006"), 
                            "English", toDate("31/10/2022"), 70, 5));
@@ -189,7 +188,7 @@ public class FakeData {
         
         for (Review item : temp) {
             ReviewDAO.addReviewToDB(item);
-            getRM().getList().add(item);
+            getRVM().getList().add(item);
         }
  
         return true;
