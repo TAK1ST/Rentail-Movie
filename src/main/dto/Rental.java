@@ -11,16 +11,6 @@ public class Rental extends Model {
     private String staffID;
     private LocalDate rentalDate;
     private LocalDate returnDate;
-<<<<<<< HEAD
-    private double lateFee;
-    private double dueDate;
-    private double totalAmount;
-    private String status;
-
-    // Constructor
-    public Rental(String id, String userID, String movieID, String staffID, LocalDate rentalDate, LocalDate returnDate,
-            double lateFee, double dueDate, double totalAmount, String status) {
-=======
     private LocalDate dueDate;
     private double lateFee;
     private double totalAmount;
@@ -28,7 +18,6 @@ public class Rental extends Model {
 
     public Rental(String id, String customerID, String movieID, String staffID, LocalDate rentalDate, LocalDate returnDate, 
             LocalDate dueDate, double lateFee, double totalAmount, RentalStatus status) {
->>>>>>> 877fd9282d72c8206daca25888b6b36210884ae6
 
         super(id);
         this.customerID = customerID;
@@ -36,13 +25,8 @@ public class Rental extends Model {
         this.staffID = staffID;
         this.rentalDate = rentalDate;
         this.returnDate = returnDate;
-<<<<<<< HEAD
-        this.lateFee = lateFee;
-        this.dueDate = dueDate;
-=======
         this.dueDate = dueDate;
         this.lateFee = lateFee;
->>>>>>> 877fd9282d72c8206daca25888b6b36210884ae6
         this.totalAmount = totalAmount;
         this.status = status;
     }
@@ -53,13 +37,9 @@ public class Rental extends Model {
         this.staffID = other.staffID;
         this.rentalDate = other.rentalDate;
         this.returnDate = other.returnDate;
-<<<<<<< HEAD
-        this.lateFee = other.lateFee;
-        this.dueDate = other.dueDate;
-=======
+
         this.dueDate = other.dueDate;
         this.lateFee = other.lateFee;
->>>>>>> 877fd9282d72c8206daca25888b6b36210884ae6
         this.totalAmount = other.totalAmount;
         this.status = other.status;
     }
@@ -74,13 +54,8 @@ public class Rental extends Model {
                 staffID,
                 rentalDate.toString(),
                 returnDate.toString(),
-<<<<<<< HEAD
-                lateFee,
-                dueDate,
-=======
                 dueDate.toString(),
                 lateFee,
->>>>>>> 877fd9282d72c8206daca25888b6b36210884ae6
                 totalAmount,
                 status);
     }
@@ -105,8 +80,6 @@ public class Rental extends Model {
         return "Rental";
     }
 
-<<<<<<< HEAD
-=======
     public String getCustomerID() {
         return customerID;
     }
@@ -118,7 +91,6 @@ public class Rental extends Model {
     public String getMovieId() {
         return movieID;
     }
->>>>>>> 877fd9282d72c8206daca25888b6b36210884ae6
 
     public void setMovieId(String movieID) {
         this.movieID = movieID;
@@ -172,19 +144,11 @@ public class Rental extends Model {
         this.lateFee = lateFee;
     }
 
-<<<<<<< HEAD
-    public double getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(double dueDate) {
-=======
     public LocalDate getDueDate() {
         return dueDate;
     }
 
     public void setDueDate(LocalDate dueDate) {
->>>>>>> 877fd9282d72c8206daca25888b6b36210884ae6
         this.dueDate = dueDate;
     }
 

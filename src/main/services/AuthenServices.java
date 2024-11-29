@@ -23,7 +23,7 @@ public class AuthenServices {
         for (Account item : getUM().getList()) 
             if(item.getUsername().equals(input) || item.getEmail().equals(input))
                 if (item.getPassword().equals(password)) {
-                    account = new User(item);
+                    account = new Account(item);
                     break;
                 }                
 
@@ -42,7 +42,7 @@ public class AuthenServices {
         int input = Menu.getChoice("Enter choice", options.length);
         switch(input) {
             case 1: 
-                checkCreate = checkCreate && getUM().registorCustomer();
+                checkCreate = checkCreate && getUM().registorAccount();
 
                 break;
             case 2: 

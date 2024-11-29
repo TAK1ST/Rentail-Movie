@@ -41,7 +41,7 @@ public class RentalDAO {
     }
     
     public static boolean updateRentalInDB(Rental rental) {
-        String sql = "UPDATE Rentals SET user_id = ?, movie_id = ?, staff_id = ?, rental_date = ?, return_date = ?, late_fee = ?, due_date = ?, total_amount = ?, status = ? WHERE rental_id = ?";
+        String sql = "UPDATE Rentals SET user_id = ?, movie_id = ?, staff_id = ?, rental_date = ?, return_date = ?, due_date = ?,  late_fee = ?, total_amount = ?, status = ? WHERE rental_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             
