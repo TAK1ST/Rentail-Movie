@@ -16,6 +16,7 @@ import main.dto.User;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.LogMessage.infoLog;
 import static main.utils.Utility.enumListing;
 
 /**
@@ -26,8 +27,10 @@ public class Validator {
     
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     
+    private static final String PASSWORD_PATTERN = "^[a-zA-Z0-9!@#$%&*+\\-_]+$";
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-    private static final String SPECIAL_CHAR_PATTERN = "[^a-zA-Z0-9]";
+    private static final String NAME_SPECIAL_CHAR_PATTERN = ".*[^a-zA-Z0-9_\\-#+].*";
+    private static final String FULLNAME_SPECIAL_CHAR_PATTERN = "[^a-zA-Z ]";
     
     private static final Scanner scanner = new Scanner(System.in);
     
@@ -56,8 +59,8 @@ public class Validator {
                 errorLog("Username must not begin with number");      
                 continue;
             }
-            if (input.matches(".*" + SPECIAL_CHAR_PATTERN + ".*")) {
-                System.out.println("Error: Username contains special characters.");
+            if (input.matches(".*" + NAME_SPECIAL_CHAR_PATTERN + ".*")) {
+                errorLog("Username contains special characters");
                 continue;
             } 
             isUnique = true;
@@ -91,7 +94,12 @@ public class Validator {
                 errorLog("Password must not contain space");
                 continue;
             }
-            confirmPassword("Confirm password: ", input);
+            if (!input.matches(PASSWORD_PATTERN)) {
+                errorLog("Password contains forbidden characters");
+                infoLog("!,@,#,$,%,&,*,-,_,+ are allowed");
+                continue;
+            }
+            confirmPassword("Confirm password", input);
             pass = true;
             
         } while (!pass); 
@@ -123,18 +131,42 @@ public class Validator {
                 errorLog("Name must not be empty");
                 continue;
             }
-            if (input.matches(".*" + SPECIAL_CHAR_PATTERN + ".*")) {
+            if (input.matches(".*" + FULLNAME_SPECIAL_CHAR_PATTERN + ".*")) {
                 errorLog("Name must not have special characters");
-                continue;
-            }
-            if (input.matches(".*\\d.*")) {
-                errorLog("Name must not contain number");
                 continue;
             }
             pass = true;
             
         } while (!pass);
 
+        return input.trim();
+    }
+    
+    public static String getFullName(String message, boolean enterToPass) {
+        String input = "";
+        boolean pass = false;
+        do {
+            System.out.printf("%s: ", message);
+            input = scanner.nextLine(); 
+            if (input.isEmpty() && enterToPass) 
+               return "";
+            
+            if (input.isEmpty()) {
+                errorLog("Full name must not be empty");
+                continue;
+            }
+            if (input.matches(".*\\d.*")) {
+                errorLog("Full name must not contain number");
+                continue;
+            }
+            if (input.matches(".*" + FULLNAME_SPECIAL_CHAR_PATTERN + ".*")) {
+                errorLog("Full name must not have special characters");
+                continue;
+            }
+            pass = true;
+            
+        } while (!pass);
+        
         return input.trim();
     }
     
@@ -161,7 +193,7 @@ public class Validator {
             pass = true;
         } while (!pass);
 
-        return input;
+        return input.replaceAll("\\D", "");
     }
 
     public static String getEmail(String message, boolean enterToPass) {
@@ -181,7 +213,7 @@ public class Validator {
                 continue;
             }
             if (!input.matches(EMAIL_PATTERN)) {
-                errorLog("Email must has format ...@gmail.com");
+                errorLog("Email format is wrong");
                 continue;
             }
             pass = true;
@@ -193,7 +225,7 @@ public class Validator {
     public static Role getRole(String message, boolean enterToPass) {
         Role[] listRole = Role.values();
         enumListing("Choose role", Role.class);
-        int input = getInteger("Choose an option: ", 0, listRole.length - 1, enterToPass);
+        int input = getInteger("Choose an option", 0, listRole.length - 1, enterToPass);
 
         if (input <= -1) 
             return Role.NONE;
@@ -204,7 +236,7 @@ public class Validator {
     public static LocalDate getDate(String message, boolean enterToPass) {
         String input = "";
         do {
-            System.out.printf("%s: ", message);
+            System.out.printf("%s (%s): ", message, DATE);
             input = scanner.nextLine(); 
             if (input.isEmpty() && enterToPass) 
                return null;

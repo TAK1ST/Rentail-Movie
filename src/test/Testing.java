@@ -6,7 +6,8 @@ package test;
 
 import java.io.IOException;
 import main.constants.Role;
-import main.utils.LogMessage;
+import main.controllers.Managers;
+import static main.controllers.Managers.getUM;
 
 /**
  *
@@ -16,7 +17,9 @@ public class Testing {
     
     public static void main(String args[]) throws IOException {
         
-        LogMessage.infoLog(Role.ADMIN.name());
+        Managers.initUM();
+        
+        getUM().addUser(Role.ADMIN);
     }
     
 }

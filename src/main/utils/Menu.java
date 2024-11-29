@@ -17,8 +17,7 @@ import static main.utils.LogMessage.errorLog;
 public class Menu {
     
     private static final int INIT_NUM = 1;
-    
-    
+       
     public static void showManagerMenu(String title, 
                                         MenuAction[] actionsBefore,
                                         MenuOption[] options, 
@@ -69,6 +68,12 @@ public class Menu {
         String optionText;
         MenuAction action;
         boolean askToContinue;
+        
+        public MenuOption(String optionText) {
+            this.optionText = optionText;
+            this.action = null;
+            this.askToContinue = false;
+        }
         
         public MenuOption(String optionText, MenuAction action) {
             this.optionText = optionText;

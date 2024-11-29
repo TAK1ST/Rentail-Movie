@@ -13,6 +13,7 @@ import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
 import static main.utils.PassEncryptor.encryptPassword;
 import main.utils.Validator;
+import static main.utils.Validator.getFullName;
 
 /**
  *
@@ -51,7 +52,7 @@ public class UserManager extends ListManager<User> {
         
         String fullName, address, phoneNumber, email;
         if (yesOrNo("Fill in all infomation?")) {
-            fullName = getString("Enter full name", false);
+            fullName = getFullName("Enter full name", false);
             address = getString("Enter your address", false);
             phoneNumber = Validator.getPhoneNumber("Enter your phone number", false);
             email = Validator.getEmail("Enter your email", false);
@@ -79,7 +80,7 @@ public class UserManager extends ListManager<User> {
                 Validator.getUsername("Enter username", false, list), 
                 Validator.getPassword("Enter password", false), 
                 (registorRole == Role.ADMIN) ? Validator.getRole("Choose a role", false): registorRole,  
-                getString("Enter full name", false), 
+                getFullName("Enter full name", false), 
                 getString("Enter your address", false), 
                 Validator.getPhoneNumber("Enter your phone number", false), 
                 Validator.getEmail("Enter your email", false)));

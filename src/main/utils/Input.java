@@ -34,7 +34,7 @@ public class Input {
     public static int getInteger(String message, int min, int max, boolean enterToPass) {
         int number;
         while (true) {
-            System.out.printf("%s (%d -> %d):", message, min, max);
+            System.out.printf("%s (%d -> %d): ", message, min, max);
             String input = scanner.nextLine();
             if (input.isEmpty() && enterToPass) {
                 return Integer.MIN_VALUE;
@@ -55,7 +55,7 @@ public class Input {
     public static double getDouble(String message, double min, double max, boolean enterToPass) {
         double number;
         while (true) {
-            System.out.print(message + ": ");
+            System.out.printf("%s (%.2f -> %.2f): ", message, min, max);
             String input = scanner.nextLine();
             if (input.isEmpty() && enterToPass) {
                 return Double.MIN_VALUE;
