@@ -82,15 +82,15 @@ public class LanguageManager extends ListManager<Language> {
         if (checkEmpty(list)) return;
         
         System.out.println(title);
-        System.out.println("----------------------------------------------------");
-        System.out.printf("%-15s | %-30s\n", "Language Code", "Language Name");
-        System.out.println("----------------------------------------------------");
+        System.out.println("|----------------------------------------------------");
+        System.out.printf("|%-15s | %-30s\n", "Language Code", "Language Name");
+        System.out.println("|----------------------------------------------------");
 
         for (Language language : languages) {
-            System.out.printf("%-15s | %-30s\n",
+            System.out.printf("|%-15s | %-30s\n",
                     language.getCode(),
                     language.getName());
         }
-        System.out.println("----------------------------------------------------");
+        System.out.println("|----------------------------------------------------");
     }
 }

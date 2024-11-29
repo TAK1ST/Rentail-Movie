@@ -1,4 +1,3 @@
-
 package main.controllers;
 
 import main.base.ListManager;
@@ -7,10 +6,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import main.dao.ProfileDAO;
-import main.constants.AccRole;
-import static main.constants.Constants.PROFILE_PREFIX;
-import static main.controllers.Managers.getMVM;
-import main.dto.Account;
 import main.dto.Profile;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getString;
@@ -102,29 +97,29 @@ public class ProfileManager extends ListManager<Profile> {
         
         return result;
     }
-    
-//    @Override
-//    public void display(List<Profile> users, String title) {
-//        if (checkEmpty(list)) return;
-//        
-//        System.out.println(title);
-//        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-//        System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
-//                "Profile ID", "Profilename","Password", "Role", "Full Name", "Address", "Phone Number", "Email");
-//        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-//        for (Profile user : users) {
-//            String role = user.getRole() == AccRole.ADMIN ? "Admin" : "Profile";
-//             System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
-//                    user.getId(),
-//                    user.getProfilename(),
-//                    user.getPassword(),
-//                    role,
-//                    user.getFullName() != null ? user.getFullName() : "N/A",
-//                    user.getAddress() != null ? user.getAddress() : "N/A",
-//                    user.getPhoneNumber() != null ? user.getPhoneNumber() : "N/A",
-//                    user.getEmail() != null ? user.getEmail() : "N/A"); 
-//        }
-//        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-//    }
-    
+
+    @Override
+    public void display(List<Profile> profiles, String title) {
+        if (checkEmpty(list)) {
+            return; 
+        }
+        System.out.println(title);
+        System.out.println("|------------------------------------------------------------------------");
+        System.out.printf("|%-15s | %-30s | %-20s | %-15s | %-12s | %-12s\n |",
+                "Account ID", "Full Name", "Phone Number", "Address", "Credit", "Birthday");
+        System.out.println("|------------------------------------------------------------------------");
+
+ 
+        for (Profile profile : profiles) {
+            System.out.printf("|%-15s | %-30s | %-20s | %-15s | %-12.2f | %-12s\n |",
+                    profile.getId(),
+                    profile.getFullName().isEmpty() ? "N/A" : profile.getFullName(),
+                    profile.getPhoneNumber().isEmpty() ? "N/A" : profile.getPhoneNumber(),
+                    profile.getAddress().isEmpty() ? "N/A" : profile.getAddress(),
+                    profile.getCredit() > 0 ? String.format("%.2f", profile.getCredit()) : "N/A",
+                    profile.getBirthday() != null ? profile.getBirthday().format(Validator.DATE) : "N/A");
+        }
+        System.out.println("|------------------------------------------------------------------------");
+    }
+
 }

@@ -11,19 +11,19 @@ public class Movie extends Model {
     private String title;
     private String description;
     private double avgRating;
-    private List<String> genreNames;
+    private List<String> genreName;
     private List<String> actorIDs;
     private List<String> languageCodes;
     private LocalDate releaseYear;  
     private double rentalPrice;
     private int availableCopies;
 
-    public Movie(String id, String title, String description, double avgRating, List<String> genreNames, List<String> actorIDs, List<String> languageCodes, LocalDate releaseYear, double rentalPrice, int availableCopies ) {
+    public Movie(String id, String title, String description, double avgRating, List<String> genreName, List<String> actorIDs, List<String> languageCodes, LocalDate releaseYear, double rentalPrice, int availableCopies ) {
         super(id);
         this.title = title;
         this.description = description;
         this.avgRating = avgRating;
-        this.genreNames = genreNames;
+        this.genreName = genreName;
         this.actorIDs = actorIDs;
         this.languageCodes = languageCodes;
         this.releaseYear = releaseYear;
@@ -37,7 +37,7 @@ public class Movie extends Model {
         this.title = other.title;
         this.description = other.description;
         this.avgRating = other.avgRating;
-        this.genreNames = other.genreNames;
+        this.genreName = other.genreName;
         this.actorIDs = other.actorIDs;
         this.languageCodes = other.languageCodes;
         this.releaseYear = other.releaseYear;
@@ -48,7 +48,7 @@ public class Movie extends Model {
 
     @Override
     public String toString() {
-         String genreNamess = genreNames != null ? String.join(", ", genreNames) : "No genres";
+         String genreNames = genreName != null ? String.join(", ", genreName) : "No genres";
          String actorNames = actorIDs != null ? String.join(", ", actorIDs) : "No actors";
          String languages = languageCodes != null ? String.join(", ", languageCodes) : "No languages";
         return String.format("Movie: %s, %s, %s, %.5f, %s, %s, %s, %s, %.5f, %d.",
@@ -56,7 +56,7 @@ public class Movie extends Model {
                 title,
                 description,
                 avgRating,
-                genreNamess,
+                genreNames,
                 actorNames,
                 languages,
                 releaseYear.format(Validator.DATE),
@@ -108,11 +108,12 @@ public class Movie extends Model {
     }
 
     public List<String> getGenreIDs() {
-        return genreNames;
+        return genreName;
     }
 
-    public void setGenreIDs(List<String> genreNames) {
-        this.genreNames = genreNames;
+    public void setGenreIDs(List<String> genreName) {
+        this.genreName = genreName;
+
     }
 
     public List<String> getActorIDs() {
