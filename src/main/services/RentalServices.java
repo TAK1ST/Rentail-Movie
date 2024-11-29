@@ -40,7 +40,7 @@ public class RentalServices {
     public static boolean returnMovie() {
         if (getRTM().checkEmpty(getRTM().getList())) return false; 
         
-        Rental foundRental = getRTM().getRentalByUserMovie(Constants.DEFAULT_ADMIN_ID);
+        Rental foundRental = getRTM().getRentalByAccountMovie(Constants.DEFAULT_ADMIN_ID);
         if (getRTM().checkNull(foundRental)) return false;
         
         Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
@@ -49,8 +49,8 @@ public class RentalServices {
         double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
 
         if (overdueFine > 0) {
-            foundRental.setOverdueFines(foundRental.getOverdueFines() + overdueFine);  
-            foundRental.setCharges(foundRental.getCharges() + foundRental.getOverdueFines()); 
+            foundRental.setLateFee(foundRental.getLateFee()+ overdueFine);  
+            foundRental.setTotalAmount(foundRental.getTotalAmount() + foundRental.getLateFee()); 
         }
 
         boolean isSuccess = RentalDAO.updateRentalInDB(foundRental);
@@ -61,7 +61,7 @@ public class RentalServices {
     }
     
     public static boolean extendReturnDate() {
-        Rental foundRental = getRTM().getRentalByUserMovie(Constants.DEFAULT_ADMIN_ID);
+        Rental foundRental = getRTM().getRentalByAccountMovie(Constants.DEFAULT_ADMIN_ID);
         if (getRTM().checkNull(foundRental)) return false;
         
         Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
@@ -71,7 +71,7 @@ public class RentalServices {
         double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
 
         if (overdueFine > 0) {
-            foundRental.setOverdueFines(overdueFine);  
+            foundRental.setLateFee(overdueFine);  
         }
         foundRental.setReturnDate(foundRental.getReturnDate().plusDays(extraDate));
         return true;
