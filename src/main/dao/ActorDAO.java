@@ -60,7 +60,9 @@ public class ActorDAO {
     public static List<Actor> getAllActors() {
         String sql = "SELECT * FROM Actors";
         List<Actor> list = new ArrayList<>();
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (Connection connection = Database.getConnection(); 
+                PreparedStatement preparedStatement = connection.prepareStatement(sql); 
+                ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 Actor actor = new Actor(
                         resultSet.getString("actor_id"),

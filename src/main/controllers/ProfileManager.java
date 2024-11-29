@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import static main.controllers.Managers.getACM;
 import main.dao.ProfileDAO;
 import main.constants.AccRole;
 import static main.constants.Constants.PROFILE_PREFIX;
+import static main.controllers.Managers.getMVM;
+import main.dto.Account;
 import main.dto.Profile;
-import main.utils.IDGenerator;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getString;
 import main.utils.Validator;
@@ -29,9 +31,12 @@ public class ProfileManager extends ListManager<Profile> {
         list = ProfileDAO.getAllProfiles();
     }
 
-    public boolean addProfile(AccRole registorRole) throws IOException {   
+    public boolean addProfile(String accountID) throws IOException {   
+        Account foundAccount = (Account) getACM().searchById(accountID);
+        if (getACM().checkNull(foundAccount)) return false;
+        
         list.add(new Profile(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), PROFILE_PREFIX), 
+                accountID, 
                 getName("Enter username", false), 
                 getPhoneNumber("Enter your phone number", false), 
                 getString("Enter your address", false),

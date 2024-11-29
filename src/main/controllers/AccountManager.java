@@ -9,13 +9,18 @@ import main.constants.AccStatus;
 import main.dao.AccountDAO;
 import main.constants.Constants;
 import static main.constants.Constants.ACCOUNT_PREFIX;
+import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import main.utils.IDGenerator;
 import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
+import static main.utils.LogMessage.errorLog;
 import static main.utils.PassEncryptor.encryptPassword;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
+import static main.utils.Validator.getEmail;
+import static main.utils.Validator.getPassword;
+import static main.utils.Validator.getUsername;
 
 /**
  *
@@ -47,20 +52,18 @@ public class AccountManager extends ListManager<Account> {
         AccountDAO.addAccountToDB(list.getLast());
     }
 
-    public boolean registorAccount() {
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
-        String username = Validator.getAccountName("Enter username", false, list);
-        String password = Validator.getPassword("Enter password", false);
-
-        String fullName, phoneNumber, email;
+    public boolean registorAccount() throws IOException {
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), ACCOUNT_PREFIX);
+        String username = getUsername("Enter username", false, list);
+        String password = getPassword("Enter password", false);
+        String email = getEmail("Enter email", false);
+        
         if (yesOrNo("Fill in all infomation?")) {
-            fullName = getString("Enter full name", false);
-            getString("Enter your address", false);
-            phoneNumber = Validator.getPhoneNumber("Enter your phone number", false);
-            email = Validator.getEmail("Enter your email", false);
-        } else {
-            fullName = phoneNumber = email = null;
-        }
+            if(getPFM().addProfile(id)) {
+                errorLog("Cannot registor account info");
+                return false;
+            }
+        } 
 
         list.add(new Account(
                 id,
@@ -76,9 +79,9 @@ public class AccountManager extends ListManager<Account> {
     public boolean addAccount(AccRole registorRole) throws IOException {
         list.add(new Account(
                 IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), ACCOUNT_PREFIX),
-                Validator.getAccountName("Enter username", false, list),
-                Validator.getPassword("Enter password", false),
-                Validator.getEmail("Enter your email", false),
+                getUsername("Enter username", false, list),
+                getPassword("Enter password", false),
+                getEmail("Enter your email", false),
                 (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole,
                 AccStatus.OFF
         ));
@@ -88,7 +91,7 @@ public class AccountManager extends ListManager<Account> {
     public boolean updateAccount(String userID) {
         if (checkEmpty(list)) return false;
         
-        Account foundAccount = null;
+        Account foundAccount;
         if (userID.isEmpty()) {
             foundAccount = (Account) getById("Enter user's id");
         } else {
@@ -98,8 +101,8 @@ public class AccountManager extends ListManager<Account> {
             return false;
         }
 
-        String newAccountname = Validator.getAccountName("Enter new username", true, list);
-        String newPassword = Validator.getPassword("Enter new password", true);
+        String newAccountname = getUsername("Enter new username", true, list);
+        String newPassword = getPassword("Enter new password", true);
 
         AccRole newRole = AccRole.NONE;
         if (foundAccount.getRole() == AccRole.ADMIN) {
