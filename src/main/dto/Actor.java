@@ -19,20 +19,11 @@ public class Actor extends Model {
     public Actor(Actor other) {
         super(other.getId());
         this.actorName = other.actorName;
-        this.rank = rank;
-        this.description = description;
     }
 
-<<<<<<< HEAD
-    //Methods
-    @Override
-    public String toString() {
-        return String.format("Actor: %s, %s, %c, %s.", super.getId(), actorName, rank, description);
-=======
     @Override
     public String toString() {
         return String.format("Actor: %s, %s, %s, %s.", super.getId(), actorName, rank, description);
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
     }
 
     @Override
@@ -40,14 +31,8 @@ public class Actor extends Model {
         return new Object[]{
             super.getId(),
             actorName,
-<<<<<<< HEAD
-            rank,
-            description
-        };
-=======
             description,
             rank};
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
     }
 
     public static String className() {

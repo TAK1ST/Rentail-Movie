@@ -11,7 +11,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 import main.constants.AccRole;
+import main.constants.ActorRank;
 import main.dto.Account;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
@@ -34,7 +36,7 @@ public class Validator {
     
     private static final Scanner scanner = new Scanner(System.in);
     
-    public static String getAccountName(String message, boolean enterToPass, List<Account> list) {
+    public static String getUsername(String message, boolean enterToPass, List<Account> list) {
         String input = "";
         boolean isUnique = false;
         do {
@@ -234,18 +236,6 @@ public class Validator {
         return input;
     }
     
-
-    public static AccRole getRole(String message, boolean enterToPass) {
-        AccRole[] listRole = AccRole.values();
-        enumListing("Choose role", AccRole.class);
-        int input = getInteger("Choose an option", 0, listRole.length - 1, enterToPass);
-
-        if (input <= -1) 
-            return AccRole.NONE;
-        else 
-            return listRole[input];
-    }
-    
     public static LocalDate getDate(String message, boolean enterToPass) {
         String input = "";
         do {
@@ -299,7 +289,7 @@ public class Validator {
         return date.atTime(time);
     }
     
-
+    /////////////////////////////////////////////////////////////////////////////////////////////////
     
     public static boolean isDateInRange(LocalDate startDate, LocalDate endDate, LocalDate targetDate) {
         return (targetDate.isEqual(startDate) || targetDate.isAfter(startDate)) &&

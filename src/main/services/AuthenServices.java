@@ -42,12 +42,7 @@ public class AuthenServices {
         int input = Menu.getChoice("Enter choice", options.length);
         switch(input) {
             case 1: 
-<<<<<<< HEAD
-                checkCreate = checkCreate && getUM().registorCustomer();
-
-=======
                 checkCreate = checkCreate && getACM().registorAccount();
->>>>>>> 0e27071236bd8733c57014037059c15ad6cbef83
                 break;
             case 2: 
                 return null;

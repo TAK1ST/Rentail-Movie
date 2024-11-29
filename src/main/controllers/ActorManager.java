@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import main.constants.ActorRank;
+import static main.constants.Constants.ACTOR_PREFIX;
 import main.dao.ActorDAO;
 import main.dto.Actor;
 import main.utils.IDGenerator;
@@ -24,22 +25,13 @@ public class ActorManager extends ListManager<Actor> {
     }
     
     public boolean addActor() {
-<<<<<<< HEAD
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "A");
-        String name = getString("Enter actor's name", false);
-    
-        list.add(new Actor(id, name,description,rank));
-        ActorDAO.addActorToDB(list.getLast());
-        return true;
-=======
         list.add(new Actor(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "A"), 
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), ACTOR_PREFIX), 
                 getName("Enter actor's name", false), 
                 (ActorRank) getEnumValue("Enter actor's status", ActorRank.class, false),
                 getString("Enter actor's description", false)
         ));
         return ActorDAO.addActorToDB(list.getLast());
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
     }
 
     public boolean updateActor() {
@@ -96,9 +88,9 @@ public class ActorManager extends ListManager<Actor> {
         if (checkEmpty(list)) return; 
         
         System.out.println(title);
-        System.out.println("|----------------------------------------------------");
+        System.out.println("|------------------------------------------------------------------------");
         System.out.printf("|%-15s | %-30s | %-4s | %-50s\n |", "Actor ID", "Actor Name", "Rank", "Description");
-        System.out.println("|----------------------------------------------------");
+        System.out.println("|------------------------------------------------------------------------");
         for (Actor item : actors) {
             System.out.printf("|%-15s | %-30s | %-4s | %-50s\n |",
                     item.getId(),
@@ -106,7 +98,7 @@ public class ActorManager extends ListManager<Actor> {
                     item.getRank(),
                     item.getDescription());
         }
-        System.out.println("|----------------------------------------------------");
+        System.out.println("|------------------------------------------------------------------------");
     }
 
 }

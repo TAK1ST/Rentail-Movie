@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import main.dto.Discount;
@@ -18,17 +17,18 @@ import main.constants.DiscountType;
 public class DiscountDAO {
 
     public static boolean addDiscountToDB(Discount discount) {
-        String sql = "INSERT INTO Discounts (code, start_date, end_date, type, usage_available, is_active, value) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Discounts (code, start_date, end_date, type, usage_available, is_active, value) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
   
             preparedStatement.setString(1, discount.getCode());  
-            preparedStatement.setDate(2, Date.valueOf(discount.getStartDate()));  
-            preparedStatement.setDate(3, Date.valueOf(discount.getEndDate()));  
-            preparedStatement.setString(4, discount.getType().name());  
-            preparedStatement.setInt(5, discount.getUsageAvailable());  
-            preparedStatement.setBoolean(6, discount.isActive());  
-            preparedStatement.setDouble(7, discount.getValue());  
+            preparedStatement.setString(2, discount.getCustomerID());
+            preparedStatement.setDate(3, Date.valueOf(discount.getStartDate()));  
+            preparedStatement.setDate(4, Date.valueOf(discount.getEndDate()));  
+            preparedStatement.setString(5, discount.getType().name());  
+            preparedStatement.setInt(6, discount.getUsageAvailable());  
+            preparedStatement.setBoolean(7, discount.isActive());  
+            preparedStatement.setDouble(8, discount.getValue());  
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -38,17 +38,18 @@ public class DiscountDAO {
     }
 
     public static boolean updateDiscountInDB(Discount discount) {
-        String sql = "UPDATE Discounts SET start_date = ?, end_date = ?, type = ?, usage_available = ?, is_active = ?, value = ? WHERE code = ?";
+        String sql = "UPDATE Discounts SET account_id = ?, start_date = ?, end_date = ?, type = ?, usage_available = ?, is_active = ?, value = ? WHERE code = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setDate(1, Date.valueOf(discount.getStartDate()));
-            preparedStatement.setDate(2, Date.valueOf(discount.getEndDate()));
-            preparedStatement.setString(3, discount.getType().name());
-            preparedStatement.setInt(4, discount.getUsageAvailable());
-            preparedStatement.setBoolean(5, discount.isActive());
-            preparedStatement.setDouble(6, discount.getValue());
-            preparedStatement.setString(7, discount.getCode());
+            preparedStatement.setString(1, discount.getCustomerID());
+            preparedStatement.setDate(2, Date.valueOf(discount.getStartDate()));
+            preparedStatement.setDate(3, Date.valueOf(discount.getEndDate()));
+            preparedStatement.setString(4, discount.getType().name());
+            preparedStatement.setInt(5, discount.getUsageAvailable());
+            preparedStatement.setBoolean(6, discount.isActive());
+            preparedStatement.setDouble(7, discount.getValue());
+            preparedStatement.setString(8, discount.getCode());
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -80,6 +81,7 @@ public class DiscountDAO {
             while (resultSet.next()) {
                 Discount discount = new Discount(
                     resultSet.getString("code"),
+                    resultSet.getString("account_id"),
                     resultSet.getDate("start_date").toLocalDate(),
                     resultSet.getDate("end_date").toLocalDate(),
                     DiscountType.valueOf(resultSet.getString("type")),
@@ -94,5 +96,5 @@ public class DiscountDAO {
         }
         return list;
     }
-    
+   
 }

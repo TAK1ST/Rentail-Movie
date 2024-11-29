@@ -3,11 +3,11 @@ package main.controllers;
 
 import main.base.ListManager;
 import java.io.IOException;
-import java.util.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import static main.constants.Constants.RENTAL_PREFIX;
 import main.constants.RentalStatus;
 import main.dao.RentalDAO;
 import static main.controllers.Managers.getMVM;
@@ -15,10 +15,6 @@ import static main.controllers.Managers.getACM;
 import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Rental;
-<<<<<<< HEAD
-import main.dto.Account;
-=======
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
 import main.services.MovieServices;
 import main.services.RentalServices;
 import main.utils.IDGenerator;
@@ -39,19 +35,9 @@ public class RentalManager extends ListManager<Rental> {
         list = RentalDAO.getAllRentals();
     }
 
-<<<<<<< HEAD
-    public boolean addRental(String userID) {    
-        Account foundAccount = (Account) getUM().searchById(userID);
-=======
     public boolean addRental(String customerID) {    
-<<<<<<< HEAD
-        Account foundAccount = (Account) getUM().searchById(customerID);
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
-        if (getUM().checkNull(foundAccount)) return false;
-=======
         Account foundAccount = (Account) getACM().searchById(customerID);
         if (getACM().checkNull(foundAccount)) return false;
->>>>>>> 0e27071236bd8733c57014037059c15ad6cbef83
 
         Movie foundMovie = (Movie) getMVM().getById("Enter movie' id to rent");
         if (getMVM().checkNull(foundMovie)) return false;
@@ -69,30 +55,15 @@ public class RentalManager extends ListManager<Rental> {
 
         int numberOfRentDate = getInteger("How many days to rent", 1, 365, false);
         LocalDate rentalDate = LocalDate.now();
-<<<<<<< HEAD
-        LocalDate returnDate = rentalDate.plusDays(numberOfRentDate);
-        double totalAmount = foundMovie.getRentalPrice() * numberOfRentDate;
-=======
         LocalDate dueDate = rentalDate.plusDays(numberOfRentDate);
         double total = foundMovie.getRentalPrice() * numberOfRentDate;
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
 
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "RT");
-//String id, String userID, String movieID, String staffID, LocalDate rentalDate, LocalDate returnDate,
-//            double lateFee, double dueDate, double totalAmount, String status
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), RENTAL_PREFIX);
+
         list.add(new Rental(
             id,
             customerID, 
             foundMovie.getId(), 
-<<<<<<< HEAD
-                foundStaff.staffID,
-                rentalDate, 
-            returnDate, 
-                lateFee,
-                dueDate,
-                totalAmount,
-                status
-=======
             foundStaff.getId(),
             rentalDate, 
             dueDate,
@@ -100,7 +71,6 @@ public class RentalManager extends ListManager<Rental> {
             0.0,
             total, 
             RentalStatus.PENDING
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
         ));
         if (RentalDAO.addRentalToDB(list.getLast())) 
             return MovieServices.adjustAvailableCopy(list.getLast().getMovieId(), -1);
@@ -108,13 +78,10 @@ public class RentalManager extends ListManager<Rental> {
         return false;
     }
     
-<<<<<<< HEAD
-=======
     public String assignStaff() {
         return "S0000001";
     }
     
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
     public Rental getRentalByAccountMovie(String userID) {
         Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");  
         if (getMVM().checkNull(foundMovie)) return null;
@@ -138,13 +105,8 @@ public class RentalManager extends ListManager<Rental> {
         
         double lateFee = RentalServices.calculateOverdueFine(foundRental.getReturnDate(), foundMovie.getRentalPrice());
 
-<<<<<<< HEAD
-        if (overdueFine > 0) {
-            foundRental.setLateFee(foundRental.getLateFee()+ overdueFine);  
-=======
         if (lateFee > 0) {
             foundRental.setLateFee(foundRental.getLateFee() + lateFee);  
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
             foundRental.setTotalAmount(foundRental.getTotalAmount() + foundRental.getLateFee()); 
         }
 
@@ -177,15 +139,10 @@ public class RentalManager extends ListManager<Rental> {
         if (returnDate != null) 
             foundRental.setReturnDate(returnDate);
 
-<<<<<<< HEAD
-        RentalDAO.updateRentalFromDB(foundRental);
-        return true;
-=======
         if (rentalDate != null && returnDate != null) 
             foundRental.setTotalAmount(ChronoUnit.DAYS.between(rentalDate, returnDate) * foundMovie.getRentalPrice());   
 
         return RentalDAO.updateRentalInDB(foundRental);
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
     }
     
     public boolean extendReturnDate(String userID) {
@@ -198,13 +155,8 @@ public class RentalManager extends ListManager<Rental> {
         int extraDate = getInteger("How many days to rent", 1, 365, false);
         double lateFee = RentalServices.calculateOverdueFine(foundRental.getReturnDate(), foundMovie.getRentalPrice());
 
-<<<<<<< HEAD
-        if (overdueFine > 0) {
-            foundRental.setLateFee(overdueFine);  
-=======
         if (lateFee > 0) {
             foundRental.setLateFee(lateFee);  
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
         }
         foundRental.setReturnDate(foundRental.getReturnDate().plusDays(extraDate));
         return true;
@@ -233,23 +185,15 @@ public class RentalManager extends ListManager<Rental> {
         List<Rental> result = new ArrayList<>();
         for (Rental item : list) 
             if (item.getId().equals(propety)
-<<<<<<< HEAD
-                    || item.getUserID().equals(propety)
-=======
                     || item.getCustomerID().equals(propety)
                     || item.getMovieID().equals(propety)
                     || item.getStaffID().equals(propety)
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
                     || item.getRentalDate().format(Validator.DATE).contains(propety.trim())
                     || item.getDueDate().format(Validator.DATE).contains(propety.trim())
                     || item.getReturnDate().format(Validator.DATE).contains(propety.trim())
-<<<<<<< HEAD
-                    || String.valueOf(item.getStaffID()).equals(propety)) {
-=======
                     || String.valueOf(item.getTotalAmount()).equals(propety)
                     || String.valueOf(item.getLateFee()).equals(propety)
                     || propety.trim().toLowerCase().contains(item.getStatus().toString().toLowerCase())) {
->>>>>>> 335b23c110e584c2b588b4a998f55724a42fb7b8
                 result.add(item);
             }
         return result;
