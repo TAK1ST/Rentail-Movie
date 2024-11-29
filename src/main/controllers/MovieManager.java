@@ -12,8 +12,10 @@ import main.dao.MovieDAO;
 import main.dto.Actor;
 import main.dto.Genre;
 import main.dto.Movie;
-import static main.controllers.Managers.getAM;
-import static main.controllers.Managers.getGM;
+import static main.controllers.Managers.getATM;
+import static main.controllers.Managers.getGRM;
+import static main.controllers.Managers.getLGM;
+import main.dao.LanguageDAO;
 import main.dto.Language;
 import main.utils.IDGenerator;
 import static main.utils.Input.getDouble;
@@ -38,9 +40,9 @@ public class MovieManager extends ListManager<Movie> {
                 getString("Enter title", false),
                 getString("Enter description", false),
                 0,
-                selectGenres("Enter genres (Comma-separated)", GenreDAO.getAllGenre()),
-                selectActors("Enter actors (Comma-separated)", ActorDAO.getAllActor()),
-                getString("Enter language", false),
+                selectGenres("Enter genres (Comma-separated)", GenreDAO.getAllGenres()),
+                selectActors("Enter actors (Comma-separated)", ActorDAO.getAllActors()),
+                selectLanguages("Enter actors (Comma-separated)", LanguageDAO.getAllLanguages()),
                 getDate("Enter release date", false),
                 getDouble("Enter rental price", 0, Double.MAX_VALUE, false),
                 getInteger("Enter available copies", 0, Integer.MAX_VALUE, false)
@@ -48,8 +50,8 @@ public class MovieManager extends ListManager<Movie> {
 
         boolean isSuccess = MovieDAO.addMovieToDB(list.getLast());
         if (isSuccess) 
-            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds()) &&
-                    MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds());
+            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIDs()) &&
+                    MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIDs());
         return false;
     }
 
@@ -57,13 +59,13 @@ public class MovieManager extends ListManager<Movie> {
         list.add(movie);
         boolean isSuccess = MovieDAO.addMovieToDB(list.getLast());
         if (isSuccess) 
-            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIds()) &&
-                    MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIds());
+            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIDs()) &&
+                    MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIDs());
         return false;
     }
 
     private List<String> selectGenres(String message, List<Genre> options) {
-        getGM().display(options, "");
+        getGRM().display(options, "");
         List<String> genreIDs = new ArrayList<>();
 
         String input = getString(message, false);
@@ -81,7 +83,7 @@ public class MovieManager extends ListManager<Movie> {
     }
 
     private List<String> selectActors(String message, List<Actor> options) {
-        getAM().display(options, "");
+        getATM().display(options, "");
         List<String> actorIDs = new ArrayList<>();
 
         String input = getString(message, false);
@@ -99,7 +101,7 @@ public class MovieManager extends ListManager<Movie> {
     }
     
     private List<String> selectLanguages(String message, List<Language> options) {
-        getAM().display(options, "");
+        getLGM().display(options, "");
         List<String> actorIDs = new ArrayList<>();
 
         String input = getString(message, false);
@@ -124,7 +126,6 @@ public class MovieManager extends ListManager<Movie> {
 
         String title = getString("Enter title", true);
         String description = getString("Enter description", true);
-        String language = getString("Enter language", true);
         LocalDate releaseYear = getDate("Enter release date", true);
         Double rentalPrice = getDouble("Enter rental price", 0, Double.MAX_VALUE, true);
 
@@ -134,17 +135,14 @@ public class MovieManager extends ListManager<Movie> {
         if (!description.isEmpty()) 
             foundMovie.setDescription(description);
 
-        if (!language.isEmpty()) 
-            foundMovie.setLanguage(language);
-
         if (releaseYear != null) 
             foundMovie.setReleaseYear(releaseYear);
 
         if (rentalPrice > 0) 
             foundMovie.setRentalPrice(rentalPrice);
 
-        MovieDAO.updateMovieFromDB(foundMovie);
-        return true;
+        
+        return MovieDAO.updateMovieInDB(foundMovie);
     }
 
     public boolean deleteMovie() {
@@ -173,7 +171,6 @@ public class MovieManager extends ListManager<Movie> {
             if (item.getId().equals(property)
                     || item.getTitle().contains(property.trim().toLowerCase())
                     || item.getDescription().contains(property.trim().toLowerCase())
-                    || item.getLanguage().contains(property.trim().toLowerCase())
                     || item.getReleaseYear().format(Validator.DATE).contains(property)
                     || String.valueOf(item.getRentalPrice()).contains(property)) {
                 result.add(item);
@@ -182,32 +179,32 @@ public class MovieManager extends ListManager<Movie> {
         return result;
     }
     
-    @Override
-    public void display(List<Movie> movies, String title) {
-        if (checkEmpty(list)) return;
-        
-        System.out.println(title);
-        System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-        System.out.printf("|%-10s | %-30s | %-30s | %-10s | %-15s | %-20s | %-10s | %-10s |\n",
-                "Movie ID", "Title", "Description", "Avg Rating", "Genres", "Actors", "Language", "Release Year", "Available Copies");
-        System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-
-        for (Movie movie : movies) {
-            String genres = String.join(", ", movie.getGenreIds());
-            String actors = String.join(", ", movie.getActorIds());
-            System.out.printf("|%-10s | %-30s | %-30s | %-10s | %-15s | %-20s | %-10s | %-10s | %-10s |\n",
-                    movie.getId(),
-                    movie.getTitle(),
-                    movie.getDescription().isEmpty() ? "N/A" : movie.getDescription() ,
-                    movie.getAVGRating(),
-                    genres.isEmpty() ? "N/A" : genres,
-                    actors.isEmpty() ? "N/A" : actors,
-                    movie.getLanguage(),
-                    movie.getReleaseYear(),
-                    movie.getAvailable_copies());
-        }
-
-        System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-    }
+//    @Override
+//    public void display(List<Movie> movies, String title) {
+//        if (checkEmpty(list)) return;
+//        
+//        System.out.println(title);
+//        System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+//        System.out.printf("|%-10s | %-30s | %-30s | %-10s | %-15s | %-20s | %-10s | %-10s |\n",
+//                "Movie ID", "Title", "Description", "Avg Rating", "Genres", "Actors", "Language", "Release Year", "Available Copies");
+//        System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+//
+//        for (Movie movie : movies) {
+//            String genres = String.join(", ", movie.getGenreIds());
+//            String actors = String.join(", ", movie.getActorIds());
+//            System.out.printf("|%-10s | %-30s | %-30s | %-10s | %-15s | %-20s | %-10s | %-10s | %-10s |\n",
+//                    movie.getId(),
+//                    movie.getTitle(),
+//                    movie.getDescription().isEmpty() ? "N/A" : movie.getDescription() ,
+//                    movie.getAVGRating(),
+//                    genres.isEmpty() ? "N/A" : genres,
+//                    actors.isEmpty() ? "N/A" : actors,
+//                    movie.getLanguage(),
+//                    movie.getReleaseYear(),
+//                    movie.getAvailable_copies());
+//        }
+//
+//        System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+//    }
 
 }

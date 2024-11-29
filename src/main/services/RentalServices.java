@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import main.dao.RentalDAO;
 import main.constants.Constants;
-import static main.controllers.Managers.getMM;
+import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRTM;
 import main.dto.Movie;
 import main.dto.Rental;
@@ -43,8 +43,8 @@ public class RentalServices {
         Rental foundRental = getRTM().getRentalByUserMovie(Constants.DEFAULT_ADMIN_ID);
         if (getRTM().checkNull(foundRental)) return false;
         
-        Movie foundMovie = getMM().searchById(foundRental.getMovieId());
-        if (getMM().checkNull(foundMovie)) return false;
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
+        if (getMVM().checkNull(foundMovie)) return false;
         
         double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
 
@@ -64,8 +64,8 @@ public class RentalServices {
         Rental foundRental = getRTM().getRentalByUserMovie(Constants.DEFAULT_ADMIN_ID);
         if (getRTM().checkNull(foundRental)) return false;
         
-        Movie foundMovie = getMM().searchById(foundRental.getMovieId());
-        if (getMM().checkNull(foundMovie)) return false;
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
+        if (getMVM().checkNull(foundMovie)) return false;
         
         int extraDate = getInteger("How many days to rent", 1, 365, false);
         double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());

@@ -72,7 +72,7 @@ public class AccountManager extends ListManager<Account> {
         return true;
     }
 
-    public boolean addAccount(AccRole registorRole, AccStatus registorStatus) throws IOException {
+    public boolean addAccount(AccRole registorRole) throws IOException {
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
         
         list.add(new Account(
