@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import main.dao.RentalDAO;
 import main.constants.Constants;
-import static main.controllers.Managers.getMM;
+import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRTM;
 import main.dto.Movie;
 import main.dto.Rental;
@@ -43,14 +43,14 @@ public class RentalServices {
         Rental foundRental = getRTM().getRentalByUserMovie(Constants.DEFAULT_ADMIN_ID);
         if (getRTM().checkNull(foundRental)) return false;
         
-        Movie foundMovie = getMM().searchById(foundRental.getMovieId());
-        if (getMM().checkNull(foundMovie)) return false;
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
+        if (getMVM().checkNull(foundMovie)) return false;
         
         double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
 
         if (overdueFine > 0) {
-            foundRental.setLateFee(foundRental.getLateFee() + overdueFine);  
-            foundRental.setTotalAmount(foundRental.getTotalAmount() + foundRental.getLateFee()); 
+            foundRental.setOverdueFines(foundRental.getOverdueFines() + overdueFine);  
+            foundRental.setCharges(foundRental.getCharges() + foundRental.getOverdueFines()); 
         }
 
         boolean isSuccess = RentalDAO.updateRentalFromDB(foundRental);
@@ -64,14 +64,14 @@ public class RentalServices {
         Rental foundRental = getRTM().getRentalByUserMovie(Constants.DEFAULT_ADMIN_ID);
         if (getRTM().checkNull(foundRental)) return false;
         
-        Movie foundMovie = getMM().searchById(foundRental.getMovieId());
-        if (getMM().checkNull(foundMovie)) return false;
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
+        if (getMVM().checkNull(foundMovie)) return false;
         
         int extraDate = getInteger("How many days to rent", 1, 365, false);
         double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
 
         if (overdueFine > 0) {
-            foundRental.setLateFee(overdueFine);  
+            foundRental.setOverdueFines(overdueFine);  
         }
         foundRental.setReturnDate(foundRental.getReturnDate().plusDays(extraDate));
         return true;

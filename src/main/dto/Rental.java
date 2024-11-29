@@ -38,7 +38,6 @@ public class Rental extends Model {
         this.staffID = other.staffID;
         this.rentalDate = other.rentalDate;
         this.returnDate = other.returnDate;
-
         this.dueDate = other.dueDate;
         this.lateFee = other.lateFee;
         this.totalAmount = other.totalAmount;

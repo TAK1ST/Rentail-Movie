@@ -1,7 +1,7 @@
 package main.services;
 
 import java.io.IOException;
-import static main.controllers.Managers.getUM;
+import static main.controllers.Managers.getACM;
 import main.dto.Account;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
@@ -20,7 +20,7 @@ public class AuthenServices {
         String input = getString("Enter username or email", false);
         String password = getString("Enter password", false);
 
-        for (Account item : getUM().getList()) 
+        for (Account item : getACM().getList()) 
             if(item.getUsername().equals(input) || item.getEmail().equals(input))
                 if (item.getPassword().equals(password)) {
                     account = new Account(item);
@@ -42,7 +42,7 @@ public class AuthenServices {
         int input = Menu.getChoice("Enter choice", options.length);
         switch(input) {
             case 1: 
-                checkCreate = checkCreate && getUM().registorCustomer();
+                checkCreate = checkCreate && getACM().registorAccount();
                 break;
             case 2: 
                 return null;
@@ -54,7 +54,7 @@ public class AuthenServices {
         } 
         else System.out.println("Registor success!!");
 
-        return getUM().getList().getLast();
+        return getACM().getList().getLast();
     }
   
 }

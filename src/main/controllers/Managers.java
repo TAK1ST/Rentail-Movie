@@ -20,6 +20,7 @@ public class Managers {
     private static ReviewManager    RVM = null;
     private static RentalManager    RTM = null;
     private static WishlistManager  WLM = null;
+    
     public static boolean initAll() throws IOException {
         return  initACM() &&
                 initATM() &&
@@ -93,6 +94,7 @@ public class Managers {
         RTM = new RentalManager();
         return true;
     }
+    
     public static boolean initWLM() throws IOException {
         if (WLM != null) return false;
         WLM = new WishlistManager();
