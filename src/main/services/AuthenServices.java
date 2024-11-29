@@ -17,14 +17,15 @@ public class AuthenServices {
         User account = null;
 
         Menu.showTitle("Login");
-        String username = getString("Enter username", false);
+        String input = getString("Enter username or email", false);
         String password = getString("Enter password", false);
 
         for (User item : getUM().getList()) 
-            if (item.getUsername().equals(username) && item.getPassword().equals(password)) {
-                account = new User(item);
-                break;
-            }                
+            if(item.getUsername().equals(input) || item.getEmail().equals(input))
+                if (item.getPassword().equals(password)) {
+                    account = new User(item);
+                    break;
+                }                
 
         if(account == null)
             errorLog("Wrong username or pasword");
