@@ -141,7 +141,11 @@ CREATE TABLE IF NOT EXISTS Discounts (
     is_active BOOLEAN DEFAULT TRUE,
     foreign key (customer_id) references Accounts (account_id)
 <<<<<<< HEAD
+<<<<<<< HEAD
 )
 =======
 )
 >>>>>>> bc1a7d09086349003ef30d16dcd2e25dbc1e8ee0
+=======
+
+>>>>>>> ea0b79886595cbfe7524f62835188bda67d7204d
