@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dao.ActorDAO;
 import main.dao.GenreDAO;
-import main.dao.UserDAO;
+import main.dao.AccountDAO;
 import static main.controllers.Managers.getAM;
 import static main.controllers.Managers.getGM;
 import static main.controllers.Managers.getMM;
@@ -48,7 +48,7 @@ public class FakeData {
         temp.add(new User("U0000011", "kkkk", "newPass890", 2, "KK Tran", "741 Cherry St", "0987654321", "kkkk@example.com"));
         
         for (User item : temp) {
-            UserDAO.addUserToDB(item);
+            AccountDAO.addUserToDB(item);
             getUM().getList().add(item);
         }
         

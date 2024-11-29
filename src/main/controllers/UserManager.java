@@ -5,7 +5,7 @@ import main.base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import main.dao.UserDAO;
+import main.dao.AccountDAO;
 import main.constants.Constants;
 import main.dto.User;
 import main.dto.User.Role;
@@ -23,7 +23,7 @@ public class UserManager extends ListManager<User> {
       
     public UserManager() throws IOException {
         super(User.className());
-        list = UserDAO.getAllUser();
+        list = AccountDAO.getAllUser();
         setAdmin();
     }
     
@@ -42,7 +42,7 @@ public class UserManager extends ListManager<User> {
                 null, 
                 null, 
                 null));
-        UserDAO.addUserToDB(list.getLast());
+        AccountDAO.addUserToDB(list.getLast());
     }
     
     public boolean registorUser() {
@@ -69,7 +69,7 @@ public class UserManager extends ListManager<User> {
                 address, 
                 phoneNumber, 
                 email));
-        UserDAO.addUserToDB(list.getLast());
+        AccountDAO.addUserToDB(list.getLast());
         return true;
     }
 public void displayUsers(List<User> users, String title) {
@@ -110,7 +110,7 @@ System.out.println("|-----------------------------------------------------------
                 getString("Enter your address", false), 
                 Validator.getPhoneNumber("Enter your phone number", false), 
                 Validator.getEmail("Enter your email", false)));
-        UserDAO.addUserToDB(list.getLast());
+        AccountDAO.addUserToDB(list.getLast());
         return true;
     }
 
@@ -145,7 +145,7 @@ System.out.println("|-----------------------------------------------------------
         if (!newPhoneNumber.isEmpty()) foundUser.setPhoneNumber(newPhoneNumber);
         if (!newEmail.isEmpty()) foundUser.setEmail(newEmail);  
 
-        UserDAO.updateUserFromDB(foundUser);
+        AccountDAO.updateUserFromDB(foundUser);
         return true;
     }
 
@@ -156,7 +156,7 @@ System.out.println("|-----------------------------------------------------------
         if (checkNull(foundUser)) return false;
 
         list.remove(foundUser);
-        UserDAO.deleteUserFromDB(foundUser.getId());
+        AccountDAO.deleteUserFromDB(foundUser.getId());
         return true;
     }
 

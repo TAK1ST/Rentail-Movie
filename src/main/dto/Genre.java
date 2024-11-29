@@ -4,20 +4,22 @@ import main.base.Model;
 
 public class Genre extends Model {
     private String genreName;
-
-    public Genre(String genreId, String genreName) {
+    private String description;
+    public Genre(String genreId, String genreName, String description) {
         super(genreId);
         this.genreName = genreName;
+        this.description = description;
     }
     
     public Genre(Genre other) {
         super(other.getId());
         this.genreName = other.genreName;
+        this.description = description;
     }
     
     @Override
     public String toString() {
-        return String.format("Genre: %s, %s.", super.getId(), genreName);
+        return String.format("Genre: %s, %s, %s.", super.getId(), genreName,description);
     }
     
     @Override
@@ -26,6 +28,7 @@ public class Genre extends Model {
                 {
                         super.getId(),
                         genreName,
+                        description
                 };
     }
     
@@ -41,4 +44,11 @@ public class Genre extends Model {
         this.genreName = genreName;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

@@ -2,25 +2,51 @@ package main.dto;
 
 import main.base.Model;
 
-public class User extends Model {
-    
-    public static enum Role {    
+public class Account extends Model {
+
+    public static enum Role {
         NONE(0),
         ADMIN(1),
         USER(2);
-        
+
         private final int value;
 
         Role(int value) {
             this.value = value;
         }
-        
+
         public int getValue() {
             return value;
         }
-        
+
         public static Role fromValue(int value) {
             for (Role item : Role.values()) {
+                if (item.value == value) {
+                    return item;
+                }
+            }
+            throw new IllegalArgumentException("Invalid value: " + value);
+        }
+    }
+    
+    public static enum Status {
+        NONE(0),
+        BANNED(1),
+        OFFLINE(2),
+        ONLINE(3);
+
+        private final int value;
+
+        Status(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static Status fromValue(int value) {
+            for (Status item : Status.values()) {
                 if (item.value == value) {
                     return item;
                 }
@@ -32,80 +58,70 @@ public class User extends Model {
     private String username;
     private String password;
     private int role;
-    private String fullName;
-    private String address;
-    private String phoneNumber;
     private String email;
+    private int status;
 
-    public User(String id, String username, String password, int role, String fullName, String address, String phoneNumber, String email) {
+    //Constructors
+    public Account(String id, String email, String password, String username,int role, int status) {
         super(id);
         this.username = username;
         this.password = password;
         this.role = role;
-        this.fullName = fullName;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
         this.email = email;
+        this.status = status;
     }
-    
-    public User(String id, String username, String password, Role role, String fullName, String address, String phoneNumber, String email) {
+
+    public Account(String id, String username, String password, String email,Role role, Status status) {
         super(id);
         this.username = username;
         this.password = password;
         this.role = role.getValue();
-        this.fullName = fullName;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
         this.email = email;
+        this.status = status.getValue();
     }
-    
-    public User(User other) {
+
+    public Account(Account other) {
         super(other.getId());
         this.username = other.username;
         this.password = other.password;
         this.role = other.role;
-        this.fullName = other.fullName;
-        this.address = other.address;
-        this.phoneNumber = other.phoneNumber;
         this.email = other.email;
+        this.status = other.status;
     }
-    
+
+    //Methods
     @Override
     public String toString() {
-        return String.format("User: %s, %s, %s, %d, %s, %s, %s, %s.", 
+        return String.format("Account: %s, %s, %s, %s, %s, %s.",
                 super.getId(),
                 username,
                 password,
                 role,
-                fullName,
-                address,
-                phoneNumber,
-                email);
+                email,
+                status);
     }
-    
+
     @Override
     public Object[] getDatabaseValues() {
-        return new Object[] {
+        return new Object[]{
             super.getId(),
             username,
             password,
             role,
-            fullName,
-            address,
-            phoneNumber,
             email,
+            status
         };
     }
-    
+
     public static String className() {
-        return "User";
+        return "Account";
     }
 
-    public String getUsername() {
+    public String getAccountName() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setAccountName(String username) {
         this.username = username;
     }
 
@@ -125,30 +141,6 @@ public class User extends Model {
         this.role = role;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -157,4 +149,11 @@ public class User extends Model {
         this.email = email;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }
