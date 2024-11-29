@@ -13,7 +13,7 @@ import static main.controllers.Managers.getMM;
 import static main.controllers.Managers.getUM;
 import main.dto.Movie;
 import main.dto.Rental;
-import main.dto.User;
+import main.dto.Account;
 import main.services.MovieServices;
 import main.services.RentalServices;
 import main.utils.IDGenerator;
@@ -53,8 +53,8 @@ public class RentalManager extends ListManager<Rental> {
     }
 
     public boolean addRental(String userID) {    
-        User foundUser = (User) getUM().searchById(userID);
-        if (getUM().checkNull(foundUser)) return false;
+        Account foundAccount = (Account) getUM().searchById(userID);
+        if (getUM().checkNull(foundAccount)) return false;
 
         Movie foundMovie = (Movie) getMM().getById("Enter movie' id to rent");
         if (getMM().checkNull(foundMovie)) return false;
@@ -67,18 +67,22 @@ public class RentalManager extends ListManager<Rental> {
         int numberOfRentDate = getInteger("How many days to rent", 1, 365, false);
         LocalDate rentalDate = LocalDate.now();
         LocalDate returnDate = rentalDate.plusDays(numberOfRentDate);
-        double charge = foundMovie.getRentalPrice() * numberOfRentDate;
+        double totalAmount = foundMovie.getRentalPrice() * numberOfRentDate;
 
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "RT");
-
+//String id, String userID, String movieID, String staffID, LocalDate rentalDate, LocalDate returnDate,
+//            double lateFee, double dueDate, double totalAmount, String status
         list.add(new Rental(
             id,
             userID, 
             foundMovie.getId(), 
-            rentalDate, 
+                foundStaff.staffID,
+                rentalDate, 
             returnDate, 
-            charge, 
-            0
+                lateFee,
+                dueDate,
+                totalAmount,
+                status
         ));
         boolean isSuccess = RentalDAO.addRentalToDB(list.getLast());
         if (isSuccess) 
@@ -87,7 +91,7 @@ public class RentalManager extends ListManager<Rental> {
         return false;
     }
     
-    public Rental getRentalByUserMovie(String userID) {
+    public Rental getRentalByAccountMovie(String userID) {
         Movie foundMovie = (Movie) getMM().getById("Enter movie's id");  
         if (getMM().checkNull(foundMovie)) return null;
         
@@ -102,7 +106,7 @@ public class RentalManager extends ListManager<Rental> {
     public boolean returnMovie(String userID) {
         if (checkEmpty(list)) return false; 
         
-        Rental foundRental = getRentalByUserMovie(userID);
+        Rental foundRental = getRentalByAccountMovie(userID);
         if (checkNull(foundRental)) return false;
         
         Movie foundMovie = getMM().searchById(foundRental.getMovieId());
@@ -111,8 +115,8 @@ public class RentalManager extends ListManager<Rental> {
         double overdueFine = RentalServices.calculateOverdueFine(foundRental.getReturnDate(), foundMovie.getRentalPrice());
 
         if (overdueFine > 0) {
-            foundRental.setOverdueFines(foundRental.getOverdueFines() + overdueFine);  
-            foundRental.setCharges(foundRental.getCharges() + foundRental.getOverdueFines()); 
+            foundRental.setLateFee(foundRental.getLateFee()+ overdueFine);  
+            foundRental.setTotalAmount(foundRental.getTotalAmount() + foundRental.getLateFee()); 
         }
 
         boolean isSuccess = RentalDAO.updateRentalFromDB(foundRental);
@@ -146,15 +150,12 @@ public class RentalManager extends ListManager<Rental> {
         if (returnDate != null) 
             foundRental.setReturnDate(returnDate);
 
-        if (rentalDate != null && returnDate != null) 
-            foundRental.setCharges(ChronoUnit.DAYS.between(rentalDate, returnDate) * foundMovie.getRentalPrice());   
-
         RentalDAO.updateRentalFromDB(foundRental);
         return true;
     }
     
     public boolean extendReturnDate(String userID) {
-        Rental foundRental = getRentalByUserMovie(userID);
+        Rental foundRental = getRentalByAccountMovie(userID);
         if (checkNull(foundRental)) return false;
         
         Movie foundMovie = getMM().searchById(foundRental.getMovieId());
@@ -164,7 +165,7 @@ public class RentalManager extends ListManager<Rental> {
         double overdueFine = RentalServices.calculateOverdueFine(foundRental.getReturnDate(), foundMovie.getRentalPrice());
 
         if (overdueFine > 0) {
-            foundRental.setOverdueFines(overdueFine);  
+            foundRental.setLateFee(overdueFine);  
         }
         foundRental.setReturnDate(foundRental.getReturnDate().plusDays(extraDate));
         return true;
@@ -196,11 +197,10 @@ public class RentalManager extends ListManager<Rental> {
         List<Rental> result = new ArrayList<>();
         for (Rental item : list) 
             if (item.getId().equals(propety)
-                    || item.getUserId().equals(propety)
+                    || item.getUserID().equals(propety)
                     || item.getRentalDate().format(Validator.DATE).contains(propety.trim())
                     || item.getReturnDate().format(Validator.DATE).contains(propety.trim())
-                    || String.valueOf(item.getCharges()).equals(propety)
-                    || String.valueOf(item.getOverdueFines()).equals(propety)) {
+                    || String.valueOf(item.getStaffID()).equals(propety)) {
                 result.add(item);
             }
         return result;

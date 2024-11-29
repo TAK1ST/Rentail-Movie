@@ -58,8 +58,8 @@ public class ActorDAO {
         return false;
     }
 
-    public static List<Actor> getAllMovie() {
-        String sql = "SELECT * FROM Movie";
+    public static List<Actor> getAllActor() {
+        String sql = "SELECT * FROM Actor";
         List<Actor> list = new ArrayList<>();
         try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
@@ -67,7 +67,7 @@ public class ActorDAO {
                         resultSet.getString("actor_id"),
                         resultSet.getString("actor_name"),
                         resultSet.getString("description"),
-                        resultSet.getDouble("rank"),
+                        resultSet.getString("rank").charAt(0),
                 list.add(actor);
             }
         } catch (SQLException e) {

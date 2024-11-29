@@ -8,6 +8,7 @@ public class Actor extends Model {
     private String description;
     private char rank;
 //Constructor
+
     public Actor(String actorId, String actorName, char rank, String description) {
         super(actorId);
         this.actorName = actorName;
@@ -18,11 +19,14 @@ public class Actor extends Model {
     public Actor(Actor other) {
         super(other.getId());
         this.actorName = other.actorName;
+        this.rank = rank;
+        this.description = description;
     }
 
+    //Methods
     @Override
     public String toString() {
-        return String.format("Actor: %s, %s, %s, %s.", super.getId(), actorName, rank, description);
+        return String.format("Actor: %s, %s, %c, %s.", super.getId(), actorName, rank, description);
     }
 
     @Override
@@ -30,8 +34,9 @@ public class Actor extends Model {
         return new Object[]{
             super.getId(),
             actorName,
-            description,
-            rank};
+            rank,
+            description
+        };
     }
 
     public static String className() {

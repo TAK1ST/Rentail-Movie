@@ -9,7 +9,7 @@ import java.io.IOException;
  */
 public class Managers {
     
-    private static UserManager UM = null;
+    private static AccountManager UM = null;
     private static ActorManager AM = null;
     private static ReviewManager RM = null;
     private static GenreManager GM = null;
@@ -27,7 +27,7 @@ public class Managers {
     
     public static boolean initUM() throws IOException {
         if (UM != null) return false;
-        UM = new UserManager();
+        UM = new AccountManager();
         return true;
     }
     
@@ -62,7 +62,7 @@ public class Managers {
     }
     
 
-    public static UserManager getUM() {
+    public static AccountManager getUM() {
         return UM;
     }
 
