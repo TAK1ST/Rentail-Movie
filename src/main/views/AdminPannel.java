@@ -4,8 +4,8 @@
  */
 package main.views;
 
-import static com.mysql.cj.Messages.getString;
 import java.io.IOException;
+import static javax.swing.UIManager.getString;
 import main.constants.Constants;
 import main.constants.AccRole;
 import static main.controllers.Managers.getATM;

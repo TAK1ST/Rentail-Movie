@@ -1,5 +1,5 @@
 -- drop schema movierentalsystemdb;
--- create schema movierentalsystemdb; 
+-- create schema movierentalsystemdb; -- 
 
 USE movierentalsystemdb;
 
@@ -11,7 +11,6 @@ USE movierentalsystemdb;
     email VARCHAR(50) NOT NULL,
     status ENUM('NONE', 'ONLINE', 'BANNED', 'OFFLINE') NOT NULL
 );
-	-- role use integer help flexible and can expand more. 
 	CREATE TABLE IF NOT EXISTS Profiles (
     account_id CHAR(8),
     full_name NVARCHAR(60),
@@ -67,7 +66,6 @@ CREATE TABLE IF NOT EXISTS Actors (
     actor_rank ENUM('NONE', 'A', 'B', 'C', 'D') NOT NULL
 );
 
--- change M-N Movie and Actor to 1-N thought Movie_Actor
 CREATE TABLE IF NOT EXISTS Movie_Actor (
     movie_id CHAR(8),
     actor_id CHAR(8),
@@ -139,13 +137,5 @@ CREATE TABLE IF NOT EXISTS Discounts (
     end_date DATE NOT NULL,
     usage_available INT DEFAULT 1,
     is_active BOOLEAN DEFAULT TRUE,
-    foreign key (customer_id) references Accounts (account_id)
-<<<<<<< HEAD
-<<<<<<< HEAD
-)
-=======
-)
->>>>>>> bc1a7d09086349003ef30d16dcd2e25dbc1e8ee0
-=======
+    foreign key (customer_id) references Accounts (account_id));
 
->>>>>>> ea0b79886595cbfe7524f62835188bda67d7204d

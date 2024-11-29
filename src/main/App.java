@@ -2,6 +2,7 @@
 package main;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import main.config.Database;
 import main.controllers.Managers;
 import main.dto.Account;
@@ -15,7 +16,7 @@ import main.views.StaffPannel;
 
 
 public class App {
-    public static void run() throws IOException {
+    public static void run() throws IOException, SQLException {
         Database.connect();
         Managers.initAll();
         do {
