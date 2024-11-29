@@ -5,6 +5,8 @@
 package main.utils;
 
 import java.time.LocalDate;
+import java.util.Scanner;
+import static main.utils.Input.getInteger;
 import static main.utils.LogMessage.errorLog;
 
 /**
@@ -12,8 +14,7 @@ import static main.utils.LogMessage.errorLog;
  * @author trann
  */
 public class Utility {
-    
-    // Universal method to display enum values
+       
     public static <E extends Enum<E>> void enumListing(String message, Class<E> enumClass) {
         if (enumClass.isEnum()) {
             E[] enumConstants = enumClass.getEnumConstants();
@@ -27,6 +28,25 @@ public class Utility {
         } else {
             errorLog("The provided class is not an enum.");
         }
+    }
+    
+    public static <E extends Enum<E>> E getEnumValue(String prompt, Class<E> enumClass, boolean enterToPass) {
+        if (!enumClass.isEnum()) {
+            throw new IllegalArgumentException("Provided class is not an enum");
+        }
+
+        E[] enumConstants = enumClass.getEnumConstants();
+        System.out.println(prompt);
+        for (int i = 0; i < enumConstants.length; i++) {
+            System.out.printf("[%d] %s%n", i, enumConstants[i]);
+        }
+        
+        int choice = getInteger("Enter choice", 0, enumConstants.length, enterToPass);
+        if (choice >= 0) {
+            return enumConstants[choice];
+        } 
+        
+        return enumConstants[0];
     }
     
     public static long extractNumber(String str) {

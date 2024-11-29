@@ -23,12 +23,11 @@ public class GenreManager extends ListManager<Genre> {
     }
 
     public boolean addGenre() {
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "G");
-        String name = getName("Enter genre", false);
-        
-        list.add(new Genre(id, name));
-        GenreDAO.addGenreToDB(list.getLast());
-        return true;
+        list.add(new Genre(
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "G"), 
+                getName("Enter genre", false)
+        ));
+        return GenreDAO.addGenreToDB(list.getLast());
     }
 
     public boolean updateGenre() {
@@ -37,12 +36,11 @@ public class GenreManager extends ListManager<Genre> {
         Genre foundGenre = (Genre)getById("Enter genre's id");
         if (checkNull(foundGenre)) return false;
         
-        String name = getName("Enter genre", true);
+        String name = getName("Enter genre name", true);
         if (!name.isEmpty()) 
             foundGenre.setGenreName(name);  
         
-        GenreDAO.updateGenreFromDB(foundGenre);
-        return true;
+        return GenreDAO.updateGenreInDB(foundGenre);
     }
 
     public boolean deleteGenre() { 
@@ -52,8 +50,7 @@ public class GenreManager extends ListManager<Genre> {
         if (checkNull(foundGenre)) return false;
 
         list.remove(foundGenre);
-        GenreDAO.deleteGenreFromDB(foundGenre.getId());
-        return true;
+        return GenreDAO.deleteGenreFromDB(foundGenre.getId());
     }
 
     public void searchGenre() {
@@ -90,7 +87,6 @@ public class GenreManager extends ListManager<Genre> {
                     genre.getId(),
                     genre.getGenreName());
         }
-
         System.out.println("----------------------------------------------------");
     }
     
