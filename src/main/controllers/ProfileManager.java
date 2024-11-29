@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import static main.controllers.Managers.getACM;
 import main.dao.ProfileDAO;
-import static main.controllers.Managers.getMVM;
-import main.dto.Account;
 import main.dto.Profile;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getString;
@@ -30,9 +27,6 @@ public class ProfileManager extends ListManager<Profile> {
     }
 
     public boolean addProfile(String accountID) throws IOException {   
-        Account foundAccount = (Account) getACM().searchById(accountID);
-        if (getACM().checkNull(foundAccount)) return false;
-        
         list.add(new Profile(
                 accountID, 
                 getName("Enter username", false), 

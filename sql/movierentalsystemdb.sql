@@ -140,4 +140,8 @@ CREATE TABLE IF NOT EXISTS Discounts (
     usage_available INT DEFAULT 1,
     is_active BOOLEAN DEFAULT TRUE,
     foreign key (customer_id) references Accounts (account_id)
+<<<<<<< HEAD
 )
+=======
+)
+>>>>>>> bc1a7d09086349003ef30d16dcd2e25dbc1e8ee0

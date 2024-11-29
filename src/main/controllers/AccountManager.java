@@ -48,7 +48,8 @@ public class AccountManager extends ListManager<Account> {
                 "1",
                 "admin@gmail.com",
                 AccRole.ADMIN,
-                AccStatus.OFF));
+                AccStatus.OFF
+        ));
         AccountDAO.addAccountToDB(list.getLast());
     }
 
@@ -71,18 +72,29 @@ public class AccountManager extends ListManager<Account> {
                 password,
                 email,
                 AccRole.CUSTOMER,
-                AccStatus.OFF));
-        AccountDAO.addAccountToDB(list.getLast());
-        return true;
+                AccStatus.OFF
+        ));
+        return AccountDAO.addAccountToDB(list.getLast());
     }
 
     public boolean addAccount(AccRole registorRole) throws IOException {
+        
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), ACCOUNT_PREFIX);
+        String username = getUsername("Enter username", false, list);
+        String password = getPassword("Enter password", false);
+        String email = getEmail("Enter your email", false);
+        AccRole role = (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole;
+        if (getPFM().addProfile(id)) {
+            errorLog("Cannot registor info");
+            return false;
+        }
+        
         list.add(new Account(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), ACCOUNT_PREFIX),
-                getUsername("Enter username", false, list),
-                getPassword("Enter password", false),
-                getEmail("Enter your email", false),
-                (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole,
+                id,
+                username,
+                password,
+                email,
+                role,
                 AccStatus.OFF
         ));
         return AccountDAO.addAccountToDB(list.getLast());

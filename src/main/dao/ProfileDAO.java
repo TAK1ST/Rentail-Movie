@@ -33,7 +33,6 @@ public class ProfileDAO {
             preparedStatement.setDouble(5, account.getCredit());  
             preparedStatement.setDate(6, Date.valueOf(account.getBirthday())); 
 
-            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -28,13 +28,28 @@ public class AdminPannel {
             "Movie Rental (Admin)",
             null,
             new MenuOption[]{
-                new MenuOption("Account managment",    () -> userMenu()),
+                new MenuOption("Account managment",    () -> accountMenu()),
                 new MenuOption("Actor managment",   () -> actorMenu()),
                 new MenuOption("Genre managment",   () -> genreMenu()),
                 new MenuOption("Movie managment",   () -> movieMenu()),
                 new MenuOption("Review managment",  () -> reviewMenu()),
                 new MenuOption("Rental managment",  () -> rentalMenu()),
                 new MenuOption("Log Out"),
+            },
+            null
+        );
+    }
+    
+    private static void accountMenu() throws IOException {
+        Menu.showManagerMenu("Account Managment",
+            null,
+            new MenuOption[]{
+                new MenuOption("Add Account", () -> showSuccess(getACM().addAccount(AccRole.ADMIN)), true),
+                new MenuOption("Delete Account", () -> showSuccess(getACM().deleteAccount()), true),
+                new MenuOption("Update Account", () -> showSuccess(getACM().updateAccount("")), true),
+                new MenuOption("Search Account", () -> getACM().searchAccount(), true),
+                new MenuOption("Display Accounts", () -> getACM().display(getACM().getList(), "List of Accounts")),
+                new MenuOption("Back", () -> {})
             },
             null
         );
@@ -50,6 +65,21 @@ public class AdminPannel {
                 new MenuOption("Update actor", () -> showSuccess(getATM().updateActor()), true),
                 new MenuOption("Search actor", () -> getATM().searchActor(), true),
                 new MenuOption("Show all actor", () -> getATM().display(getATM().getList(), "List of Actor")),
+                new MenuOption("Back", () -> {})
+            },
+            null
+        );
+    }
+    
+    private static void discountMenu() throws IOException {
+        Menu.showManagerMenu("Discount Managment",
+            null,
+            new MenuOption[]{
+                new MenuOption("Add Account", () -> showSuccess(getACM().addAccount(AccRole.ADMIN)), true),
+                new MenuOption("Delete Account", () -> showSuccess(getACM().deleteAccount()), true),
+                new MenuOption("Update Account", () -> showSuccess(getACM().updateAccount("")), true),
+                new MenuOption("Search Account", () -> getACM().searchAccount(), true),
+                new MenuOption("Display Accounts", () -> getACM().display(getACM().getList(), "List of Accounts")),
                 new MenuOption("Back", () -> {})
             },
             null
@@ -121,7 +151,9 @@ public class AdminPannel {
   
     }
     
-    private static void userMenu() throws IOException {
+    
+    
+    private static void accountMenu() throws IOException {
         Menu.showManagerMenu("Account Managment",
             null,
             new MenuOption[]{
