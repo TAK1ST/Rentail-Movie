@@ -9,7 +9,7 @@ import static main.controllers.Managers.getMM;
 import static main.controllers.Managers.getRM;
 import static main.controllers.Managers.getRTM;
 import static main.controllers.Managers.getUM;
-import main.dto.User;
+import main.dto.Account;
 import main.services.RentalServices;
 import main.utils.Menu;
 import main.utils.Menu.MenuOption;
@@ -20,7 +20,7 @@ import main.utils.Menu.MenuOption;
  */
 public class CustomerPannel {
     
-    public static void show(User account) throws IOException {
+    public static void show(Account account) throws IOException {
         Menu.showManagerMenu(
             "Movie Rental (Customer)",
             null,

@@ -43,7 +43,6 @@ public class AuthenServices {
         switch(input) {
             case 1: 
                 checkCreate = checkCreate && getUM().registorCustomer();
-
                 break;
             case 2: 
                 return null;

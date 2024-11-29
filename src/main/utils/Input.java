@@ -7,6 +7,7 @@ package main.utils;
 
 import java.util.Scanner;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.LogMessage.infoLog;
 
 /**
  *
@@ -19,6 +20,8 @@ public class Input {
     public static String getString(String message, boolean enterToPass) {
             String result = "";
             do {
+                if (enterToPass) infoLog("Press Enter to skip");
+                
                 System.out.print(message + ": ");
                 result = scanner.nextLine();
                 if(result.isEmpty() && enterToPass) 
@@ -35,6 +38,8 @@ public class Input {
     public static int getInteger(String message, int min, int max, boolean enterToPass) {
         int number;
         while (true) {
+            if (enterToPass) infoLog("Press Enter to skip");
+            
             System.out.printf("%s (%d -> %d): ", message, min, max);
             String input = scanner.nextLine();
             if (input.isEmpty() && enterToPass) {
@@ -56,6 +61,8 @@ public class Input {
     public static double getDouble(String message, double min, double max, boolean enterToPass) {
         double number;
         while (true) {
+            if (enterToPass) infoLog("Press Enter to skip");
+            
             System.out.printf("%s (%.2f -> %.2f): ", message, min, max);
             String input = scanner.nextLine();
             if (input.isEmpty() && enterToPass) {
@@ -80,6 +87,8 @@ public class Input {
     }
 
     public static String selectInfo(String message, String[] infoLists, boolean enterToPass) {
+        if (enterToPass) infoLog("Press Enter to skip");
+        
         System.out.println("\n" + message + ": ");
         for (int index = 0; index < infoLists.length; index++) {
                 if (index % 4 == 0) System.out.println();
