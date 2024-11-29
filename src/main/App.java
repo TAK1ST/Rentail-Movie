@@ -19,7 +19,7 @@ public class App {
         Database.connect();
         Managers.initAll();
         do {
-            redirect(AuthenPannel.getUsers());
+            redirect(AuthenPannel.getAccounts());
         } 
         while(!yesOrNo("Exit"));
     }
