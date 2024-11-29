@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/test/FakeData.java</file>
         </group>
         <group>
@@ -20,6 +21,27 @@
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/constants/Role.java</file>
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/config/Database.java</file>
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dto/Actor.java</file>
+=======
+            <file>file:/D:/Java/Rental-Movie/src/main/DAO/ReviewDAO.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/DAO/MovieDAO.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/services/AuthenServices.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/services/RentalServices.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/base/ListManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/services/UserServices.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/App.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/services/ActorServices.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/services/GenreServices.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/constants/Constants.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/services/MovieServices.java</file>
+        </group>
+        <group>
+            <file>file:/D:/Java/Rental-Movie/src/main/dao/UserDAO.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/App.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/UserManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/ActorManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/MovieManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/GenreManager.java</file>
+>>>>>>> 4a57875a9b3b70734b3f28a28bdfe16adaacd7c0
         </group>
     </open-files>
 </project-private>

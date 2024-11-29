@@ -162,4 +162,27 @@ public class UserManager extends ListManager<User> {
         display(searchById(userID), "My Profile");
     }
     
+    public void displayUsers(List<User> users, String title) {
+        if (checkEmpty(list)) return;
+        
+        System.out.println(title);
+        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+        System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
+                "User ID", "Username","Password", "Role", "Full Name", "Address", "Phone Number", "Email");
+        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+        for (User user : users) {
+            String role = user.getRole() == Role.ADMIN ? "Admin" : "User";
+             System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
+                    user.getId(),
+                    user.getUsername(),
+                    user.getPassword(),
+                    role,
+                    user.getFullName() != null ? user.getFullName() : "N/A",
+                    user.getAddress() != null ? user.getAddress() : "N/A",
+                    user.getPhoneNumber() != null ? user.getPhoneNumber() : "N/A",
+                    user.getEmail() != null ? user.getEmail() : "N/A"); 
+        }
+        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+    }
+    
 }

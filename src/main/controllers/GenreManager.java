@@ -79,4 +79,22 @@ public class GenreManager extends ListManager<Genre> {
         return result;
     }
     
+    @Override
+    public void display(List<Genre> genres, String title) {
+        if (checkEmpty(list)) return;
+        
+        System.out.println(title);
+        System.out.println("----------------------------------------------------");
+        System.out.printf("%-15s | %-30s\n", "Genre ID", "Genre Name");
+        System.out.println("----------------------------------------------------");
+
+        for (Genre genre : genres) {
+            System.out.printf("%-15s | %-30s\n",
+                    genre.getId(),
+                    genre.getGenreName());
+        }
+
+        System.out.println("----------------------------------------------------");
+    }
+    
 }

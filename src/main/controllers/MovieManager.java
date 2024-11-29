@@ -161,5 +161,33 @@ public class MovieManager extends ListManager<Movie> {
         }
         return result;
     }
+    
+    @Override
+    public void display(List<Movie> movies, String title) {
+        if (checkEmpty(list)) return;
+        
+        System.out.println(title);
+        System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+        System.out.printf("|%-10s | %-30s | %-30s | %-10s | %-15s | %-20s | %-10s | %-10s |\n",
+                "Movie ID", "Title", "Description", "Avg Rating", "Genres", "Actors", "Language", "Release Year", "Available Copies");
+        System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+
+        for (Movie movie : movies) {
+            String genres = String.join(", ", movie.getGenreIds());
+            String actors = String.join(", ", movie.getActorIds());
+            System.out.printf("|%-10s | %-30s | %-30s | %-10s | %-15s | %-20s | %-10s | %-10s | %-10s |\n",
+                    movie.getId(),
+                    movie.getTitle(),
+                    movie.getDescription().isEmpty() ? "N/A" : movie.getDescription() ,
+                    movie.getAVGRating(),
+                    genres.isEmpty() ? "N/A" : genres,
+                    actors.isEmpty() ? "N/A" : actors,
+                    movie.getLanguage(),
+                    movie.getReleaseYear(),
+                    movie.getAvailable_copies());
+        }
+
+        System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+    }
 
 }
