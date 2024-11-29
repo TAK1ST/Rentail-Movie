@@ -24,7 +24,7 @@ public class AccountManager extends ListManager<Account> {
 
     public AccountManager() throws IOException {
         super(Account.className());
-        list = AccountDAO.getAllAccount();
+        list = AccountDAO.getAllAccounts();
         setAdmin();
     }
 
@@ -38,9 +38,9 @@ public class AccountManager extends ListManager<Account> {
         }
         list.add(new Account(
                 Constants.DEFAULT_ADMIN_ID,
-                "admin@gmail.com",
+                "admin",
                 "1",
-                null,
+                "admin@gmail.com",
                 AccRole.ADMIN,
                 AccStatus.OFF));
         AccountDAO.addAccountToDB(list.getLast());

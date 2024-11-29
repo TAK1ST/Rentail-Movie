@@ -62,7 +62,7 @@ public class GenreDAO {
         return false;
     }
     
-    public static List<Genre> getAllGenre() {
+    public static List<Genre> getAllGenres() {
         String sql = "SELECT * FROM Genres";
         List<Genre> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();

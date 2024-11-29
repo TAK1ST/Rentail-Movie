@@ -67,7 +67,7 @@ public class AccountDAO {
         return false;
     }
     
-    public static List<Account> getAllAccount() {
+    public static List<Account> getAllAccounts() {
         String sql = "SELECT * FROM Accounts";
         List<Account> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();

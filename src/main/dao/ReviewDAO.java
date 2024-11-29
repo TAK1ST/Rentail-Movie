@@ -68,7 +68,7 @@ public class ReviewDAO {
         return false;
     }
     
-    public static List<Review> getAllReview() {
+    public static List<Review> getAllReviews() {
         String sql = "SELECT * FROM Reviews";
         List<Review> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();

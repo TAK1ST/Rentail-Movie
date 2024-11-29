@@ -32,7 +32,7 @@ public class RentalManager extends ListManager<Rental> {
 
     public RentalManager() throws IOException {
         super(Rental.className());
-        list = RentalDAO.getAllRental();
+        list = RentalDAO.getAllRentals();
     }
 
     public boolean addRental(String customerID) {    
