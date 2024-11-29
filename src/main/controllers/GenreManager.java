@@ -19,7 +19,7 @@ public class GenreManager extends ListManager<Genre> {
     
     public GenreManager() throws IOException {
         super(Genre.className());
-        list = GenreDAO.getAllGenre();
+        list = GenreDAO.getAllGenres();
     }
 
     public boolean addGenre() {

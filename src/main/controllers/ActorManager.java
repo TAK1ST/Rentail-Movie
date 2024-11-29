@@ -20,7 +20,7 @@ public class ActorManager extends ListManager<Actor> {
     
     public ActorManager() throws IOException {
         super(Actor.className());
-        list = ActorDAO.getAllActor();
+        list = ActorDAO.getAllActors();
     }
     
     public boolean addActor() {

@@ -3,6 +3,7 @@ package main.dto;
 import main.base.Model;
 import java.time.LocalDate;
 import main.constants.RentalStatus;
+import main.utils.Validator;
 
 public class Rental extends Model {
 
@@ -52,9 +53,9 @@ public class Rental extends Model {
                 customerID,
                 movieID,
                 staffID,
-                rentalDate.toString(),
-                returnDate.toString(),
-                dueDate.toString(),
+                rentalDate.format(Validator.DATE),
+                returnDate.format(Validator.DATE),
+                dueDate.format(Validator.DATE),
                 lateFee,
                 totalAmount,
                 status);
@@ -67,10 +68,10 @@ public class Rental extends Model {
             customerID,
             movieID,
             staffID,
-            rentalDate.toString(),
-            returnDate.toString(),
-            lateFee,
+            rentalDate,
+            returnDate,
             dueDate,
+            lateFee,
             totalAmount,
             status
         };

@@ -27,7 +27,7 @@ public class MovieManager extends ListManager<Movie> {
 
     public MovieManager() throws IOException {
         super(Movie.className());
-        list = MovieDAO.getAllMovie();
+        list = MovieDAO.getAllMovies();
     }
 
     public boolean addMovie(String userID) {

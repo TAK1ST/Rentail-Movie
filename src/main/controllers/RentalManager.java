@@ -23,7 +23,7 @@ public class RentalManager extends ListManager<Rental> {
 
     public RentalManager() throws IOException {
         super(Rental.className());
-        list = RentalDAO.getAllRental();
+        list = RentalDAO.getAllRentals();
     }
         Account foundAccount = (Account) getUM().searchById(customerID);
         if (getUM().checkNull(foundAccount)) return false;

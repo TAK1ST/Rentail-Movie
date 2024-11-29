@@ -3,6 +3,7 @@ package main.dto;
 import java.time.LocalDate;
 import main.base.Model;
 import main.constants.DiscountType;
+import main.utils.Validator;
 
 public class Discount extends Model {
 
@@ -43,8 +44,8 @@ public class Discount extends Model {
     public Object[] getDatabaseValues() {
         return new Object[]{
             this.getCode(),
-            startDate,
-            endDate,
+            startDate.format(Validator.DATE),
+            endDate.format(Validator.DATE),
             type,
             usageAvailable,
             isActive,

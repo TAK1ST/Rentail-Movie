@@ -4,6 +4,7 @@ import main.base.Model;
 import main.constants.PaymentMethod;
 
 public class Payment extends Model {
+    
     private PaymentMethod method;
     private String rentalID;
 

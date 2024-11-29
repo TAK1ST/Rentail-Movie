@@ -3,9 +3,10 @@ package main.dto;
 import main.base.Model;
 import java.time.LocalDate;
 import main.constants.WishlistPriority;
+import main.utils.Validator;
 
 public class Wishlist extends Model {
-    private String wishlistID;
+    
     private String movieID;
     private String customerID;
     private LocalDate addedDate;
@@ -33,7 +34,7 @@ public class Wishlist extends Model {
                 super.getId(),
                 movieID,
                 customerID,
-                addedDate,
+                addedDate.format(Validator.DATE),
                 priority
         );
     }
