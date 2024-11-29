@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 import main.constants.AccRole;
 import main.dto.Account;
 import static main.utils.Input.getInteger;
@@ -39,6 +38,8 @@ public class Validator {
         String input = "";
         boolean isUnique = false;
         do {
+            if (enterToPass) infoLog("Press Enter to skip");
+            
             System.out.printf("%s: ", message);
             input = scanner.nextLine();   
             if (input.isEmpty() && enterToPass) 
@@ -78,6 +79,8 @@ public class Validator {
         String input = "";
         boolean pass = false;
         do {
+            if (enterToPass) infoLog("Press Enter to skip");
+            
             System.out.printf("%s: ", message);
             input = scanner.nextLine();
             if (input.isEmpty() && enterToPass) 
@@ -123,6 +126,8 @@ public class Validator {
         String input = "";
         boolean pass = false;
         do {
+            if (enterToPass) infoLog("Press Enter to skip");
+            
             System.out.printf("%s: ", message);
             input = scanner.nextLine(); 
             if (input.isEmpty() && enterToPass) 
@@ -147,6 +152,8 @@ public class Validator {
         String input = "";
         boolean pass = false;
         do {
+            if (enterToPass) infoLog("Press Enter to skip");
+            
             System.out.printf("%s: ", message);
             input = scanner.nextLine(); 
             if (input.isEmpty() && enterToPass) 
@@ -175,6 +182,8 @@ public class Validator {
         String input = "";
         boolean pass = false;
         do {
+            if (enterToPass) infoLog("Press Enter to skip");
+            
             input = getString(message, enterToPass);
             if (input.isEmpty() && enterToPass) 
                 return "";
@@ -201,6 +210,8 @@ public class Validator {
         String input = "";
         boolean pass = false;
         do {
+            if (enterToPass) infoLog("Press Enter to skip");
+            
             input = getString(message, enterToPass);
             if (input.isEmpty() && enterToPass) 
                 return "";
@@ -223,6 +234,7 @@ public class Validator {
         return input;
     }
     
+
     public static AccRole getRole(String message, boolean enterToPass) {
         AccRole[] listRole = AccRole.values();
         enumListing("Choose role", AccRole.class);
@@ -237,6 +249,8 @@ public class Validator {
     public static LocalDate getDate(String message, boolean enterToPass) {
         String input = "";
         do {
+            if (enterToPass) infoLog("Press Enter to skip");
+            
             System.out.printf("%s (%s): ", message, DATE);
             input = scanner.nextLine(); 
             if (input.isEmpty() && enterToPass) 
@@ -285,7 +299,7 @@ public class Validator {
         return date.atTime(time);
     }
     
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+
     
     public static boolean isDateInRange(LocalDate startDate, LocalDate endDate, LocalDate targetDate) {
         return (targetDate.isEqual(startDate) || targetDate.isAfter(startDate)) &&

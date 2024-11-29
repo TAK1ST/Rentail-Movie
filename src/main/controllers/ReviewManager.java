@@ -33,10 +33,10 @@ public final class ReviewManager extends ListManager<Review> {
         list = ReviewDAO.getAllReview();
     }
 
-    public boolean makeReview(String userID) {
-        List<Review> foundReview = searchBy(userID);
+    public boolean makeReview(String customID) {
+        List<Review> foundReview = searchBy(customID);
         for (Review item : foundReview) 
-            if (item.getUserID().equals(userID)) {
+            if (item.getCustomerID().equals(customID)) {
                 errorLog("Already review this movie");
                 return false;
             }
@@ -51,7 +51,7 @@ public final class ReviewManager extends ListManager<Review> {
 
         list.add(new Review(
                 id,
-                userID,
+                customID,
                 foundMovie.getId(),
                 rating,
                 reviewText,
@@ -143,8 +143,8 @@ public final class ReviewManager extends ListManager<Review> {
         display(movieReviews, foundMovie.getTitle() + " 's reviews");    
     }
     
-    public void myReviews(String userID) {
-        List<Review> movieReviews = searchBy(userID);
+    public void myReviews(String customID) {
+        List<Review> movieReviews = searchBy(customID);
         
         String[] options = new String[] { "id", "rating" };
         sortBy(selectInfo("Sort review by", options, true));

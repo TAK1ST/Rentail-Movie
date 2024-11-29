@@ -3,34 +3,6 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/UserDAO.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/views/UserPannel.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/UserManager.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Validator.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/test/FakeData.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Input.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/App.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Utility.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/test/Testing.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dto/User.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/views/AdminPannel.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/constants/Role.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/config/Database.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dto/Actor.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/DAO/ReviewDAO.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/DAO/MovieDAO.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/services/AuthenServices.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/services/RentalServices.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/base/ListManager.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/services/UserServices.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/dao/UserDAO.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/App.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/controllers/UserManager.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/controllers/ActorManager.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/controllers/MovieManager.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/controllers/GenreManager.java</file>
-        </group>
-        <group>
             <file>file:/D:/Java/Rental-Movie/src/main/dto/Actor.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/dao/UserDAO.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/App.java</file>
@@ -39,6 +11,29 @@
             <file>file:/D:/Java/Rental-Movie/src/main/controllers/MovieManager.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/controllers/GenreManager.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/constants/Constants.java</file>
+        </group>
+        <group>
+            <file>file:/D:/Java/Rental-Movie/src/main/services/AuthenServices.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/services/RentalServices.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/dto/Account.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/App.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/UserManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/config/Database.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/ActorManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/MovieManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/dao/MovieDAO.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/services/MovieServices.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/RentalManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/dto/Actor.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/constants/AccRole.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/utils/Validator.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/AccountManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/dto/Rental.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/GenreManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/constants/Constants.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/dto/Discount.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/Main.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/ReviewManager.java</file>
         </group>
     </open-files>
 </project-private>
