@@ -8,10 +8,10 @@ package main.constants;
  *
  * @author trann
  */
-public enum Role {
+public enum ActorRank {
     NONE,
-    ADMIN,
-    STAFF,
-    CUSTOMER,
-    PREMIUM
+    A,
+    B,
+    C,
+    D
 }

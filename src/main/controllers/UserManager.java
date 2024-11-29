@@ -1,12 +1,13 @@
+
 package main.controllers;
 
 import main.base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import main.dao.UserDAO;
+import main.dao.AccountDAO;
 import main.constants.Constants;
-import main.constants.Role;
+import main.constants.AccRole;
 import main.dto.User;
 import main.utils.IDGenerator;
 import static main.utils.Input.getString;
@@ -23,26 +24,26 @@ public class UserManager extends ListManager<User> {
       
     public UserManager() throws IOException {
         super(User.className());
-        list = UserDAO.getAllUser();
+        list = AccountDAO.getAllUser();
         setAdmin();
     }
     
     private void setAdmin() throws IOException {
         if(!list.isEmpty())
             for (User item : list) 
-                if (item.getRole() == Role.ADMIN)
+                if (item.getRole() == AccRole.ADMIN)
                     return;
         
         list.add(new User(
                 Constants.DEFAULT_ADMIN_ID, 
                 "admin", 
                 "1", 
-                Role.ADMIN,  
+                AccRole.ADMIN,  
                 null, 
                 null, 
                 null, 
                 null));
-        UserDAO.addUserToDB(list.getLast());
+        AccountDAO.addUserToDB(list.getLast());
     }
     
     public boolean registorCustomer() {
@@ -64,27 +65,27 @@ public class UserManager extends ListManager<User> {
                 id, 
                 username, 
                 password, 
-                Role.CUSTOMER, 
+                AccRole.CUSTOMER, 
                 fullName, 
                 address, 
                 phoneNumber, 
                 email));
-        UserDAO.addUserToDB(list.getLast());
+        AccountDAO.addUserToDB(list.getLast());
         return true;
     }
 
-    public boolean addUser(Role registorRole) throws IOException {   
+    public boolean addUser(AccRole registorRole) throws IOException {   
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
         list.add(new User(
                 id, 
                 Validator.getUsername("Enter username", false, list), 
                 Validator.getPassword("Enter password", false), 
-                (registorRole == Role.ADMIN) ? Validator.getRole("Choose a role", false): registorRole,  
+                (registorRole == AccRole.ADMIN) ? Validator.getRole("Choose a role", false): registorRole,  
                 getFullName("Enter full name", false), 
                 getString("Enter your address", false), 
                 Validator.getPhoneNumber("Enter your phone number", false), 
                 Validator.getEmail("Enter your email", false)));
-        UserDAO.addUserToDB(list.getLast());
+        AccountDAO.addUserToDB(list.getLast());
         return true;
     }
 
@@ -102,8 +103,8 @@ public class UserManager extends ListManager<User> {
         String newUsername = Validator.getUsername("Enter new username", true, list);
         String newPassword = Validator.getPassword("Enter new password", true);
         
-        Role newRole = Role.NONE;
-        if (foundUser.getRole() == Role.ADMIN)
+        AccRole newRole = AccRole.NONE;
+        if (foundUser.getRole() == AccRole.ADMIN)
             newRole = Validator.getRole("Enter new role", true);
         
         String newFullName = getString("Enter full name", true);
@@ -113,13 +114,13 @@ public class UserManager extends ListManager<User> {
 
         if (!newUsername.isEmpty()) foundUser.setUsername(newUsername);
         if (!newPassword.isEmpty()) foundUser.setPassword(encryptPassword(newPassword));
-        if (newRole != Role.NONE) foundUser.setRole(newRole);
+        if (newRole != AccRole.NONE) foundUser.setRole(newRole);
         if (!newFullName.isEmpty()) foundUser.setFullName(newFullName);
         if (!newAddress.isEmpty()) foundUser.setAddress(newAddress);
         if (!newPhoneNumber.isEmpty()) foundUser.setPhoneNumber(newPhoneNumber);
         if (!newEmail.isEmpty()) foundUser.setEmail(newEmail);  
 
-        UserDAO.updateUserFromDB(foundUser);
+        AccountDAO.updateUserFromDB(foundUser);
         return true;
     }
 
@@ -130,7 +131,7 @@ public class UserManager extends ListManager<User> {
         if (checkNull(foundUser)) return false;
 
         list.remove(foundUser);
-        UserDAO.deleteUserFromDB(foundUser.getId());
+        AccountDAO.deleteUserFromDB(foundUser.getId());
         return true;
     }
 
@@ -172,7 +173,7 @@ public class UserManager extends ListManager<User> {
                 "User ID", "Username","Password", "Role", "Full Name", "Address", "Phone Number", "Email");
         System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
         for (User user : users) {
-            String role = user.getRole() == Role.ADMIN ? "Admin" : "User";
+            String role = user.getRole() == AccRole.ADMIN ? "Admin" : "User";
              System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s | %-20s | %-15s | %-20s |\n", 
                     user.getId(),
                     user.getUsername(),

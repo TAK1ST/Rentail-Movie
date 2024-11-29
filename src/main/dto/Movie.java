@@ -9,24 +9,24 @@ public class Movie extends Model {
     private String title;
     private String description;
     private double avgRating;
-    private List<String> genreIds;
-    private List<String> actorIds;
-    private String language;
+    private List<String> genreIDs;
+    private List<String> actorIDs;
+    private List<String> languageCodes;
     private LocalDate releaseYear;  
     private double rentalPrice;
-    private int available_copies;
+    private int availableCopies;
 
-    public Movie(String id, String title, String description, double avgRating, List<String> genreIds, List<String> actorIds, String language, LocalDate releaseYear, double rentalPrice, int available_copies ) {
+    public Movie(String id, String title, String description, double avgRating, List<String> genreIDs, List<String> actorIDs, List<String> languageCodes, LocalDate releaseYear, double rentalPrice, int availableCopies ) {
         super(id);
         this.title = title;
         this.description = description;
         this.avgRating = avgRating;
-        this.genreIds = genreIds;
-        this.actorIds = actorIds;
-        this.language = language;
+        this.genreIDs = genreIDs;
+        this.actorIDs = actorIDs;
+        this.languageCodes = languageCodes;
         this.releaseYear = releaseYear;
         this.rentalPrice = rentalPrice;
-        this.available_copies = available_copies;
+        this.availableCopies = availableCopies;
     }
 
    
@@ -35,20 +35,20 @@ public class Movie extends Model {
         this.title = other.title;
         this.description = other.description;
         this.avgRating = other.avgRating;
-        this.genreIds = other.genreIds;
-        this.actorIds = other.actorIds;
-        this.language = other.language;
+        this.genreIDs = other.genreIDs;
+        this.actorIDs = other.actorIDs;
+        this.languageCodes = other.languageCodes;
         this.releaseYear = other.releaseYear;
         this.rentalPrice = other.rentalPrice;
-        this.available_copies = other.available_copies;
+        this.availableCopies = other.availableCopies;
 
     }
 
-    //Methods
     @Override
     public String toString() {
-         String genreNames = genreIds != null ? String.join(", ", genreIds) : "No genres";
-         String actorNames = actorIds != null ? String.join(", ", actorIds) : "No actors";
+         String genreNames = genreIDs != null ? String.join(", ", genreIDs) : "No genres";
+         String actorNames = actorIDs != null ? String.join(", ", actorIDs) : "No actors";
+         String languages = languageCodes != null ? String.join(", ", languageCodes) : "No languages";
         return String.format("Movie: %s, %s, %s, %.5f, %s, %s, %s, %s, %.5f, %d.",
                 super.getId(),
                 title,
@@ -56,14 +56,13 @@ public class Movie extends Model {
                 avgRating,
                 genreNames,
                 actorNames,
-                language,
+                languages,
                 releaseYear,
                 rentalPrice,
-                available_copies
+                availableCopies
 
         );
     }
-
 
     @Override
     public Object[] getDatabaseValues() {
@@ -72,10 +71,9 @@ public class Movie extends Model {
             title,
             description,
             avgRating,
-            language,
             releaseYear,
             rentalPrice,
-            available_copies
+            availableCopies
         };
     }
 
@@ -83,7 +81,6 @@ public class Movie extends Model {
         return "Movie";
     }
 
-    // Getters and setters
     public String getTitle() {
         return title;
     }
@@ -100,36 +97,36 @@ public class Movie extends Model {
         this.description = description;
     }
 
-    public double getAVGRating() {
+    public double getAvgRating() {
         return avgRating;
     }
 
-    public void setAVGRating(double avgRating) {
+    public void setAvgRating(double avgRating) {
         this.avgRating = avgRating;
     }
 
-    public List<String> getGenreIds() {
-        return genreIds;
+    public List<String> getGenreIDs() {
+        return genreIDs;
     }
 
-    public void setGenreIds(List<String> genreIds) {
-        this.genreIds = genreIds;
+    public void setGenreIDs(List<String> genreIDs) {
+        this.genreIDs = genreIDs;
     }
 
-    public List<String> getActorIds() {
-        return actorIds;
+    public List<String> getActorIDs() {
+        return actorIDs;
     }
 
-    public void setActorIds(List<String> actorIds) {
-        this.actorIds = actorIds;
-    }
-    
-    public String getLanguage() {
-        return language;
+    public void setActorIDs(List<String> actorIDs) {
+        this.actorIDs = actorIDs;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public List<String> getLanguageCodes() {
+        return languageCodes;
+    }
+
+    public void setLanguageCodes(List<String> languageCodes) {
+        this.languageCodes = languageCodes;
     }
 
     public LocalDate getReleaseYear() {
@@ -148,11 +145,12 @@ public class Movie extends Model {
         this.rentalPrice = rentalPrice;
     }
 
-      public int getAvailable_copies() {
-        return available_copies;
+    public int getAvailable_copies() {
+        return availableCopies;
     }
 
-    public void setAvailable_copies(int available_copies) {
-        this.available_copies = available_copies;
+    public void setAvailable_copies(int availableCopies) {
+        this.availableCopies = availableCopies;
     }
+
 }

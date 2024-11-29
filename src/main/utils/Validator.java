@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
-import main.constants.Role;
+import main.constants.AccRole;
 import main.dto.User;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
@@ -222,13 +222,13 @@ public class Validator {
         return input;
     }
     
-    public static Role getRole(String message, boolean enterToPass) {
-        Role[] listRole = Role.values();
-        enumListing("Choose role", Role.class);
+    public static AccRole getRole(String message, boolean enterToPass) {
+        AccRole[] listRole = AccRole.values();
+        enumListing("Choose role", AccRole.class);
         int input = getInteger("Choose an option", 0, listRole.length - 1, enterToPass);
 
         if (input <= -1) 
-            return Role.NONE;
+            return AccRole.NONE;
         else 
             return listRole[input];
     }

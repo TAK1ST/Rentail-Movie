@@ -1,74 +1,90 @@
-
 package main.dto;
-
 
 import main.base.Model;
 import java.time.LocalDate;
+import main.constants.RentalStatus;
 
 public class Rental extends Model {
-    private String userID;
+
+    private String customerID;
     private String movieID;
+    private String staffID;
     private LocalDate rentalDate;
     private LocalDate returnDate;
-    private double charges;
-    private double overdueFines;
+    private LocalDate dueDate;
+    private double lateFee;
+    private double totalAmount;
+    private RentalStatus status;
 
-    public Rental(String id, String userID, String movieID, LocalDate rentalDate, LocalDate returnDate, double charges, double overdueFines) {
+    public Rental(String id, String customerID, String movieID, String staffID, LocalDate rentalDate, LocalDate returnDate, 
+            LocalDate dueDate, double lateFee, double totalAmount, RentalStatus status) {
+
         super(id);
-        this.userID = userID;
+        this.customerID = customerID;
         this.movieID = movieID;
+        this.staffID = staffID;
         this.rentalDate = rentalDate;
         this.returnDate = returnDate;
-        this.charges = charges;
-        this.overdueFines = overdueFines;
+        this.dueDate = dueDate;
+        this.lateFee = lateFee;
+        this.totalAmount = totalAmount;
+        this.status = status;
     }
-    
+
     public Rental(Rental other) {
         super(other.getId());
-        this.userID = other.userID;
         this.movieID = other.movieID;
+        this.staffID = other.staffID;
         this.rentalDate = other.rentalDate;
         this.returnDate = other.returnDate;
-        this.charges = other.charges;
-        this.overdueFines = other.overdueFines;
+        this.dueDate = other.dueDate;
+        this.lateFee = other.lateFee;
+        this.totalAmount = other.totalAmount;
+        this.status = other.status;
     }
-    
+
+    //Methods    
     @Override
     public String toString() {
-        return String.format("Rental: %s, %s, %s, %s, %s, %.5f, %.5f.", 
-                super.getId(), 
-                userID, 
-                movieID, 
-                rentalDate.toString(), 
+        return String.format("Rental: %s, %s, %s, %s, %s, %s, %s, %.2f, %.2f, %s.",
+                super.getId(),
+                customerID,
+                movieID,
+                staffID,
+                rentalDate.toString(),
                 returnDate.toString(),
-                charges,
-                overdueFines);
+                dueDate.toString(),
+                lateFee,
+                totalAmount,
+                status);
     }
-    
+
     @Override
     public Object[] getDatabaseValues() {
-        return new Object[]
-                {
-                        getId(),
-                        userID,
-                        movieID,
-                        rentalDate,
-                        returnDate,
-                        charges,
-                        overdueFines
-                };
+        return new Object[]{
+            getId(),
+            customerID,
+            movieID,
+            staffID,
+            rentalDate.toString(),
+            returnDate.toString(),
+            lateFee,
+            dueDate,
+            totalAmount,
+            status
+        };
     }
-    
+
     public static String className() {
         return "Rental";
     }
 
     public String getUserId() {
-        return userID;
+        return customerID;
     }
 
-    public void setUserId(String userID) {
-        this.userID = userID;
+    public void setUserId(String customerID) {
+        this.customerID = customerID;
     }
 
     public String getMovieId() {
@@ -95,20 +111,59 @@ public class Rental extends Model {
         this.returnDate = returnDate;
     }
 
-    public double getCharges() {
-        return charges;
+    public String getUserID() {
+        return customerID;
     }
 
-    public void setCharges(double charges) {
-        this.charges = charges;
+    public void setUserID(String customerID) {
+        this.customerID = customerID;
     }
 
-    public double getOverdueFines() {
-        return overdueFines;
+    public String getMovieID() {
+        return movieID;
     }
 
-    public void setOverdueFines(double overdueFines) {
-        this.overdueFines = overdueFines;
+    public void setMovieID(String movieID) {
+        this.movieID = movieID;
     }
 
+    public String getStaffID() {
+        return staffID;
+    }
+
+    public void setStaffID(String staffID) {
+        this.staffID = staffID;
+    }
+
+    public double getLateFee() {
+        return lateFee;
+    }
+
+    public void setLateFee(double lateFee) {
+        this.lateFee = lateFee;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public RentalStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RentalStatus status) {
+        this.status = status;
+    }
 }

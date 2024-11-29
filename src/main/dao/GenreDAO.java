@@ -72,7 +72,8 @@ public class GenreDAO {
             while (resultSet.next()) {
                 Genre genre = new Genre(
                     resultSet.getString("genre_id"),
-                    resultSet.getString("genre_name")
+                    resultSet.getString("genre_name"),
+                    resultSet.getString("description")
                 );
                 list.add(genre);
             }

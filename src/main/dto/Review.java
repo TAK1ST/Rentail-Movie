@@ -5,15 +5,15 @@ import java.time.LocalDate;
 
 public class Review extends Model {
     private String movieID;
-    private String userID;
+    private String customerID;
     private int rating;
-    private String reviewText;
     private LocalDate reviewDate;
+    private String reviewText;
 
-    public Review(String id, String movieID, String userID, int rating, String reviewText, LocalDate reviewDate) {
+    public Review(String id, String movieID, String customerID, int rating, String reviewText, LocalDate reviewDate) {
         super(id);
         this.movieID = movieID;
-        this.userID = userID;
+        this.customerID = customerID;
         this.rating = rating;
         this.reviewDate = reviewDate;
         this.reviewText = reviewText;
@@ -22,7 +22,7 @@ public class Review extends Model {
     public Review(Review other) {
         super(other.getId());
         this.movieID = other.movieID;
-        this.userID = other.userID;
+        this.customerID = other.customerID;
         this.rating = other.rating;
         this.reviewDate = other.reviewDate;
         this.reviewText = other.reviewText;
@@ -33,7 +33,7 @@ public class Review extends Model {
         return String.format("Rental: %s, %s, %s, %d, %s, %s.", 
                 super.getId(),
                 movieID,
-                userID,
+                customerID,
                 rating,
                 reviewDate.toString(),
                 reviewText);
@@ -45,7 +45,7 @@ public class Review extends Model {
                 {
                     super.getId(),
                     movieID,
-                    userID,
+                    customerID,
                     rating,
                     reviewDate,
                     reviewText,
@@ -64,12 +64,12 @@ public class Review extends Model {
         this.movieID = movieID;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getCustomerID() {
+        return customerID;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
     }
 
     public int getRating() {
