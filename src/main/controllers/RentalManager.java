@@ -3,11 +3,11 @@ package main.controllers;
 
 import main.base.ListManager;
 import java.io.IOException;
-import java.util.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import static main.constants.Constants.RENTAL_PREFIX;
 import main.constants.RentalStatus;
 import main.dao.RentalDAO;
 import static main.controllers.Managers.getMVM;
@@ -58,7 +58,7 @@ public class RentalManager extends ListManager<Rental> {
         LocalDate dueDate = rentalDate.plusDays(numberOfRentDate);
         double total = foundMovie.getRentalPrice() * numberOfRentDate;
 
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "RT");
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), RENTAL_PREFIX);
 
         list.add(new Rental(
             id,

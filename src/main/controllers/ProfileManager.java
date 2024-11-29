@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dao.ProfileDAO;
 import main.constants.AccRole;
+import static main.constants.Constants.PROFILE_PREFIX;
 import main.dto.Profile;
 import main.utils.IDGenerator;
 import static main.utils.Input.getDouble;
@@ -30,7 +31,7 @@ public class ProfileManager extends ListManager<Profile> {
 
     public boolean addProfile(AccRole registorRole) throws IOException {   
         list.add(new Profile(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U"), 
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), PROFILE_PREFIX), 
                 getName("Enter username", false), 
                 getPhoneNumber("Enter your phone number", false), 
                 getString("Enter your address", false),
