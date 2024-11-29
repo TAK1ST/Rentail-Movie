@@ -68,7 +68,7 @@ public class AccountManager extends ListManager<Account> {
         list.add(new Account(
                 id,
                 username,
-                password,
+                encryptPassword(password),
                 email,
                 AccRole.CUSTOMER,
                 AccStatus.OFF));
