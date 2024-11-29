@@ -145,11 +145,11 @@ public class Movie extends Model {
         this.rentalPrice = rentalPrice;
     }
 
-    public int getAvailable_copies() {
+    public int getAvailableCopies() {
         return availableCopies;
     }
 
-    public void setAvailable_copies(int availableCopies) {
+    public void setAvailableCopies(int availableCopies) {
         this.availableCopies = availableCopies;
     }
 

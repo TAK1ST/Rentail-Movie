@@ -17,32 +17,13 @@ import main.config.Database;
  */
 public class LanguageDAO {
     
-    // Add a new language to the database
     public static boolean addLanguageToDB(Language language) {
-        String sql = "INSERT INTO Languages (language_id, code, name) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Languages (language_code, laguage_name) VALUES (?, ?)";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, language.getId());  
-            preparedStatement.setString(2, language.getCode());  
-            preparedStatement.setString(3, language.getName());  
-
-            return preparedStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    // Update a language in the database
-    public static boolean updateLanguageInDB(Language language) {
-        String sql = "UPDATE Languages SET code = ?, name = ? WHERE language_id = ?";
-        try (Connection connection = Database.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
+  
             preparedStatement.setString(1, language.getCode());  
             preparedStatement.setString(2, language.getName());  
-            preparedStatement.setString(3, language.getId());  
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -51,9 +32,23 @@ public class LanguageDAO {
         return false;
     }
     
-    // Delete a language from the database
+    public static boolean updateLanguageInDB(Language language) {
+        String sql = "UPDATE Languages SET name = ? WHERE language_code = ?";
+        try (Connection connection = Database.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, language.getName());  
+            preparedStatement.setString(2, language.getCode());  
+
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
     public static boolean deleteLanguageFromDB(String languageId) {
-        String sql = "DELETE FROM Languages WHERE language_id = ?";
+        String sql = "DELETE FROM Languages WHERE language_code = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -65,7 +60,6 @@ public class LanguageDAO {
         return false;
     }
     
-    // Get a list of all languages from the database
     public static List<Language> getAllLanguages() {
         String sql = "SELECT * FROM Languages";
         List<Language> list = new ArrayList<>();
@@ -75,9 +69,8 @@ public class LanguageDAO {
 
             while (resultSet.next()) {
                 Language language = new Language(
-                    resultSet.getString("language_id"),  
-                    resultSet.getString("code"),  
-                    resultSet.getString("name")
+                    resultSet.getString("language_code"),  
+                    resultSet.getString("languaeg_name")
                 );
                 list.add(language);
             }
@@ -86,26 +79,5 @@ public class LanguageDAO {
         }
         return list;
     }
-    
-    // Get a language by its ID from the database
-    public static Language getLanguageById(String languageId) {
-        String sql = "SELECT * FROM Languages WHERE language_id = ?";
-        try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, languageId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                return new Language(
-                    resultSet.getString("language_id"),
-                    resultSet.getString("code"),
-                    resultSet.getString("name")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+   
 }

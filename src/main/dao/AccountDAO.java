@@ -16,15 +16,15 @@ import main.constants.AccStatus;
  * @author kiet
  */
 public class AccountDAO {
-    public static boolean addUserToDB(Account account) {
-        String sql = "INSERT INTO Users (user_id, email, password, username, role, status) VALUES (?, ?, ?, ?, ?, ?)";
+    public static boolean addAccountToDB(Account account) {
+        String sql = "INSERT INTO Accounts (account_id, email, password, username, role, status) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, account.getId());  
             preparedStatement.setString(2, account.getEmail());  
             preparedStatement.setString(3, account.getPassword());  
-            preparedStatement.setString(4, account.getAccountName());  
+            preparedStatement.setString(4, account.getUsername());  
             preparedStatement.setString(5, account.getRole().name());  
             preparedStatement.setString(6, account.getStatus().name());  
 
@@ -35,14 +35,14 @@ public class AccountDAO {
         return false;
     }
     
-    public static boolean updateUserFromDB(Account account) {
-        String sql = "UPDATE Users SET email = ?, password = ?, username = ?, role = ?, status = ? WHERE user_id = ?";
+    public static boolean updateAccountInDB(Account account) {
+        String sql = "UPDATE Accounts SET email = ?, password = ?, username = ?, role = ?, status = ? WHERE account_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, account.getEmail());  
             preparedStatement.setString(2, account.getPassword());  
-            preparedStatement.setString(3, account.getAccountName());  
+            preparedStatement.setString(3, account.getUsername());  
             preparedStatement.setString(4, account.getRole().name());  
             preparedStatement.setString(5, account.getStatus().name());  
             preparedStatement.setString(6, account.getId());  
@@ -54,8 +54,8 @@ public class AccountDAO {
         return false;
     }
     
-    public static boolean deleteUserFromDB(String userID) {
-        String sql = "DELETE FROM Users WHERE user_id = ?";
+    public static boolean deleteAccountFromDB(String userID) {
+        String sql = "DELETE FROM Accounts WHERE account_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -67,8 +67,8 @@ public class AccountDAO {
         return false;
     }
     
-    public static List<Account> getAllUser() {
-        String sql = "SELECT * FROM Users";
+    public static List<Account> getAllAccount() {
+        String sql = "SELECT * FROM Accounts";
         List<Account> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -76,7 +76,7 @@ public class AccountDAO {
 
             while (resultSet.next()) {
                 Account account = new Account(
-                    resultSet.getString("user_id"),  
+                    resultSet.getString("account_id"),  
                     resultSet.getString("email"),  
                     resultSet.getString("password"),  
                     resultSet.getString("username"),  

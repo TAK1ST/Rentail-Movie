@@ -57,11 +57,11 @@ public class Account extends Model {
         return "Account";
     }
 
-    public String getAccountName() {
+    public String getUsername() {
         return username;
     }
 
-    public void setAccountName(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 

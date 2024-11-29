@@ -1,6 +1,7 @@
 package main.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,8 +23,8 @@ public class DiscountDAO {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
   
             preparedStatement.setString(1, discount.getCode());  
-            preparedStatement.setObject(2, discount.getStartDate());  
-            preparedStatement.setObject(3, discount.getEndDate());  
+            preparedStatement.setDate(2, Date.valueOf(discount.getStartDate()));  
+            preparedStatement.setDate(3, Date.valueOf(discount.getEndDate()));  
             preparedStatement.setString(4, discount.getType().name());  
             preparedStatement.setInt(5, discount.getUsageAvailable());  
             preparedStatement.setBoolean(6, discount.isActive());  
@@ -41,8 +42,8 @@ public class DiscountDAO {
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setObject(1, discount.getStartDate());
-            preparedStatement.setObject(2, discount.getEndDate());
+            preparedStatement.setDate(1, Date.valueOf(discount.getStartDate()));
+            preparedStatement.setDate(2, Date.valueOf(discount.getEndDate()));
             preparedStatement.setString(3, discount.getType().name());
             preparedStatement.setInt(4, discount.getUsageAvailable());
             preparedStatement.setBoolean(5, discount.isActive());
@@ -79,8 +80,8 @@ public class DiscountDAO {
             while (resultSet.next()) {
                 Discount discount = new Discount(
                     resultSet.getString("code"),
-                    resultSet.getObject("start_date", LocalDate.class),
-                    resultSet.getObject("end_date", LocalDate.class),
+                    resultSet.getDate("start_date").toLocalDate(),
+                    resultSet.getDate("end_date").toLocalDate(),
                     DiscountType.valueOf(resultSet.getString("type")),
                     resultSet.getInt("usage_available"),
                     resultSet.getBoolean("is_active"),

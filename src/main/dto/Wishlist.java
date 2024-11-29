@@ -11,9 +11,8 @@ public class Wishlist extends Model {
     private LocalDate addedDate;
     private WishlistPriority priority;
 
-    public Wishlist(String id, String wishlistID, String movieID, String customerID, LocalDate addedDate, WishlistPriority priority) {
+    public Wishlist(String id, String movieID, String customerID, LocalDate addedDate, WishlistPriority priority) {
         super(id);
-        this.wishlistID = wishlistID;
         this.movieID = movieID;
         this.customerID = customerID;
         this.addedDate = addedDate;
@@ -22,7 +21,6 @@ public class Wishlist extends Model {
 
     public Wishlist(Wishlist other) {
         super(other.getId());
-        this.wishlistID = other.wishlistID;
         this.movieID = other.movieID;
         this.customerID = other.customerID;
         this.addedDate = other.addedDate;
@@ -33,9 +31,9 @@ public class Wishlist extends Model {
     public String toString() {
         return String.format("Wishlist: %s, %s, %s, %s, %s.",
                 super.getId(),
-                wishlistID,
                 movieID,
                 customerID,
+                addedDate,
                 priority
         );
     }
@@ -44,7 +42,6 @@ public class Wishlist extends Model {
     public Object[] getDatabaseValues() {
         return new Object[]{
             super.getId(),
-            wishlistID,
             movieID,
             customerID,
             addedDate,
@@ -54,14 +51,6 @@ public class Wishlist extends Model {
 
     public static String className() {
         return "Wishlist";
-    }
-
-    public String getWishlistId() {
-        return wishlistID;
-    }
-
-    public void setWishlistId(String wishlistID) {
-        this.wishlistID = wishlistID;
     }
 
     public String getMovieId() {

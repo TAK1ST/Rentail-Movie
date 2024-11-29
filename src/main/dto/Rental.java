@@ -79,11 +79,11 @@ public class Rental extends Model {
         return "Rental";
     }
 
-    public String getUserId() {
+    public String getCustomerID() {
         return customerID;
     }
 
-    public void setUserId(String customerID) {
+    public void setCustomerID(String customerID) {
         this.customerID = customerID;
     }
 

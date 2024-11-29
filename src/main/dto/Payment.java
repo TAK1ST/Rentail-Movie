@@ -1,34 +1,34 @@
 package main.dto;
 
 import main.base.Model;
+import main.constants.PaymentMethod;
 
 public class Payment extends Model {
-    private String paymentMethods;
+    private PaymentMethod method;
     private String rentalID;
 
-    public Payment(String id, String paymentMethods, String rentalID) {
+    public Payment(String id, PaymentMethod method, String rentalID) {
         super(id); 
-        this.paymentMethods = paymentMethods;
+        this.method = method;
         this.rentalID = rentalID;
     }
 
     public Payment(Payment other) {
         super(other.getId());
-        this.paymentMethods = other.paymentMethods;
+        this.method = other.method;
         this.rentalID = other.rentalID;
     }
 
-    // toString method to display the object as a string
     @Override
     public String toString() {
-        return String.format("Payment: %s, %s, %s.", super.getId(), paymentMethods, rentalID);
+        return String.format("Payment: %s, %s, %s.", super.getId(), method, rentalID);
     }
 
     @Override
     public Object[] getDatabaseValues() {
         return new Object[]{
                 super.getId(),
-                paymentMethods,
+                method,
                 rentalID
         };
     }
@@ -37,12 +37,12 @@ public class Payment extends Model {
         return "Payment";
     }
 
-    public String getPaymentMethods() {
-        return paymentMethods;
+    public PaymentMethod getPaymentMethods() {
+        return method;
     }
 
-    public void setPaymentMethods(String paymentMethods) {
-        this.paymentMethods = paymentMethods;
+    public void setPaymentMethods(PaymentMethod method) {
+        this.method = method;
     }
     public String getRentalId() {
         return rentalID;
