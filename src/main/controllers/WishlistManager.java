@@ -111,4 +111,5 @@ public class WishlistManager extends ListManager<Wishlist> {
             }   
         return result;
     }
+    
 }

@@ -62,20 +62,20 @@ public class MovieManager extends ListManager<Movie> {
 
     private List<String> selectGenres(String message, List<Genre> options) {
         getGRM().display(options, "");
-        List<String> genreIDs = new ArrayList<>();
+        List<String> genreNames = new ArrayList<>();
 
         String input = getString(message, false);
-        String[] genreNames = input.split(",");
+        String[] inputs = input.split(",");
 
-        for (String item : genreNames) {
+        for (String item : inputs) {
             item = item.trim();
             int index = toInt(item);
             if (index > 0 && index <= options.size()) {
-                genreIDs.add(options.get(index).getId());
+                genreNames.add(options.get(index).getId());
             }
         }
 
-        return genreIDs;
+        return genreNames;
     }
 
     private List<String> selectActors(String message, List<Actor> options) {
