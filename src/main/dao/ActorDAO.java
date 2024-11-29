@@ -14,8 +14,7 @@ public class ActorDAO {
     // Add actor to the database with all fields
     public static boolean addActorToDB(Actor actor) {
         String sql = "INSERT INTO Actor (actor_id, actor_name, description, rank) VALUES (?, ?, ?, ?)";
-        try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actor.getId());
             preparedStatement.setString(2, actor.getActorName());
@@ -32,8 +31,7 @@ public class ActorDAO {
     // Update an actor's information in the database
     public static boolean updateActorFromDB(Actor actor) {
         String sql = "UPDATE Actor SET actor_name = ?, description = ?, rank = ? WHERE actor_id = ?";
-        try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actor.getActorName());
             preparedStatement.setString(2, actor.getDescription());
@@ -50,8 +48,7 @@ public class ActorDAO {
     // Delete actor from the database by actor ID
     public static boolean deleteActorFromDB(String actorId) {
         String sql = "DELETE FROM Actor WHERE actor_id = ?";
-        try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actorId);
             return preparedStatement.executeUpdate() > 0;
@@ -61,4 +58,21 @@ public class ActorDAO {
         return false;
     }
 
+    public static List<Actor> getAllMovie() {
+        String sql = "SELECT * FROM Movie";
+        List<Actor> list = new ArrayList<>();
+        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                Actor actor = new Actor(
+                        resultSet.getString("actor_id"),
+                        resultSet.getString("actor_name"),
+                        resultSet.getString("description"),
+                        resultSet.getDouble("rank"),
+                list.add(actor);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

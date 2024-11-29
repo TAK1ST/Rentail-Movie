@@ -12,8 +12,9 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-import main.dto.User;
-import main.dto.User.Role;
+import main.dto.Account;
+import main.dto.Account.Role;
+import main.dto.Account.Status;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.Input.rolesListing;
@@ -32,7 +33,7 @@ public class Validator {
     
     private static final Scanner scanner = new Scanner(System.in);
     
-    public static String getUsername(String message, boolean enterToPass, List<User> list) {
+    public static String getAccountName(String message, boolean enterToPass, List<Account> list) {
         String input = "";
         boolean isUnique;
         do {
@@ -43,13 +44,13 @@ public class Validator {
                 return "";
 
             if (input.isEmpty()) 
-                errorLog("Username must not be empty");
+                errorLog("Accountname must not be empty");
    
             if (input.length() < 4) 
                 errorLog("Accountname must be at least 4 character");         
  
-            for(User item : list) 
-                if (item.getUsername().equals(input)) {
+            for(Account item : list) 
+                if (item.getAccountName().equals(input)) {
                     errorLog("Accountname has already exist");
                     isUnique = false;
                 }
@@ -216,6 +217,18 @@ public class Validator {
         return input;
     }
     
+    public static Status getStatus(String message, boolean enterToPass) {
+        Status[] listStatus = Status.values();
+        rolesListing(message);
+        int input = getInteger("Choose an option: ", 0, listStatus.length - 1, enterToPass);
+
+        if (input <= -1) 
+            return Status.NONE;
+        else 
+            return listStatus[input];
+    }
+    
+    
     public static boolean isDateInRange(LocalDate startDate, LocalDate endDate, LocalDate targetDate) {
         return (targetDate.isEqual(startDate) || targetDate.isAfter(startDate)) &&
                (targetDate.isEqual(endDate) || targetDate.isBefore(endDate));
@@ -243,7 +256,7 @@ public class Validator {
         return price >= 0 && price <= MAX_PRODUCT_PRICE;
     }
     
-    public static boolean isValidUsername(String username) {
+    public static boolean isValidAccountname(String username) {
         return username != null && username.length() >= 5 && !username.contains(" ");
     }
 

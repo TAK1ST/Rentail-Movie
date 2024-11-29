@@ -14,8 +14,8 @@ import main.config.Database;
  * @author kiet
  */
 public class AccountDAO {
-    public static boolean addUserToDB(Account account) {
-        String sql = "INSERT INTO Users (user_id, email, password, username, role, status) VALUES (?, ?, ?, ?, ?, ?)";
+    public static boolean addAccountToDB(Account account) {
+        String sql = "INSERT INTO Accounts (user_id, email, password, username, role, status) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -33,8 +33,8 @@ public class AccountDAO {
         return false;
     }
     
-    public static boolean updateUserFromDB(Account account) {
-        String sql = "UPDATE Users SET email = ?, password = ?, username = ?, role = ?, status = ? WHERE user_id = ?";
+    public static boolean updateAccountFromDB(Account account) {
+        String sql = "UPDATE Accounts SET email = ?, password = ?, username = ?, role = ?, status = ? WHERE user_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -52,8 +52,8 @@ public class AccountDAO {
         return false;
     }
     
-    public static boolean deleteUserFromDB(String userID) {
-        String sql = "DELETE FROM Users WHERE user_id = ?";
+    public static boolean deleteAccountFromDB(String userID) {
+        String sql = "DELETE FROM Accounts WHERE user_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -65,8 +65,8 @@ public class AccountDAO {
         return false;
     }
     
-    public static List<Account> getAllUser() {
-        String sql = "SELECT * FROM Users";
+    public static List<Account> getAllAccount() {
+        String sql = "SELECT * FROM Accounts";
         List<Account> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
