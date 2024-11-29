@@ -49,8 +49,8 @@ public class RentalServices {
         double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
 
         if (overdueFine > 0) {
-            foundRental.setOverdueFines(foundRental.getOverdueFines() + overdueFine);  
-            foundRental.setCharges(foundRental.getCharges() + foundRental.getOverdueFines()); 
+            foundRental.setLateFee(foundRental.getLateFee() + overdueFine);  
+            foundRental.setTotalAmount(foundRental.getTotalAmount() + foundRental.getLateFee()); 
         }
 
         boolean isSuccess = RentalDAO.updateRentalFromDB(foundRental);
@@ -71,7 +71,7 @@ public class RentalServices {
         double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
 
         if (overdueFine > 0) {
-            foundRental.setOverdueFines(overdueFine);  
+            foundRental.setLateFee(overdueFine);  
         }
         foundRental.setReturnDate(foundRental.getReturnDate().plusDays(extraDate));
         return true;
