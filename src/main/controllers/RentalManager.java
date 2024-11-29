@@ -18,7 +18,7 @@ import main.services.RentalServices;
 import main.utils.IDGenerator;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
-import static main.utils.Log.errorLog;
+import static main.utils.LogMessage.errorLog;
 import main.utils.Menu;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;

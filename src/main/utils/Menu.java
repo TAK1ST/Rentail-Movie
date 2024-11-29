@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.yesOrNo;
-import static main.utils.Log.errorLog;
+import static main.utils.LogMessage.errorLog;
 
 /**
  *

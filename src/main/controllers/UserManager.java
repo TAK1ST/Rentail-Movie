@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dao.UserDAO;
 import main.constants.Constants;
+import main.constants.Role;
 import main.dto.User;
-import main.dto.User.Role;
 import main.utils.IDGenerator;
 import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
@@ -29,7 +29,7 @@ public class UserManager extends ListManager<User> {
     private void setAdmin() throws IOException {
         if(!list.isEmpty())
             for (User item : list) 
-                if (item.getRole() == 1)
+                if (item.getRole() == Role.ADMIN)
                     return;
         
         list.add(new User(
@@ -44,7 +44,7 @@ public class UserManager extends ListManager<User> {
         UserDAO.addUserToDB(list.getLast());
     }
     
-    public boolean registorUser() {
+    public boolean registorCustomer() {
         String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), "U");
         String username = Validator.getUsername("Enter username", false, list);
         String password = Validator.getPassword("Enter password", false);
@@ -63,7 +63,7 @@ public class UserManager extends ListManager<User> {
                 id, 
                 username, 
                 password, 
-                Role.USER, 
+                Role.CUSTOMER, 
                 fullName, 
                 address, 
                 phoneNumber, 
@@ -102,7 +102,7 @@ public class UserManager extends ListManager<User> {
         String newPassword = Validator.getPassword("Enter new password", true);
         
         Role newRole = Role.NONE;
-        if (foundUser.getRole() == Role.ADMIN.getValue())
+        if (foundUser.getRole() == Role.ADMIN)
             newRole = Validator.getRole("Enter new role", true);
         
         String newFullName = getString("Enter full name", true);
@@ -112,7 +112,7 @@ public class UserManager extends ListManager<User> {
 
         if (!newUsername.isEmpty()) foundUser.setUsername(newUsername);
         if (!newPassword.isEmpty()) foundUser.setPassword(encryptPassword(newPassword));
-        if (newRole != Role.NONE) foundUser.setRole(newRole.getValue());
+        if (newRole != Role.NONE) foundUser.setRole(newRole);
         if (!newFullName.isEmpty()) foundUser.setFullName(newFullName);
         if (!newAddress.isEmpty()) foundUser.setAddress(newAddress);
         if (!newPhoneNumber.isEmpty()) foundUser.setPhoneNumber(newPhoneNumber);

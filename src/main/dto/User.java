@@ -1,58 +1,23 @@
 package main.dto;
 
 import main.base.Model;
+import main.constants.Role;
 
 public class User extends Model {
     
-    public static enum Role {    
-        NONE(0),
-        ADMIN(1),
-        USER(2);
-        
-        private final int value;
-
-        Role(int value) {
-            this.value = value;
-        }
-        
-        public int getValue() {
-            return value;
-        }
-        
-        public static Role fromValue(int value) {
-            for (Role item : Role.values()) {
-                if (item.value == value) {
-                    return item;
-                }
-            }
-            throw new IllegalArgumentException("Invalid value: " + value);
-        }
-    }
-    
     private String username;
     private String password;
-    private int role;
+    private Role role;
     private String fullName;
     private String address;
     private String phoneNumber;
     private String email;
-
-    public User(String id, String username, String password, int role, String fullName, String address, String phoneNumber, String email) {
-        super(id);
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.fullName = fullName;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-    }
     
     public User(String id, String username, String password, Role role, String fullName, String address, String phoneNumber, String email) {
         super(id);
         this.username = username;
         this.password = password;
-        this.role = role.getValue();
+        this.role = role;
         this.fullName = fullName;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -72,7 +37,7 @@ public class User extends Model {
     
     @Override
     public String toString() {
-        return String.format("User: %s, %s, %s, %d, %s, %s, %s, %s.", 
+        return String.format("User: %s, %s, %s, %s, %s, %s, %s, %s.", 
                 super.getId(),
                 username,
                 password,
@@ -117,11 +82,11 @@ public class User extends Model {
         this.password = password;
     }
 
-    public int getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(int role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

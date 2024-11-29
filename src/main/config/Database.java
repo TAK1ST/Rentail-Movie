@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Map;
-import static main.utils.Log.errorLog;
+import static main.utils.LogMessage.errorLog;
 
 public class Database {
 
@@ -36,7 +36,6 @@ public class Database {
                 System.out.println("Connect Databases sucessfully!");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             errorLog("Connect Fail!");
         }
         return connection;

@@ -5,14 +5,29 @@
 package main.utils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import static main.utils.Log.errorLog;
+import static main.utils.LogMessage.errorLog;
 
 /**
  *
  * @author trann
  */
 public class Utility {
+    
+    // Universal method to display enum values
+    public static <E extends Enum<E>> void enumListing(String message, Class<E> enumClass) {
+        if (enumClass.isEnum()) {
+            E[] enumConstants = enumClass.getEnumConstants();
+            System.out.printf("%s:\n", message);
+            for(int index = 1; index < enumConstants.length; index++) {
+                if (index % 3 == 0)
+                    System.out.println();
+                System.out.printf("%2d.%-25s", index, enumConstants[index]);
+            }
+            System.out.println("\n");
+        } else {
+            errorLog("The provided class is not an enum.");
+        }
+    }
     
     public static long extractNumber(String str) {
         String number = str.replaceAll("\\D+", "");
@@ -32,7 +47,7 @@ public class Utility {
             return Integer.parseInt(input);
         } catch (NumberFormatException e) {
             errorLog("Can not convert to Number");
-            return 0;
+            return Integer.MIN_VALUE;
         }
     }
     

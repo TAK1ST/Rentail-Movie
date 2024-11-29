@@ -6,13 +6,13 @@ package main.views;
 
 import java.io.IOException;
 import main.constants.Constants;
+import main.constants.Role;
 import static main.controllers.Managers.getAM;
 import static main.controllers.Managers.getGM;
 import static main.controllers.Managers.getMM;
 import static main.controllers.Managers.getRM;
 import static main.controllers.Managers.getRTM;
 import static main.controllers.Managers.getUM;
-import main.dto.User;
 import main.utils.Menu;
 import main.utils.Menu.MenuOption;
 import static main.utils.Menu.showSuccess;
@@ -126,7 +126,7 @@ public class AdminPannel {
             "User Managment",
             null,
             new MenuOption[]{
-                new MenuOption("Add User", () -> showSuccess(getUM().addUser(User.Role.ADMIN)), true),
+                new MenuOption("Add User", () -> showSuccess(getUM().addUser(Role.ADMIN)), true),
                 new MenuOption("Delete User", () -> showSuccess(getUM().deleteUser()), true),
                 new MenuOption("Update User", () -> showSuccess(getUM().updateUser("")), true),
                 new MenuOption("Search User", () -> getUM().searchUser(), true),

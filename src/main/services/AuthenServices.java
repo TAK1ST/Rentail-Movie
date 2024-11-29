@@ -4,7 +4,7 @@ import java.io.IOException;
 import static main.controllers.Managers.getUM;
 import main.dto.User;
 import static main.utils.Input.getString;
-import static main.utils.Log.errorLog;
+import static main.utils.LogMessage.errorLog;
 import main.utils.Menu;
 
 /**
@@ -41,7 +41,7 @@ public class AuthenServices {
         int input = Menu.getChoice("Enter choice", options.length);
         switch(input) {
             case 1: 
-                checkCreate = checkCreate && getUM().registorUser();
+                checkCreate = checkCreate && getUM().registorCustomer();
                 break;
             case 2: 
                 return null;

@@ -2,21 +2,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package test;
-
-import java.io.IOException;
-import main.constants.Role;
-import main.utils.LogMessage;
+package main.views;
 
 /**
  *
  * @author trann
  */
-public class Testing {
+public class PremiumPannel {
     
-    public static void main(String args[]) throws IOException {
+    public static void show() {
         
-        LogMessage.infoLog(Role.ADMIN.name());
     }
     
 }

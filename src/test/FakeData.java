@@ -6,17 +6,23 @@ package test;
 
 import java.util.ArrayList;
 import java.util.List;
+import main.constants.Role;
 import main.dao.ActorDAO;
 import main.dao.GenreDAO;
 import main.dao.UserDAO;
 import static main.controllers.Managers.getAM;
 import static main.controllers.Managers.getGM;
 import static main.controllers.Managers.getMM;
+import static main.controllers.Managers.getRM;
+import static main.controllers.Managers.getRTM;
 import static main.controllers.Managers.getUM;
+import main.dao.RentalDAO;
+import main.dao.ReviewDAO;
 import main.dto.Actor;
 import main.dto.Genre;
 import main.dto.Movie;
 import main.dto.Rental;
+import main.dto.Review;
 import main.dto.User;
 import static main.utils.Utility.toDate;
 
@@ -25,6 +31,10 @@ import static main.utils.Utility.toDate;
  * @author trann
  */
 public class FakeData {
+    
+    public static void init() {
+        
+    }
     
     public static boolean makeAllFakeData() {
         return makeFakeUser() 
@@ -36,16 +46,16 @@ public class FakeData {
     public static boolean makeFakeUser() {
         
         List<User> temp = new ArrayList<>();
-        temp.add(new User("U0000002", "thien", "newPass123", 2, "Thien Tran", "123 Main St", "9876543210", "thien@example.com"));
-        temp.add(new User("U0000003", "kiet", "newPass456", 1, "Kiet Tran", "456 Elm St", "8765432109", "kiet@example.com"));
-        temp.add(new User("U0000004", "kietse", "newPass789", 2, "Ngoc Thien", "789 Oak St", "7654321098", "kietse@example.com"));
-        temp.add(new User("U0000005", "duongngo", "newPass012", 1, "Duong Ngo", "321 Pine St", "6543210987", "duongngo@example.com"));
-        temp.add(new User("U0000006", "duongbingo", "newPass345", 2, "Bingo Duong", "654 Cedar St", "5432109876", "duongbingo@example.com"));
-        temp.add(new User("U0000007", "thiendepzai", "newPass678", 2, "Thien Depzai", "987 Maple St", "4321098765", "thiendepzai@example.com"));
-        temp.add(new User("U0000008", "3changlinh", "newPass901", 2, "Chang Linh", "147 Birch St", "3210987654", "3changlinh@example.com"));
-        temp.add(new User("U0000009", "success", "newPass234", 1, "Successful Tran", "258 Walnut St", "2109876543", "success@example.com"));
-        temp.add(new User("U0000010", "tttt", "newPass567", 2, "T Tran", "369 Spruce St", "1098765432", "tttt@example.com"));
-        temp.add(new User("U0000011", "kkkk", "newPass890", 2, "KK Tran", "741 Cherry St", "0987654321", "kkkk@example.com"));
+        temp.add(new User("U0000002", "thien", "newPass123", Role.STAFF, "Thien Tran", "123 Main St", "9876543210", "thien@example.com"));
+        temp.add(new User("U0000003", "kiet", "newPass456", Role.CUSTOMER, "Kiet Tran", "456 Elm St", "8765432109", "kiet@example.com"));
+        temp.add(new User("U0000004", "kietse", "newPass789", Role.CUSTOMER, "Ngoc Thien", "789 Oak St", "7654321098", "kietse@example.com"));
+        temp.add(new User("U0000005", "duongngo", "newPass012", Role.STAFF, "Duong Ngo", "321 Pine St", "6543210987", "duongngo@example.com"));
+        temp.add(new User("U0000006", "duongbingo", "newPass345", Role.ADMIN, "Bingo Duong", "654 Cedar St", "5432109876", "duongbingo@example.com"));
+        temp.add(new User("U0000007", "thiendepzai", "newPass678", Role.PREMIUM, "Thien Depzai", "987 Maple St", "4321098765", "thiendepzai@example.com"));
+        temp.add(new User("U0000008", "3changlinh", "newPass901", Role.CUSTOMER, "Chang Linh", "147 Birch St", "3210987654", "3changlinh@example.com"));
+        temp.add(new User("U0000009", "success", "newPass234", Role.CUSTOMER, "Successful Tran", "258 Walnut St", "2109876543", "success@example.com"));
+        temp.add(new User("U0000010", "tttt", "newPass567", Role.STAFF, "T Tran", "369 Spruce St", "1098765432", "tttt@example.com"));
+        temp.add(new User("U0000011", "kkkk", "newPass890", Role.PREMIUM, "KK Tran", "741 Cherry St", "0987654321", "kkkk@example.com"));
         
         for (User item : temp) {
             UserDAO.addUserToDB(item);
@@ -144,8 +154,44 @@ public class FakeData {
     public static boolean makeFakeRental() {
         List<Rental> temp = new ArrayList<>();
         
-        temp.add(new Rental("RT000001", "U00000002", "M00000004", toDate("12/04/2023"), toDate("16/04/2023"), 100.15, 0));
+        temp.add(new Rental("RT000001", "U0000002", "M0000001", toDate("12/04/2023"), toDate("16/04/2023"), 100.15, 0));
+        temp.add(new Rental("RT000002", "U0000003", "M0000002", toDate("05/05/2023"), toDate("10/05/2023"), 120.50, 10.0));
+        temp.add(new Rental("RT000003", "U0000004", "M0000003", toDate("01/06/2023"), toDate("03/06/2023"), 80.00, 5.0));
+        temp.add(new Rental("RT000004", "U0000005", "M0000004", toDate("15/06/2023"), toDate("18/06/2023"), 90.25, 0));
+        temp.add(new Rental("RT000005", "U0000006", "M0000005", toDate("20/07/2023"), toDate("25/07/2023"), 150.75, 20.0));
+        temp.add(new Rental("RT000006", "U0000007", "M0000006", toDate("01/08/2023"), toDate("05/08/2023"), 50.00, 0));
+        temp.add(new Rental("RT000007", "U0000008", "M0000007", toDate("10/09/2023"), toDate("15/09/2023"), 70.30, 15.0));
+        temp.add(new Rental("RT000008", "U0000009", "M0000008", toDate("20/10/2023"), toDate("25/10/2023"), 110.00, 0));
+        temp.add(new Rental("RT000009", "U0000010", "M0000001", toDate("01/11/2023"), toDate("06/11/2023"), 65.50, 5.0));
+        temp.add(new Rental("RT000010", "U0000011", "M0000002", toDate("15/11/2023"), toDate("20/11/2023"), 125.00, 10.0));
         
+        for (Rental item : temp) {
+            RentalDAO.addRentalToDB(item);
+            getRTM().getList().add(item);
+        }
+        
+        return true;
+    }
+    
+    public static boolean makeFakeReview() {
+        List<Review> temp = new ArrayList<>();
+        
+        temp.add(new Review("R00000001", "M00000004", "U00000005", 5, "Absolutely fantastic movie!", toDate("12/04/2023")));
+        temp.add(new Review("R00000002", "M00000002", "U00000003", 4, "Great watch, enjoyed the storyline.", toDate("15/04/2023")));
+        temp.add(new Review("R00000003", "M00000006", "U00000007", 3, "It was okay, not the best.", toDate("18/04/2023")));
+        temp.add(new Review("R00000004", "M00000001", "U00000002", 5, "Loved it! Would watch again.", toDate("20/04/2023")));
+        temp.add(new Review("R00000005", "M00000005", "U00000004", 2, "Disappointed, expected better.", toDate("25/04/2023")));
+        temp.add(new Review("R00000006", "M00000003", "U00000006", 4, "Good performances and direction.", toDate("28/04/2023")));
+        temp.add(new Review("R00000007", "M00000007", "U00000008", 1, "Terrible, wouldn't recommend.", toDate("30/04/2023")));
+        temp.add(new Review("R00000008", "M00000008", "U00000009", 5, "Amazing visuals and plot!", toDate("02/05/2023")));
+        temp.add(new Review("R00000009", "M00000004", "U0000010", 3, "Average movie, could be better.", toDate("05/05/2023")));
+        temp.add(new Review("R00000010", "M00000002", "U0000011", 4, "Enjoyed it overall, worth watching.", toDate("08/05/2023")));
+        
+        for (Review item : temp) {
+            ReviewDAO.addReviewToDB(item);
+            getRM().getList().add(item);
+        }
+ 
         return true;
     }
 }
