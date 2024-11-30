@@ -13,7 +13,7 @@ import main.constants.ActorRank;
 public class ActorDAO {
 
     public static boolean addActorToDB(Actor actor) {
-        String sql = "INSERT INTO Actors (actor_id, actor_name, description, rank) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Actors (actor_id, actor_name, actor_description, actor_rank) VALUES (?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actor.getId());
@@ -29,7 +29,7 @@ public class ActorDAO {
     }
 
     public static boolean updateActorInDB(Actor actor) {
-        String sql = "UPDATE Actors SET actor_name = ?, description = ?, rank = ? WHERE actor_id = ?";
+        String sql = "UPDATE Actors SET actor_name = ?, actor_description = ?, actor_rank = ? WHERE actor_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, actor.getActorName());
@@ -67,8 +67,8 @@ public class ActorDAO {
                 Actor actor = new Actor(
                         resultSet.getString("actor_id"),
                         resultSet.getString("actor_name"),
-                        ActorRank.valueOf(resultSet.getString("rank")),
-                        resultSet.getString("description")
+                        ActorRank.valueOf(resultSet.getString("actor_rank")),
+                        resultSet.getString("actor_description")
                 );
                 list.add(actor);
             }

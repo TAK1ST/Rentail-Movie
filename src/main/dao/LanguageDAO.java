@@ -70,7 +70,7 @@ public class LanguageDAO {
             while (resultSet.next()) {
                 Language language = new Language(
                     resultSet.getString("language_code"),  
-                    resultSet.getString("languaeg_name")
+                    resultSet.getString("language_name")
                 );
                 list.add(language);
             }

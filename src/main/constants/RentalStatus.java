@@ -11,6 +11,6 @@ package main.constants;
 public enum RentalStatus {
     NONE,
     PENDING,
-    APPROVE,
-    DENY
+    APPROVED,
+    DENIED
 }

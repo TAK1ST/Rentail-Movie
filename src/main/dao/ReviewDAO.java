@@ -78,7 +78,7 @@ public class ReviewDAO {
             while (resultSet.next()) {
                 Review review = new Review(
                     resultSet.getString("review_id"),
-                    resultSet.getString("user_id"),
+                    resultSet.getString("customer_id"),
                     resultSet.getString("movie_id"),
                     resultSet.getInt("rating"),
                     resultSet.getString("review_text"),

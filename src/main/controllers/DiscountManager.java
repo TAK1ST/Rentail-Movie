@@ -9,9 +9,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import main.base.ListManager;
-import main.constants.AccRole;
-import static main.constants.Constants.DISCOUNT_PREFIX;
 import main.constants.DiscountType;
+import main.constants.IDPrefix;
 import static main.controllers.Managers.getACM;
 import main.dao.DiscountDAO;
 import main.dto.Account;
@@ -41,7 +40,7 @@ public class DiscountManager extends ListManager<Discount> {
         if (getACM().checkNull(foundAccount)) return false;
         
         list.add(new Discount(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), DISCOUNT_PREFIX), 
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.DISCOUNT_PREFIX), 
                 foundAccount.getId(),
                 getDate("Enter start date", false),
                 getDate("Enter end date", false),

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import static main.constants.Constants.REVIEW_PREFIX;
+import main.constants.IDPrefix;
 import main.dao.ReviewDAO;
 import static main.controllers.Managers.getMVM;
 import main.dto.Movie;
@@ -46,7 +46,7 @@ public final class ReviewManager extends ListManager<Review> {
         if (getMVM().checkNull(foundMovie)) return false;
 
         list.add(new Review(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), REVIEW_PREFIX),
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.REVIEW_PREFIX),
                 customID,
                 foundMovie.getId(),
                 getInteger("Enter rating", 1, 5, false),

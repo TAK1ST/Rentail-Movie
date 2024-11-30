@@ -41,7 +41,7 @@ public class ProfileDAO {
     }
     
     public static boolean updateProfileInDB(Profile account) {
-        String sql = "UPDATE Profiles SET full_name = ?, phone_number = ?, address = ?, credit = ? birthday = ? WHERE account_id = ?";
+        String sql = "UPDATE Profiles SET full_name = ?, phone_number = ?, address = ?, credit = ? birth_day = ? WHERE account_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
  
@@ -86,7 +86,7 @@ public class ProfileDAO {
                     resultSet.getString("phone_number"),  
                     resultSet.getString("address"),  
                     resultSet.getDouble("credit"),
-                    resultSet.getDate("birthday").toLocalDate()
+                    resultSet.getDate("birth_day").toLocalDate()
                 );
                 list.add(account);
             }

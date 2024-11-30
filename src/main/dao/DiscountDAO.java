@@ -17,7 +17,7 @@ import main.constants.DiscountType;
 public class DiscountDAO {
 
     public static boolean addDiscountToDB(Discount discount) {
-        String sql = "INSERT INTO Discounts (code, start_date, end_date, type, usage_available, is_active, value) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Discounts (discount_code, start_date, end_date, discount_type, usage_available, is_active, discount_value) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
   
@@ -38,7 +38,7 @@ public class DiscountDAO {
     }
 
     public static boolean updateDiscountInDB(Discount discount) {
-        String sql = "UPDATE Discounts SET account_id = ?, start_date = ?, end_date = ?, type = ?, usage_available = ?, is_active = ?, value = ? WHERE code = ?";
+        String sql = "UPDATE Discounts SET customer_id = ?, start_date = ?, end_date = ?, discount_type = ?, usage_available = ?, is_active = ?, discount_value = ? WHERE discount_code = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -59,7 +59,7 @@ public class DiscountDAO {
     }
 
     public static boolean deleteDiscountFromDB(String discountID) {
-        String sql = "DELETE FROM Discounts WHERE code = ?";
+        String sql = "DELETE FROM Discounts WHERE discount_code = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -80,14 +80,14 @@ public class DiscountDAO {
 
             while (resultSet.next()) {
                 Discount discount = new Discount(
-                    resultSet.getString("code"),
-                    resultSet.getString("account_id"),
+                    resultSet.getString("discount_code"),
+                    resultSet.getString("customer_id"),
                     resultSet.getDate("start_date").toLocalDate(),
                     resultSet.getDate("end_date").toLocalDate(),
-                    DiscountType.valueOf(resultSet.getString("type")),
+                    DiscountType.valueOf(resultSet.getString("discount_type")),
                     resultSet.getInt("usage_available"),
                     resultSet.getBoolean("is_active"),
-                    resultSet.getDouble("value")
+                    resultSet.getDouble("discount_value")
                 );
                 list.add(discount);
             }
