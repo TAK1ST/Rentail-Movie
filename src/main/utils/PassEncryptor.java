@@ -31,7 +31,7 @@ public class PassEncryptor {
     public static boolean validatePassword(String enteredPassword, String storedHash) {
         // Encrypt the entered password
         String hashedEnteredPassword = encryptPassword(enteredPassword);
-
+        
         // Check if the hashed entered password matches the stored hash
         return hashedEnteredPassword.equals(storedHash);
     }

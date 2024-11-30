@@ -1,20 +1,25 @@
-FROM openjdk:23 as build
+# Use official JDK 23 base image
+FROM openjdk:23-slim
 
-RUN apt-get update && apt-get install -y ant
-
+# Set working directory
 WORKDIR /app
 
-COPY . /app
+# Install Ant
+RUN apt-get update && \
+    apt-get install -y ant && \
+    apt-get clean
 
-RUN ant clean jar  
+# Copy the project files
+COPY . .
 
-FROM openjdk:23
+# Copy the build.xml file
+COPY build.xml .
 
-WORKDIR /app
+# Build the project using Ant
+RUN ant clean compile
 
-COPY --from=build /app/dist/Rental-Movie.jar /app/Rental-Movie.jar
-
+# Expose the port your application runs on
 EXPOSE 8080
 
-CMD ["java", "-jar", "Rental-Movie.jar"]
-
+# Command to run the application
+CMD ["ant", "run"]

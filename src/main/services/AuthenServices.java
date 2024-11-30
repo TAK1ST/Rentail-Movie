@@ -3,24 +3,31 @@ package main.services;
 import java.io.IOException;
 import java.sql.SQLException;
 import static main.controllers.Managers.getACM;
+import main.dao.AccountDAO;
 import main.dto.Account;
 import static main.utils.Input.getString;
+import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
 import main.utils.Menu;
+import static main.utils.PassEncryptor.validatePassword;
+import static main.utils.Validator.getPassword;
 
 public class AuthenServices {
 
     public static Account login() throws SQLException {
-        
         Menu.showTitle("Login");
         String input = getString("Enter username or email", false);
         String password = getString("Enter password", false);
 
         for (Account item : getACM().getList()) {
             if (input.equals(item.getUsername()) || input.equals(item.getEmail())) {
-                if (password.equals(item.getPassword())) {
+                if (validatePassword(password, item.getPassword())) {
                     return new Account(item);
+                } else {
+                    System.out.println("Are you forgot password");
+                    forgetPassword(item.getId());
                 }
+
             }
         }
         errorLog("Wrong username/email or password");
@@ -50,5 +57,13 @@ public class AuthenServices {
         }
 
         return getACM().getList().getLast();
+    }
+
+    public static void forgetPassword(String accountID) {
+        if (yesOrNo("Forgot password")) {
+            String newPassword = getPassword("Enter new password", false);
+            AccountDAO.updatePasswordAccountInDB(accountID);
+            getACM().updatePassword(accountID, newPassword);
+        }
     }
 }
