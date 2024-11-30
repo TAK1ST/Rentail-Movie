@@ -83,4 +83,8 @@ public abstract class ListManager<T extends Model> {
         list.forEach(item -> System.out.println(item));
     }
     
+    public void displayList(String title) {
+        display(list, title);
+    }
+    
 }

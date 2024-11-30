@@ -13,6 +13,9 @@ import main.dto.Account;
 import main.services.RentalServices;
 import main.utils.Menu;
 import main.utils.Menu.MenuOption;
+import static main.utils.Menu.MenuOption.Finally.ASK_FOR_AGAIN;
+import static main.utils.Menu.MenuOption.Finally.ENTER_TO_CONTINUE;
+import static main.utils.Menu.MenuOption.Finally.EXIT_MENU;
 
 /**
  *
@@ -25,18 +28,18 @@ public class CustomerPannel {
             "Movie Rental (Customer)",
             null,
             new MenuOption[]{
-                new MenuOption("Show my profile", () -> getACM().showMyProfile(account.getId()), false),
-                new MenuOption("Update profile", () -> getACM().updateAccount(account.getId()), true),
-                new MenuOption("Display movie list", () -> getMVM().display(getMVM().getList(), "All film"), false),
-                new MenuOption("Search movie", () -> getMVM().searchMovie(), true),
-                new MenuOption("Rent movie", () -> getRTM().addRental(account.getId()), true),
-                new MenuOption("Renturn movie", () -> getRTM().addRental(account.getId()), true),
-                new MenuOption("Extend return date", () -> getRTM().extendReturnDate(account.getId()), true),
-                new MenuOption("See the movie's reviews", () -> getRVM().displayAMovieReviews(), false),
-                new MenuOption("Make reviews", () -> getRVM().makeReview(account.getId()), true),
-                new MenuOption("Display my reviews history", () -> getRVM().myReviews(account.getId()), false), 
-                new MenuOption("Rental history", () -> RentalServices.myHistoryRental(account.getId()), false),
-                new MenuOption("Log Out", () -> {}, false),
+                new MenuOption("Show my profile", () -> getACM().showMyProfile(account.getId()), ENTER_TO_CONTINUE),
+                new MenuOption("Update profile", () -> getACM().updateAccount(account.getId()), ASK_FOR_AGAIN),
+                new MenuOption("Display movie list", () -> getMVM().display(getMVM().getList(), "All film"), ENTER_TO_CONTINUE),
+                new MenuOption("Search movie", () -> getMVM().searchMovie(), ASK_FOR_AGAIN),
+                new MenuOption("Rent movie", () -> getRTM().addRental(account.getId()), ASK_FOR_AGAIN),
+                new MenuOption("Renturn movie", () -> getRTM().addRental(account.getId()), ASK_FOR_AGAIN),
+                new MenuOption("Extend return date", () -> getRTM().extendReturnDate(account.getId()), ASK_FOR_AGAIN),
+                new MenuOption("See the movie's reviews", () -> getRVM().displayAMovieReviews(), ENTER_TO_CONTINUE),
+                new MenuOption("Make reviews", () -> getRVM().makeReview(account.getId()), ASK_FOR_AGAIN),
+                new MenuOption("Display my reviews history", () -> getRVM().myReviews(account.getId()), ENTER_TO_CONTINUE), 
+                new MenuOption("Rental history", () -> RentalServices.myHistoryRental(account.getId()), ENTER_TO_CONTINUE),
+                new MenuOption("Log Out", EXIT_MENU),
             },
             null
         );

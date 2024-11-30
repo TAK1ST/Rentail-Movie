@@ -13,7 +13,7 @@ import main.constants.PaymentMethod;
 public class PaymentDAO {
     
     public static boolean addPaymentToDB(Payment payment) {
-        String sql = "INSERT INTO Payments (payment_id, payment_methods, rental_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Payments (payment_id, payment_method, rental_id) VALUES (?, ?, ?)";
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -29,7 +29,7 @@ public class PaymentDAO {
     }
     
     public static boolean updatePaymentInDB(Payment payment) {
-        String sql = "UPDATE Payments SET payment_methods = ?, rental_id = ? WHERE payment_id = ?";
+        String sql = "UPDATE Payments SET payment_method = ?, rental_id = ? WHERE payment_id = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -67,7 +67,7 @@ public class PaymentDAO {
             while (resultSet.next()) {
                 Payment payment = new Payment(
                     resultSet.getString("payment_id"),
-                    PaymentMethod.valueOf(resultSet.getString("payment_methods")),
+                    PaymentMethod.valueOf(resultSet.getString("payment_method")),
                     resultSet.getString("rental_id")
                 );
                 list.add(payment);

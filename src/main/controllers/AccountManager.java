@@ -8,7 +8,6 @@ import main.constants.AccRole;
 import main.constants.AccStatus;
 import main.dao.AccountDAO;
 import main.constants.Constants;
-import static main.constants.Constants.ACCOUNT_PREFIX;
 import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import main.utils.IDGenerator;
@@ -48,13 +47,13 @@ public class AccountManager extends ListManager<Account> {
                 "1",
                 "admin@gmail.com",
                 AccRole.ADMIN,
-                AccStatus.OFF
+                AccStatus.OFFLINE
         ));
         AccountDAO.addAccountToDB(list.getLast());
     }
 
     public boolean registorAccount() throws IOException {
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), ACCOUNT_PREFIX);
+        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), AccRole.CUSTOMER);
         String username = getUsername("Enter username", false, list);
         String password = getPassword("Enter password", false);
         String email = getEmail("Enter email", false);
@@ -72,18 +71,19 @@ public class AccountManager extends ListManager<Account> {
                 encryptPassword(password),
                 email,
                 AccRole.CUSTOMER,
-                AccStatus.OFF
+                AccStatus.OFFLINE
         ));
         return AccountDAO.addAccountToDB(list.getLast());
     }
 
-    public boolean addAccount(AccRole registorRole) throws IOException {
+    public boolean addAccount(AccRole registorRole) throws IOException {  
         
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), ACCOUNT_PREFIX);
         String username = getUsername("Enter username", false, list);
         String password = getPassword("Enter password", false);
         String email = getEmail("Enter your email", false);
         AccRole role = (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole;
+        
+        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), role);
         
         list.add(new Account(
                 id,
@@ -91,9 +91,12 @@ public class AccountManager extends ListManager<Account> {
                 password,
                 email,
                 role,
-                AccStatus.OFF
+                AccStatus.OFFLINE
         ));
         if(AccountDAO.addAccountToDB(list.getLast())) {
+            if (list.getLast().getRole() == AccRole.ADMIN)
+                return true;
+            
             if (!getPFM().addProfile(id)) {
                 errorLog("Cannot registor info");
                 return false;
@@ -183,20 +186,20 @@ public class AccountManager extends ListManager<Account> {
         if (checkEmpty(list)) return;
         
         System.out.println(title);
-        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-        System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s |\n",
+        System.out.println("|---------------------------------------------------------------------------------------------------|");
+        System.out.printf("|%-15s | %-30s | %-30s | %-10s | %-30s |\n",
                 "Account ID", "Accountname", "Password", "Role", "Email");
-        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+        System.out.println("|---------------------------------------------------------------------------------------------------|");
         for (Account user : users) {
             String role = user.getRole() == AccRole.ADMIN ? "Admin" : "Account";  // Chuyển đổi số vai trò thành tên vai trò
-            System.out.printf("|%-15s | %-20s | %-20s | %-10s | %-20s |\n",
+            System.out.printf("|%-15s | %-30s | %-30s | %-10s | %-20s |\n",
                     user.getId(),
                     user.getUsername(),
                     user.getPassword(),
                     role,
                     user.getEmail() != null ? user.getEmail() : "N/A");
         }
-        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+        System.out.println("|---------------------------------------------------------------------------------------------------|");
     }
 
 }

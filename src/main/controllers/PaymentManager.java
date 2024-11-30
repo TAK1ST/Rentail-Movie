@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import main.base.ListManager;
-import static main.constants.Constants.PAYMENT_PREFIX;
+import main.constants.IDPrefix;
 import main.constants.PaymentMethod;
 import static main.controllers.Managers.getRTM;
 import main.dao.PaymentDAO;
@@ -34,7 +34,7 @@ public class PaymentManager extends ListManager<Payment> {
         if (getRTM().checkNull(foundRental)) return false;
         
         list.add(new Payment(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), PAYMENT_PREFIX), 
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.PAYMENT_PREFIX), 
                 (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false),
                 foundRental.getId()
         ));
@@ -83,5 +83,20 @@ public class PaymentManager extends ListManager<Payment> {
                 result.add(item);
             }   
         return result;
+    }
+    @Override
+    public void display(List<Payment> payments, String title ){
+         if (checkEmpty(list)) return;
+         System.out.println(title);
+          System.out.println("|------------------------------------------------------------------------|");
+        System.out.printf("|%-15s | %-20s | %-15s |\n |", "Payment ID", "Payment Method", "Rental ID");
+        System.out.println("|------------------------------------------------------------------------|");
+        for (Payment item : payments) {
+            System.out.printf("|%-15s | %-20s | %-15s |\n |",
+                    item.getId(),
+                    item.getPaymentMethods(),
+                    item.getRentalId());
+        }
+        System.out.println("|------------------------------------------------------------------------|");
     }
 }

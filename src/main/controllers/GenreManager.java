@@ -5,7 +5,7 @@ import main.base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import static main.constants.Constants.GENRE_PREFIX;
+import main.constants.IDPrefix;
 import main.dao.GenreDAO;
 import main.dto.Genre;
 import main.utils.IDGenerator;
@@ -25,7 +25,7 @@ public class GenreManager extends ListManager<Genre> {
 
     public boolean addGenre() {
         list.add(new Genre(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), GENRE_PREFIX), 
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.GENRE_PREFIX), 
                 getName("Enter genre", false)
         ));
         return GenreDAO.addGenreToDB(list.getLast());
@@ -79,16 +79,16 @@ public class GenreManager extends ListManager<Genre> {
         if (checkEmpty(list)) return;
         
         System.out.println(title);
-        System.out.println("|----------------------------------------------------");
-        System.out.printf("%|-15s | %-30s\n", "Genre ID", "Genre Name");
-        System.out.println("|----------------------------------------------------");
+        System.out.println("|---------------------------------------|");
+        System.out.printf("|%-15s | %-30s |\n", "Genre ID", "Genre Name");
+        System.out.println("|---------------------------------------|");
 
         for (Genre genre : genres) {
             System.out.printf("|%-15s | %-30s\n",
                     genre.getId(),
                     genre.getGenreName());
         }
-        System.out.println("|----------------------------------------------------");
+        System.out.println("|----------------------------------------|");
     }
     
 }

@@ -10,7 +10,7 @@ package main.constants;
  */
 public enum AccStatus {
     NONE,
-    ONL,
-    OFF,
-    BAN,
+    ONLINE,
+    OFFLINE,
+    BANNED,
 }
