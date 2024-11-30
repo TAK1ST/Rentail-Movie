@@ -15,36 +15,34 @@ import static main.utils.LogMessage.errorLog;
 public class Utility {
        
     public static <E extends Enum<E>> void enumListing(String message, Class<E> enumClass) {
-        if (enumClass.isEnum()) {
-            E[] enumConstants = enumClass.getEnumConstants();
-            System.out.printf("%s:\n", message);
-            for(int index = 1; index < enumConstants.length; index++) {
-                if (index % 3 == 0)
-                    System.out.println();
-                System.out.printf("%2d.%-25s", index, enumConstants[index]);
-            }
-            System.out.println("\n");
-        } else {
+        if (!enumClass.isEnum()) {
             errorLog("The provided class is not an enum.");
+            return;
         }
+        
+        E[] enumConstants = enumClass.getEnumConstants();
+        System.out.printf("%s:\n", message);
+        for(int index = 1; index < enumConstants.length; index++) {
+            if (index % 3 == 0)
+                System.out.println();
+            System.out.printf("[%02d] %-25s", index, enumConstants[index]);
+        }
+        System.out.println("\n");
     }
     
-    public static <E extends Enum<E>> E getEnumValue(String prompt, Class<E> enumClass, boolean enterToPass) {
+    public static <E extends Enum<E>> E getEnumValue(String message, Class<E> enumClass, boolean enterToPass) {
         if (!enumClass.isEnum()) {
-            throw new IllegalArgumentException("Provided class is not an enum");
+            errorLog("The provided class is not an enum.");
+            return null;
         }
 
         E[] enumConstants = enumClass.getEnumConstants();
-        System.out.println(prompt);
-        for (int i = 0; i < enumConstants.length; i++) {
-            System.out.printf("[%d] %s%n", i, enumConstants[i]);
-        }
+        enumListing(message, enumClass);
         
-        int choice = getInteger("Enter choice", 0, enumConstants.length, enterToPass);
-        if (choice >= 0) {
+        int choice = getInteger("Enter choice", 1, enumConstants.length, enterToPass);
+        if (choice > 0) 
             return enumConstants[choice];
-        } 
-        
+
         return enumConstants[0];
     }
     

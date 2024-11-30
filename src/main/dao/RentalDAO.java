@@ -18,7 +18,7 @@ import main.constants.RentalStatus;
 public class RentalDAO {
     
     public static boolean addRentalToDB(Rental rental) {
-        String sql = "INSERT INTO Rentals (rental_id, user_id, movie_id, staff_id, rental_date, return_date, due_date, late_fee, total_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Rentals (rental_id, customer_id, movie_id, staff_id, rental_date, return_date, due_date, late_fee, total_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -41,7 +41,7 @@ public class RentalDAO {
     }
     
     public static boolean updateRentalInDB(Rental rental) {
-        String sql = "UPDATE Rentals SET user_id = ?, movie_id = ?, staff_id = ?, rental_date = ?, return_date = ?, late_fee = ?, due_date = ?, total_amount = ?, status = ? WHERE rental_id = ?";
+        String sql = "UPDATE Rentals SET customer_id = ?, movie_id = ?, staff_id = ?, rental_date = ?, return_date = ?, late_fee = ?, due_date = ?, total_amount = ?, status = ? WHERE rental_id = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             
@@ -87,11 +87,11 @@ public class RentalDAO {
             while (resultSet.next()) {
                 Rental rental = new Rental(
                     resultSet.getString("rental_id"),
-                    resultSet.getString("user_id"),
+                    resultSet.getString("customer_id"),
                     resultSet.getString("movie_id"),
                     resultSet.getString("staff_id"),
                     resultSet.getDate("rental_date").toLocalDate(),
-                    resultSet.getDate("return_date").toLocalDate(),
+                    resultSet.getDate("return_date") != null ? resultSet.getDate("return_date").toLocalDate() : null,
                     resultSet.getDate("due_date").toLocalDate(),
                     resultSet.getDouble("late_fee"),
                     resultSet.getDouble("total_amount"),

@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import main.base.ListManager;
-import static main.constants.Constants.LANGUAGE_PREFIX;
+import main.constants.IDPrefix;
 import main.dao.LanguageDAO;
 import main.dto.Language;
 import main.utils.IDGenerator;
@@ -28,7 +28,7 @@ public class LanguageManager extends ListManager<Language> {
 
     public boolean addLanguage() {
         list.add(new Language(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), LANGUAGE_PREFIX), 
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.LANGUAGE_PREFIX), 
                 getName("Enter language", false)
         ));
         return LanguageDAO.addLanguageToDB(list.getLast());

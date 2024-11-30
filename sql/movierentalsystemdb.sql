@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS Accounts (
 );
 
 CREATE TABLE IF NOT EXISTS Profiles (
+
     account_id CHAR(8),
     full_name NVARCHAR(60),
     birth_day DATE NOT NULL,
@@ -60,8 +61,9 @@ CREATE TABLE IF NOT EXISTS Movie_Genre (
 
 CREATE TABLE IF NOT EXISTS Actors (
     actor_id CHAR(8) PRIMARY KEY,
-    actor_name NVARCHAR(255) NOT NULL,
-    actor_rank ENUM('NONE', 'A', 'B', 'C', 'D') NOT NULL
+    actor_name NVARCHAR(100) NOT NULL,
+    actor_rank ENUM('NONE', 'A', 'B', 'C', 'D') NOT NULL,
+    actor_description NVARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS Movie_Actor (
@@ -127,3 +129,4 @@ CREATE TABLE IF NOT EXISTS Discounts (
     usage_available INT DEFAULT 1,
     is_active BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (customer_id) REFERENCES Accounts (account_id));
+

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import main.constants.ActorRank;
-import static main.constants.Constants.ACTOR_PREFIX;
+import main.constants.IDPrefix;
 import main.dao.ActorDAO;
 import main.dto.Actor;
 import main.utils.IDGenerator;
@@ -26,7 +26,7 @@ public class ActorManager extends ListManager<Actor> {
     
     public boolean addActor() {
         list.add(new Actor(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), ACTOR_PREFIX), 
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.ACTOR_PREFIX), 
                 getName("Enter actor's name", false), 
                 (ActorRank) getEnumValue("Enter actor's status", ActorRank.class, false),
                 getString("Enter actor's description", false)

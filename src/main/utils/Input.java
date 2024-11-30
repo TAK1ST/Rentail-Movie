@@ -17,6 +17,22 @@ public class Input {
     
     private static final Scanner scanner = new Scanner(System.in);
     
+    private static int getBackIn = 3;
+    
+    private static boolean askToExit() {
+        getBackIn--;
+        if (getBackIn == 0) {
+            getBackIn = 3;
+            return yesOrNo("Don't want to type");
+        }
+        return false;
+    }
+    
+    public static void pressEnterToContinue() {
+        System.out.print("\nPress Enter to continue...");
+        scanner.nextLine();
+    }
+    
     public static String getString(String message, boolean enterToPass) {
             String result = "";
             do {
@@ -27,8 +43,10 @@ public class Input {
                 if(result.isEmpty() && enterToPass) 
                     return "";
                 
-                if(result.isEmpty())
+                if(result.isEmpty()) {
                     errorLog("Please input");
+                    if(askToExit()) return "";
+                }
                 
             } while (result.isEmpty());
 

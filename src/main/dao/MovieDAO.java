@@ -40,7 +40,7 @@ public class MovieDAO {
     }
 
     public static boolean addMovieGenres(String movieID, List<String> genreIDs) {
-        String sql = "INSERT INTO Movie_Genre (movie_id, genre_id) VALUES (?, ?)";
+        String sql = "INSERT INTO Movie_Genre (movie_id, genre_name) VALUES (?, ?)";
         try (Connection conn = Database.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             for (String genreID : genreIDs) {
@@ -169,12 +169,12 @@ public class MovieDAO {
 
     private static List<String> getGenresByMovieId(String movieId) {
         List<String> genres = new ArrayList<>();
-        String sql = "SELECT genre_id FROM Movie_Genre WHERE movie_id = ?";
+        String sql = "SELECT genre_name FROM Movie_Genre WHERE movie_id = ?";
         try (Connection conn = Database.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, movieId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                genres.add(rs.getString("genre_id"));
+                genres.add(rs.getString("genre_name"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

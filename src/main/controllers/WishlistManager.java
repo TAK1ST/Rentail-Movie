@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import main.base.ListManager;
-import static main.constants.Constants.WISHLIST_PREFIX;
+import main.constants.IDPrefix;
 import main.constants.WishlistPriority;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
@@ -48,7 +48,7 @@ public class WishlistManager extends ListManager<Wishlist> {
         }
         
         list.add(new Wishlist(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), WISHLIST_PREFIX), 
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.WISHLIST_PREFIX), 
                 foundMovie.getId(),
                 foundAccount.getId(),
                 LocalDate.now(),
