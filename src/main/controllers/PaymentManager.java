@@ -85,4 +85,19 @@ public class PaymentManager extends ListManager<Payment> {
             }   
         return result;
     }
+    @Override
+    public void display(List<Payment> payments, String title ){
+         if (checkEmpty(list)) return;
+         System.out.println(title);
+          System.out.println("|------------------------------------------------------------------------|");
+        System.out.printf("|%-15s | %-20s | %-15s |\n |", "Payment ID", "Payment Method", "Rental ID");
+        System.out.println("|------------------------------------------------------------------------|");
+        for (Payment item : payments) {
+            System.out.printf("|%-15s | %-20s | %-15s |\n |",
+                    item.getId(),
+                    item.getPaymentMethods(),
+                    item.getRentalId());
+        }
+        System.out.println("|------------------------------------------------------------------------|");
+    }
 }

@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/ProfileDAO.java</file>
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/Main.java</file>
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/ActorDAO.java</file>
@@ -49,6 +50,7 @@
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/IDGenerator.java</file>
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/ActorManager.java</file>
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dto/Actor.java</file>
+
         </group>
         <group/>
     </open-files>
