@@ -21,11 +21,9 @@ import static main.controllers.Managers.getPMM;
 import static main.controllers.Managers.getWLM;
 import main.utils.Menu;
 import main.utils.Menu.MenuOption;
-import main.utils.Menu.MenuOption.Finally;
 import static main.utils.Menu.MenuOption.Finally.ASK_FOR_AGAIN;
 import static main.utils.Menu.MenuOption.Finally.ENTER_TO_CONTINUE;
 import static main.utils.Menu.MenuOption.Finally.EXIT_MENU;
-import static main.utils.Menu.showSuccess;
 
 /**
  *
@@ -90,7 +88,7 @@ public class AdminPannel {
         Menu.showManagerMenu("Discount Managment",
             null,
             new MenuOption[]{
-                new MenuOption("Add Discount", () -> getDCM().addDiscount(Constants.DEFAULT_ADMIN_ID), ASK_FOR_AGAIN),
+                new MenuOption("Add Discount", () -> getDCM().addDiscount(), ASK_FOR_AGAIN),
                 new MenuOption("Delete Discount", () -> getDCM().deleteDiscount(), ASK_FOR_AGAIN),
                 new MenuOption("Update Discount", () -> getDCM().updateDiscount(), ASK_FOR_AGAIN),
                 new MenuOption("Search Discount", () -> getDCM().searchDiscount(), ASK_FOR_AGAIN),
@@ -137,7 +135,7 @@ public class AdminPannel {
             "Movie Management",
             null,
             new MenuOption[]{
-                new MenuOption("Add movie", () -> getMVM().addMovie(Constants.DEFAULT_ADMIN_ID), ASK_FOR_AGAIN),
+                new MenuOption("Add movie", () -> getMVM().addMovie(), ASK_FOR_AGAIN),
                 new MenuOption("Delete movie", () -> getMVM().deleteMovie(), ASK_FOR_AGAIN),
                 new MenuOption("Update movie", () -> getMVM().updateMovie(), ASK_FOR_AGAIN),
                 new MenuOption("Search movie", () -> getMVM().searchMovie(), ASK_FOR_AGAIN),
