@@ -10,6 +10,7 @@ import main.dto.Account;
 import static main.services.AuthenServices.login;
 import static main.services.AuthenServices.registor;
 import static main.utils.Input.yesOrNo;
+import static main.utils.LogMessage.infoLog;
 
 /**
  *
@@ -25,7 +26,7 @@ public class AuthenPannel {
                 account = registor();
 
             if (account == null) 
-                System.out.println("Please try again.");      
+                infoLog("Please try again");      
 
         } while(account == null);
 
