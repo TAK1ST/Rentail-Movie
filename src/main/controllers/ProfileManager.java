@@ -32,7 +32,7 @@ public class ProfileManager extends ListManager<Profile> {
         Account foundAccount = (Account) getACM().searchById(accountID);
         if (getACM().checkNull(foundAccount)) return false;
         
-        String name = getName("Enter username", false);
+        String name = getName("Enter full name", false);
         if (name.isEmpty()) return false;
         
         String phoneNumber = getPhoneNumber("Enter your phone number", false);

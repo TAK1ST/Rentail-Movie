@@ -22,6 +22,7 @@ import static main.utils.Menu.MenuOption.Finally.EXIT_MENU;
 public class Menu {
     
     private static final int INIT_NUM = 1;
+    private static final int MENU_WIDTH = 80;
        
     public static void showManagerMenu(String title, 
                                         MenuAction[] actionsBefore,
@@ -39,19 +40,20 @@ public class Menu {
                 for (MenuAction action : actionsBefore) 
                     action.performAction();
             
+            int optionWidth = MENU_WIDTH/2 - 6;
             for (int index = 0; index < options.length; index++) {
-                if (index % 2 == 0 && index != 0) 
-                    System.out.println();
-                
-                System.out.printf("[%02d] %-40s", (index + INIT_NUM), options[index].optionText);
+                String format = index % 2 != 0 ? "[%02d] %-" + optionWidth + "s|\n" : "|[%02d] %-" + optionWidth + "s";
+                System.out.printf(format, (index + INIT_NUM), options[index].optionText);
             }
-            System.out.println();
+            for (int index = 0; index < MENU_WIDTH; index++) System.out.print("-");
+            System.out.println("\n");
             
             if (actionsFinally != null)
                 for (MenuAction action : actionsFinally) 
                     action.performAction();
         
             int choice = Menu.getChoice("Enter choice", options.length + INIT_NUM - 1);
+            if (choice == Integer.MIN_VALUE) continue;
             do {
                 MenuOption option = options[choice - INIT_NUM];
                 if (option.action != null) 
@@ -68,14 +70,20 @@ public class Menu {
                 
                 if (option.after == ASK_FOR_AGAIN && Menu.askForAgain()) {
                 } 
-                else return;
+                else break;
                 
             } while (true);
         } while (true);
     }
      
     public static void showTitle(String title) {
-        System.out.printf("\n%s\n\n", title);
+        int half = title.length()/2;
+        int begin = MENU_WIDTH/2 - half;
+        System.out.println();
+        for (int index = 0; index < MENU_WIDTH; index++) System.out.print("-");
+        System.out.printf("\n|%" + (begin - 1) + "s%-"+ (MENU_WIDTH/2 + half - 1) +"s|\n", " ", title);
+        for (int index = 0; index < MENU_WIDTH; index++) System.out.print("-");
+        System.out.println("\n");
     }
     
     public static void showOptions(String[] options, int rowFormatNum) {
