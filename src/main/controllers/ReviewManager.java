@@ -44,15 +44,18 @@ public final class ReviewManager extends ListManager<Review> {
         }
 
         Movie foundMovie = (Movie) getMVM().getById("Enter movie'id");
-        if (getMVM().checkNull(foundMovie)) {
-            return false;
-        }
+
+        if (getMVM().checkNull(foundMovie)) return false;
+        
+        int rating = getInteger("Enter rating", 1, 5, false);
+        if (rating == Integer.MIN_VALUE) return false;
+
 
         list.add(new Review(
                 IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.REVIEW_PREFIX),
                 customID,
                 foundMovie.getId(),
-                getInteger("Enter rating", 1, 5, false),
+                rating,
                 getString("Enter comment", true),
                 LocalDate.now()));
 
@@ -65,6 +68,8 @@ public final class ReviewManager extends ListManager<Review> {
         }
 
         String input = getString("Enter movie'id", false);
+        if (input.isEmpty()) return false;
+        
         Review foundReview = searchBy(input).getFirst();
         Movie foundMovie = (Movie) getMVM().searchById(input);
         if (checkNull(foundReview) || getMVM().checkNull(foundMovie)) {

@@ -12,6 +12,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 import main.dto.Account;
+import static main.utils.Input.askToExit;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.infoLog;
@@ -44,28 +45,34 @@ public class Validator {
 
             if (input.isEmpty()) {
                 errorLog("Username must not be empty");
+                if(askToExit()) return "";
                 continue;
             }
             if (input.length() < 4) {
-                errorLog("Username must be at least 4 character");      
+                errorLog("Username must be at least 4 character");   
+                if(askToExit()) return "";
                 continue;
             }
             if (input.contains(" ")) {
-                errorLog("Username must not contain space");      
+                errorLog("Username must not contain space");    
+                if(askToExit()) return "";
                 continue;
             }
             if (Character.isDigit(input.charAt(0))) {
-                errorLog("Username must not begin with number");      
+                errorLog("Username must not begin with number"); 
+                if(askToExit()) return "";
                 continue;
             }
             if (input.matches(".*" + NAME_SPECIAL_CHAR_PATTERN + ".*")) {
                 errorLog("Username contains special characters");
+                if(askToExit()) return "";
                 continue;
             } 
             isUnique = true;
             for(Account item : list) 
                 if (item.getUsername().equals(input)) {
                     errorLog("Username has already exist");
+                    if(askToExit()) return "";
                     isUnique = false;
                 }
         } while (!isUnique);
@@ -85,19 +92,23 @@ public class Validator {
             
             if (input.isEmpty()) {
                 errorLog("Password must not be empty");
+                if(askToExit()) return "";
                 continue;
             }
             if (input.length() < 6) {
                 errorLog("Password must be at least 6 character");
+                if(askToExit()) return "";
                 continue;
             }
             if (input.contains(" ")) {
                 errorLog("Password must not contain space");
+                if(askToExit()) return "";
                 continue;
             }
             if (!input.matches(PASSWORD_PATTERN)) {
                 errorLog("Password contains forbidden characters");
                 infoLog("!,@,#,$,%,&,*,-,_,+ are allowed");
+                if(askToExit()) return "";
                 continue;
             }
             confirmPassword("Confirm password", input);
@@ -113,8 +124,10 @@ public class Validator {
             System.out.printf("%s: ", message);
             confirm = scanner.nextLine();
 
-            if(!confirm.equals(password)) 
+            if(!confirm.equals(password)) {
                 errorLog("Password Unmatch");
+                if(askToExit()) return;
+            }
             
         } while (!confirm.equals(password));
     }
@@ -132,10 +145,12 @@ public class Validator {
             
             if (input.isEmpty()) {
                 errorLog("Name must not be empty");
+                if(askToExit()) return "";
                 continue;
             }
             if (input.matches(".*" + FULLNAME_SPECIAL_CHAR_PATTERN + ".*")) {
                 errorLog("Name must not have special characters");
+                if(askToExit()) return "";
                 continue;
             }
             pass = true;
@@ -158,14 +173,17 @@ public class Validator {
             
             if (input.isEmpty()) {
                 errorLog("Full name must not be empty");
+                if(askToExit()) return "";
                 continue;
             }
             if (input.matches(".*\\d.*")) {
                 errorLog("Full name must not contain number");
+                if(askToExit()) return "";
                 continue;
             }
             if (input.matches(".*" + FULLNAME_SPECIAL_CHAR_PATTERN + ".*")) {
                 errorLog("Full name must not have special characters");
+                if(askToExit()) return "";
                 continue;
             }
             pass = true;
@@ -187,14 +205,17 @@ public class Validator {
 
             if (input.isEmpty()) {
                 errorLog("Phone number must not be empty");
+                if(askToExit()) return "";
                 continue;
             }
             if (input.contains(" ")) {
-                errorLog("Contains space");      
+                errorLog("Contains space");   
+                if(askToExit()) return "";
                 continue;
             }
             if (input.replaceAll("\\D", "").length() != 10) {
                 errorLog("Phone number must be 10 digit");
+                if(askToExit()) return "";
                 continue;
             }
             pass = true;
@@ -215,14 +236,17 @@ public class Validator {
 
             if (input.isEmpty()) {
                 errorLog("Email must not be empty");
+                if(askToExit()) return "";
                 continue;
             }
             if (input.contains(" ")) {
                 errorLog("Contains space");      
+                if(askToExit()) return "";
                 continue;
             }
             if (!input.matches(EMAIL_PATTERN)) {
                 errorLog("Email format is wrong");
+                if(askToExit()) return "";
                 continue;
             }
             pass = true;
@@ -241,13 +265,16 @@ public class Validator {
             if (input.isEmpty() && enterToPass) 
                return null;
             
-            if (input.isEmpty()) 
+            if (input.isEmpty()) {
                 errorLog("Date must not be empty");
+                if(askToExit()) return null;
+            }
 
-            if (!Validator.isValidDate(input)) 
+            if (!isValidDate(input)) {
                 errorLog("Date must be right format dd/MM/yyyy");
-                
-        } while (!Validator.isValidDate(input));
+                if(askToExit()) return null;
+            }
+        } while (!isValidDate(input));
 
         return LocalDate.parse(input, DATE);
     }

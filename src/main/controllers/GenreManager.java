@@ -24,9 +24,15 @@ public class GenreManager extends ListManager<Genre> {
     }
 
     public boolean addGenre() {
+        String name = getName("Enter genre name", false);
+        if (name.isEmpty()) return false;
+        
+        String description = getString("Enter description", false);
+        if (!description.isEmpty()) return false;
+        
         list.add(new Genre(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.GENRE_PREFIX), 
-                getName("Enter genre", false)
+                name, 
+                description
         ));
         return GenreDAO.addGenreToDB(list.getLast());
     }
@@ -34,12 +40,14 @@ public class GenreManager extends ListManager<Genre> {
     public boolean updateGenre() {
         if (checkEmpty(list)) return false;
 
-        Genre foundGenre = (Genre)getById("Enter genre's id");
+        Genre foundGenre = (Genre)getById("Enter genre");
         if (checkNull(foundGenre)) return false;
         
         String name = getName("Enter genre name", true);
-        if (!name.isEmpty()) 
-            foundGenre.setGenreName(name);  
+        String description = getString("Enter description", true);
+        
+        if (name.isEmpty()) foundGenre.setGenreName(name);
+        if (!description.isEmpty()) foundGenre.setDescription(description);  
         
         return GenreDAO.updateGenreInDB(foundGenre);
     }
@@ -47,7 +55,7 @@ public class GenreManager extends ListManager<Genre> {
     public boolean deleteGenre() { 
         if (checkEmpty(list)) return false;       
 
-        Genre foundGenre = (Genre)getById("Enter genre's id");
+        Genre foundGenre = (Genre)getById("Enter genre");
         if (checkNull(foundGenre)) return false;
 
         list.remove(foundGenre);
@@ -79,14 +87,15 @@ public class GenreManager extends ListManager<Genre> {
         if (checkEmpty(list)) return;
         
         System.out.println(title);
+
         System.out.println("|---------------------------------------|");
         System.out.printf("|%-15s | %-30s |\n", "Genre ID", "Genre Name");
         System.out.println("|---------------------------------------|");
 
         for (Genre genre : genres) {
             System.out.printf("|%-15s | %-30s\n",
-                    genre.getId(),
-                    genre.getGenreName());
+                    genre.getGenreName(),
+                    genre.getDescription());
         }
         System.out.println("|----------------------------------------|");
     }

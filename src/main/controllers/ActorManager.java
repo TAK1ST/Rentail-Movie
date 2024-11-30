@@ -25,11 +25,21 @@ public class ActorManager extends ListManager<Actor> {
     }
     
     public boolean addActor() {
+        
+        String name = getName("Enter actor's name", false);
+        if (name.isEmpty()) return false;
+        
+        ActorRank rank = (ActorRank) getEnumValue("Enter actor's rank", ActorRank.class, false);
+        if (rank == ActorRank.NONE) return false;
+        
+        String description = getString("Enter actor's description", false);
+        if (description.isEmpty()) return false;
+        
         list.add(new Actor(
                 IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.ACTOR_PREFIX), 
-                getName("Enter actor's name", false), 
-                (ActorRank) getEnumValue("Enter actor's status", ActorRank.class, false),
-                getString("Enter actor's description", false)
+                name, 
+                rank,
+                description
         ));
         return ActorDAO.addActorToDB(list.getLast());
     }
@@ -37,7 +47,7 @@ public class ActorManager extends ListManager<Actor> {
     public boolean updateActor() {
         if (checkEmpty(list)) return false;
 
-        Actor foundActor = (Actor)getById("Enter user's id");
+        Actor foundActor = (Actor)getById("Enter actor's id");
         if (checkNull(foundActor)) return false;
         
         String name = getName("Enter actor's name", true);     
@@ -57,7 +67,7 @@ public class ActorManager extends ListManager<Actor> {
     public boolean deleteActor() { 
         if (checkEmpty(list)) return false;       
 
-        Actor foundActor = (Actor)getById("Enter user's id");
+        Actor foundActor = (Actor)getById("Enter actor's id");
         if (checkNull(foundActor)) return false;
 
         list.remove(foundActor);

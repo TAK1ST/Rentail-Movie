@@ -44,26 +44,32 @@ public class AccountManager extends ListManager<Account> {
         list.add(new Account(
                 Constants.DEFAULT_ADMIN_ID,
                 "admin",
-                "1",
+                encryptPassword("1"),
                 "admin@gmail.com",
                 AccRole.ADMIN,
                 AccStatus.OFFLINE
         ));
-        AccountDAO.addAccountToDB(list.getLast());
+        AccountDAO.addAccountToDB(list.getLast()); 
     }
 
     public boolean registorAccount() throws IOException {
-        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), AccRole.CUSTOMER);
-        String username = getUsername("Enter username", false, list);
-        String password = getPassword("Enter password", false);
-        String email = getEmail("Enter email", false);
         
+        String username = getUsername("Enter username", false, list);
+        if (username.isEmpty()) return false;
+        
+        String password = getPassword("Enter password", false);
+        if (password.isEmpty()) return false;
+        
+        String email = getEmail("Enter email", false);
+        if (password.isEmpty()) return false;
+        
+        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), AccRole.CUSTOMER);
         if (yesOrNo("Fill in all infomation?")) {
-            if(getPFM().addProfile(id)) {
+            if (getPFM().addProfile(id)) {
                 errorLog("Cannot registor account info");
                 return false;
             }
-        } 
+        }
 
         list.add(new Account(
                 id,
@@ -76,15 +82,20 @@ public class AccountManager extends ListManager<Account> {
         return AccountDAO.addAccountToDB(list.getLast());
     }
 
-    public boolean addAccount(AccRole registorRole) throws IOException {  
-        
+    public boolean addAccount(AccRole registorRole) throws IOException {
+
         String username = getUsername("Enter username", false, list);
+        if (username.isEmpty()) return false;
+        
         String password = getPassword("Enter password", false);
+        if (password.isEmpty()) return false;
+        
         String email = getEmail("Enter your email", false);
+        if (email.isEmpty()) return false;
+        
         AccRole role = (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole;
-        
         String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), role);
-        
+
         list.add(new Account(
                 id,
                 username,
@@ -93,10 +104,11 @@ public class AccountManager extends ListManager<Account> {
                 role,
                 AccStatus.OFFLINE
         ));
-        if(AccountDAO.addAccountToDB(list.getLast())) {
-            if (list.getLast().getRole() == AccRole.ADMIN)
+        if (AccountDAO.addAccountToDB(list.getLast())) {
+            if (list.getLast().getRole() == AccRole.ADMIN) {
                 return true;
-            
+            }
+
             if (!getPFM().addProfile(id)) {
                 errorLog("Cannot registor info");
                 return false;
@@ -107,8 +119,10 @@ public class AccountManager extends ListManager<Account> {
     }
 
     public boolean updateAccount(String userID) {
-        if (checkEmpty(list)) return false;
-        
+        if (checkEmpty(list)) {
+            return false;
+        }
+
         Account foundAccount;
         if (userID.isEmpty()) {
             foundAccount = (Account) getById("Enter user's id");
@@ -124,7 +138,7 @@ public class AccountManager extends ListManager<Account> {
 
         AccRole newRole = AccRole.NONE;
         if (foundAccount.getRole() == AccRole.ADMIN) {
-            newRole = (AccRole)getEnumValue("Choose a role", AccRole.class, true);
+            newRole = (AccRole) getEnumValue("Choose a role", AccRole.class, true);
         }
         String newEmail = Validator.getEmail("Enter your email", true);
 
@@ -144,12 +158,24 @@ public class AccountManager extends ListManager<Account> {
         return AccountDAO.updateAccountInDB(foundAccount);
     }
 
+    public void updatePassword(String accountID, String newPassword) {
+        Account foundAccount = (Account) searchById(accountID);
+        if (checkNull(foundAccount)) {
+            return;
+        }
+        foundAccount.setPassword(newPassword);
+    }
+
     public boolean deleteAccount() throws IOException {
-        if (checkEmpty(list)) return false;
-        
+        if (checkEmpty(list)) {
+            return false;
+        }
+
         Account foundAccount = (Account) getById("Enter user's id");
-        if (checkNull(foundAccount)) return false;
-        
+        if (checkNull(foundAccount)) {
+            return false;
+        }
+
         list.remove(foundAccount);
         return AccountDAO.deleteAccountFromDB(foundAccount.getId());
     }
@@ -180,11 +206,13 @@ public class AccountManager extends ListManager<Account> {
     public void showMyProfile(String userID) {
         display(searchById(userID), "My Profile");
     }
-    
+
     @Override
     public void display(List<Account> users, String title) {
-        if (checkEmpty(list)) return;
-        
+        if (checkEmpty(list)) {
+            return;
+        }
+
         System.out.println(title);
         System.out.println("|---------------------------------------------------------------------------------------------------|");
         System.out.printf("|%-15s | %-30s | %-30s | %-10s | %-30s |\n",
@@ -193,9 +221,9 @@ public class AccountManager extends ListManager<Account> {
         for (Account user : users) {
             String role = user.getRole() == AccRole.ADMIN ? "Admin" : "Account";  // Chuyển đổi số vai trò thành tên vai trò
             System.out.printf("|%-15s | %-30s | %-30s | %-10s | %-20s |\n",
+
                     user.getId(),
                     user.getUsername(),
-                    user.getPassword(),
                     role,
                     user.getEmail() != null ? user.getEmail() : "N/A");
         }

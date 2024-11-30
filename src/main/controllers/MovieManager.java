@@ -7,22 +7,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import main.constants.IDPrefix;
-import main.dao.ActorDAO;
-import main.dao.GenreDAO;
-import main.dao.MovieDAO;
-import main.dto.Actor;
-import main.dto.Genre;
 import main.dto.Movie;
 import static main.controllers.Managers.getATM;
 import static main.controllers.Managers.getGRM;
 import static main.controllers.Managers.getLGM;
-import main.dao.LanguageDAO;
-import main.dto.Language;
+import main.dao.MovieDAO;
 import main.utils.IDGenerator;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
-import static main.utils.Utility.toInt;
+import static main.utils.Input.selectByNumbers;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
 
@@ -33,18 +27,43 @@ public class MovieManager extends ListManager<Movie> {
         list = MovieDAO.getAllMovies();
     }
 
-    public boolean addMovie(String userID) {
+    public boolean addMovie() throws IOException {
+        
+        String title = getString("Enter title", false);
+        if (title.isEmpty()) return false;
+        
+        String description = getString("Enter description", false);
+        if (description.isEmpty()) return false;
+        
+        List<String> genres = selectByNumbers("Enter genres (Comma-separated)", getGRM(), true);
+        if (genres.isEmpty()) return false;
+        
+        List<String> actors = selectByNumbers("Enter actors (Comma-separated)", getATM(), true);
+        if (actors.isEmpty()) return false;
+        
+        List<String> languages = selectByNumbers("Enter languages (Comma-separated)", getLGM(), true);
+        if (languages.isEmpty()) return false;
+        
+        LocalDate releaseDate = getDate("Enter release date", false);
+        if (releaseDate == null) return false;
+        
+        double price = getDouble("Enter rental price", 0, Double.MAX_VALUE, false);
+        if (price == Double.MIN_VALUE) return false;
+        
+        int availableCopies = getInteger("Enter available copies", 0, Integer.MAX_VALUE, false);
+        if (availableCopies == Integer.MIN_VALUE) return false;
+        
         list.add(new Movie(
                 IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.MOVIE_PREFIX),
-                getString("Enter title", false),
-                getString("Enter description", false),
+                title,
+                description,
                 0,
-                selectGenres("Enter genres (Comma-separated)", GenreDAO.getAllGenres()),
-                selectActors("Enter actors (Comma-separated)", ActorDAO.getAllActors()),
-                selectLanguages("Enter actors (Comma-separated)", LanguageDAO.getAllLanguages()),
-                getDate("Enter release date", false),
-                getDouble("Enter rental price", 0, Double.MAX_VALUE, false),
-                getInteger("Enter available copies", 0, Integer.MAX_VALUE, false)
+                genres,
+                actors,
+                languages,
+                releaseDate,
+                price,
+                availableCopies 
         ));
         if (MovieDAO.addMovieToDB(list.getLast())) 
             return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIDs()) &&
@@ -58,60 +77,6 @@ public class MovieManager extends ListManager<Movie> {
             return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIDs()) &&
                     MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIDs());
         return false;
-    }
-
-    private List<String> selectGenres(String message, List<Genre> options) {
-        getGRM().display(options, "");
-        List<String> genreNames = new ArrayList<>();
-
-        String input = getString(message, false);
-        String[] inputs = input.split(",");
-
-        for (String item : inputs) {
-            item = item.trim();
-            int index = toInt(item);
-            if (index > 0 && index <= options.size()) {
-                genreNames.add(options.get(index).getId());
-            }
-        }
-
-        return genreNames;
-    }
-
-    private List<String> selectActors(String message, List<Actor> options) {
-        getATM().display(options, "");
-        List<String> actorIDs = new ArrayList<>();
-
-        String input = getString(message, false);
-        String[] actorNames = input.split(",");
-
-        for (String item : actorNames) {
-            item = item.trim();
-            int index = toInt(item);
-            if (index > 0 && index <= options.size()) {
-                actorIDs.add(options.get(index).getId());
-            }
-        }
-
-        return actorIDs;
-    }
-    
-    private List<String> selectLanguages(String message, List<Language> options) {
-        getLGM().display(options, "");
-        List<String> actorIDs = new ArrayList<>();
-
-        String input = getString(message, false);
-        String[] actorNames = input.split(",");
-
-        for (String item : actorNames) {
-            item = item.trim();
-            int index = toInt(item);
-            if (index > 0 && index <= options.size()) {
-                actorIDs.add(options.get(index).getId());
-            }
-        }
-
-        return actorIDs;
     }
 
     public boolean updateMovie() {

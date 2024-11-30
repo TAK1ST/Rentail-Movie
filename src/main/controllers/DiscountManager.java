@@ -11,9 +11,7 @@ import java.util.List;
 import main.base.ListManager;
 import main.constants.DiscountType;
 import main.constants.IDPrefix;
-import static main.controllers.Managers.getACM;
 import main.dao.DiscountDAO;
-import main.dto.Account;
 import main.dto.Discount;
 import main.utils.IDGenerator;
 import static main.utils.Input.getDouble;
@@ -35,19 +33,32 @@ public class DiscountManager extends ListManager<Discount> {
         list = DiscountDAO.getAllDiscounts();
     }
 
-    public boolean addDiscount(String customerID) {
-        Account foundAccount = (Account) getACM().searchById(customerID);
-        if (getACM().checkNull(foundAccount)) return false;
+    public boolean addDiscount() {
         
+        LocalDate startDate = getDate("Enter start date", false);
+        if (startDate == null) return false;
+        
+        LocalDate endDate = getDate("Enter end date", false);
+        if (endDate == null) return false;
+        
+        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, false);
+        if (type == DiscountType.NONE) return false;
+        
+        int availableUsage = getInteger("Enter available usage", 1, 20, false);
+        if (availableUsage == Integer.MIN_VALUE) return false;
+        
+        double value = getDouble("Enter value", 1, 20, false);
+        if (value == Double.MIN_VALUE) return false;
+
         list.add(new Discount(
                 IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.DISCOUNT_PREFIX), 
-                foundAccount.getId(),
-                getDate("Enter start date", false),
-                getDate("Enter end date", false),
-                (DiscountType) getEnumValue("Choose discount type", DiscountType.class, false),
-                getInteger("Enter available usage", 1, 20, false),
+                null,
+                startDate,
+                endDate,
+                type,
+                availableUsage,
                 true,
-                getDouble("Enter value", 1, 20, false)
+                value
         ));
         return DiscountDAO.addDiscountToDB(list.getLast());
     }
@@ -58,10 +69,10 @@ public class DiscountManager extends ListManager<Discount> {
         Discount foundDiscount = (Discount)getById("Enter discount code");
         if (checkNull(foundDiscount)) return false;
         
-        LocalDate startDate = getDate("Enter start date", false);  
-        LocalDate endDate = getDate("Enter end date", false);
-        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, false);
-        int usage = getInteger("Enter available usage", 1, 20, false);
+        LocalDate startDate = getDate("Enter start date", true);  
+        LocalDate endDate = getDate("Enter end date", true);
+        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, true);
+        int usage = getInteger("Enter available usage", 1, 20, true);
         boolean active = yesOrNo("Set active");
         
         if (startDate != null) foundDiscount.setStartDate(startDate);
