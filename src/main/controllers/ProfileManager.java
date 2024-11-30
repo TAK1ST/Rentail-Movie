@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import static main.controllers.Managers.getACM;
 import main.dao.ProfileDAO;
+import main.dto.Account;
 import main.dto.Profile;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getString;
@@ -25,14 +27,30 @@ public class ProfileManager extends ListManager<Profile> {
         list = ProfileDAO.getAllProfiles();
     }
 
-    public boolean addProfile(String accountID) throws IOException {   
+    public boolean addProfile(String accountID) throws IOException { 
+        
+        Account foundAccount = (Account) getACM().searchById(accountID);
+        if (getACM().checkNull(foundAccount)) return false;
+        
+        String name = getName("Enter username", false);
+        if (name.isEmpty()) return false;
+        
+        String phoneNumber = getPhoneNumber("Enter your phone number", false);
+        if (phoneNumber.isEmpty()) return false;
+        
+        String address = getString("Enter your address", false);
+        if (address.isEmpty()) return false;
+        
+        LocalDate birthday = getDate("Enter your birthday", false);
+        if (birthday == null) return false;
+        
         list.add(new Profile(
                 accountID, 
-                getName("Enter username", false), 
-                getPhoneNumber("Enter your phone number", false), 
-                getString("Enter your address", false),
+                name, 
+                phoneNumber, 
+                address,
                 0,
-                getDate("Enter your birthday", false)
+                birthday
         ));
         return ProfileDAO.addProfileToDB(list.getLast());
     }
@@ -40,7 +58,7 @@ public class ProfileManager extends ListManager<Profile> {
     public boolean updateProfile(String userID) {
         if (checkEmpty(list)) return false;
 
-        Profile foundProfile = null;
+        Profile foundProfile;
         if (userID.isEmpty()) {
             foundProfile = (Profile)getById("Enter user's id");
         } else {

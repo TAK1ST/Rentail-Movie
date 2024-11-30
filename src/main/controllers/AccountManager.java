@@ -49,15 +49,21 @@ public class AccountManager extends ListManager<Account> {
                 AccRole.ADMIN,
                 AccStatus.OFFLINE
         ));
-        AccountDAO.addAccountToDB(list.getLast());
+        AccountDAO.addAccountToDB(list.getLast()); 
     }
 
     public boolean registorAccount() throws IOException {
-        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), AccRole.CUSTOMER);
-        String username = getUsername("Enter username", false, list);
-        String password = getPassword("Enter password", false);
-        String email = getEmail("Enter email", false);
         
+        String username = getUsername("Enter username", false, list);
+        if (username.isEmpty()) return false;
+        
+        String password = getPassword("Enter password", false);
+        if (password.isEmpty()) return false;
+        
+        String email = getEmail("Enter email", false);
+        if (password.isEmpty()) return false;
+        
+        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), AccRole.CUSTOMER);
         if (yesOrNo("Fill in all infomation?")) {
             if(getPFM().addProfile(id)) {
                 errorLog("Cannot registor account info");
@@ -79,8 +85,14 @@ public class AccountManager extends ListManager<Account> {
     public boolean addAccount(AccRole registorRole) throws IOException {  
         
         String username = getUsername("Enter username", false, list);
+        if (username.isEmpty()) return false;
+        
         String password = getPassword("Enter password", false);
+        if (password.isEmpty()) return false;
+        
         String email = getEmail("Enter your email", false);
+        if (email.isEmpty()) return false;
+        
         AccRole role = (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole;
         
         String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), role);

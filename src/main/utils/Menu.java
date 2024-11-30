@@ -51,11 +51,9 @@ public class Menu {
                 for (MenuAction action : actionsFinally) 
                     action.performAction();
         
-            MenuOption option;
             int choice = Menu.getChoice("Enter choice", options.length + INIT_NUM - 1);
             do {
-                option = options[choice - INIT_NUM];
-
+                MenuOption option = options[choice - INIT_NUM];
                 if (option.action != null) 
                     option.action.performAction();
 
@@ -68,7 +66,11 @@ public class Menu {
                 if (option.after == ENTER_TO_CONTINUE)
                     pressEnterToContinue();
                 
-            } while (option.after == ASK_FOR_AGAIN && Menu.askForAgain());
+                if (option.after == ASK_FOR_AGAIN && Menu.askForAgain()) {
+                } 
+                else return;
+                
+            } while (true);
         } while (true);
     }
      
