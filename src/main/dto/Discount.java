@@ -1,6 +1,6 @@
 package main.dto;
 
-import exceptions.MethodNotFound;
+import main.exceptions.MethodNotFound;
 import java.time.LocalDate;
 import main.base.Model;
 import main.constants.DiscountType;
@@ -13,17 +13,17 @@ public class Discount extends Model {
     private LocalDate startDate;
     private LocalDate endDate;
     private DiscountType type;
-    private int usageAvailable;
+    private int quantity;
     private boolean isActive;
     private double value;
 
-    public Discount(String code, String customerID, LocalDate startDate, LocalDate endDate, DiscountType type, int usageAvailable, boolean isActive, double value) {
+    public Discount(String code, String customerID, LocalDate startDate, LocalDate endDate, DiscountType type, int quantity, boolean isActive, double value) {
         super(code);
         this.customerID = customerID;
         this.startDate = startDate;
         this.endDate = endDate;
         this.type = type;
-        this.usageAvailable = usageAvailable;
+        this.quantity = quantity;
         this.isActive = isActive;
         this.value = value;
     }
@@ -34,7 +34,7 @@ public class Discount extends Model {
         this.startDate = other.startDate;
         this.endDate = other.endDate;
         this.type = other.type;
-        this.usageAvailable = other.usageAvailable;
+        this.quantity = other.quantity;
         this.isActive = other.isActive;
         this.value = other.value;
     }
@@ -42,7 +42,7 @@ public class Discount extends Model {
     @Override
     public String toString() {
         return String.format("Discount: %s, %s, %s, %s, %s, %d, %b, %.2f.",
-                this.getCode(), customerID, startDate, endDate, type, usageAvailable, isActive, value);
+                this.getCode(), customerID, startDate, endDate, type, quantity, isActive, value);
     }
 
     public static String className() {
@@ -108,13 +108,23 @@ public class Discount extends Model {
         this.type = type;
     }
 
-    public int getUsageAvailable() {
-        return usageAvailable;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setUsageAvailable(int usageAvailable) {
-        this.usageAvailable = usageAvailable;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
+
+    public boolean isIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    
 
     public boolean isActive() {
         return isActive;

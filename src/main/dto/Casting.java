@@ -4,7 +4,7 @@
  */
 package main.dto;
 
-import exceptions.MethodNotFound;
+import main.exceptions.MethodNotFound;
 import main.base.Model;
 import main.constants.ActorRole;
 import static main.utils.LogMessage.errorLog;

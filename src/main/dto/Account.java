@@ -13,8 +13,9 @@ public class Account extends Model {
     private String email;
     private AccRole role;
     private AccStatus status;
-    private LocalDate createDate;
-    private LocalDate updateDate;
+    private LocalDate createAt;
+    private LocalDate updateAt;
+    private LocalDate onlineAt;
 
     public Account(
             String id, 
@@ -23,8 +24,9 @@ public class Account extends Model {
             String email, 
             AccRole role, 
             AccStatus status, 
-            LocalDate createDate, 
-            LocalDate updateDate) 
+            LocalDate createAt, 
+            LocalDate updateAt,
+            LocalDate onlineAt) 
     {
         super(id);
         this.username = username;
@@ -32,8 +34,9 @@ public class Account extends Model {
         this.email = email;
         this.role = role;
         this.status = status;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
+        this.onlineAt = onlineAt;
     }
 
     public Account(Account other) {
@@ -43,21 +46,23 @@ public class Account extends Model {
         this.email = other.email;
         this.role = other.role;
         this.status = other.status;
-        this.createDate = other.createDate;
-        this.updateDate = other.updateDate;
+        this.createAt = other.createAt;
+        this.updateAt = other.updateAt;
+        this.onlineAt = other.onlineAt;
     }
 
     @Override
     public String toString() {
-        return String.format("Account: %s, %s, %s, %s, %s, %s, %s, %s.",
+        return String.format("Account: %s, %s, %s, %s, %s, %s, %s, %s, %s.",
                 super.getId(),
                 username,
                 password,
                 email,
                 role,
                 status,
-                createDate.format(Validator.DATE),
-                updateDate.format(Validator.DATE)
+                createAt.format(Validator.DATE),
+                updateAt.format(Validator.DATE),
+                onlineAt.format(Validator.DATE)
         );
     }
 
@@ -105,20 +110,28 @@ public class Account extends Model {
         this.status = status;
     }
 
-    public LocalDate getCreateDate() {
-        return createDate;
+    public LocalDate getCreateAt() {
+        return createAt;
     }
 
-    public void setCreateDate(LocalDate createDate) {
-        this.createDate = createDate;
+    public void setCreateAt(LocalDate createAt) {
+        this.createAt = createAt;
     }
 
-    public LocalDate getUpdateDate() {
-        return updateDate;
+    public LocalDate getUpdateAt() {
+        return updateAt;
     }
 
-    public void setUpdateDate(LocalDate updateDate) {
-        this.updateDate = updateDate;
+    public void setUpdateAt(LocalDate updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public LocalDate getOnlineAt() {
+        return onlineAt;
+    }
+
+    public void setOnlineAt(LocalDate onlineAt) {
+        this.onlineAt = onlineAt;
     }
     
 }
