@@ -75,7 +75,7 @@ public class ActorManager extends ListManager<Actor> {
     }
 
     public void searchActor() {
-        display(getActorBy("Enter actor's propety"), "List of Actor");
+        display(getActorBy("Enter actor's propety"));
     }
 
     public List<Actor> getActorBy(String message) {
@@ -94,21 +94,31 @@ public class ActorManager extends ListManager<Actor> {
     }
     
     @Override
-    public void display(List<Actor> actors, String title) {
-        if (checkEmpty(list)) return; 
+    public void display(List<Actor> tempList) {
+        if (checkEmpty(tempList)) return; 
+        int actorNameLength = 0;
+        int descriptionLength = 0;
+        for (Actor item : list) {
+            actorNameLength = Math.max(actorNameLength, item.getActorName().length());
+            descriptionLength = Math.max(descriptionLength, item.getDescription().length());
+        }
         
-        System.out.println(title);
-        System.out.println("|------------------------------------------------------------------------|");
-        System.out.printf("|%-15s | %-30s | %-4s | %-50s\n |", "Actor ID", "Actor Name", "Rank", "Description");
-        System.out.println("|------------------------------------------------------------------------|");
-        for (Actor item : actors) {
-            System.out.printf("|%-15s | %-30s | %-4s | %-50s\n |",
+        int widthLength = 8 + actorNameLength + 5 + descriptionLength + 13;
+         for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-" + actorNameLength + "s | %-5s | %-" + descriptionLength + "s | \n",
+                "ID", "Name", "Rank" , "Description");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        for (Actor item : tempList) {
+            System.out.printf("\n| %-8s | %-" + actorNameLength + "s | %-5s | %-" + descriptionLength + "s |",
                     item.getId(),
                     item.getActorName(),
                     item.getRank(),
                     item.getDescription());
         }
-        System.out.println("|------------------------------------------------------------------------|");
+        System.out.println();
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.println();
+    }
+   
     }
 
-}

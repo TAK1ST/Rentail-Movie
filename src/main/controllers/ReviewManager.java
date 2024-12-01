@@ -12,9 +12,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import main.constants.IDPrefix;
-import main.dao.ReviewDAO;
+import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
+import main.dao.ReviewDAO;
+import static main.controllers.Managers.getPFM;
+import main.dto.Account;
 import main.dto.Movie;
+import main.dto.Profile;
 import main.dto.Review;
 import main.utils.IDGenerator;
 import static main.utils.Input.getInteger;
@@ -105,7 +109,7 @@ public final class ReviewManager extends ListManager<Review> {
     }
 
     public void searchReview() {
-        display(getReviewBy("Enter review's propety to search"), "Search Results");
+        display(getReviewBy("Enter review's propety to search"));
     }
 
     public List<Review> getReviewBy(String message) {
@@ -155,7 +159,7 @@ public final class ReviewManager extends ListManager<Review> {
         String[] options = new String[]{"id", "rating"};
         sortBy(selectInfo("Sort review by", options, true));
 
-        display(movieReviews, foundMovie.getTitle() + " 's reviews");
+        display(movieReviews);
     }
 
     public void myReviews(String customID) {
@@ -164,32 +168,43 @@ public final class ReviewManager extends ListManager<Review> {
         String[] options = new String[]{"id", "rating"};
         sortBy(selectInfo("Sort review by", options, true));
 
-        display(movieReviews, "My Review History");
+        display(movieReviews);
     }
 
+
     @Override
-    public void display(List<Review> reviews, String title) {
-        if (checkEmpty(list)) {
-            return;
+    public void display(List<Review> tempList) {
+        if (checkEmpty(tempList)) return; 
+        int reviewLength = 0;
+        int customerNameLength = 0;
+        int movieNameLength = 0;
+        for (Review item : list) {
+            reviewLength = Math.max(reviewLength, item.getReviewText().length());
+            Profile foundCustomer = (Profile) getPFM().searchById(item.getCustomerID());
+            Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
+            customerNameLength = Math.max(customerNameLength, foundCustomer.getFullName().length());
+            movieNameLength = Math.max(movieNameLength, foundMovie.getTitle().length());
         }
-        System.out.println(title);
-        System.out.println("|------------------------------------------------------------------------------------------------");
 
-        System.out.printf("|%-15s | %-15s | %-15s | %-10d | %-20s | %-30s |n",
-                "Review ID", "Customer ID", "Movie ID", "Rating",
-                "Review Date", "Review Text");
-        System.out.println("|------------------------------------------------------------------------------------------------");
-
-        for (Review item  : reviews) {
-            System.out.printf("|%-15s | %-15s | %-15s | %-10d | %-20s | %-30s |%n",
+        
+        int widthLength = 8 + movieNameLength + customerNameLength + reviewLength + 4 + 10 + 19;
+         for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-" + movieNameLength + "s |  %-" + customerNameLength + "s | %-" + reviewLength + "s | %-4s | %-10s | \n",
+                "ID", "Name", "Birthday" , "Address" , "PhoneNumber" , "Credit");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        for (Review item : tempList) {
+             Account foundCustomer = (Account) getACM().searchById(item.getCustomerID());
+            Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
+        System.out.printf("\n| %-8s | %-" + movieNameLength + "s |  %-" + customerNameLength + "s | %-" + reviewLength + "s | %-4s | %-10s | \n",
                     item.getId(),
-                    item.getCustomerID(),
-                    item.getMovieID(),
+                    foundMovie.getTitle(),
+                    foundCustomer.getUsername(),
+                    item.getReviewText(),
                     item.getRating(),
-                    item.getReviewDate(),
-                    item.getReviewText());
+                    item.getReviewDate());
         }
-        System.out.println("|------------------------------------------------------------------------------------------------");
-
+        System.out.println();
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.println();
     }
 }

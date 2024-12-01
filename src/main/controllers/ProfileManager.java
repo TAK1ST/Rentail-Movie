@@ -92,7 +92,7 @@ public class ProfileManager extends ListManager<Profile> {
     }
 
     public void searchProfile() {
-        display(getProfileBy("Enter any user's propety"), "Search Results");
+        display(getProfileBy("Enter any user's propety"));
     }
 
     public List<Profile> getProfileBy(String message) {
@@ -114,28 +114,32 @@ public class ProfileManager extends ListManager<Profile> {
         return result;
     }
 
-    @Override
-    public void display(List<Profile> profiles, String title) {
-        if (checkEmpty(list)) {
-            return; 
+ @Override
+    public void display(List<Profile> tempList) {
+        if (checkEmpty(tempList)) return; 
+        int fullNameLength = 0;
+        int addressLength = 0;
+        for (Profile item : list) {
+            fullNameLength = Math.max(fullNameLength, item.getFullName().length());
+            addressLength = Math.max(addressLength, item.getAddress().length());
         }
-        System.out.println(title);
-        System.out.println("|------------------------------------------------------------------------------------------------");
-        System.out.printf("|%-15s | %-30s | %-20s | %-15s | %-12s | %-12s\n |",
-                "Account ID", "Full Name", "Phone Number", "Address", "Credit", "Birthday");
-        System.out.println("|------------------------------------------------------------------------------------------------");
-
- 
-        for (Profile profile : profiles) {
-            System.out.printf("|%-15s | %-30s | %-20s | %-15s | %-12.2f | %-12s\n |",
-                    profile.getId(),
-                    profile.getFullName().isEmpty() ? "N/A" : profile.getFullName(),
-                    profile.getPhoneNumber().isEmpty() ? "N/A" : profile.getPhoneNumber(),
-                    profile.getAddress().isEmpty() ? "N/A" : profile.getAddress(),
-                    profile.getCredit() > 0 ? String.format("%.2f", profile.getCredit()) : "N/A",
-                    profile.getBirthday() != null ? profile.getBirthday().format(Validator.DATE) : "N/A");
+        
+        int widthLength = 8 + fullNameLength + 10 + addressLength + 10 + 4 + 19;
+         for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-" + fullNameLength + "s | %-10s | %-" + addressLength + "s | %-11s | %-6s | \n",
+                "ID", "Name", "Birthday" , "Address" , "PhoneNumber" , "Credit");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        for (Profile item : tempList) {
+        System.out.printf("\n| %-8s | %-" + fullNameLength + "s | %-10s | %-" + addressLength + "s | %-11s | %-6s | \n",
+                    item.getId(),
+                    item.getFullName(),
+                    item.getBirthday(),
+                    item.getAddress(),
+                    item.getPhoneNumber(),
+                    item.getCredit());
         }
-        System.out.println("|------------------------------------------------------------------------------------------------");
+        System.out.println();
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.println();
     }
-
 }

@@ -117,7 +117,7 @@ public class MovieManager extends ListManager<Movie> {
     }
 
     public void searchMovie() {
-        display(getMovieBy("Enter movie's property"), "Search Results");
+        display(getMovieBy("Enter movie's property"), "MOVIE");
     }
 
     public List<Movie> getMovieBy(String message) {
@@ -139,7 +139,6 @@ public class MovieManager extends ListManager<Movie> {
         return result;
     }
     
-    @Override
     public void display(List<Movie> movies, String title) {
         if (checkEmpty(list)) return;
         
@@ -164,6 +163,5 @@ public class MovieManager extends ListManager<Movie> {
 
         System.out.println("|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|");
     }
-    
-    
+   
 }

@@ -16,9 +16,11 @@ public class GenreDAO {
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
+
             int count = 0;
             ps.setString(++count, genre.getGenreName());
             ps.setString(++count, genre.getDescription());
+
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -43,13 +45,17 @@ public class GenreDAO {
         return false;
     }
 
+
     public static boolean deleteGenreFromDB(String genreName) {
+
         String sql = "DELETE FROM Genres WHERE genre_name = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
+
             ps.setString(1, genreName);
             return ps.executeUpdate() > 0;
+
         } catch (SQLException e) {
             e.printStackTrace(); 
         }

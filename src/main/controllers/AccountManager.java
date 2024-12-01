@@ -223,6 +223,7 @@ public class AccountManager extends ListManager<Account> {
         return result;
     }
 
+
     @Override
     public void display(List<Account> tempList) {
         if (checkEmpty(tempList)) {
@@ -236,29 +237,22 @@ public class AccountManager extends ListManager<Account> {
             emailLength = Math.max(emailLength, item.getEmail().length());
         }
         
-        int widthLength = 8 + usernameLength + 8 + emailLength + 13;
+        int widthLength = 8 + usernameLength + 8 + emailLength + 8 + 16;
         
         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |\n",
-                "ID", "Username", "Role", "Email");
+        System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s | %-8s |\n",
+                "ID", "Username", "Role", "Email" , "Status");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Account item : tempList) {
-            System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |",
+            System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s | %-8s |",
                     item.getId(),
                     item.getUsername(),
                     item.getRole(),
-                    item.getEmail());
+                    item.getEmail(),
+                    item.getStatus());
         }
         System.out.println();
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         System.out.println();
     }
-    
-    public void show() {
-        while (yesOrNo("Sort the list?")) {
-            String[] options = new String[]{"username"};
-            display(sortBy(selectInfo("Sort review by", options, true)));
-        } 
-    }
-    
 }
