@@ -60,7 +60,7 @@ public class AdminPannel {
                 new MenuOption("Add Account", () -> getACM().addAccount(AccRole.ADMIN), ASK_FOR_AGAIN),
                 new MenuOption("Delete Account", () -> getACM().deleteAccount(), ASK_FOR_AGAIN),
                 new MenuOption("Update Account", () -> getACM().updateAccount(""), ASK_FOR_AGAIN),
-                new MenuOption("Search Account", () -> getACM().searchAccount(), ASK_FOR_AGAIN),
+                new MenuOption("Search Account", () -> getACM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Display Accounts", () -> getACM().displayList(), ENTER_TO_CONTINUE),
                 new MenuOption("Back", EXIT_MENU)
             },
@@ -76,7 +76,7 @@ public class AdminPannel {
                 new MenuOption("Add actor", () -> getATM().addActor(), ASK_FOR_AGAIN),
                 new MenuOption("Delete actor", () -> getATM().deleteActor(), ASK_FOR_AGAIN),
                 new MenuOption("Update actor", () -> getATM().updateActor(), ASK_FOR_AGAIN),
-                new MenuOption("Search actor", () -> getATM().searchActor(), ASK_FOR_AGAIN),
+                new MenuOption("Search actor", () -> getATM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Show all actor", () -> getATM().displayList(), ENTER_TO_CONTINUE),
                 new MenuOption("Back", EXIT_MENU)
             },
@@ -91,7 +91,7 @@ public class AdminPannel {
                 new MenuOption("Add Discount", () -> getDCM().addDiscount(), ASK_FOR_AGAIN),
                 new MenuOption("Delete Discount", () -> getDCM().deleteDiscount(), ASK_FOR_AGAIN),
                 new MenuOption("Update Discount", () -> getDCM().updateDiscount(), ASK_FOR_AGAIN),
-                new MenuOption("Search Discount", () -> getDCM().searchDiscount(), ASK_FOR_AGAIN),
+                new MenuOption("Search Discount", () -> getDCM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Display Discount", () -> getDCM().displayList(), ENTER_TO_CONTINUE),
                 new MenuOption("Back", EXIT_MENU)
             },
@@ -107,7 +107,7 @@ public class AdminPannel {
                 new MenuOption("Add genre",    () -> getGRM().addGenre(), ASK_FOR_AGAIN),
                 new MenuOption("Delete genre", () -> getGRM().deleteGenre(), ASK_FOR_AGAIN),
                 new MenuOption("Update genre", () -> getGRM().updateGenre(), ASK_FOR_AGAIN),
-                new MenuOption("Search genre", () -> getGRM().searchGenre(), ASK_FOR_AGAIN),
+                new MenuOption("Search genre", () -> getGRM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Show all genre", () -> getGRM().displayList(), ENTER_TO_CONTINUE),
                 new MenuOption("Back", EXIT_MENU)
             },
@@ -122,7 +122,7 @@ public class AdminPannel {
                 new MenuOption("Add Language", () -> getLGM().addLanguage(), ASK_FOR_AGAIN),
                 new MenuOption("Delete Language", () -> getLGM().deleteLanguage(), ASK_FOR_AGAIN),
                 new MenuOption("Update Language", () -> getLGM().updateLanguage(), ASK_FOR_AGAIN),
-                new MenuOption("Search Language", () -> getLGM().searchLanguage(), ASK_FOR_AGAIN),
+                new MenuOption("Search Language", () -> getLGM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Display Languages", () -> getLGM().displayList(), ENTER_TO_CONTINUE),
                 new MenuOption("Back", EXIT_MENU)
             },
@@ -138,7 +138,7 @@ public class AdminPannel {
                 new MenuOption("Add movie", () -> getMVM().addMovie(), ASK_FOR_AGAIN),
                 new MenuOption("Delete movie", () -> getMVM().deleteMovie(), ASK_FOR_AGAIN),
                 new MenuOption("Update movie", () -> getMVM().updateMovie(), ASK_FOR_AGAIN),
-                new MenuOption("Search movie", () -> getMVM().searchMovie(), ASK_FOR_AGAIN),
+                new MenuOption("Search movie", () -> getMVM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Show all movie", () -> getMVM().displayList(), ENTER_TO_CONTINUE),
                 new MenuOption("Back", EXIT_MENU)
             },
@@ -153,7 +153,7 @@ public class AdminPannel {
                 new MenuOption("Add Payment", () -> getPMM().addPayment(getString("Enter rental's id")), ASK_FOR_AGAIN),
                 new MenuOption("Delete Payment", () -> getPMM().deletePayment(), ASK_FOR_AGAIN),
                 new MenuOption("Update Payment", () -> getPMM().updatePayment(), ASK_FOR_AGAIN),
-                new MenuOption("Search Payment", () -> getPMM().updatePayment(), ASK_FOR_AGAIN),
+                new MenuOption("Search Payment", () -> getPMM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Display Payments", () -> getPMM().displayList(), ENTER_TO_CONTINUE),
                 new MenuOption("Back", EXIT_MENU)
             },
@@ -168,7 +168,7 @@ public class AdminPannel {
                 new MenuOption("Add Profile", () -> getPFM().addProfile(getString("Enter account's id")), ASK_FOR_AGAIN),
                 new MenuOption("Delete Profile", () -> getPFM().deleteProfile(), ASK_FOR_AGAIN),
                 new MenuOption("Update Profile", () -> getPFM().updateProfile(getString("Enter account's id")), ASK_FOR_AGAIN),
-                new MenuOption("Search Profile", () -> getPFM().searchProfile(), ASK_FOR_AGAIN),
+                new MenuOption("Search Profile", () -> getPFM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Display Profiles", () -> getPFM().displayList(), ENTER_TO_CONTINUE),
                 new MenuOption("Back", EXIT_MENU)
             },
@@ -184,7 +184,7 @@ public class AdminPannel {
                     new MenuOption("Add rental", () -> getRTM().addRental(Constants.DEFAULT_ADMIN_ID), ASK_FOR_AGAIN),
                     new MenuOption("Delete rental", () -> getRTM().deleteRental(), ASK_FOR_AGAIN),
                     new MenuOption("Update rental", () -> getRTM().updateRental(), ASK_FOR_AGAIN),
-                    new MenuOption("Search rental", () -> getRTM().searchRental(), ASK_FOR_AGAIN),
+                    new MenuOption("Search rental", () -> getRTM().search(), ASK_FOR_AGAIN),
                     new MenuOption("Show all rental", () -> getRTM().displayList(), ENTER_TO_CONTINUE),
                     new MenuOption("Back", EXIT_MENU)
                 },
@@ -197,10 +197,10 @@ public class AdminPannel {
             "Review Management",
             null,
             new MenuOption[]{
-                new MenuOption("Add review", () -> getRVM().makeReview(Constants.DEFAULT_ADMIN_ID), ASK_FOR_AGAIN),
+                new MenuOption("Add review", () -> getRVM().addReview(Constants.DEFAULT_ADMIN_ID), ASK_FOR_AGAIN),
                 new MenuOption("Delete review", () -> getRVM().deleteReview(), ASK_FOR_AGAIN),
                 new MenuOption("Update review", () -> getRVM().updateReview(), ASK_FOR_AGAIN),
-                new MenuOption("Search review", () -> getRVM().searchReview(), ASK_FOR_AGAIN),
+                new MenuOption("Search review", () -> getRVM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Show all review", () -> getRVM().displayList(), ENTER_TO_CONTINUE),
                 new MenuOption("Back", EXIT_MENU)
             },
@@ -216,7 +216,7 @@ public class AdminPannel {
                 new MenuOption("Add Wishlist", () -> getWLM().addWishlist(getString("Enter customer' ID")), ASK_FOR_AGAIN),
                 new MenuOption("Delete Wishlist", () -> getWLM().deleteWishlist(), ASK_FOR_AGAIN),
                 new MenuOption("Update Wishlist", () -> getWLM().updateWishlist(), ASK_FOR_AGAIN),
-                new MenuOption("Search Wishlist", () -> getWLM().searchWishlist(), ASK_FOR_AGAIN),
+                new MenuOption("Search Wishlist", () -> getWLM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Display Wishlists", () -> getWLM().displayList(), ENTER_TO_CONTINUE),
                 new MenuOption("Back", EXIT_MENU)
             },

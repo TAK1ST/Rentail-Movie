@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import main.constants.IDPrefix;
 import main.constants.RentalStatus;
@@ -208,14 +209,6 @@ public class RentalManager extends ListManager<Rental> {
         return RentalDAO.deleteRentalFromDB(foundRental.getId());
     }
 
-    public void searchRental() {
-        display(getRentalBy("Enter any rental's propety"));
-    }
-
-    public List<Rental> getRentalBy(String message) {
-        return searchBy(getString(message, false));
-    }
-
     @Override
     public List<Rental> searchBy(String propety) {
         List<Rental> result = new ArrayList<>();
@@ -235,7 +228,53 @@ public class RentalManager extends ListManager<Rental> {
         }
         return result;
     }
-@Override
+    
+    @Override
+    public List<Rental> sortList(List<Rental> tempList, String property) {
+        if (checkEmpty(tempList)) {
+            return null;
+        }
+
+        List<Rental> result = new ArrayList<>(tempList);
+        switch (property) {
+            case "rentalId":
+                result.sort(Comparator.comparing(Rental::getId));
+                break;
+            case "movieId":
+                result.sort(Comparator.comparing(Rental::getMovieId));
+                break;
+            case "staffId":
+                result.sort(Comparator.comparing(Rental::getStaffID));
+                break;
+            case "customerId":
+                result.sort(Comparator.comparing(Rental::getCustomerID));
+                break;
+            case "dueDate":
+                result.sort(Comparator.comparing(Rental::getDueDate));
+                break;
+            case "rentalDate":
+                result.sort(Comparator.comparing(Rental::getRentalDate));
+                break;
+            case "returnDate":
+                result.sort(Comparator.comparing(Rental::getReturnDate));
+                break;
+            case "status":
+                result.sort(Comparator.comparing(Rental::getStatus));
+                break;
+            case "totalAmount":
+                result.sort(Comparator.comparing(Rental::getTotalAmount));
+                break;
+            case "lateFee":
+                result.sort(Comparator.comparing(Rental::getLateFee));
+                break;
+            default:
+                result.sort(Comparator.comparing(Rental::getId));
+                break;
+        }
+        return result;
+    }
+    
+    @Override
     public void display(List<Rental> tempList) {
         if (checkEmpty(tempList)) return; 
         int staffNameLength = 0;

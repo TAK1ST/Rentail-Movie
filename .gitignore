@@ -1,7 +1,6 @@
 /dist/
 /build/
 /lib/
-/nbproject/
 /src/test/
 .env
 

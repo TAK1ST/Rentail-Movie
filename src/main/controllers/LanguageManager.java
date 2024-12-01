@@ -6,6 +6,7 @@ package main.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
 import main.dao.LanguageDAO;
@@ -18,6 +19,8 @@ import static main.utils.Validator.getName;
  * @author trann
  */
 public class LanguageManager extends ListManager<Language> {
+    
+    private static final String[] searchOptions = {"language_code", "language_name"};
     
     public LanguageManager() throws IOException {
         super(Language.className());
@@ -62,14 +65,6 @@ public class LanguageManager extends ListManager<Language> {
         list.remove(foundLanguage);   
         return LanguageDAO.deleteLanguageFromDB(foundLanguage.getId());
     }
-
-    public void searchLanguage() {
-        display(getLanguageBy("Enter language's propety"));
-    }
-
-    public List<Language> getLanguageBy(String message) {
-        return searchBy(getString(message, false));
-    }
    
     @Override
     public List<Language> searchBy(String propety) {
@@ -83,7 +78,28 @@ public class LanguageManager extends ListManager<Language> {
         return result;
     }
     
-     @Override
+    @Override
+    public List<Language> sortList(List<Language> tempList, String property) {
+        if (checkEmpty(tempList)) {
+            return null;
+        }
+
+        List<Language> result = new ArrayList<>(tempList);
+        switch (property) {
+            case "languageCode":
+                result.sort(Comparator.comparing(Language::getCode));
+                break;
+            case "languageName":
+                result.sort(Comparator.comparing(Language::getName));
+                break;
+            default:
+                result.sort(Comparator.comparing(Language::getCode)); 
+                break;
+        }
+        return result;
+    }
+ 
+    @Override
     public void display(List<Language> tempList) {
         if (checkEmpty(tempList)) return; 
         int languageNameLength = 0;

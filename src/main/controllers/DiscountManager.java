@@ -7,6 +7,7 @@ package main.controllers;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
 import main.constants.DiscountType;
@@ -18,7 +19,6 @@ import main.dto.Discount;
 import main.utils.IDGenerator;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
-import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -29,6 +29,8 @@ import static main.utils.Validator.getDate;
  * @author trann
  */
 public class DiscountManager extends ListManager<Discount> {
+    
+    private static final String[] searchOptions = {"discount_code", "customer_id", "discount_type", "discount_value", "start_date", "end_date", "quantity", "is_active"};
     
     public DiscountManager() throws IOException {
         super(Discount.className());
@@ -95,14 +97,6 @@ public class DiscountManager extends ListManager<Discount> {
         list.remove(foundDiscount);
         return DiscountDAO.deleteDiscountFromDB(foundDiscount.getId());
     }
-
-    public void searchDiscount() {
-        display(getDiscountBy("Enter discount's propety"));
-    }
-
-    public List<Discount> getDiscountBy(String message) {
-        return searchBy(getString(message, false));
-    }
    
     @Override
     public List<Discount> searchBy(String propety) {
@@ -120,7 +114,47 @@ public class DiscountManager extends ListManager<Discount> {
             }   
         return result;
     }
-     @Override
+    
+    @Override
+    public List<Discount> sortList(List<Discount> tempList, String property) {
+        if (checkEmpty(tempList)) {
+            return null;
+        }
+
+        List<Discount> result = new ArrayList<>(tempList);
+        switch (property) {
+            case "discountCode":
+                result.sort(Comparator.comparing(Discount::getCode));
+                break;
+            case "customerId":
+                result.sort(Comparator.comparing(Discount::getCustomerID));
+                break;
+            case "discountType":
+                result.sort(Comparator.comparing(Discount::getType));
+                break;
+            case "discountValue":
+                result.sort(Comparator.comparing(Discount::getValue));
+                break;
+            case "startDate":
+                result.sort(Comparator.comparing(Discount::getStartDate));
+                break;
+            case "endDate":
+                result.sort(Comparator.comparing(Discount::getEndDate));
+                break;
+            case "quantity":
+                result.sort(Comparator.comparing(Discount::getQuantity));
+                break;
+            case "isActive":
+                result.sort(Comparator.comparing(Discount::isActive));
+                break;
+            default:
+                result.sort(Comparator.comparing(Discount::getCode)); 
+                break;
+        }
+        return result;
+    }
+
+    @Override
     public void display(List<Discount> tempList) {
         if (checkEmpty(tempList)) return; 
         int discountCodeLength = 0;

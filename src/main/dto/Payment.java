@@ -55,11 +55,11 @@ public class Payment extends Model {
         super.setId(id);
     }
 
-    public PaymentMethod getPaymentMethods() {
+    public PaymentMethod getMethod() {
         return method;
     }
 
-    public void setPaymentMethods(PaymentMethod method) {
+    public void setMethod(PaymentMethod method) {
         this.method = method;
     }
     

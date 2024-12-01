@@ -20,7 +20,7 @@ public class ProfileDAO {
         String sql = "INSERT INTO Profiles ("
                 + "account_id, "
                 + "full_name, "
-                + "birth_day, "
+                + "birthday, "
                 + "address, "
                 + "phone_number, "
                 + "credit) VALUES (?, ?, ?, ?, ?, ?)";
@@ -48,7 +48,7 @@ public class ProfileDAO {
                 + "phone_number = ?, "
                 + "address = ?, "
                 + "credit = ?, "
-                + "birth_day = ? "
+                + "birthday = ? "
                 + "WHERE account_id = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -95,7 +95,7 @@ public class ProfileDAO {
                     resultSet.getString("phone_number"),
                     resultSet.getString("address"),
                     resultSet.getDouble("credit"),
-                    resultSet.getDate("birth_day").toLocalDate()
+                    resultSet.getDate("birthday").toLocalDate()
                 );
                 list.add(account);
             }
