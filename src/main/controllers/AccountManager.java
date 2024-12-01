@@ -16,7 +16,6 @@ import static main.utils.Input.getString;
 import static main.utils.Input.selectInfo;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
-import main.utils.Menu;
 import static main.utils.PassEncryptor.encryptPassword;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -181,7 +180,7 @@ public class AccountManager extends ListManager<Account> {
     }
 
     public void searchAccount() {
-        display(getAccountBy("Enter any user's propety"), "Search Results");
+        display(getAccountBy("Enter any user's propety"));
     }
 
     public List<Account> getAccountBy(String message) {
@@ -223,53 +222,44 @@ public class AccountManager extends ListManager<Account> {
         }
         return result;
     }
-   @Override
-public void display(List<Account> tempList, String title) {
-    if (checkEmpty(tempList)) {
-        return;
+
+
+    @Override
+    public void display(List<Account> tempList) {
+        if (checkEmpty(tempList)) {
+            return;
+        }
+
+        int usernameLength = 0;
+        int emailLength = 0;
+        for (Account item : list) {
+            usernameLength = Math.max(usernameLength, item.getUsername().length());
+            emailLength = Math.max(emailLength, item.getEmail().length());
+        }
+        
+        int widthLength = 8 + usernameLength + 8 + emailLength + 8 + 16;
+        
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s | %-8s |\n",
+                "ID", "Username", "Role", "Email" , "Status");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        for (Account item : tempList) {
+            System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s | %-8s |",
+                    item.getId(),
+                    item.getUsername(),
+                    item.getRole(),
+                    item.getEmail(),
+                    item.getStatus());
+        }
+        System.out.println();
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.println();
     }
-
-    Menu.showHeader(title);
-
-    int usernameLength = 0;
-    int emailLength = 0;
-
-    // Tính chiều rộng tối đa cho username và email
-    for (Account item : tempList) {
-       usernameLength = Math.max(usernameLength, item.getUsername().length());
-       emailLength = Math.max(emailLength, item.getEmail().length());
-    }
-
-
-    // Tính chiều rộng tổng của bảng
-    int widthLength = 8 + usernameLength + 8 + emailLength;
-
-    // In dòng ngăn cách trên
-    for (int index = 0; index < widthLength; index++) System.out.print("-");
-
-    // In tiêu đề
-    System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |\n", "ID", "Username", "Role", "Email");
-
-    // In dòng ngăn cách giữa
-    for (int index = 0; index < widthLength; index++) System.out.print("-");
-
-    // In các tài khoản
-    for (Account item : tempList) {
-        System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |\n",
-                item.getId(),
-                item.getUsername(),
-                item.getRole(),
-                item.getEmail());
-    }
-
-    // In dòng ngăn cách dưới
-    for (int index = 0; index < widthLength; index++) System.out.print("-");
-    System.out.println();
-}
-    public void show(String title) {
+    
+    public void show() {
         while (yesOrNo("Sort the list?")) {
             String[] options = new String[]{"username"};
-            display(sortBy(selectInfo("Sort review by", options, true)), title);
+            display(sortBy(selectInfo("Sort review by", options, true)));
         } 
 }
 }

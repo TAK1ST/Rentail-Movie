@@ -24,8 +24,8 @@ public class GenreDAO {
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, genre.getId());
-            preparedStatement.setString(2, genre.getGenreName());
+            preparedStatement.setString(1, genre.getGenreName());
+            preparedStatement.setString(2, genre.getDescription());
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -49,12 +49,12 @@ public class GenreDAO {
         return false;
     }
     
-    public static boolean deleteGenreFromDB(String genre_id) {
+    public static boolean deleteGenreFromDB(String genre_name) {
         String sql = "DELETE FROM Genres WHERE genre_name = ?";
         try (Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, genre_id);
+            preparedStatement.setString(1, genre_name);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

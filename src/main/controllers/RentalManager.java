@@ -11,8 +11,10 @@ import main.constants.RentalStatus;
 import main.dao.RentalDAO;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getACM;
+import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import main.dto.Movie;
+import main.dto.Profile;
 import main.dto.Rental;
 import main.services.MovieServices;
 import main.services.RentalServices;
@@ -262,5 +264,41 @@ public class RentalManager extends ListManager<Rental> {
 
         System.out.println("|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
     }
-
+@Override
+    public void display(List<Rental> tempList) {
+        if (checkEmpty(tempList)) return; 
+        int staffNameLength = 0;
+        int customerNameLength = 0;
+        int movieNameLength = 0;
+        
+        for (Rental item : list) {
+            Profile foundStaff = (Profile) getPFM().searchById(item.getStaffID());
+            Profile foundCustomer = (Profile) getPFM().searchById(item.getCustomerID());
+            Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
+            staffNameLength = Math.max(staffNameLength, foundStaff.getFullName().length());
+            customerNameLength = Math.max(customerNameLength, foundCustomer.getFullName().length());
+            movieNameLength = Math.max(movieNameLength, foundMovie.getTitle().length());
+        }
+        
+        int widthLength = 8 + fullNameLength + 10 + addressLength + 10 + 4 + 19;
+         for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-" + fullNameLength + "s | %-10s | %-" + addressLength + "s | %-11s | %-6s | \n",
+                "ID", "Name", "Birthday" , "Address" , "PhoneNumber" , "Credit");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        for (Rental item : tempList) {
+            Account foundStaff = (Account) getACM().searchById(item.getStaffID());
+            Account foundCustomer = (Account) getACM().searchById(item.getCustomerID());
+            Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
+        System.out.printf("\n| %-8s | %-" + fullNameLength + "s | %-10s | %-" + addressLength + "s | %-11s | %-6s | \n",
+                    item.getId(),
+                    item.getFullName(),
+                    item.getBirthday(),
+                    item.getAddress(),
+                    item.getPhoneNumber(),
+                    item.getCredit());
+        }
+        System.out.println();
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.println();
+    }
 }
