@@ -21,7 +21,7 @@ public abstract class ListManager<T extends Model> {
         this.className = className;
         this.isNotSaved = false;
     }
-
+    
     public abstract List<T> sortList(List<T> tempList, String propety);
     public abstract List<T> searchBy(String property);
     
@@ -59,7 +59,7 @@ public abstract class ListManager<T extends Model> {
         return true;
     }
 
-    public boolean checkEmpty(List<T> list) {
+    public boolean checkNull(List<T> list) {
         if (!list.isEmpty()) {
             return false;
         }
@@ -85,12 +85,12 @@ public abstract class ListManager<T extends Model> {
         System.out.println(item);
     }
     
-    public void display(List<T> inputList) {
-        if (checkEmpty(inputList)) return;
-        inputList.forEach(item -> System.out.println(item));
+    public void display(List<T> tempList) {
+        if (checkNull(tempList)) return;
+        tempList.forEach(item -> System.out.println(item));
     }
     
-    public void displayList() {
+    public void display() {
         display(list);
     }
     
@@ -106,6 +106,18 @@ public abstract class ListManager<T extends Model> {
                 sortList(temp, propety);
             } else return;
         } while(true);
+    }
+    
+    public void displayWithSort(List<T> tempList, T t) {
+        displayWithSort(tempList, t.getSearchOptions());
+    }
+    
+    public void displayWithSort(String[] options) {
+        displayWithSort(list, options);
+    }
+    
+    public void displayWithSort(T t) {
+        displayWithSort(list, t.getSearchOptions());
     }
     
 }

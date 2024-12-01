@@ -30,8 +30,6 @@ import static main.utils.Validator.getDate;
  */
 public class DiscountManager extends ListManager<Discount> {
     
-    private static final String[] searchOptions = {"discount_code", "customer_id", "discount_type", "discount_value", "start_date", "end_date", "quantity", "is_active"};
-    
     public DiscountManager() throws IOException {
         super(Discount.className());
         list = DiscountDAO.getAllDiscounts();
@@ -68,7 +66,7 @@ public class DiscountManager extends ListManager<Discount> {
     }
 
     public boolean updateDiscount() {
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
 
         Discount foundDiscount = (Discount)getById("Enter discount code");
         if (checkNull(foundDiscount)) return false;
@@ -89,7 +87,7 @@ public class DiscountManager extends ListManager<Discount> {
     }
 
     public boolean deleteDiscount() { 
-        if (checkEmpty(list)) return false;       
+        if (checkNull(list)) return false;       
 
         Discount foundDiscount = (Discount)getById("Enter discount code");
         if (checkNull(foundDiscount)) return false;
@@ -117,7 +115,7 @@ public class DiscountManager extends ListManager<Discount> {
     
     @Override
     public List<Discount> sortList(List<Discount> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -156,7 +154,7 @@ public class DiscountManager extends ListManager<Discount> {
 
     @Override
     public void display(List<Discount> tempList) {
-        if (checkEmpty(tempList)) return; 
+        if (checkNull(tempList)) return; 
         int discountCodeLength = 0;
         for (Discount item : list) {
             discountCodeLength = Math.max(discountCodeLength, item.getCode().length());

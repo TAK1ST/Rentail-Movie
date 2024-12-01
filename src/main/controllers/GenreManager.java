@@ -17,8 +17,6 @@ import static main.utils.Validator.getName;
  */
 public class GenreManager extends ListManager<Genre> {
     
-    private static final String[] searchOptions = {"genre_name", "description"};
-    
     public GenreManager() throws IOException {
         super(Genre.className());
         list = GenreDAO.getAllGenres();
@@ -39,7 +37,7 @@ public class GenreManager extends ListManager<Genre> {
     }
 
     public boolean updateGenre() {
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
 
         Genre foundGenre = (Genre)getById("Enter genre");
         if (checkNull(foundGenre)) return false;
@@ -54,7 +52,7 @@ public class GenreManager extends ListManager<Genre> {
     }
 
     public boolean deleteGenre() { 
-        if (checkEmpty(list)) return false;       
+        if (checkNull(list)) return false;       
 
         Genre foundGenre = (Genre)getById("Enter genre");
         if (checkNull(foundGenre)) return false;
@@ -77,7 +75,7 @@ public class GenreManager extends ListManager<Genre> {
     
     @Override
     public List<Genre> sortList(List<Genre> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -98,7 +96,7 @@ public class GenreManager extends ListManager<Genre> {
 
     @Override
     public void display(List<Genre> tempList) {
-        if (checkEmpty(tempList)) return; 
+        if (checkNull(tempList)) return; 
         int genreNameLength = 0;
         int descriptionLength = 0;
         for (Genre item : list) {

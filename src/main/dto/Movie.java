@@ -83,6 +83,11 @@ public class Movie extends Model {
     public static String className() {
         return "Movie";
     }
+    
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"movie_id", "title", "description", "avg_rating", "release_year", "rental_price", "available_copies", "created_at", "updated_at"};
+    }
 
     public String getTitle() {
         return title;

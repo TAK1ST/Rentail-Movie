@@ -20,8 +20,6 @@ import static main.utils.Validator.getName;
  */
 public class LanguageManager extends ListManager<Language> {
     
-    private static final String[] searchOptions = {"language_code", "language_name"};
-    
     public LanguageManager() throws IOException {
         super(Language.className());
         list = LanguageDAO.getAllLanguages();
@@ -42,7 +40,7 @@ public class LanguageManager extends ListManager<Language> {
     }
 
     public boolean updateLanguage() {
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
 
         Language foundLanguage = (Language)getById("Enter language code");
         if (checkNull(foundLanguage)) return false;
@@ -57,7 +55,7 @@ public class LanguageManager extends ListManager<Language> {
     }
 
     public boolean deleteLanguage() { 
-        if (checkEmpty(list)) return false;       
+        if (checkNull(list)) return false;       
 
         Language foundLanguage = (Language)getById("Enter language codde");
         if (checkNull(foundLanguage)) return false;
@@ -80,7 +78,7 @@ public class LanguageManager extends ListManager<Language> {
     
     @Override
     public List<Language> sortList(List<Language> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -101,7 +99,7 @@ public class LanguageManager extends ListManager<Language> {
  
     @Override
     public void display(List<Language> tempList) {
-        if (checkEmpty(tempList)) return; 
+        if (checkNull(tempList)) return; 
         int languageNameLength = 0;
         for (Language item : list) {
             languageNameLength = Math.max(languageNameLength, item.getName().length());

@@ -43,6 +43,12 @@ public class Review extends Model {
     public static String className() {
         return "Review";
     }
+    
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"review_id", "movie_id", "customer_id", "review_text", "rating", "review_date"};
+    }
+
 
     public String getMovieID() {
         return movieID;

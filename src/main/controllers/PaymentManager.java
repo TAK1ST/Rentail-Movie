@@ -9,13 +9,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
-import main.constants.IDPrefix;
 import main.constants.PaymentMethod;
 import static main.controllers.Managers.getRTM;
 import main.dao.PaymentDAO;
 import main.dto.Rental;
 import main.dto.Payment;
-import static main.utils.Input.getString;
 import static main.utils.Utility.getEnumValue;
 
 /**
@@ -23,8 +21,6 @@ import static main.utils.Utility.getEnumValue;
  * @author trann
  */
 public class PaymentManager extends ListManager<Payment> {
-    
-    private static final String[] searchOptions = {"rental_id", "payment_method", "payment_date"};
 
     public PaymentManager() throws IOException {
         super(Payment.className());
@@ -46,7 +42,7 @@ public class PaymentManager extends ListManager<Payment> {
     }
 
     public boolean updatePayment() {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -64,7 +60,7 @@ public class PaymentManager extends ListManager<Payment> {
     }
 
     public boolean deletePayment() {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -91,7 +87,7 @@ public class PaymentManager extends ListManager<Payment> {
 
     @Override
     public List<Payment> sortList(List<Payment> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -112,7 +108,7 @@ public class PaymentManager extends ListManager<Payment> {
 
     @Override
     public void display(List<Payment> tempList) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return;
         }
 

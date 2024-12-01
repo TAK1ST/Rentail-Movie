@@ -45,7 +45,12 @@ public class Profile extends Model {
     }
 
     public static String className() {
-        return "User";
+        return "Profile";
+    }
+    
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"account_id", "full_name", "birthday", "address", "phone_number", "credit"};
     }
 
     @Override

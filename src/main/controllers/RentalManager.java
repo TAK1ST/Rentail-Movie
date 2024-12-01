@@ -108,7 +108,7 @@ public class RentalManager extends ListManager<Rental> {
     }
 
     public boolean returnMovie(String userID) {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -138,7 +138,7 @@ public class RentalManager extends ListManager<Rental> {
 
     public boolean updateRental() {
 
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
         
         Rental foundRental = (Rental)getById("Enter rental's id");
         if (checkNull(foundRental)) return false;
@@ -196,7 +196,7 @@ public class RentalManager extends ListManager<Rental> {
     }
 
     public boolean deleteRental() {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -231,7 +231,7 @@ public class RentalManager extends ListManager<Rental> {
     
     @Override
     public List<Rental> sortList(List<Rental> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -276,7 +276,7 @@ public class RentalManager extends ListManager<Rental> {
     
     @Override
     public void display(List<Rental> tempList) {
-        if (checkEmpty(tempList)) return; 
+        if (checkNull(tempList)) return; 
         int staffNameLength = 0;
         int customerNameLength = 0;
         int movieNameLength = 0;

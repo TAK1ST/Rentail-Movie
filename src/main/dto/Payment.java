@@ -28,6 +28,12 @@ public class Payment extends Model {
         return "Payment";
     }    
     
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"rental_id", "payment_method", "payment_date"};
+    }
+
+    
     @Override
     public String getId() {
         try {

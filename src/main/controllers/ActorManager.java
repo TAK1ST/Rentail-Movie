@@ -20,8 +20,6 @@ import static main.utils.Validator.getName;
  */
 public class ActorManager extends ListManager<Actor> {
     
-    private static final String[] searchOptions = {"actor_id", "actor_name", "actor_rank", "actor_description"};
-    
     public ActorManager() throws IOException {
         super(Actor.className());
         list = ActorDAO.getAllActors();
@@ -48,7 +46,7 @@ public class ActorManager extends ListManager<Actor> {
     }
 
     public boolean updateActor() {
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
 
         Actor foundActor = (Actor)getById("Enter actor's id");
         if (checkNull(foundActor)) return false;
@@ -68,7 +66,7 @@ public class ActorManager extends ListManager<Actor> {
     }
 
     public boolean deleteActor() { 
-        if (checkEmpty(list)) return false;       
+        if (checkNull(list)) return false;       
 
         Actor foundActor = (Actor)getById("Enter actor's id");
         if (checkNull(foundActor)) return false;
@@ -79,7 +77,7 @@ public class ActorManager extends ListManager<Actor> {
     
     @Override
     public List<Actor> sortList(List<Actor> tempList, String property) {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return null;
         }
 
@@ -114,7 +112,7 @@ public class ActorManager extends ListManager<Actor> {
     
     @Override
     public void display(List<Actor> tempList) {
-        if (checkEmpty(tempList)) return; 
+        if (checkNull(tempList)) return; 
         int actorNameLength = 0;
         int descriptionLength = 0;
         for (Actor item : list) {
@@ -123,7 +121,7 @@ public class ActorManager extends ListManager<Actor> {
         }
         
         int widthLength = 8 + actorNameLength + 5 + descriptionLength + 13;
-         for (int index = 0; index < widthLength; index++) System.out.print("-");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
         System.out.printf("\n| %-8s | %-" + actorNameLength + "s | %-5s | %-" + descriptionLength + "s | \n",
                 "ID", "Name", "Rank" , "Description");
         for (int index = 0; index < widthLength; index++) System.out.print("-");

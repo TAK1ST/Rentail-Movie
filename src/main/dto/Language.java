@@ -27,6 +27,12 @@ public class Language extends Model {
         return "Language";
     }
     
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"language_code", "language_name"};
+    }
+
+    
     @Override
     public String getId() {
         try {

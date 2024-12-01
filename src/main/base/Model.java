@@ -2,6 +2,8 @@ package main.base;
 
 public abstract class Model {
     private String id;
+    
+    public abstract String[] getSearchOptions();
 
     public Model(String id) {
         this.id = id;

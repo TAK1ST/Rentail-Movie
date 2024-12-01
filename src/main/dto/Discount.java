@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import main.base.Model;
 import main.constants.DiscountType;
 import static main.utils.LogMessage.errorLog;
-import main.utils.Validator;
 
 public class Discount extends Model {
 
@@ -47,6 +46,11 @@ public class Discount extends Model {
 
     public static String className() {
         return "Discount";
+    }
+    
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"discount_code", "customer_id", "discount_type", "discount_value", "start_date", "end_date", "quantity", "is_active"};
     }
     
     @Override

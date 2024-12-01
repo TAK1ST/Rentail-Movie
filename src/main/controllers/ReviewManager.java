@@ -9,7 +9,6 @@ import main.base.ListManager;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.IDPrefix;
@@ -32,8 +31,6 @@ import main.utils.Validator;
  * @author trann
  */
 public final class ReviewManager extends ListManager<Review> {
-
-    private static final String[] searchOptions = {"review_id", "movie_id", "customer_id", "review_text", "rating", "review_date"};
     
     public ReviewManager() throws IOException {
         super(Review.className());
@@ -69,7 +66,7 @@ public final class ReviewManager extends ListManager<Review> {
     }
 
     public boolean updateReview() {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -97,7 +94,7 @@ public final class ReviewManager extends ListManager<Review> {
     }
 
     public boolean deleteReview() {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -116,7 +113,7 @@ public final class ReviewManager extends ListManager<Review> {
             return;
         }
         List<Review> movieReview = searchBy(foundMovie.getId());
-        if (checkEmpty(movieReview)) {
+        if (checkNull(movieReview)) {
             return;
         }
 
@@ -126,7 +123,7 @@ public final class ReviewManager extends ListManager<Review> {
     public void myReviews(String customID) {
         List<Review> movieReview = searchBy(customID);
 
-        displayWithSort(movieReview, searchOptions);
+        displayWithSort(movieReview, new Review());
     }
 
     @Override
@@ -148,7 +145,7 @@ public final class ReviewManager extends ListManager<Review> {
 
     @Override
     public List<Review> sortList(List<Review> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -181,7 +178,7 @@ public final class ReviewManager extends ListManager<Review> {
 
     @Override
     public void display(List<Review> tempList) {
-        if (checkEmpty(tempList)) return; 
+        if (checkNull(tempList)) return; 
         int reviewLength = 0;
         int customerNameLength = 0;
         int movieNameLength = 0;

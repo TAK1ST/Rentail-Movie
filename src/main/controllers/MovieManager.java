@@ -22,8 +22,6 @@ import main.utils.Validator;
 import static main.utils.Validator.getDate;
 
 public class MovieManager extends ListManager<Movie> {
-    
-    private static final String[] searchOptions = {"movie_id", "title", "description", "avg_rating", "release_year", "rental_price", "available_copies", "created_at", "updated_at"};
 
     public MovieManager() throws IOException {
         super(Movie.className());
@@ -85,7 +83,7 @@ public class MovieManager extends ListManager<Movie> {
     }
 
     public boolean updateMovie() {
-        if (checkEmpty(list)) return false;    
+        if (checkNull(list)) return false;    
 
         Movie foundMovie = (Movie) getById("Enter movie's id");
         if (checkNull(foundMovie)) return false;
@@ -112,7 +110,7 @@ public class MovieManager extends ListManager<Movie> {
     }
 
     public boolean deleteMovie() {
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
 
         Movie foundMovie = (Movie) getById("Enter movie's id");
         if (checkNull(foundMovie)) return false;
@@ -138,7 +136,7 @@ public class MovieManager extends ListManager<Movie> {
     
     @Override
     public List<Movie> sortList(List<Movie> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -177,7 +175,7 @@ public class MovieManager extends ListManager<Movie> {
     
     @Override
     public void display(List<Movie> movies) {
-        if (checkEmpty(list)) return;
+        if (checkNull(list)) return;
         
         System.out.println("|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|");
         System.out.printf("|%-10s | %-30s | %-30s | %-10s | %-15s | %-20s | %-10s | %-10s | %15s |\n",

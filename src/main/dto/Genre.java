@@ -27,6 +27,11 @@ public class Genre extends Model {
         return "Genre";
     }
     
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"genre_name", "description"};
+    }
+    
     @Override
     public String getId() {
         try {

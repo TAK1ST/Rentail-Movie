@@ -13,7 +13,6 @@ import main.constants.Constants;
 import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import main.utils.IDGenerator;
-import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.PassEncryptor.encryptPassword;
@@ -28,8 +27,6 @@ import static main.utils.Validator.getUsername;
  * @author trann
  */
 public class AccountManager extends ListManager<Account> {
-    
-    private static final String[] options = {"account_id", "username", "password", "role", "email", "status", "online_at", "created_at", "updated_at"};
 
     public AccountManager() throws IOException {
         super(Account.className());
@@ -132,7 +129,7 @@ public class AccountManager extends ListManager<Account> {
     }
 
     public boolean updateAccount(String userID) {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -180,7 +177,7 @@ public class AccountManager extends ListManager<Account> {
     }
 
     public boolean deleteAccount() throws IOException {
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
       
         Account foundAccount = (Account) getById("Enter user's id");
         if (checkNull(foundAccount)) return false;
@@ -211,7 +208,7 @@ public class AccountManager extends ListManager<Account> {
 
     @Override
     public List<Account> sortList(List<Account> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -234,7 +231,7 @@ public class AccountManager extends ListManager<Account> {
 
     @Override
     public void display(List<Account> tempList) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return;
         }
 

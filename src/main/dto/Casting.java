@@ -39,6 +39,11 @@ public class Casting extends Model {
         return "Casting";
     }
     
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"movie_id", "actor_id", "role"};
+    }
+
     @Override
     public String getId() {
         try {

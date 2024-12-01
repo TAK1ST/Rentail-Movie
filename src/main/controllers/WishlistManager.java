@@ -64,7 +64,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     }
 
     public boolean updateWishlist() {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -97,7 +97,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     }
 
     public boolean deleteWishlist() {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -134,7 +134,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     
     @Override
     public List<Wishlist> sortList(List<Wishlist> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -165,7 +165,7 @@ public class WishlistManager extends ListManager<Wishlist> {
 
     @Override
     public void display(List<Wishlist> wishlists) {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return;
         }
         System.out.println("|------------------------------------------------------------------------------------------------");

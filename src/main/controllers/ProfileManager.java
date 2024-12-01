@@ -22,8 +22,6 @@ import static main.utils.Validator.getPhoneNumber;
  * @author trann
  */
 public class ProfileManager extends ListManager<Profile> {
-    
-    private static final String[] searchOptions = {"account_id", "full_name", "birthday", "address", "phone_number", "credit"};
       
     public ProfileManager() throws IOException {
         super(Profile.className());
@@ -59,7 +57,7 @@ public class ProfileManager extends ListManager<Profile> {
     }
 
     public boolean updateProfile(String userID) {
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
 
         Profile foundProfile;
         if (userID.isEmpty()) {
@@ -85,7 +83,7 @@ public class ProfileManager extends ListManager<Profile> {
     }
 
     public boolean deleteProfile() throws IOException { 
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
 
         Profile foundProfile = (Profile)getById("Enter user's id");
         if (checkNull(foundProfile)) return false;
@@ -111,7 +109,7 @@ public class ProfileManager extends ListManager<Profile> {
 
     @Override
     public List<Profile> sortList(List<Profile> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -144,7 +142,7 @@ public class ProfileManager extends ListManager<Profile> {
     
     @Override
     public void display(List<Profile> tempList) {
-        if (checkEmpty(tempList)) return; 
+        if (checkNull(tempList)) return; 
         int fullNameLength = 0;
         int addressLength = 0;
         for (Profile item : list) {
