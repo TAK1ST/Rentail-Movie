@@ -3,4 +3,5 @@
 /lib/
 /src/test/
 .env
-
+ERD_MovieRentalSystem.drawio
+/build/
