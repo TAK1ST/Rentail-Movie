@@ -15,6 +15,9 @@ public class Discount extends Model {
     private int quantity;
     private boolean isActive;
     private double value;
+    
+    public Discount() {
+    }
 
     public Discount(String code, String customerID, LocalDate startDate, LocalDate endDate, DiscountType type, int quantity, boolean isActive, double value) {
         super(code);

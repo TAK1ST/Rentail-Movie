@@ -16,17 +16,15 @@ public class AccountDAO {
 
     public static boolean addAccountToDB(Account account) {
         String sql = "INSERT INTO Accounts ("
-                + "account_id, "
-                + "username, "
-
-                + "password, "
-                + "email, "
-                + "role, "
-                + "status, "
-                + "created_at, "
-                + "updated_at, "
-
-                + "online_at"
+                + "account_id,"
+                + "username,"
+                + "password,"
+                + "email,"
+                + "role,"
+                + "status,"
+                + "online_at,"
+                + "created_at,"
+                + "updated_at"
                 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
@@ -38,12 +36,12 @@ public class AccountDAO {
             ps.setString(++count, account.getRole().name());
             ps.setString(++count, account.getStatus().name());
 
+            ps.setDate(++count, account.getOnlineAt() != null ? Date.valueOf(account.getOnlineAt()) : null);
             ps.setDate(++count, account.getCreateAt() != null ? Date.valueOf(account.getCreateAt()) : null);
             ps.setDate(++count, account.getUpdateAt() != null ? Date.valueOf(account.getUpdateAt()) : null);
-            ps.setDate(++count, account.getOnlineAt() != null ? Date.valueOf(account.getOnlineAt()) : null);
 
 
-            return ps.executeUpdate() > 0;
+//            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,7 +57,7 @@ public class AccountDAO {
                 + "status = ?,"
                 + "created_at = ?,"
                 + "updated_at = ?,"
-                + "online_at = ? "
+                + "online_at = ?, "
                 + "WHERE account_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             

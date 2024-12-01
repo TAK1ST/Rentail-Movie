@@ -18,6 +18,9 @@ public class Movie extends Model {
     private int availableCopies;
     private LocalDate createDate;
     private LocalDate updateDate;
+    
+    public Movie() {
+    }
 
     public Movie(
             String id, 

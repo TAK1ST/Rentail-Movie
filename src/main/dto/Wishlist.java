@@ -11,6 +11,9 @@ public class Wishlist extends Model {
     private String customerID;
     private LocalDate addedDate;
     private WishlistPriority priority;
+    
+    public Wishlist() {
+    }
 
     public Wishlist(String id, String movieID, String customerID, LocalDate addedDate, WishlistPriority priority) {
         super(id);

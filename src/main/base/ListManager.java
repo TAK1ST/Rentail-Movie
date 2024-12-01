@@ -96,13 +96,12 @@ public abstract class ListManager<T extends Model> {
     
     public void displayWithSort(List<T> tempList, String[] options) {
         List<T> temp = new ArrayList<>(tempList);
-        
-        String propety = selectInfo("Sort by", options, false);
-        if (propety.isEmpty()) return;
-        
         do {
             display(tempList);
             if (yesOrNo("Sort list")) {
+                String propety = selectInfo("Sort by", options, false);
+                if (propety.isEmpty()) return;
+                
                 sortList(temp, propety);
             } else return;
         } while(true);

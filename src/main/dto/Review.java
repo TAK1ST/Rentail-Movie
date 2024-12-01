@@ -10,6 +10,9 @@ public class Review extends Model {
     private int rating;
     private LocalDate reviewDate;
     private String reviewText;
+    
+    public Review() {
+    }
 
     public Review(String id, String movieID, String customerID, int rating, String reviewText, LocalDate reviewDate) {
         super(id);

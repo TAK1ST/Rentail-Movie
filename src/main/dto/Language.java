@@ -8,6 +8,9 @@ public class Language extends Model {
     
     private String name;  
 
+    public Language() {
+    }
+    
     public Language(String code, String name) {
         super(code);
         this.name = name;

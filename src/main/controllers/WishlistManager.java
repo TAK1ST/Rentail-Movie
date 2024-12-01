@@ -19,7 +19,6 @@ import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Wishlist;
 import main.utils.IDGenerator;
-import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.getEnumValue;
 
@@ -110,14 +109,6 @@ public class WishlistManager extends ListManager<Wishlist> {
         return WishlistDAO.deleteWishlistFromDB(foundWishlist.getId());
     }
 
-    public void searchWishlist() {
-        display(getWishlistBy("Enter wishlist's propety"));
-    }
-
-    public List<Wishlist> getWishlistBy(String message) {
-        return searchBy(getString(message, false));
-    }
-
     @Override
     public List<Wishlist> searchBy(String propety) {
         List<Wishlist> result = new ArrayList<>();
@@ -162,28 +153,41 @@ public class WishlistManager extends ListManager<Wishlist> {
         return result;
     }
 
-
     @Override
     public void display(List<Wishlist> wishlists) {
         if (checkNull(list)) {
             return;
         }
-        System.out.println("|------------------------------------------------------------------------------------------------");
-
-  
-        System.out.printf("|%-15s | %-15s | %-15s | %-10s | %-20s |%n",
-                "Wishlist ID", "Movie ID", "Customer ID", "Added Date", "Priority");
+        
+        
+        
+        int customerL = "Customer".length();
+        int movieL = "Movie Title".length();
+        for (Wishlist item : list) {
+            Account foundAccount = (Account) getACM().searchById(item.getCustomerId());
+            Movie foundMovie = (Movie) getMVM().getById(item.getMovieId());
+            
+            customerL = Math.max(customerL, foundAccount.getUsername().length());
+            movieL = Math.max(movieL, foundMovie.getTitle().length());
+        }
+        
+        int widthLength = 8 + movieL + customerL + 10 + 8 + 16;
+        
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-" + movieL + "s | %-" + customerL + "s | %-10s | %-8s |%n",
+                "ID", "Movie Titlte", "Customer", "Added Date", "Priority");
         System.out.println("|------------------------------------------------------------------------------------------------");
         for (Wishlist item : wishlists) {
-            System.out.printf("|%-15s | %-15s | %-15s | %-10s | %-20s |%n",
+            System.out.printf("\n| %-8s | %-" + movieL + "s | %-" + customerL + "s | %-10s | %-8s |%n",
                     item.getId(),
                     item.getMovieId(),
                     item.getCustomerId(),
                     item.getAddedDate(),
                     item.getPriority().name());
         }
-
-        System.out.println("|------------------------------------------------------------------------------------------------");
+        System.out.println();
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.println();
     }
 
 }

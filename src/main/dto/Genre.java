@@ -8,6 +8,9 @@ public class Genre extends Model {
     
     private String description;
     
+    public Genre() {
+    }
+    
     public Genre(String genreName, String description) {
         super(genreName);
         this.description = description;

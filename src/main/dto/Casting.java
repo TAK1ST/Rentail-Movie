@@ -18,6 +18,9 @@ public class Casting extends Model {
     private String actorID;
     private ActorRole role;
 
+    public Casting() {
+    }
+    
     public Casting(String movieID, String actorID, ActorRole role) {
         super(movieID);
         this.actorID = actorID;

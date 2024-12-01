@@ -16,6 +16,9 @@ public class Rental extends Model {
     private double lateFee;
     private double totalAmount;
     private RentalStatus status;
+    
+    public Rental() {
+    }
 
     public Rental(
             String id, 

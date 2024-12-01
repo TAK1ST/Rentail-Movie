@@ -38,7 +38,7 @@ public class RentalServices {
         // admin test logic
     
     public static boolean returnMovie() {
-        if (getRTM().checkEmpty(getRTM().getList())) return false; 
+        if (getRTM().checkNull(getRTM().getList())) return false; 
         
         Rental foundRental = getRTM().getRentalByAccountMovie(Constants.DEFAULT_ADMIN_ID);
         if (getRTM().checkNull(foundRental)) return false;

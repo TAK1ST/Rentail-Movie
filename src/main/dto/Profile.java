@@ -13,6 +13,9 @@ public class Profile extends Model {
     private String address;
     private double credit;
     private LocalDate birthday;
+    
+    public Profile() {
+    }
 
     public Profile(String accountID, String fullName, String phoneNumber, String address, double credit, LocalDate birthday) {
         super(accountID);

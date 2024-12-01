@@ -30,7 +30,7 @@ public class CustomerPannel {
             new MenuOption[]{
                 new MenuOption("Show my profile", () -> getACM().showMyProfile(account.getId()), ENTER_TO_CONTINUE),
                 new MenuOption("Update profile", () -> getACM().updateAccount(account.getId()), ASK_FOR_AGAIN),
-                new MenuOption("Display movie list", () -> getMVM().displayList(), ENTER_TO_CONTINUE),
+                new MenuOption("Display movie list", () -> getMVM().display(), ENTER_TO_CONTINUE),
                 new MenuOption("Search movie", () -> getMVM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Rent movie", () -> getRTM().addRental(account.getId()), ASK_FOR_AGAIN),
                 new MenuOption("Renturn movie", () -> getRTM().addRental(account.getId()), ASK_FOR_AGAIN),

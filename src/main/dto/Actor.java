@@ -9,6 +9,9 @@ public class Actor extends Model {
     private ActorRank rank;
     private String description;
     
+    public Actor() {
+    }
+    
     public Actor(String id, String actorName, ActorRank rank, String description) {
         super(id);
         this.actorName = actorName;

@@ -112,9 +112,12 @@ public class ActorManager extends ListManager<Actor> {
     
     @Override
     public void display(List<Actor> tempList) {
-        if (checkNull(tempList)) return; 
-        int actorNameLength = 0;
-        int descriptionLength = 0;
+        if (checkNull(tempList)) { 
+            return;
+        } 
+        
+        int actorNameLength = 4;
+        int descriptionLength = 11;
         for (Actor item : list) {
             actorNameLength = Math.max(actorNameLength, item.getActorName().length());
             descriptionLength = Math.max(descriptionLength, item.getDescription().length());

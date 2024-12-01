@@ -235,21 +235,21 @@ public class AccountManager extends ListManager<Account> {
             return;
         }
 
-        int usernameLength = 0;
-        int emailLength = 0;
+        int usernameL = "Username".length();
+        int emailL = "Email".length();
         for (Account item : list) {
-            usernameLength = Math.max(usernameLength, item.getUsername().length());
-            emailLength = Math.max(emailLength, item.getEmail().length());
+            usernameL = Math.max(usernameL, item.getUsername().length());
+            emailL = Math.max(emailL, item.getEmail().length());
         }
         
-        int widthLength = 8 + usernameLength + 8 + emailLength + 8 + 16;
+        int widthLength = 8 + usernameL + 8 + emailL + 8 + 16;
         
         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s | %-8s |\n",
+        System.out.printf("\n| %-8s | %-" + usernameL + "s | %-8s | %-" + emailL+ "s | %-8s |\n",
                 "ID", "Username", "Role", "Email" , "Status");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Account item : tempList) {
-            System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s | %-8s |",
+            System.out.printf("\n| %-8s | %-" + usernameL+ "s | %-8s | %-" + emailL + "s | %-8s |",
                     item.getId(),
                     item.getUsername(),
                     item.getRole(),

@@ -2,7 +2,6 @@ DROP DATABASE movierentalsystemdb;
 CREATE DATABASE IF NOT EXISTS movierentalsystemdb;
 USE movierentalsystemdb;
 
--- 1. Create the Accounts table first
 CREATE TABLE IF NOT EXISTS Accounts (
     account_id CHAR(8) PRIMARY KEY,
     username NVARCHAR(50) UNIQUE NOT NULL,
@@ -11,24 +10,21 @@ CREATE TABLE IF NOT EXISTS Accounts (
     email VARCHAR(50) UNIQUE NOT NULL,
     status ENUM('ONLINE', 'BANNED', 'OFFLINE') DEFAULT 'OFFLINE' NOT NULL,
 
-    online_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Records the last time the account was online
+    online_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- 2. Create Languages table
 CREATE TABLE IF NOT EXISTS Languages (
     language_code CHAR(2) PRIMARY KEY,
     language_name NVARCHAR(100) NOT NULL
 );
 
--- 3. Create Genres table
 CREATE TABLE IF NOT EXISTS Genres (
     genre_name NVARCHAR(100) PRIMARY KEY,
     description TEXT
 );
 
--- 4. Create Movies table
 CREATE TABLE IF NOT EXISTS Movies (
     movie_id CHAR(8) PRIMARY KEY,
     title NVARCHAR(100) NOT NULL,
@@ -41,7 +37,6 @@ CREATE TABLE IF NOT EXISTS Movies (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- 5. Create Discounts table
 CREATE TABLE IF NOT EXISTS Discounts (
     discount_code VARCHAR(50) PRIMARY KEY,
     customer_id CHAR(8) NOT NULL,
@@ -54,7 +49,6 @@ CREATE TABLE IF NOT EXISTS Discounts (
     FOREIGN KEY (customer_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
 );
 
--- 6. Create Actors table
 CREATE TABLE IF NOT EXISTS Actors (
     actor_id CHAR(8) PRIMARY KEY,
     actor_name NVARCHAR(100) NOT NULL,
@@ -62,7 +56,6 @@ CREATE TABLE IF NOT EXISTS Actors (
     actor_description NVARCHAR(255)
 );
 
--- 7. Create Movie_Actor table
 CREATE TABLE IF NOT EXISTS Movie_Actor (
     movie_id CHAR(8),
     actor_id CHAR(8),
@@ -72,7 +65,6 @@ CREATE TABLE IF NOT EXISTS Movie_Actor (
     FOREIGN KEY (actor_id) REFERENCES Actors (actor_id) ON DELETE CASCADE
 );
 
--- 8. Create Movie_Genre table
 CREATE TABLE IF NOT EXISTS Movie_Genre (
     movie_id CHAR(8) NOT NULL,
     genre_name NVARCHAR(100) NOT NULL,
@@ -81,7 +73,6 @@ CREATE TABLE IF NOT EXISTS Movie_Genre (
     FOREIGN KEY (genre_name) REFERENCES Genres (genre_name) ON DELETE CASCADE
 );
 
--- 9. Create Movie_Language table
 CREATE TABLE IF NOT EXISTS Movie_Language (
     movie_id CHAR(8) NOT NULL,
     language_code CHAR(2) NOT NULL,
@@ -90,7 +81,6 @@ CREATE TABLE IF NOT EXISTS Movie_Language (
     FOREIGN KEY (language_code) REFERENCES Languages (language_code) ON DELETE CASCADE
 );
 
--- 10. Create Account_Discount table
 CREATE TABLE IF NOT EXISTS Account_Discount (
     account_id CHAR(8) NOT NULL,
     discount_code VARCHAR(50) NOT NULL,
@@ -99,7 +89,6 @@ CREATE TABLE IF NOT EXISTS Account_Discount (
     FOREIGN KEY (discount_code) REFERENCES Discounts(discount_code) ON DELETE CASCADE
 );
 
--- 11. Create Rentals table
 CREATE TABLE IF NOT EXISTS Rentals (
     rental_id CHAR(8) PRIMARY KEY,
     movie_id CHAR(8) NOT NULL,
@@ -116,7 +105,6 @@ CREATE TABLE IF NOT EXISTS Rentals (
     FOREIGN KEY (customer_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
 );
 
--- 12. Create Payments table
 CREATE TABLE IF NOT EXISTS Payments (
     rental_id CHAR(8),
     payment_method ENUM('CARD', 'ONLINE', 'BANKING') NOT NULL DEFAULT 'CARD',
@@ -124,7 +112,6 @@ CREATE TABLE IF NOT EXISTS Payments (
     FOREIGN KEY (rental_id) REFERENCES Rentals (rental_id) ON DELETE CASCADE
 );
 
--- 13. Create Profiles table
 CREATE TABLE IF NOT EXISTS Profiles (
     account_id CHAR(8),
     full_name NVARCHAR(60),
@@ -135,7 +122,6 @@ CREATE TABLE IF NOT EXISTS Profiles (
     FOREIGN KEY (account_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
 );
 
--- 14. Create Reviews table
 CREATE TABLE IF NOT EXISTS Reviews (
     review_id CHAR(8) PRIMARY KEY,
     movie_id CHAR(8) NOT NULL,
@@ -147,7 +133,6 @@ CREATE TABLE IF NOT EXISTS Reviews (
     FOREIGN KEY (customer_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
 );
 
--- 15. Create Wishlists table
 CREATE TABLE IF NOT EXISTS Wishlists (
     wishlist_id CHAR(8) PRIMARY KEY,
     customer_id CHAR(8) NOT NULL,

@@ -134,7 +134,7 @@ public class Input {
     }
     
     public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager, boolean enterToPass) {
-        manager.displayList();
+        manager.display();
         String temps = "";
 
         String input = getString(message, enterToPass);

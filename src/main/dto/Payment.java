@@ -8,6 +8,9 @@ import static main.utils.LogMessage.errorLog;
 public class Payment extends Model {
     
     private PaymentMethod method;
+    
+    public Payment() {
+    }
 
     public Payment(String retalID, PaymentMethod method) {
         super(retalID); 
