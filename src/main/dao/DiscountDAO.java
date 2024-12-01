@@ -11,49 +11,65 @@ import main.dto.Discount;
 import main.config.Database;
 import main.constants.DiscountType;
 
-/**
- * @author kiet
- */
 public class DiscountDAO {
 
     public static boolean addDiscountToDB(Discount discount) {
-        String sql = "INSERT INTO Discounts (discount_code, start_date, end_date, discount_type, usage_available, is_active, discount_value) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Discounts ("
+                + "discount_code, "
+                + "customer_id, "
+                + "start_date, "
+                + "end_date, "
+                + "discount_type, "
+                + "quantity, "
+                + "is_active, "
+                + "discount_value"
+                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-  
-            preparedStatement.setString(1, discount.getCode());  
-            preparedStatement.setString(2, discount.getCustomerID());
-            preparedStatement.setDate(3, Date.valueOf(discount.getStartDate()));  
-            preparedStatement.setDate(4, Date.valueOf(discount.getEndDate()));  
-            preparedStatement.setString(5, discount.getType().name());  
-            preparedStatement.setInt(6, discount.getUsageAvailable());  
-            preparedStatement.setBoolean(7, discount.isActive());  
-            preparedStatement.setDouble(8, discount.getValue());  
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            return preparedStatement.executeUpdate() > 0;
+            int count = 0;
+            ps.setString(++count, discount.getCode());
+            ps.setString(++count, discount.getCustomerID());
+            ps.setDate(++count, Date.valueOf(discount.getStartDate()));
+            ps.setDate(++count, Date.valueOf(discount.getEndDate()));
+            ps.setString(++count, discount.getType().name());
+            ps.setInt(++count, discount.getQuantity());
+            ps.setBoolean(++count, discount.isActive());
+            ps.setDouble(++count, discount.getValue());
+
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Replace with proper logging
         }
         return false;
     }
 
     public static boolean updateDiscountInDB(Discount discount) {
-        String sql = "UPDATE Discounts SET customer_id = ?, start_date = ?, end_date = ?, discount_type = ?, usage_available = ?, is_active = ?, discount_value = ? WHERE discount_code = ?";
+        String sql = "UPDATE Discounts SET "
+                + "customer_id = ?, "
+                + "start_date = ?, "
+                + "end_date = ?, "
+                + "discount_type = ?, "
+                + "quantity = ?, "
+                + "is_active = ?, "
+                + "discount_value = ? "
+                + "WHERE discount_code = ?";
         try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, discount.getCustomerID());
-            preparedStatement.setDate(2, Date.valueOf(discount.getStartDate()));
-            preparedStatement.setDate(3, Date.valueOf(discount.getEndDate()));
-            preparedStatement.setString(4, discount.getType().name());
-            preparedStatement.setInt(5, discount.getUsageAvailable());
-            preparedStatement.setBoolean(6, discount.isActive());
-            preparedStatement.setDouble(7, discount.getValue());
-            preparedStatement.setString(8, discount.getCode());
+            int count = 0;
+            ps.setString(++count, discount.getCustomerID());
+            ps.setDate(++count, Date.valueOf(discount.getStartDate()));
+            ps.setDate(++count, Date.valueOf(discount.getEndDate()));
+            ps.setString(++count, discount.getType().name());
+            ps.setInt(++count, discount.getQuantity());
+            ps.setBoolean(++count, discount.isActive());
+            ps.setDouble(++count, discount.getValue());
+            ps.setString(++count, discount.getCode());
 
-            return preparedStatement.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Replace with proper logging
         }
         return false;
     }
@@ -61,12 +77,12 @@ public class DiscountDAO {
     public static boolean deleteDiscountFromDB(String discountID) {
         String sql = "DELETE FROM Discounts WHERE discount_code = ?";
         try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, discountID);
-            return preparedStatement.executeUpdate() > 0;
+            ps.setString(1, discountID);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Replace with proper logging
         }
         return false;
     }
@@ -75,26 +91,25 @@ public class DiscountDAO {
         String sql = "SELECT * FROM Discounts";
         List<Discount> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet resultSet = ps.executeQuery()) {
 
             while (resultSet.next()) {
                 Discount discount = new Discount(
-                    resultSet.getString("discount_code"),
-                    resultSet.getString("customer_id"),
-                    resultSet.getDate("start_date").toLocalDate(),
-                    resultSet.getDate("end_date").toLocalDate(),
-                    DiscountType.valueOf(resultSet.getString("discount_type")),
-                    resultSet.getInt("usage_available"),
-                    resultSet.getBoolean("is_active"),
-                    resultSet.getDouble("discount_value")
+                        resultSet.getString("discount_code"),
+                        resultSet.getString("customer_id"),
+                        resultSet.getDate("start_date").toLocalDate(),
+                        resultSet.getDate("end_date").toLocalDate(),
+                        DiscountType.valueOf(resultSet.getString("discount_type")),
+                        resultSet.getInt("quantity"),
+                        resultSet.getBoolean("is_active"),
+                        resultSet.getDouble("discount_value")
                 );
                 list.add(discount);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Replace with proper logging
         }
         return list;
     }
-   
 }
