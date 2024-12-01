@@ -3,6 +3,7 @@ package main.controllers;
 import main.base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import main.constants.AccRole;
 import main.constants.AccStatus;
@@ -12,8 +13,10 @@ import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import main.utils.IDGenerator;
 import static main.utils.Input.getString;
+import static main.utils.Input.selectInfo;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
+import main.utils.Menu;
 import static main.utils.PassEncryptor.encryptPassword;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -44,26 +47,32 @@ public class AccountManager extends ListManager<Account> {
         list.add(new Account(
                 Constants.DEFAULT_ADMIN_ID,
                 "admin",
-                "1",
+                encryptPassword("1"),
                 "admin@gmail.com",
                 AccRole.ADMIN,
                 AccStatus.OFFLINE
         ));
-        AccountDAO.addAccountToDB(list.getLast());
+        AccountDAO.addAccountToDB(list.getLast()); 
     }
 
     public boolean registorAccount() throws IOException {
-        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), AccRole.CUSTOMER);
-        String username = getUsername("Enter username", false, list);
-        String password = getPassword("Enter password", false);
-        String email = getEmail("Enter email", false);
         
+        String username = getUsername("Enter username", false, list);
+        if (username.isEmpty()) return false;
+        
+        String password = getPassword("Enter password", false);
+        if (password.isEmpty()) return false;
+        
+        String email = getEmail("Enter email", false);
+        if (password.isEmpty()) return false;
+        
+        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), AccRole.CUSTOMER);
         if (yesOrNo("Fill in all infomation?")) {
-            if(getPFM().addProfile(id)) {
+            if (getPFM().addProfile(id)) {
                 errorLog("Cannot registor account info");
                 return false;
             }
-        } 
+        }
 
         list.add(new Account(
                 id,
@@ -76,15 +85,20 @@ public class AccountManager extends ListManager<Account> {
         return AccountDAO.addAccountToDB(list.getLast());
     }
 
-    public boolean addAccount(AccRole registorRole) throws IOException {  
-        
+    public boolean addAccount(AccRole registorRole) throws IOException {
+
         String username = getUsername("Enter username", false, list);
+        if (username.isEmpty()) return false;
+        
         String password = getPassword("Enter password", false);
+        if (password.isEmpty()) return false;
+        
         String email = getEmail("Enter your email", false);
+        if (email.isEmpty()) return false;
+        
         AccRole role = (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole;
-        
         String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), role);
-        
+
         list.add(new Account(
                 id,
                 username,
@@ -93,10 +107,11 @@ public class AccountManager extends ListManager<Account> {
                 role,
                 AccStatus.OFFLINE
         ));
-        if(AccountDAO.addAccountToDB(list.getLast())) {
-            if (list.getLast().getRole() == AccRole.ADMIN)
+        if (AccountDAO.addAccountToDB(list.getLast())) {
+            if (list.getLast().getRole() == AccRole.ADMIN) {
                 return true;
-            
+            }
+
             if (!getPFM().addProfile(id)) {
                 errorLog("Cannot registor info");
                 return false;
@@ -107,8 +122,10 @@ public class AccountManager extends ListManager<Account> {
     }
 
     public boolean updateAccount(String userID) {
-        if (checkEmpty(list)) return false;
-        
+        if (checkEmpty(list)) {
+            return false;
+        }
+
         Account foundAccount;
         if (userID.isEmpty()) {
             foundAccount = (Account) getById("Enter user's id");
@@ -124,7 +141,7 @@ public class AccountManager extends ListManager<Account> {
 
         AccRole newRole = AccRole.NONE;
         if (foundAccount.getRole() == AccRole.ADMIN) {
-            newRole = (AccRole)getEnumValue("Choose a role", AccRole.class, true);
+            newRole = (AccRole) getEnumValue("Choose a role", AccRole.class, true);
         }
         String newEmail = Validator.getEmail("Enter your email", true);
 
@@ -144,12 +161,21 @@ public class AccountManager extends ListManager<Account> {
         return AccountDAO.updateAccountInDB(foundAccount);
     }
 
+    public void updatePassword(String accountID, String newPassword) {
+        Account foundAccount = (Account) searchById(accountID);
+        if (checkNull(foundAccount)) return;
+        
+        foundAccount.setPassword(newPassword);
+        AccountDAO.updatePasswordInDB(accountID, newPassword);
+    }
+
     public boolean deleteAccount() throws IOException {
         if (checkEmpty(list)) return false;
-        
+      
         Account foundAccount = (Account) getById("Enter user's id");
         if (checkNull(foundAccount)) return false;
-        
+       
+
         list.remove(foundAccount);
         return AccountDAO.deleteAccountFromDB(foundAccount.getId());
     }
@@ -181,25 +207,69 @@ public class AccountManager extends ListManager<Account> {
         display(searchById(userID), "My Profile");
     }
     
-    @Override
-    public void display(List<Account> users, String title) {
-        if (checkEmpty(list)) return;
-        
-        System.out.println(title);
-        System.out.println("|---------------------------------------------------------------------------------------------------|");
-        System.out.printf("|%-15s | %-30s | %-30s | %-10s | %-30s |\n",
-                "Account ID", "Accountname", "Password", "Role", "Email");
-        System.out.println("|---------------------------------------------------------------------------------------------------|");
-        for (Account user : users) {
-            String role = user.getRole() == AccRole.ADMIN ? "Admin" : "Account";  // Chuyển đổi số vai trò thành tên vai trò
-            System.out.printf("|%-15s | %-30s | %-30s | %-10s | %-20s |\n",
-                    user.getId(),
-                    user.getUsername(),
-                    user.getPassword(),
-                    role,
-                    user.getEmail() != null ? user.getEmail() : "N/A");
+    public List<Account> sortBy(String propety) {
+        if (checkEmpty(list)) {
+            return null;
         }
-        System.out.println("|---------------------------------------------------------------------------------------------------|");
+        
+        List<Account> result = new ArrayList<>(list);
+        switch (propety) {
+            case "username":
+                result.sort(Comparator.comparing(Account::getUsername));
+                break;
+            default:
+                sortById();
+                break;
+        }
+        return result;
+    }
+   @Override
+public void display(List<Account> tempList, String title) {
+    if (checkEmpty(tempList)) {
+        return;
     }
 
+    Menu.showHeader(title);
+
+    int usernameLength = 0;
+    int emailLength = 0;
+
+    // Tính chiều rộng tối đa cho username và email
+    for (Account item : tempList) {
+       usernameLength = Math.max(usernameLength, item.getUsername().length());
+       emailLength = Math.max(emailLength, item.getEmail().length());
+    }
+
+
+    // Tính chiều rộng tổng của bảng
+    int widthLength = 8 + usernameLength + 8 + emailLength;
+
+    // In dòng ngăn cách trên
+    for (int index = 0; index < widthLength; index++) System.out.print("-");
+
+    // In tiêu đề
+    System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |\n", "ID", "Username", "Role", "Email");
+
+    // In dòng ngăn cách giữa
+    for (int index = 0; index < widthLength; index++) System.out.print("-");
+
+    // In các tài khoản
+    for (Account item : tempList) {
+        System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |\n",
+                item.getId(),
+                item.getUsername(),
+                item.getRole(),
+                item.getEmail());
+    }
+
+    // In dòng ngăn cách dưới
+    for (int index = 0; index < widthLength; index++) System.out.print("-");
+    System.out.println();
+}
+    public void show(String title) {
+        while (yesOrNo("Sort the list?")) {
+            String[] options = new String[]{"username"};
+            display(sortBy(selectInfo("Sort review by", options, true)), title);
+        } 
+}
 }

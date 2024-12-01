@@ -5,6 +5,9 @@
 package test;
 
 import java.io.IOException;
+import main.constants.AccRole;
+import main.controllers.Managers;
+import static main.controllers.Managers.getACM;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.infoLog;
 
@@ -16,9 +19,12 @@ public class Testing {
     
     public static void main(String args[]) throws IOException {
         
-        String name = getString("Enter", false);
-        
-        infoLog(name);
+//        String name = getString("Enter", false);
+//        
+//        infoLog(name);
+
+        Managers.initACM();
+        getACM().addAccount(AccRole.CUSTOMER);
         
     }
     

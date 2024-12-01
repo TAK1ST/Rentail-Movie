@@ -10,6 +10,7 @@ import main.dto.Account;
 import static main.services.AuthenServices.login;
 import static main.services.AuthenServices.registor;
 import static main.utils.Input.yesOrNo;
+import static main.utils.LogMessage.infoLog;
 
 /**
  *
@@ -19,13 +20,13 @@ public class AuthenPannel {
     public static Account getAccounts() throws IOException, SQLException {
         Account account;
         do {
-            if(yesOrNo("Have account?"))  
+            if(yesOrNo("\nHave account?"))  
                 account = login();
             else 
                 account = registor();
 
             if (account == null) 
-                System.out.println("Please try again.");      
+                infoLog("Please try again");      
 
         } while(account == null);
 

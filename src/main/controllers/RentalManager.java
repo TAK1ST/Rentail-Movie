@@ -57,6 +57,8 @@ public class RentalManager extends ListManager<Rental> {
         }
 
         int numberOfRentDate = getInteger("How many days to rent", 1, 365, false);
+        if (numberOfRentDate == Integer.MIN_VALUE) return false;
+        
         LocalDate rentalDate = LocalDate.now();
         LocalDate dueDate = rentalDate.plusDays(numberOfRentDate);
         double total = foundMovie.getRentalPrice() * numberOfRentDate;
@@ -132,11 +134,12 @@ public class RentalManager extends ListManager<Rental> {
     }
 
     public boolean updateRental() {
-        if (checkEmpty(list)) {
-            return false;
-        }
 
-        Rental foundRental = (Rental) getById("Enter rental's id");
+        if (checkEmpty(list)) return false;
+        
+        Rental foundRental = (Rental)getById("Enter rental's id");
+        if (checkNull(foundRental)) return false;
+
 
         Movie foundMovie = null;
         String input = getString("Enter rental' id to rent", true);

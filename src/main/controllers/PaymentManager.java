@@ -33,9 +33,12 @@ public class PaymentManager extends ListManager<Payment> {
         Rental foundRental = (Rental) getRTM().searchById(rentalID);
         if (getRTM().checkNull(foundRental)) return false;
         
+        PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false);
+        if (method == PaymentMethod.NONE) return false;
+        
         list.add(new Payment(
                 IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.PAYMENT_PREFIX), 
-                (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false),
+                method,
                 foundRental.getId()
         ));
         return PaymentDAO.addPaymentToDB(list.getLast());
@@ -47,10 +50,8 @@ public class PaymentManager extends ListManager<Payment> {
         Payment foundPayment = (Payment)getById("Enter payment code");
         if (checkNull(foundPayment)) return false;
         
-        PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false);
-        
-        if (method != PaymentMethod.NONE) 
-            foundPayment.setPaymentMethods(method);
+        PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false);  
+        if (method != PaymentMethod.NONE) foundPayment.setPaymentMethods(method);
 
         return PaymentDAO.updatePaymentInDB(foundPayment);
     }

@@ -5,9 +5,14 @@
  */
 package main.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import main.base.ListManager;
+import main.base.Model;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.infoLog;
+import static main.utils.Utility.toInt;
 
 /**
  *
@@ -19,11 +24,11 @@ public class Input {
     
     private static int getBackIn = 3;
     
-    private static boolean askToExit() {
+    public static boolean askToExit() {
         getBackIn--;
         if (getBackIn == 0) {
             getBackIn = 3;
-            return yesOrNo("Don't want to type");
+            return !yesOrNo("\nContinue");
         }
         return false;
     }
@@ -47,7 +52,6 @@ public class Input {
                     errorLog("Please input");
                     if(askToExit()) return "";
                 }
-                
             } while (result.isEmpty());
 
             return result;
@@ -62,6 +66,11 @@ public class Input {
             String input = scanner.nextLine();
             if (input.isEmpty() && enterToPass) {
                 return Integer.MIN_VALUE;
+            }
+            if(input.isEmpty()) {
+                errorLog("Please input");
+                if(askToExit()) 
+                    return Integer.MIN_VALUE;
             }
             try {
                 number = Integer.parseInt(input);
@@ -85,6 +94,11 @@ public class Input {
             String input = scanner.nextLine();
             if (input.isEmpty() && enterToPass) {
                 return Double.MIN_VALUE;
+            }
+            if(input.isEmpty()) {
+                errorLog("Please input");
+                if(askToExit()) 
+                    return Double.MIN_VALUE;
             }
             try {
                 number = Double.parseDouble(input);
@@ -117,6 +131,26 @@ public class Input {
             return infoLists[getInteger("Enter an option", 0, infoLists.length - 1, enterToPass)];
         else 
             return "";
+    }
+    
+    public static <T extends Model> List<String> selectByNumbers(String message, ListManager<T> manager, boolean enterToPass) {
+        manager.displayList("");
+        List<String> temps = new ArrayList<>();
+
+        String input = getString(message, enterToPass);
+        if (input.isEmpty()) return null;
+        
+        String[] inputs = input.split(",");
+
+        for (String item : inputs) {
+            item = item.trim();
+            int index = toInt(item);
+            if (index > 0 && index <= manager.getList().size()) {
+                temps.add(manager.getList().get(index).getId());
+            }
+        }
+
+        return temps;
     }
     
 }

@@ -5,25 +5,34 @@ import java.sql.SQLException;
 import static main.controllers.Managers.getACM;
 import main.dto.Account;
 import static main.utils.Input.getString;
+import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.LogMessage.successLog;
 import main.utils.Menu;
+import static main.utils.PassEncryptor.validatePassword;
+import static main.utils.Validator.getPassword;
 
 public class AuthenServices {
 
     public static Account login() throws SQLException {
-        
         Menu.showTitle("Login");
         String input = getString("Enter username or email", false);
+        if (input.isEmpty()) return null;
+        
         String password = getString("Enter password", false);
+        if (password.isEmpty()) return null;
 
         for (Account item : getACM().getList()) {
             if (input.equals(item.getUsername()) || input.equals(item.getEmail())) {
                 if (password.equals(item.getPassword())) {
                     return new Account(item);
+                } else {
+                    errorLog("Wrong username/email or password");
+                    forgetPassword(item.getId());
                 }
+
             }
         }
-        errorLog("Wrong username/email or password");
         return null;
     }
 
@@ -46,9 +55,16 @@ public class AuthenServices {
             errorLog("Cannot register account");
             return null;
         } else {
-            System.out.println("Registration successful!");
+            successLog("Registration successful!");
         }
 
         return getACM().getList().getLast();
+    }
+
+    public static void forgetPassword(String accountID) {
+        if (yesOrNo("Forgot password")) {
+            String newPassword = getPassword("Enter new password", false);
+            getACM().updatePassword(accountID, newPassword);
+        }
     }
 }

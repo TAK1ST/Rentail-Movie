@@ -50,13 +50,14 @@ public class WishlistManager extends ListManager<Wishlist> {
                 return false;
             }
         }
-
+        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, false);
+        if (priority == WishlistPriority.NONE) return false;
         list.add(new Wishlist(
                 IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.WISHLIST_PREFIX),
                 foundMovie.getId(),
                 foundAccount.getId(),
                 LocalDate.now(),
-                (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, false)
+                priority
         ));
         return WishlistDAO.addWishlistToDB(list.getLast());
     }
@@ -76,9 +77,10 @@ public class WishlistManager extends ListManager<Wishlist> {
             return false;
         }
 
-        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose wishlist type", WishlistPriority.class, false);
 
-        if (!foundMovie.getId().equals(foundWishlist.getMovieId())) {
+        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose wishlist type", WishlistPriority.class, true);
+        
+        if(!foundMovie.getId().equals(foundWishlist.getMovieId())) {
             foundWishlist.setMovieId(foundMovie.getId());
         }
 
