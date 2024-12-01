@@ -24,15 +24,15 @@ public class AuthenServices {
 
         for (Account item : getACM().getList()) {
             if (input.equals(item.getUsername()) || input.equals(item.getEmail())) {
-                if (validatePassword(password, item.getPassword())) {
+                if (password.equals(item.getPassword())) {
                     return new Account(item);
                 } else {
+                    errorLog("Wrong username/email or password");
                     forgetPassword(item.getId());
                 }
 
             }
         }
-        errorLog("Wrong username/email or password");
         return null;
     }
 

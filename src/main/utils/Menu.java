@@ -86,6 +86,10 @@ public class Menu {
         System.out.println("\n");
     }
     
+    public static void showHeader(String header) {
+        System.out.printf("\n%s\n\n", header);
+    }
+    
     public static void showOptions(String[] options, int rowFormatNum) {
         int index = 0;
         if(options.length >= 5) {

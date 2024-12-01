@@ -20,7 +20,7 @@ public class AuthenPannel {
     public static Account getAccounts() throws IOException, SQLException {
         Account account;
         do {
-            if(yesOrNo("Have account?"))  
+            if(yesOrNo("\nHave account?"))  
                 account = login();
             else 
                 account = registor();

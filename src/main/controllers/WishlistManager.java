@@ -80,7 +80,7 @@ public class WishlistManager extends ListManager<Wishlist> {
 
         WishlistPriority priority = (WishlistPriority) getEnumValue("Choose wishlist type", WishlistPriority.class, true);
         
-        if(!foundMovie.getId().equals(foundWishlist.getMovieId()))
+        if(!foundMovie.getId().equals(foundWishlist.getMovieId())) {
             foundWishlist.setMovieId(foundMovie.getId());
         }
 
