@@ -1,8 +1,10 @@
 package main.dto;
 
+import exceptions.MethodNotFound;
 import java.time.LocalDate;
 import main.base.Model;
 import main.constants.DiscountType;
+import static main.utils.LogMessage.errorLog;
 import main.utils.Validator;
 
 public class Discount extends Model {
@@ -43,22 +45,27 @@ public class Discount extends Model {
                 this.getCode(), customerID, startDate, endDate, type, usageAvailable, isActive, value);
     }
 
-    @Override
-    public Object[] getDatabaseValues() {
-        return new Object[]{
-            this.getCode(),
-            customerID,
-            startDate.format(Validator.DATE),
-            endDate.format(Validator.DATE),
-            type,
-            usageAvailable,
-            isActive,
-            value
-        };
-    }
-
     public static String className() {
         return "Discount";
+    }
+    
+    @Override
+    public String getId() {
+        try {
+            throw new MethodNotFound("Discount only has CODE instead of id");
+        } catch (MethodNotFound e) {
+            errorLog("Exception caught: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    @Override
+    public void setId(String id) {
+        try {
+            throw new MethodNotFound("Discount only has CODE instead of id");
+        } catch (MethodNotFound e) {
+            errorLog("Exception caught: " + e.getMessage());
+        }
     }
 
     public String getCode() {

@@ -6,9 +6,9 @@ import main.constants.ActorRank;
 public class Actor extends Model {
 
     private String actorName;
-    private String description;
     private ActorRank rank;
-
+    private String description;
+    
     public Actor(String id, String actorName, ActorRank rank, String description) {
         super(id);
         this.actorName = actorName;
@@ -19,20 +19,13 @@ public class Actor extends Model {
     public Actor(Actor other) {
         super(other.getId());
         this.actorName = other.actorName;
+        this.rank = other.rank;
+        this.description = other.description;
     }
 
     @Override
     public String toString() {
         return String.format("Actor: %s, %s, %s, %s.", super.getId(), actorName, rank, description);
-    }
-
-    @Override
-    public Object[] getDatabaseValues() {
-        return new Object[]{
-            super.getId(),
-            actorName,
-            description,
-            rank};
     }
 
     public static String className() {

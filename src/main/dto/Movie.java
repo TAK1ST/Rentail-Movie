@@ -2,7 +2,6 @@ package main.dto;
 
 import main.base.Model;
 import java.time.LocalDate;
-import java.util.List;
 import main.utils.Validator;
 
 
@@ -11,72 +10,74 @@ public class Movie extends Model {
     private String title;
     private String description;
     private double avgRating;
-    private List<String> genreName;
-    private List<String> actorIDs;
-    private List<String> languageCodes;
+    private String genreNames;
+    private String actorIDs;
+    private String languageCodes;
     private LocalDate releaseYear;  
     private double rentalPrice;
     private int availableCopies;
+    private LocalDate createDate;
+    private LocalDate updateDate;
 
-    public Movie(String id, String title, String description, double avgRating, List<String> genreName, List<String> actorIDs, List<String> languageCodes, LocalDate releaseYear, double rentalPrice, int availableCopies ) {
+    public Movie(
+            String id, 
+            String title, 
+            String description, 
+            double avgRating, 
+            String genreNames, 
+            String actorIDs, 
+            String languageCodes, 
+            LocalDate releaseYear, 
+            double rentalPrice, 
+            int availableCopies,
+            LocalDate createDate, 
+            LocalDate updateDate) 
+    {
         super(id);
         this.title = title;
         this.description = description;
         this.avgRating = avgRating;
-        this.genreName = genreName;
+        this.genreNames = genreNames;
         this.actorIDs = actorIDs;
         this.languageCodes = languageCodes;
         this.releaseYear = releaseYear;
         this.rentalPrice = rentalPrice;
         this.availableCopies = availableCopies;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
     }
-
    
     public Movie(Movie other) {
         super(other.getId());
         this.title = other.title;
         this.description = other.description;
         this.avgRating = other.avgRating;
-        this.genreName = other.genreName;
+        this.genreNames = other.genreNames;
         this.actorIDs = other.actorIDs;
         this.languageCodes = other.languageCodes;
         this.releaseYear = other.releaseYear;
         this.rentalPrice = other.rentalPrice;
         this.availableCopies = other.availableCopies;
-
+        this.createDate = other.createDate;
+        this.updateDate = other.updateDate;
     }
 
     @Override
     public String toString() {
-         String genreNames = genreName != null ? String.join(", ", genreName) : "No genres";
-         String actorNames = actorIDs != null ? String.join(", ", actorIDs) : "No actors";
-         String languages = languageCodes != null ? String.join(", ", languageCodes) : "No languages";
-        return String.format("Movie: %s, %s, %s, %.5f, %s, %s, %s, %s, %.5f, %d.",
+        return String.format("Movie: %s, %s, %s, %.5f, %s, %s, %s, %s, %.5f, %d, %s, %s.",
                 super.getId(),
                 title,
                 description,
                 avgRating,
-                genreNames,
-                actorNames,
-                languages,
+                genreNames != null ? genreNames : "No genres",
+                actorIDs != null ? actorIDs : "No actors",
+                languageCodes != null ? languageCodes : "No languages",
                 releaseYear.format(Validator.DATE),
                 rentalPrice,
-                availableCopies
-
+                availableCopies,
+                createDate.format(Validator.DATE),
+                updateDate.format(Validator.DATE)
         );
-    }
-
-    @Override
-    public Object[] getDatabaseValues() {
-        return new Object[]{
-            super.getId(),
-            title,
-            description,
-            avgRating,
-            releaseYear,
-            rentalPrice,
-            availableCopies
-        };
     }
 
     public static String className() {
@@ -107,28 +108,27 @@ public class Movie extends Model {
         this.avgRating = avgRating;
     }
 
-    public List<String> getGenreIDs() {
-        return genreName;
+    public String getGenreNames() {
+        return genreNames;
     }
 
-    public void setGenreIDs(List<String> genreName) {
-        this.genreName = genreName;
-
+    public void setGenreNames(String genreNames) {
+        this.genreNames = genreNames;
     }
 
-    public List<String> getActorIDs() {
+    public String getActorIDs() {
         return actorIDs;
     }
 
-    public void setActorIDs(List<String> actorIDs) {
+    public void setActorIDs(String actorIDs) {
         this.actorIDs = actorIDs;
     }
 
-    public List<String> getLanguageCodes() {
+    public String getLanguageCodes() {
         return languageCodes;
     }
 
-    public void setLanguageCodes(List<String> languageCodes) {
+    public void setLanguageCodes(String languageCodes) {
         this.languageCodes = languageCodes;
     }
 
@@ -154,6 +154,22 @@ public class Movie extends Model {
 
     public void setAvailableCopies(int availableCopies) {
         this.availableCopies = availableCopies;
+    }
+
+    public LocalDate getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
+    }
+
+    public LocalDate getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(LocalDate updateDate) {
+        this.updateDate = updateDate;
     }
 
 }
