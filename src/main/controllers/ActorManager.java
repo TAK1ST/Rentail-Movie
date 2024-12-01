@@ -98,9 +98,9 @@ public class ActorManager extends ListManager<Actor> {
         if (checkEmpty(list)) return; 
         
         System.out.println(title);
-        System.out.println("|------------------------------------------------------------------------");
+        System.out.println("|------------------------------------------------------------------------|");
         System.out.printf("|%-15s | %-30s | %-4s | %-50s\n |", "Actor ID", "Actor Name", "Rank", "Description");
-        System.out.println("|------------------------------------------------------------------------");
+        System.out.println("|------------------------------------------------------------------------|");
         for (Actor item : actors) {
             System.out.printf("|%-15s | %-30s | %-4s | %-50s\n |",
                     item.getId(),
@@ -108,7 +108,7 @@ public class ActorManager extends ListManager<Actor> {
                     item.getRank(),
                     item.getDescription());
         }
-        System.out.println("|------------------------------------------------------------------------");
+        System.out.println("|------------------------------------------------------------------------|");
     }
 
 }

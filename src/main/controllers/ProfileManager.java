@@ -122,10 +122,10 @@ public class ProfileManager extends ListManager<Profile> {
             return; 
         }
         System.out.println(title);
-        System.out.println("|------------------------------------------------------------------------");
+        System.out.println("|------------------------------------------------------------------------------------------------");
         System.out.printf("|%-15s | %-30s | %-20s | %-15s | %-12s | %-12s\n |",
                 "Account ID", "Full Name", "Phone Number", "Address", "Credit", "Birthday");
-        System.out.println("|------------------------------------------------------------------------");
+        System.out.println("|------------------------------------------------------------------------------------------------");
 
  
         for (Profile profile : profiles) {
@@ -137,7 +137,7 @@ public class ProfileManager extends ListManager<Profile> {
                     profile.getCredit() > 0 ? String.format("%.2f", profile.getCredit()) : "N/A",
                     profile.getBirthday() != null ? profile.getBirthday().format(Validator.DATE) : "N/A");
         }
-        System.out.println("|------------------------------------------------------------------------");
+        System.out.println("|------------------------------------------------------------------------------------------------");
     }
 
 }

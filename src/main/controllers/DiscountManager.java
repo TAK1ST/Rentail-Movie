@@ -123,13 +123,13 @@ public class DiscountManager extends ListManager<Discount> {
         if (checkEmpty(list)) return;
 
     System.out.println(title);
-    System.out.println("|-------------------------------------------------------------------------------------------------------------|");
-    System.out.printf("| %-15s | %-15s | %-15s | %-15s | %-6s | %-10s | %-8s | %-6s |\n", 
+    System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------|");
+    System.out.printf("| %-15s | %-15s | %-15s | %-15s | %-15s | %-10s | %-8s | %-6s |\n", 
                         "Discount Code", "Customer ID", "Start Date", "End Date", "Type", "Value", "Status", "Usage Available");
-    System.out.println("|-------------------------------------------------------------------------------------------------------------|");
+    System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------|");
 
     for (Discount item : discounts) {
-        System.out.printf("| %-15s | %-15s | %-15s | %-15s | %-6s | %-10.2f | %-8s | %-6d |\n", 
+        System.out.printf("| %-15s | %-15s | %-15s | %-15s | %-15s | %-10.2f | %-8s | %-6d |\n", 
                           item.getCode(),
                           item.getCustomerID(),
                           item.getStartDate(),
@@ -140,6 +140,6 @@ public class DiscountManager extends ListManager<Discount> {
                           item.getUsageAvailable());
     }
 
-    System.out.println("|-------------------------------------------------------------------------------------------------------------|");
+    System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------|");
 }
 }
