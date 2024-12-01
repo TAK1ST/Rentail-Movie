@@ -18,12 +18,14 @@ public class AccountDAO {
         String sql = "INSERT INTO Accounts ("
                 + "account_id, "
                 + "username, "
+
                 + "password, "
                 + "email, "
                 + "role, "
                 + "status, "
                 + "created_at, "
                 + "updated_at, "
+
                 + "online_at"
                 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -35,9 +37,11 @@ public class AccountDAO {
             ps.setString(++count, account.getEmail());
             ps.setString(++count, account.getRole().name());
             ps.setString(++count, account.getStatus().name());
+
             ps.setDate(++count, account.getCreateAt() != null ? Date.valueOf(account.getCreateAt()) : null);
             ps.setDate(++count, account.getUpdateAt() != null ? Date.valueOf(account.getUpdateAt()) : null);
             ps.setDate(++count, account.getOnlineAt() != null ? Date.valueOf(account.getOnlineAt()) : null);
+
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -55,8 +59,10 @@ public class AccountDAO {
                 + "status = ?,"
                 + "create_at = ?,"
                 + "update_at = ?,"
+
                 + "online_at = ? "
                 + "WHERE account_id = ?";
+
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
             int count = 0;
@@ -65,9 +71,11 @@ public class AccountDAO {
             ps.setString(++count, account.getEmail());
             ps.setString(++count, account.getRole().name());
             ps.setString(++count, account.getStatus().name());
+
             ps.setDate(++count, account.getCreateAt() != null ? Date.valueOf(account.getCreateAt()) : null);
             ps.setDate(++count, account.getUpdateAt() != null ? Date.valueOf(account.getUpdateAt()) : null);
             ps.setDate(++count, account.getOnlineAt() != null ? Date.valueOf(account.getOnlineAt()) : null);
+
             ps.setString(++count, account.getId());
 
             return ps.executeUpdate() > 0;
@@ -80,6 +88,7 @@ public class AccountDAO {
     public static boolean deleteAccountFromDB(String accountID) {
         String sql = "DELETE FROM Accounts WHERE account_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+
             ps.setString(1, accountID);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -92,6 +101,7 @@ public class AccountDAO {
         String sql = "SELECT * FROM Accounts";
         List<Account> list = new ArrayList<>();
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet resultSet = ps.executeQuery()) {
+
             while (resultSet.next()) {
                 Account account = new Account(
                         resultSet.getString("account_id"),
@@ -103,6 +113,7 @@ public class AccountDAO {
                         resultSet.getDate("create_at") != null ? resultSet.getDate("create_at").toLocalDate() : null,
                         resultSet.getDate("update_at") != null ? resultSet.getDate("update_at").toLocalDate() : null,
                         resultSet.getDate("online_at") != null ? resultSet.getDate("online_at").toLocalDate() : null
+
                 );
                 list.add(account);
             }

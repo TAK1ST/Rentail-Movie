@@ -32,6 +32,7 @@ public class MovieDAO {
                 + "available_copies, "
                 + "created_at, "
                 + "updated_at "
+
                 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
@@ -113,6 +114,7 @@ public class MovieDAO {
                 + "available_copies = ?,"
                 + "created_at = ?,"
                 + "updated_at = ? "
+
                 + "WHERE movie_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
