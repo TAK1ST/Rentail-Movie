@@ -29,19 +29,15 @@ public class PaymentManager extends ListManager<Payment> {
         list = PaymentDAO.getAllPayments();
     }
 
-    public boolean addPayment(String rentalID) {
+      public boolean addPayment(String rentalID) {
         Rental foundRental = (Rental) getRTM().searchById(rentalID);
-        if (getRTM().checkNull(foundRental)) {
-            return false;
-        }
-
+        if (getRTM().checkNull(foundRental)) return false;
+        
         PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false);
-        if (method == PaymentMethod.NONE) {
-            return false;
-        }
-
+        if (method == PaymentMethod.NONE) return false;
+        
         list.add(new Payment(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.PAYMENT_PREFIX),
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.PAYMENT_PREFIX), 
                 method,
                 foundRental.getId()
         ));

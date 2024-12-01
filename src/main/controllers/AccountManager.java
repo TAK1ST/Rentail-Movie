@@ -255,11 +255,4 @@ public class AccountManager extends ListManager<Account> {
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         System.out.println();
     }
-    
-    public void show() {
-        while (yesOrNo("Sort the list?")) {
-            String[] options = new String[]{"username"};
-            display(sortBy(selectInfo("Sort review by", options, true)));
-        } 
-}
 }
