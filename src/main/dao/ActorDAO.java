@@ -13,15 +13,21 @@ import main.constants.ActorRank;
 public class ActorDAO {
 
     public static boolean addActorToDB(Actor actor) {
-        String sql = "INSERT INTO Actors (actor_id, actor_name, actor_description, actor_rank) VALUES (?, ?, ?, ?)";
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        String sql = "INSERT INTO Actors ("
+                + "actor_id, "
+                + "actor_name, "
+                + "actor_description, "
+                + "actor_rank"
+                + ") VALUES (?, ?, ?, ?)";
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            
+            int count = 0;
+            ps.setString(++count, actor.getId());
+            ps.setString(++count, actor.getActorName());
+            ps.setString(++count, actor.getDescription());
+            ps.setString(++count, actor.getRank().name()); 
 
-            preparedStatement.setString(1, actor.getId());
-            preparedStatement.setString(2, actor.getActorName());
-            preparedStatement.setString(3, actor.getDescription());
-            preparedStatement.setString(4, actor.getRank().name()); 
-
-            return preparedStatement.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -29,15 +35,20 @@ public class ActorDAO {
     }
 
     public static boolean updateActorInDB(Actor actor) {
-        String sql = "UPDATE Actors SET actor_name = ?, actor_description = ?, actor_rank = ? WHERE actor_id = ?";
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        String sql = "UPDATE Actors SET "
+                + "actor_name = ?, "
+                + "actor_description = ?, "
+                + "actor_rank = ? "
+                + "WHERE actor_id = ?";
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, actor.getActorName());
-            preparedStatement.setString(2, actor.getDescription());
-            preparedStatement.setString(3, actor.getRank().name()); 
-            preparedStatement.setString(4, actor.getId());
+            int count = 0;
+            ps.setString(++count, actor.getActorName());
+            ps.setString(++count, actor.getDescription());
+            ps.setString(++count, actor.getRank().name()); 
+            ps.setString(++count, actor.getId());
 
-            return preparedStatement.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -46,10 +57,10 @@ public class ActorDAO {
     
     public static boolean deleteActorFromDB(String actorId) {
         String sql = "DELETE FROM Actors WHERE actor_id = ?";
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, actorId);
-            return preparedStatement.executeUpdate() > 0;
+            ps.setString(1, actorId);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -61,8 +72,8 @@ public class ActorDAO {
         String sql = "SELECT * FROM Actors";
         List<Actor> list = new ArrayList<>();
         try (Connection connection = Database.getConnection(); 
-                PreparedStatement preparedStatement = connection.prepareStatement(sql); 
-                ResultSet resultSet = preparedStatement.executeQuery()) {
+                PreparedStatement ps = connection.prepareStatement(sql); 
+                ResultSet resultSet = ps.executeQuery()) {
             while (resultSet.next()) {
                 Actor actor = new Actor(
                         resultSet.getString("actor_id"),

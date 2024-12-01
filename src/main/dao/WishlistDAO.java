@@ -2,25 +2,36 @@ package main.dao;
 
 import main.dto.Wishlist;
 import main.config.Database;
+import main.constants.WishlistPriority;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import main.constants.WishlistPriority;
 
 public class WishlistDAO {
 
     public static boolean addWishlistToDB(Wishlist wishlist) {
-        String sql = "INSERT INTO Wishlists (wishlist_id, movie_id, customer_id, added_date, priority) VALUES (?, ?, ?, ?, ?)";
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        String sql = "INSERT INTO Wishlists ("
+                + "wishlist_id, "
+                + "movie_id, "
+                + "customer_id, "
+                + "added_date, "
+                + "priority"
+                + ") VALUES (?, ?, ?, ?, ?)";
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            
+            int count = 0;
+            ps.setString(++count, wishlist.getId());
+            ps.setString(++count, wishlist.getMovieId());
+            ps.setString(++count, wishlist.getCustomerId());
+            ps.setDate(++count, Date.valueOf(wishlist.getAddedDate()));
+            ps.setString(++count, wishlist.getPriority().name());
 
-            preparedStatement.setString(1, wishlist.getId());
-            preparedStatement.setString(2, wishlist.getMovieId());
-            preparedStatement.setString(3, wishlist.getCustomerId());
-            preparedStatement.setDate(4, Date.valueOf(wishlist.getAddedDate()));
-            preparedStatement.setString(5, wishlist.getPriority().name());
-
-            return preparedStatement.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -28,16 +39,22 @@ public class WishlistDAO {
     }
 
     public static boolean updateWishlistInDB(Wishlist wishlist) {
-        String sql = "UPDATE Wishlists SET movie_id = ?, customer_id = ?, added_date = ?, priority = ? WHERE wishlist_id = ?";
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        String sql = "UPDATE Wishlists SET "
+                + "movie_id = ?, "
+                + "customer_id = ?, "
+                + "added_date = ?, "
+                + "priority = ? "
+                + "WHERE wishlist_id = ?";
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            
+            int count = 0;
+            ps.setString(++count, wishlist.getMovieId());
+            ps.setString(++count, wishlist.getCustomerId());
+            ps.setDate(++count, Date.valueOf(wishlist.getAddedDate()));
+            ps.setString(++count, wishlist.getPriority().name());
+            ps.setString(++count, wishlist.getId());
 
-            preparedStatement.setString(1, wishlist.getMovieId());
-            preparedStatement.setString(2, wishlist.getCustomerId());
-            preparedStatement.setDate(3, Date.valueOf(wishlist.getAddedDate()));
-            preparedStatement.setString(4, wishlist.getPriority().name());
-            preparedStatement.setString(5, wishlist.getId());
-
-            return preparedStatement.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -46,10 +63,10 @@ public class WishlistDAO {
 
     public static boolean deleteWishlistFromDB(String wishlistId) {
         String sql = "DELETE FROM Wishlists WHERE wishlist_id = ?";
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, wishlistId);
-            return preparedStatement.executeUpdate() > 0;
+            ps.setString(1, wishlistId);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,7 +76,7 @@ public class WishlistDAO {
     public static List<Wishlist> getAllWishlists() {
         String sql = "SELECT * FROM Wishlists";
         List<Wishlist> list = new ArrayList<>();
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet resultSet = ps.executeQuery()) {
 
             while (resultSet.next()) {
                 Wishlist wishlist = new Wishlist(
