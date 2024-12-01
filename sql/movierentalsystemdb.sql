@@ -80,11 +80,19 @@ CREATE TABLE IF NOT EXISTS Movie_Language (
     FOREIGN KEY (language_code) REFERENCES Languages (language_code) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Account_Discount (
+CREATE TABLE IF NOT EXISTS Discount_Actor (
     account_id CHAR(8) NOT NULL,
     discount_code VARCHAR(50) NOT NULL,
     PRIMARY KEY (account_id, discount_code),
     FOREIGN KEY (account_id) REFERENCES Accounts(account_id) ON DELETE CASCADE,
+    FOREIGN KEY (discount_code) REFERENCES Discounts(discount_code) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Discount_Movie (
+    movie_id CHAR(8) NOT NULL,
+    discount_code VARCHAR(50) NOT NULL,
+    PRIMARY KEY (movie_id, discount_code),
+    FOREIGN KEY (movie_id) REFERENCES Movies(movie_id) ON DELETE CASCADE,
     FOREIGN KEY (discount_code) REFERENCES Discounts(discount_code) ON DELETE CASCADE
 );
 
