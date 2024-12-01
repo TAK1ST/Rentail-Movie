@@ -4,6 +4,7 @@ package main.controllers;
 import main.base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import main.dao.GenreDAO;
 import main.dto.Genre;
@@ -15,6 +16,8 @@ import static main.utils.Validator.getName;
  * @author trann
  */
 public class GenreManager extends ListManager<Genre> {
+    
+    private static final String[] searchOptions = {"genre_name", "description"};
     
     public GenreManager() throws IOException {
         super(Genre.className());
@@ -59,14 +62,6 @@ public class GenreManager extends ListManager<Genre> {
         list.remove(foundGenre);
         return GenreDAO.deleteGenreFromDB(foundGenre.getId());
     }
-
-    public void searchGenre() {
-        display(getGenreBy("Enter genre's propety"));
-    }
-
-    public List<Genre> getGenreBy(String message) {
-        return searchBy(getString(message, false));
-    }
    
     @Override
     public List<Genre> searchBy(String propety) {
@@ -79,8 +74,29 @@ public class GenreManager extends ListManager<Genre> {
             }   
         return result;
     }
-   
-     @Override
+    
+    @Override
+    public List<Genre> sortList(List<Genre> tempList, String property) {
+        if (checkEmpty(tempList)) {
+            return null;
+        }
+
+        List<Genre> result = new ArrayList<>(tempList);
+        switch (property) {
+            case "genreName":
+                result.sort(Comparator.comparing(Genre::getGenreName));
+                break;
+            case "description":
+                result.sort(Comparator.comparing(Genre::getDescription));
+                break;
+            default:
+                result.sort(Comparator.comparing(Genre::getGenreName)); 
+                break;
+        }
+        return result;
+    }
+
+    @Override
     public void display(List<Genre> tempList) {
         if (checkEmpty(tempList)) return; 
         int genreNameLength = 0;

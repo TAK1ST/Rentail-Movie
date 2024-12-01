@@ -4,6 +4,7 @@ import main.base.ListManager;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import static main.controllers.Managers.getACM;
 import main.dao.ProfileDAO;
@@ -21,6 +22,8 @@ import static main.utils.Validator.getPhoneNumber;
  * @author trann
  */
 public class ProfileManager extends ListManager<Profile> {
+    
+    private static final String[] searchOptions = {"account_id", "full_name", "birthday", "address", "phone_number", "credit"};
       
     public ProfileManager() throws IOException {
         super(Profile.className());
@@ -90,14 +93,6 @@ public class ProfileManager extends ListManager<Profile> {
         list.remove(foundProfile);
         return ProfileDAO.deleteProfileFromDB(foundProfile.getId());
     }
-
-    public void searchProfile() {
-        display(getProfileBy("Enter any user's propety"));
-    }
-
-    public List<Profile> getProfileBy(String message) {
-        return searchBy(getString(message, false));
-    }
     
     @Override
     public List<Profile> searchBy(String propety) {
@@ -114,7 +109,40 @@ public class ProfileManager extends ListManager<Profile> {
         return result;
     }
 
- @Override
+    @Override
+    public List<Profile> sortList(List<Profile> tempList, String property) {
+        if (checkEmpty(tempList)) {
+            return null;
+        }
+
+        List<Profile> result = new ArrayList<>(tempList);
+        switch (property) {
+            case "accountId":
+                result.sort(Comparator.comparing(Profile::getAccountId));
+                break;
+            case "fullName":
+                result.sort(Comparator.comparing(Profile::getFullName));
+                break;
+            case "birthday":
+                result.sort(Comparator.comparing(Profile::getBirthday));
+                break;
+            case "address":
+                result.sort(Comparator.comparing(Profile::getAddress));
+                break;
+            case "phoneNumber":
+                result.sort(Comparator.comparing(Profile::getPhoneNumber));
+                break;
+            case "credit":
+                result.sort(Comparator.comparing(Profile::getCredit));
+                break;
+            default:
+                result.sort(Comparator.comparing(Profile::getAccountId)); // Default to accountId
+                break;
+        }
+        return result;
+    }
+    
+    @Override
     public void display(List<Profile> tempList) {
         if (checkEmpty(tempList)) return; 
         int fullNameLength = 0;
