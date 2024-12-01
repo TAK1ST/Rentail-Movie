@@ -161,7 +161,7 @@ public class MovieDAO {
                         resultSet.getDouble("avg_rating"),
                         getGenresByMovieId(resultSet.getString("movie_id")),
                         getActorsByMovieId(resultSet.getString("movie_id")),
-                        getLaguagesByMovieId(resultSet.getString("movie_id")),
+                        getLanguagesByMovieId(resultSet.getString("movie_id")),
                         resultSet.getDate("release_year").toLocalDate(),
                         resultSet.getDouble("rental_price"),
                         resultSet.getInt("available_copies"),
@@ -177,45 +177,68 @@ public class MovieDAO {
     }
 
     private static String getGenresByMovieId(String movieID) {
-        String sql = "DELETE FROM Movies WHERE movie_id = ?";
+        String sql = "SELECT genre_name FROM Movie_Genre WHERE movie_id = ?";
+        StringBuilder genres = new StringBuilder();
         try (Connection connection = Database.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
             ps.setString(1, movieID);
-            return ps.executeUpdate() > 0 ? rs.getString("moive_id") : "";
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                if (genres.length() > 0) {
+                    genres.append(", ");
+                }
+                genres.append(rs.getString("genre_name"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "";
+        return genres.toString();
     }
 
     private static String getActorsByMovieId(String movieID) {
         String sql = "SELECT actor_id FROM Movie_Actor WHERE movie_id = ?";
+        StringBuilder actors = new StringBuilder();
         try (Connection connection = Database.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
             ps.setString(1, movieID);
-            return ps.executeUpdate() > 0 ? rs.getString("moive_id") : "";
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                if (actors.length() > 0) {
+                    actors.append(", ");
+                }
+                actors.append(rs.getString("actor_id"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "";
+        return actors.toString();
     }
+
     
-    private static String getLaguagesByMovieId(String movieID) {
+    private static String getLanguagesByMovieId(String movieID) {
         String sql = "SELECT language_code FROM Movie_Language WHERE movie_id = ?";
+        StringBuilder languages = new StringBuilder();
         try (Connection connection = Database.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
             ps.setString(1, movieID);
-            return ps.executeUpdate() > 0 ? rs.getString("moive_id") : "";
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                if (languages.length() > 0) {
+                    languages.append(", ");
+                }
+                languages.append(rs.getString("language_code"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "";
+        return languages.toString();
     }
+
 
 }
