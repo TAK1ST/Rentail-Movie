@@ -1,7 +1,9 @@
 package main.dto;
 
+import exceptions.MethodNotFound;
 import java.time.LocalDate;
 import main.base.Model;
+import static main.utils.LogMessage.errorLog;
 import main.utils.Validator;
 
 public class Profile extends Model {
@@ -23,7 +25,7 @@ public class Profile extends Model {
 
 
     public Profile(Profile other) {
-        super(other.getId());
+        super(other.getAccountId());
         this.fullName = other.fullName;
         this.phoneNumber = other.phoneNumber;
         this.address = other.address;
@@ -42,20 +44,35 @@ public class Profile extends Model {
                 birthday.format(Validator.DATE));
     }
 
-    @Override
-    public Object[] getDatabaseValues() {
-        return new Object[]{
-            super.getId(),
-            fullName,
-            phoneNumber,
-            address,
-            credit,
-            birthday
-        };
-    }
-
     public static String className() {
         return "User";
+    }
+
+    @Override
+    public String getId() {
+        try {
+            throw new MethodNotFound("Profile only has accountId instead of id");
+        } catch (MethodNotFound e) {
+            errorLog("Exception caught: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    @Override
+    public void setId(String id) {
+        try {
+            throw new MethodNotFound("Profile only has accountId instead of id");
+        } catch (MethodNotFound e) {
+            errorLog("Exception caught: " + e.getMessage());
+        }
+    }
+    
+    public String getAccountId() {
+        return super.getId();
+    }
+    
+    public void setAccountId(String id) {
+        super.setId(id);
     }
 
     public String getFullName() {

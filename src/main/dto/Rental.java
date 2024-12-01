@@ -17,8 +17,18 @@ public class Rental extends Model {
     private double totalAmount;
     private RentalStatus status;
 
-    public Rental(String id, String customerID, String movieID, String staffID, LocalDate rentalDate, LocalDate returnDate, 
-            LocalDate dueDate, double lateFee, double totalAmount, RentalStatus status) {
+    public Rental(
+            String id, 
+            String customerID, 
+            String movieID, 
+            String staffID, 
+            LocalDate rentalDate, 
+            LocalDate returnDate, 
+            LocalDate dueDate, 
+            double lateFee, 
+            double totalAmount, 
+            RentalStatus status) 
+    {
 
         super(id);
         this.customerID = customerID;
@@ -58,22 +68,6 @@ public class Rental extends Model {
                 lateFee,
                 totalAmount,
                 status);
-    }
-
-    @Override
-    public Object[] getDatabaseValues() {
-        return new Object[]{
-            getId(),
-            customerID,
-            movieID,
-            staffID,
-            rentalDate,
-            returnDate,
-            dueDate,
-            lateFee,
-            totalAmount,
-            status
-        };
     }
 
     public static String className() {
