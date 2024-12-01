@@ -73,9 +73,9 @@ public class AccountDAO {
             while (resultSet.next()) {
                 Account account = new Account(
                         resultSet.getString("account_id"),
-                        resultSet.getString("email"),
-                        resultSet.getString("password"),
                         resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getString("email"),
                         AccRole.valueOf(resultSet.getString("role")),
                         AccStatus.valueOf(resultSet.getString("status"))
                 );

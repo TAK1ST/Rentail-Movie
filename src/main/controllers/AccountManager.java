@@ -16,7 +16,6 @@ import static main.utils.Input.getString;
 import static main.utils.Input.selectInfo;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
-import main.utils.Menu;
 import static main.utils.PassEncryptor.encryptPassword;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -181,7 +180,7 @@ public class AccountManager extends ListManager<Account> {
     }
 
     public void searchAccount() {
-        display(getAccountBy("Enter any user's propety"), "Search Results");
+        display(getAccountBy("Enter any user's propety"));
     }
 
     public List<Account> getAccountBy(String message) {
@@ -225,41 +224,40 @@ public class AccountManager extends ListManager<Account> {
     }
 
     @Override
-    public void display(List<Account> tempList, String title) {
+    public void display(List<Account> tempList) {
         if (checkEmpty(tempList)) {
             return;
         }
-        
-        Menu.showHeader(title);
 
         int usernameLength = 0;
         int emailLength = 0;
         for (Account item : list) {
-            if (usernameLength > item.getUsername().length()) usernameLength = item.getUsername().length();
-            if (emailLength > item.getEmail().length()) emailLength = item.getEmail().length();
+            usernameLength = Math.max(usernameLength, item.getUsername().length());
+            emailLength = Math.max(emailLength, item.getEmail().length());
         }
         
-        int widthLength = 8 + usernameLength + 8 + emailLength;
+        int widthLength = 8 + usernameLength + 8 + emailLength + 13;
         
-        for (int index = 0; index < widthLength; index++) System.out.println("-");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
         System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |\n",
                 "ID", "Username", "Role", "Email");
-        for (int index = 0; index < widthLength; index++) System.out.println("-");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Account item : tempList) {
-            System.out.printf("| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |\n",
+            System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |",
                     item.getId(),
                     item.getUsername(),
                     item.getRole(),
                     item.getEmail());
         }
-        for (int index = 0; index < widthLength; index++) System.out.println("-");
+        System.out.println();
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
         System.out.println();
     }
     
-    public void show(String title) {
+    public void show() {
         while (yesOrNo("Sort the list?")) {
             String[] options = new String[]{"username"};
-            display(sortBy(selectInfo("Sort review by", options, true)), title);
+            display(sortBy(selectInfo("Sort review by", options, true)));
         } 
     }
     
