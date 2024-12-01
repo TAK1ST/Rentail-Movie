@@ -47,7 +47,7 @@ public class AdminPannel {
                 new MenuOption("Rental managment",  () -> rentalMenu()),
                 new MenuOption("Review managment",  () -> reviewMenu()),
                 new MenuOption("Wishlist managment",  () -> wishlistMenu()),
-                new MenuOption("Log Out"),
+                new MenuOption("Log Out", EXIT_MENU),
             },
             null
         );

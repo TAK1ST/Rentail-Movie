@@ -78,8 +78,6 @@ public class ProfileManager extends ListManager<Profile> {
         if (newCredit > 0) foundProfile.setCredit(newCredit);
         if (newBirthday != null) foundProfile.setBirthday(newBirthday);
          
-
-        
         return ProfileDAO.updateProfileInDB(foundProfile);
     }
 
