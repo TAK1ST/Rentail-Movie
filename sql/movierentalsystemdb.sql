@@ -39,7 +39,6 @@ CREATE TABLE IF NOT EXISTS Movies (
 
 CREATE TABLE IF NOT EXISTS Discounts (
     discount_code VARCHAR(50) PRIMARY KEY,
-    customer_id CHAR(8) NOT NULL,
     discount_type ENUM('PERCENT', 'FIXED_AMOUNT', 'BUY_X_GET_Y_FREE') NOT NULL DEFAULT 'PERCENT',
     discount_value DECIMAL(10, 2) NOT NULL,
     start_date DATE NOT NULL,
