@@ -163,8 +163,8 @@ public class MovieDAO {
                         resultSet.getDate("release_year").toLocalDate(),
                         resultSet.getDouble("rental_price"),
                         resultSet.getInt("available_copies"),
-                        resultSet.getDate("creat_at").toLocalDate(),
-                        resultSet.getDate("creat_at").toLocalDate()
+                        resultSet.getDate("created_at").toLocalDate(),
+                        resultSet.getDate("updated_at").toLocalDate()
                 );
                 list.add(movie);
             }

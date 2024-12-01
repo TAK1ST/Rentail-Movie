@@ -53,8 +53,8 @@ public class AccountDAO {
                 + "email = ?, "
                 + "role = ?, "
                 + "status = ?,"
-                + "create_at = ?,"
-                + "update_at = ?,"
+                + "created_at = ?,"
+                + "updated_at = ?,"
                 + "online_at = ? "
                 + "WHERE account_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -100,8 +100,8 @@ public class AccountDAO {
                         resultSet.getString("email"),
                         AccRole.valueOf(resultSet.getString("role")),
                         AccStatus.valueOf(resultSet.getString("status")),
-                        resultSet.getDate("create_at") != null ? resultSet.getDate("create_at").toLocalDate() : null,
-                        resultSet.getDate("update_at") != null ? resultSet.getDate("update_at").toLocalDate() : null,
+                        resultSet.getDate("created_at") != null ? resultSet.getDate("created_at").toLocalDate() : null,
+                        resultSet.getDate("updated_at") != null ? resultSet.getDate("updated_at").toLocalDate() : null,
                         resultSet.getDate("online_at") != null ? resultSet.getDate("online_at").toLocalDate() : null
                 );
                 list.add(account);
