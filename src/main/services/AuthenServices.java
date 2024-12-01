@@ -3,7 +3,6 @@ package main.services;
 import java.io.IOException;
 import java.sql.SQLException;
 import static main.controllers.Managers.getACM;
-import main.dao.AccountDAO;
 import main.dto.Account;
 import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
@@ -28,7 +27,6 @@ public class AuthenServices {
                 if (validatePassword(password, item.getPassword())) {
                     return new Account(item);
                 } else {
-                    System.out.println("Are you forgot password");
                     forgetPassword(item.getId());
                 }
 
@@ -66,7 +64,6 @@ public class AuthenServices {
     public static void forgetPassword(String accountID) {
         if (yesOrNo("Forgot password")) {
             String newPassword = getPassword("Enter new password", false);
-            AccountDAO.updatePasswordAccountInDB(accountID);
             getACM().updatePassword(accountID, newPassword);
         }
     }
