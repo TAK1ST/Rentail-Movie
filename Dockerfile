@@ -1,25 +1,7 @@
-# Use official JDK 23 base image
-FROM openjdk:23-slim
+FROM mysql:8.0
 
-# Set working directory
-WORKDIR /app
+# Copy SQL script
+COPY ./sql/movierentalsystemdb.sql /docker-entrypoint-initdb.d/
 
-# Install Ant
-RUN apt-get update && \
-    apt-get install -y ant && \
-    apt-get clean
-
-# Copy the project files
-COPY . .
-
-# Copy the build.xml file
-COPY build.xml .
-
-# Build the project using Ant
-RUN ant clean compile
-
-# Expose the port your application runs on
-EXPOSE 8080
-
-# Command to run the application
-CMD ["ant", "run"]
+# Set character encoding
+CMD ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
