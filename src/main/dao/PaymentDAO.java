@@ -19,7 +19,7 @@ public class PaymentDAO {
             
             int count = 0;
             ps.setString(++count, payment.getId());
-            ps.setString(++count, payment.getPaymentMethods().name());
+            ps.setString(++count, payment.getMethod().name());
             ps.setString(++count, payment.getRentalId());
 
             return ps.executeUpdate() > 0;
@@ -35,7 +35,7 @@ public class PaymentDAO {
              PreparedStatement ps = connection.prepareStatement(sql)) {
             
             int count = 0;
-            ps.setString(++count, payment.getPaymentMethods().name());
+            ps.setString(++count, payment.getMethod().name());
             ps.setString(++count, payment.getRentalId());
             ps.setString(++count, payment.getId());
 

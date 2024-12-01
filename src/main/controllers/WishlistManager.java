@@ -7,6 +7,7 @@ package main.controllers;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
 import main.constants.IDPrefix;
@@ -130,6 +131,37 @@ public class WishlistManager extends ListManager<Wishlist> {
         }
         return result;
     }
+    
+    @Override
+    public List<Wishlist> sortList(List<Wishlist> tempList, String property) {
+        if (checkEmpty(tempList)) {
+            return null;
+        }
+
+        List<Wishlist> result = new ArrayList<>(tempList);
+        switch (property) {
+            case "wishlistId":
+                result.sort(Comparator.comparing(Wishlist::getId));
+                break;
+            case "customerId":
+                result.sort(Comparator.comparing(Wishlist::getCustomerId));
+                break;
+            case "movieId":
+                result.sort(Comparator.comparing(Wishlist::getMovieId));
+                break;
+            case "addedDate":
+                result.sort(Comparator.comparing(Wishlist::getAddedDate));
+                break;
+            case "priority":
+                result.sort(Comparator.comparing(Wishlist::getPriority));
+                break;
+            default:
+                result.sort(Comparator.comparing(Wishlist::getId));
+                break;
+        }
+        return result;
+    }
+
 
     @Override
     public void display(List<Wishlist> wishlists) {

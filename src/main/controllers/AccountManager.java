@@ -14,7 +14,6 @@ import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import main.utils.IDGenerator;
 import static main.utils.Input.getString;
-import static main.utils.Input.selectInfo;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.PassEncryptor.encryptPassword;
@@ -29,6 +28,8 @@ import static main.utils.Validator.getUsername;
  * @author trann
  */
 public class AccountManager extends ListManager<Account> {
+    
+    private static final String[] options = {"account_id", "username", "password", "role", "email", "status", "online_at", "created_at", "updated_at"};
 
     public AccountManager() throws IOException {
         super(Account.className());
@@ -189,14 +190,10 @@ public class AccountManager extends ListManager<Account> {
         return AccountDAO.deleteAccountFromDB(foundAccount.getId());
     }
 
-    public void searchAccount() {
-        display(getAccountBy("Enter any user's propety"));
+    public void showMyProfile(String userID) {
+        display(searchById(userID), "My Profile");
     }
-
-    public List<Account> getAccountBy(String message) {
-        return searchBy(getString(message, false));
-    }
-
+    
     @Override
     public List<Account> searchBy(String propety) {
         List<Account> result = new ArrayList<>();
@@ -212,27 +209,28 @@ public class AccountManager extends ListManager<Account> {
         return result;
     }
 
-    public void showMyProfile(String userID) {
-        display(searchById(userID), "My Profile");
-    }
-    
-    public List<Account> sortBy(String propety) {
-        if (checkEmpty(list)) {
+    @Override
+    public List<Account> sortList(List<Account> tempList, String property) {
+        if (checkEmpty(tempList)) {
             return null;
         }
-        
-        List<Account> result = new ArrayList<>(list);
-        switch (propety) {
-            case "username":
-                result.sort(Comparator.comparing(Account::getUsername));
-                break;
-            default:
-                sortById();
+
+        List<Account> result = new ArrayList<>(tempList);
+        switch (property) {
+            case "username": result.sort(Comparator.comparing(Account::getUsername)); break;
+            case "password": result.sort(Comparator.comparing(Account::getPassword)); break;
+            case "email": result.sort(Comparator.comparing(Account::getEmail)); break;
+            case "role": result.sort(Comparator.comparing(Account::getRole)); break;
+            case "status": result.sort(Comparator.comparing(Account::getStatus)); break;
+            case "createAt": result.sort(Comparator.comparing(Account::getCreateAt)); break;
+            case "updateAt": result.sort(Comparator.comparing(Account::getUpdateAt)); break;
+            case "onlineAt": result.sort(Comparator.comparing(Account::getOnlineAt)); break;
+            default: 
+                result.sort(Comparator.comparing(Account::getId));
                 break;
         }
         return result;
     }
-
 
     @Override
     public void display(List<Account> tempList) {
@@ -265,4 +263,5 @@ public class AccountManager extends ListManager<Account> {
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         System.out.println();
     }
+    
 }
