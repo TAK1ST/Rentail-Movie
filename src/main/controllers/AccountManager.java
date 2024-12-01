@@ -3,6 +3,7 @@ package main.controllers;
 import main.base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import main.constants.AccRole;
 import main.constants.AccStatus;
@@ -12,8 +13,10 @@ import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import main.utils.IDGenerator;
 import static main.utils.Input.getString;
+import static main.utils.Input.selectInfo;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
+import main.utils.Menu;
 import static main.utils.PassEncryptor.encryptPassword;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -203,27 +206,61 @@ public class AccountManager extends ListManager<Account> {
     public void showMyProfile(String userID) {
         display(searchById(userID), "My Profile");
     }
-
-    @Override
-    public void display(List<Account> users, String title) {
+    
+    public List<Account> sortBy(String propety) {
         if (checkEmpty(list)) {
-            return;
+            return null;
         }
-
-        System.out.println(title);
-        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-        System.out.printf("|%-15s | %-20s | %-10s | %-20s |\n",
-                "Account ID", "Accountname", "Role", "Email");
-        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-        for (Account user : users) {
-            String role = user.getRole() == AccRole.ADMIN ? "Admin" : "Account";  // Chuyển đổi số vai trò thành tên vai trò
-            System.out.printf("|%-15s | %-20s | %-10s | %-20s |\n",
-                    user.getId(),
-                    user.getUsername(),
-                    role,
-                    user.getEmail() != null ? user.getEmail() : "N/A");
+        
+        List<Account> result = new ArrayList<>(list);
+        switch (propety) {
+            case "username":
+                result.sort(Comparator.comparing(Account::getUsername));
+                break;
+            default:
+                sortById();
+                break;
         }
-        System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+        return result;
     }
 
+    @Override
+    public void display(List<Account> tempList, String title) {
+        if (checkEmpty(tempList)) {
+            return;
+        }
+        
+        Menu.showHeader(title);
+
+        int usernameLength = 0;
+        int emailLength = 0;
+        for (Account item : list) {
+            if (usernameLength > item.getUsername().length()) usernameLength = item.getUsername().length();
+            if (emailLength > item.getEmail().length()) emailLength = item.getEmail().length();
+        }
+        
+        int widthLength = 8 + usernameLength + 8 + emailLength;
+        
+        for (int index = 0; index < widthLength; index++) System.out.println("-");
+        System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |\n",
+                "ID", "Username", "Role", "Email");
+        for (int index = 0; index < widthLength; index++) System.out.println("-");
+        for (Account item : tempList) {
+            System.out.printf("| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |\n",
+                    item.getId(),
+                    item.getUsername(),
+                    item.getRole(),
+                    item.getEmail());
+        }
+        for (int index = 0; index < widthLength; index++) System.out.println("-");
+        System.out.println();
+    }
+    
+    public void show(String title) {
+        while (yesOrNo("Sort the list?")) {
+            String[] options = new String[]{"username"};
+            display(sortBy(selectInfo("Sort review by", options, true)), title);
+        } 
+    }
+    
 }

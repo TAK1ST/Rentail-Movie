@@ -1,5 +1,7 @@
 -- drop schema movierentalsystemdb;
 
+-- create schema movierentalsystemdb; 
+
 CREATE DATABASE IF NOT EXISTS movierentalsystemdb;
 USE movierentalsystemdb;
 
@@ -128,5 +130,7 @@ CREATE TABLE IF NOT EXISTS Discounts (
     end_date DATE NOT NULL,
     usage_available INT DEFAULT 1,
     is_active BOOLEAN DEFAULT TRUE,
-    FOREIGN KEY (customer_id) REFERENCES Accounts (account_id));
+    foreign key (customer_id) references Accounts (account_id)
+
+)
 

@@ -36,17 +36,20 @@ public final class ReviewManager extends ListManager<Review> {
 
     public boolean makeReview(String customID) {
         List<Review> foundReview = searchBy(customID);
-        for (Review item : foundReview) 
+        for (Review item : foundReview) {
             if (item.getCustomerID().equals(customID)) {
                 errorLog("Already review this movie");
                 return false;
             }
-        
+        }
+
         Movie foundMovie = (Movie) getMVM().getById("Enter movie'id");
+
         if (getMVM().checkNull(foundMovie)) return false;
         
         int rating = getInteger("Enter rating", 1, 5, false);
         if (rating == Integer.MIN_VALUE) return false;
+
 
         list.add(new Review(
                 IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.REVIEW_PREFIX),
@@ -55,39 +58,48 @@ public final class ReviewManager extends ListManager<Review> {
                 rating,
                 getString("Enter comment", true),
                 LocalDate.now()));
-        
+
         return ReviewDAO.addReviewToDB(list.getLast());
     }
 
     public boolean updateReview() {
-        if (checkEmpty(list)) return false;
-        
+        if (checkEmpty(list)) {
+            return false;
+        }
+
         String input = getString("Enter movie'id", false);
         if (input.isEmpty()) return false;
         
         Review foundReview = searchBy(input).getFirst();
         Movie foundMovie = (Movie) getMVM().searchById(input);
-        if (checkNull(foundReview) || getMVM().checkNull(foundMovie)) 
+        if (checkNull(foundReview) || getMVM().checkNull(foundMovie)) {
             return false;
-        
+        }
+
         int rating = getInteger("Enter rating", 1, 5, true);
         String reviewText = getString("Enter comment", true);
 
-        if (rating > 0) 
+        if (rating > 0) {
             foundReview.setRating(rating);
-        
-        if (!reviewText.isEmpty()) 
+        }
+
+        if (!reviewText.isEmpty()) {
             foundReview.setReviewText(reviewText);
-        
+        }
+
         return ReviewDAO.updateReviewInDB(foundReview);
     }
 
     public boolean deleteReview() {
-        if (checkEmpty(list)) return false;
-        
+        if (checkEmpty(list)) {
+            return false;
+        }
+
         Review foundReview = (Review) getById("Enter review' id");
-        if (checkNull(foundReview)) return false;
-        
+        if (checkNull(foundReview)) {
+            return false;
+        }
+
         list.remove(foundReview);
         return ReviewDAO.deleteReviewFromDB(foundReview.getId());
     }
@@ -95,11 +107,11 @@ public final class ReviewManager extends ListManager<Review> {
     public void searchReview() {
         display(getReviewBy("Enter review's propety to search"), "Search Results");
     }
-    
+
     public List<Review> getReviewBy(String message) {
         return searchBy(getString(message, false));
     }
-    
+
     @Override
     public List<Review> searchBy(String propety) {
         List<Review> result = new ArrayList<>();
@@ -116,10 +128,12 @@ public final class ReviewManager extends ListManager<Review> {
         }
         return result;
     }
-    
+
     public void sortBy(String propety) {
-        if (checkEmpty(list)) return;
-        
+        if (checkEmpty(list)) {
+            return;
+        }
+
         switch (propety) {
             case "rating":
                 Collections.sort(list, (item1, item2) -> Double.compare(item1.getRating(), item2.getRating()));
@@ -128,27 +142,54 @@ public final class ReviewManager extends ListManager<Review> {
                 sortById();
                 break;
         }
-    }  
-    
+    }
+
     public void displayAMovieReviews() {
         Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
-        if (getMVM().checkNull(foundMovie)) return;
-        
+        if (getMVM().checkNull(foundMovie)) {
+            return;
+        }
+
         List<Review> movieReviews = searchBy(foundMovie.getId());
-        
-        String[] options = new String[] { "id", "rating" };
+
+        String[] options = new String[]{"id", "rating"};
         sortBy(selectInfo("Sort review by", options, true));
-        
-        display(movieReviews, foundMovie.getTitle() + " 's reviews");    
+
+        display(movieReviews, foundMovie.getTitle() + " 's reviews");
     }
-    
+
     public void myReviews(String customID) {
         List<Review> movieReviews = searchBy(customID);
-        
-        String[] options = new String[] { "id", "rating" };
+
+        String[] options = new String[]{"id", "rating"};
         sortBy(selectInfo("Sort review by", options, true));
-        
+
         display(movieReviews, "My Review History");
     }
-    
+
+    @Override
+    public void display(List<Review> reviews, String title) {
+        if (checkEmpty(list)) {
+            return;
+        }
+        System.out.println(title);
+        System.out.println("|------------------------------------------------------------------------------------------------");
+
+        System.out.printf("|%-15s | %-15s | %-15s | %-10d | %-20s | %-30s |n",
+                "Review ID", "Customer ID", "Movie ID", "Rating",
+                "Review Date", "Review Text");
+        System.out.println("|------------------------------------------------------------------------------------------------");
+
+        for (Review item  : reviews) {
+            System.out.printf("|%-15s | %-15s | %-15s | %-10d | %-20s | %-30s |%n",
+                    item.getId(),
+                    item.getCustomerID(),
+                    item.getMovieID(),
+                    item.getRating(),
+                    item.getReviewDate(),
+                    item.getReviewText());
+        }
+        System.out.println("|------------------------------------------------------------------------------------------------");
+
+    }
 }

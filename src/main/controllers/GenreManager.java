@@ -87,16 +87,17 @@ public class GenreManager extends ListManager<Genre> {
         if (checkEmpty(list)) return;
         
         System.out.println(title);
-        System.out.println("|----------------------------------------------------");
-        System.out.printf("|%-30s | %-30s |\n", "Genre", "Description");
-        System.out.println("|----------------------------------------------------");
+
+        System.out.println("|---------------------------------------|");
+        System.out.printf("|%-15s | %-30s |\n", "Genre ID", "Genre Name");
+        System.out.println("|---------------------------------------|");
 
         for (Genre genre : genres) {
             System.out.printf("|%-15s | %-30s\n",
                     genre.getGenreName(),
                     genre.getDescription());
         }
-        System.out.println("|----------------------------------------------------");
+        System.out.println("|----------------------------------------|");
     }
     
 }
