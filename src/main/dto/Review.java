@@ -40,19 +40,6 @@ public class Review extends Model {
                 reviewText);
     }
     
-    @Override
-    public Object[] getDatabaseValues() {
-        return new Object[]
-                {
-                    super.getId(),
-                    movieID,
-                    customerID,
-                    rating,
-                    reviewDate,
-                    reviewText,
-                };
-    }
-    
     public static String className() {
         return "Review";
     }

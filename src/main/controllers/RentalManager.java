@@ -241,6 +241,8 @@ public class RentalManager extends ListManager<Rental> {
         if (checkEmpty(list)) {
             return;
         }
+        
+        
         System.out.println(title);
         System.out.println("|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
         System.out.printf("|%-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | -15%s |\n",
@@ -248,11 +250,15 @@ public class RentalManager extends ListManager<Rental> {
         System.out.println("|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
 
         for (Rental item : rentals) {
+            Account foundStaff = (Account) getACM().searchById(item.getStaffID());
+            Account foundCustomer = (Account) getACM().searchById(item.getCustomerID());
+            Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
+            
             System.out.printf("|%-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
                     item.getId(),
-                    item.getCustomerID(),
-                    item.getMovieID(),
-                    item.getStaffID(),
+                    foundCustomer.getId(),
+                    foundMovie.getId(),
+                    foundStaff.getId(),
                     item.getRentalDate().toString(),
                     item.getReturnDate() != null ? item.getReturnDate().toString() : "N/A",
                     item.getDueDate().toString(),

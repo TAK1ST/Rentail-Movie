@@ -2,8 +2,6 @@ package main.base;
 
 public abstract class Model {
     private String id;
-    
-    public abstract Object[] getDatabaseValues();
 
     public Model(String id) {
         this.id = id;

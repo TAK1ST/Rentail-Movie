@@ -39,17 +39,6 @@ public class Wishlist extends Model {
         );
     }
 
-    @Override
-    public Object[] getDatabaseValues() {
-        return new Object[]{
-            super.getId(),
-            movieID,
-            customerID,
-            addedDate,
-            priority
-        };
-    }
-
     public static String className() {
         return "Wishlist";
     }
