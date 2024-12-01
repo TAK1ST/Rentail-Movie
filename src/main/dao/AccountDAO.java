@@ -12,22 +12,20 @@ import main.config.Database;
 import main.constants.AccRole;
 import main.constants.AccStatus;
 
-/**
- *
- * @author kiet
- */
 public class AccountDAO {
 
     public static boolean addAccountToDB(Account account) {
         String sql = "INSERT INTO Accounts ("
                 + "account_id, "
                 + "username, "
-                + "email, "
+
                 + "password, "
+                + "email, "
                 + "role, "
-                + "status "
-                + "create_at"
-                + "update_at"
+                + "status, "
+                + "created_at, "
+                + "updated_at, "
+
                 + "online_at"
                 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -39,9 +37,11 @@ public class AccountDAO {
             ps.setString(++count, account.getEmail());
             ps.setString(++count, account.getRole().name());
             ps.setString(++count, account.getStatus().name());
-            ps.setDate(++count, Date.valueOf(account.getCreateAt()));
-            ps.setDate(++count, Date.valueOf(account.getUpdateAt()));
-            ps.setDate(++count, Date.valueOf(account.getOnlineAt()));
+
+            ps.setDate(++count, account.getCreateAt() != null ? Date.valueOf(account.getCreateAt()) : null);
+            ps.setDate(++count, account.getUpdateAt() != null ? Date.valueOf(account.getUpdateAt()) : null);
+            ps.setDate(++count, account.getOnlineAt() != null ? Date.valueOf(account.getOnlineAt()) : null);
+
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -59,8 +59,10 @@ public class AccountDAO {
                 + "status = ?,"
                 + "create_at = ?,"
                 + "update_at = ?,"
-                + "online_at = ?,"
-                + " WHERE account_id = ?";
+
+                + "online_at = ? "
+                + "WHERE account_id = ?";
+
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
             int count = 0;
@@ -69,9 +71,11 @@ public class AccountDAO {
             ps.setString(++count, account.getEmail());
             ps.setString(++count, account.getRole().name());
             ps.setString(++count, account.getStatus().name());
-            ps.setDate(++count, Date.valueOf(account.getCreateAt()));
-            ps.setDate(++count, Date.valueOf(account.getUpdateAt()));
-            ps.setDate(++count, Date.valueOf(account.getOnlineAt()));
+
+            ps.setDate(++count, account.getCreateAt() != null ? Date.valueOf(account.getCreateAt()) : null);
+            ps.setDate(++count, account.getUpdateAt() != null ? Date.valueOf(account.getUpdateAt()) : null);
+            ps.setDate(++count, account.getOnlineAt() != null ? Date.valueOf(account.getOnlineAt()) : null);
+
             ps.setString(++count, account.getId());
 
             return ps.executeUpdate() > 0;
@@ -106,9 +110,10 @@ public class AccountDAO {
                         resultSet.getString("email"),
                         AccRole.valueOf(resultSet.getString("role")),
                         AccStatus.valueOf(resultSet.getString("status")),
-                        resultSet.getDate("create_at").toLocalDate(),
-                        resultSet.getDate("update_at").toLocalDate(),
-                        resultSet.getDate("online_at").toLocalDate()
+                        resultSet.getDate("create_at") != null ? resultSet.getDate("create_at").toLocalDate() : null,
+                        resultSet.getDate("update_at") != null ? resultSet.getDate("update_at").toLocalDate() : null,
+                        resultSet.getDate("online_at") != null ? resultSet.getDate("online_at").toLocalDate() : null
+
                 );
                 list.add(account);
             }

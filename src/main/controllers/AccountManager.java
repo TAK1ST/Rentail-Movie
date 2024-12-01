@@ -2,6 +2,7 @@ package main.controllers;
 
 import main.base.ListManager;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -46,10 +47,13 @@ public class AccountManager extends ListManager<Account> {
         list.add(new Account(
                 Constants.DEFAULT_ADMIN_ID,
                 "admin",
-                encryptPassword("1"),
+                "1",
                 "admin@gmail.com",
                 AccRole.ADMIN,
-                AccStatus.OFFLINE
+                AccStatus.OFFLINE,
+                null,
+                null,
+                null
         ));
         AccountDAO.addAccountToDB(list.getLast()); 
     }
@@ -79,7 +83,10 @@ public class AccountManager extends ListManager<Account> {
                 encryptPassword(password),
                 email,
                 AccRole.CUSTOMER,
-                AccStatus.OFFLINE
+                AccStatus.OFFLINE,
+                LocalDate.now(),
+                null,
+                LocalDate.now()
         ));
         return AccountDAO.addAccountToDB(list.getLast());
     }
@@ -104,7 +111,10 @@ public class AccountManager extends ListManager<Account> {
                 password,
                 email,
                 role,
-                AccStatus.OFFLINE
+                AccStatus.OFFLINE,
+                LocalDate.now(),
+                null,
+                LocalDate.now()
         ));
         if (AccountDAO.addAccountToDB(list.getLast())) {
             if (list.getLast().getRole() == AccRole.ADMIN) {

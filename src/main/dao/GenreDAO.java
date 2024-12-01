@@ -47,14 +47,13 @@ public class GenreDAO {
 
 
     public static boolean deleteGenreFromDB(String genreName) {
-
         String sql = "DELETE FROM Genres WHERE genre_name = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-
             ps.setString(1, genreName);
             return ps.executeUpdate() > 0;
+
 
         } catch (SQLException e) {
             e.printStackTrace(); 

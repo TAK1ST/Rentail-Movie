@@ -37,9 +37,8 @@ public class PaymentManager extends ListManager<Payment> {
         if (method == PaymentMethod.NONE) return false;
         
         list.add(new Payment(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.PAYMENT_PREFIX), 
-                method,
-                foundRental.getId()
+                rentalID, 
+                method
         ));
         return PaymentDAO.addPaymentToDB(list.getLast());
     }

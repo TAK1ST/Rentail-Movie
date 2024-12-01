@@ -35,13 +35,13 @@ public class MovieManager extends ListManager<Movie> {
         String description = getString("Enter description", false);
         if (description.isEmpty()) return false;
         
-        List<String> genres = selectByNumbers("Enter genres (Comma-separated)", getGRM(), true);
+        String genres = selectByNumbers("Enter genres (Comma-separated)", getGRM(), true);
         if (genres.isEmpty()) return false;
         
-        List<String> actors = selectByNumbers("Enter actors (Comma-separated)", getATM(), true);
+        String actors = selectByNumbers("Enter actors (Comma-separated)", getATM(), true);
         if (actors.isEmpty()) return false;
         
-        List<String> languages = selectByNumbers("Enter languages (Comma-separated)", getLGM(), true);
+        String languages = selectByNumbers("Enter languages (Comma-separated)", getLGM(), true);
         if (languages.isEmpty()) return false;
         
         LocalDate releaseDate = getDate("Enter release date", false);
@@ -63,10 +63,12 @@ public class MovieManager extends ListManager<Movie> {
                 languages,
                 releaseDate,
                 price,
-                availableCopies 
+                availableCopies,
+                LocalDate.now(),
+                null
         ));
         if (MovieDAO.addMovieToDB(list.getLast())) 
-            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIDs()) &&
+            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreNames()) &&
                     MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIDs());
         return false;
     }
@@ -74,7 +76,7 @@ public class MovieManager extends ListManager<Movie> {
     public boolean addMovie(Movie movie) {
         list.add(movie);
         if (MovieDAO.addMovieToDB(list.getLast())) 
-            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreIDs()) &&
+            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreNames()) &&
                     MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIDs());
         return false;
     }
@@ -154,7 +156,7 @@ public class MovieManager extends ListManager<Movie> {
                     movie.getTitle(),
                     movie.getDescription().isEmpty() ? "N/A" : movie.getDescription() ,
                     movie.getAvgRating(),
-                    movie.getGenreIDs().isEmpty() ? "N/A" : movie.getGenreIDs(),
+                    movie.getGenreNames().isEmpty() ? "N/A" : movie.getGenreNames(),
                     movie.getActorIDs().isEmpty() ? "N/A" : movie.getActorIDs(),
                     movie.getLanguageCodes().isEmpty() ? "N/A" : movie.getLanguageCodes(),
                     movie.getReleaseYear(),

@@ -133,9 +133,9 @@ public class Input {
             return "";
     }
     
-    public static <T extends Model> List<String> selectByNumbers(String message, ListManager<T> manager, boolean enterToPass) {
-        manager.displayList("");
-        List<String> temps = new ArrayList<>();
+    public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager, boolean enterToPass) {
+        manager.displayList();
+        String temps = "";
 
         String input = getString(message, enterToPass);
         if (input.isEmpty()) return null;
@@ -146,7 +146,7 @@ public class Input {
             item = item.trim();
             int index = toInt(item);
             if (index > 0 && index <= manager.getList().size()) {
-                temps.add(manager.getList().get(index).getId());
+                temps += manager.getList().get(index).getId();
             }
         }
 
