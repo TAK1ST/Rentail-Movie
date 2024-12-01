@@ -30,8 +30,8 @@ public class MovieDAO {
                 + "release_year, "
                 + "rental_price, "
                 + "available_copies, "
-                + "create_at, "
-                + "update_at "
+                + "created_at, "
+                + "updated_at "
                 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
@@ -111,8 +111,8 @@ public class MovieDAO {
                 + "release_year = ?, "
                 + "rental_price = ?, "
                 + "available_copies = ?,"
-                + "create_at = ?,"
-                + "update_at = ? "
+                + "created_at = ?,"
+                + "updated_at = ? "
                 + "WHERE movie_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             

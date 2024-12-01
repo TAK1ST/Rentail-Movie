@@ -11,7 +11,9 @@ import java.util.List;
 import main.base.ListManager;
 import main.constants.DiscountType;
 import main.constants.IDPrefix;
+import static main.controllers.Managers.getACM;
 import main.dao.DiscountDAO;
+import main.dto.Account;
 import main.dto.Discount;
 import main.utils.IDGenerator;
 import static main.utils.Input.getDouble;
@@ -44,8 +46,8 @@ public class DiscountManager extends ListManager<Discount> {
         DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, false);
         if (type == DiscountType.NONE) return false;
         
-        int availableUsage = getInteger("Enter available usage", 1, 20, false);
-        if (availableUsage == Integer.MIN_VALUE) return false;
+        int quantity = getInteger("Enter available quantity", 1, 20, false);
+        if (quantity == Integer.MIN_VALUE) return false;
         
         double value = getDouble("Enter value", 1, 20, false);
         if (value == Double.MIN_VALUE) return false;
@@ -56,7 +58,7 @@ public class DiscountManager extends ListManager<Discount> {
                 startDate,
                 endDate,
                 type,
-                availableUsage,
+                quantity,
                 true,
                 value
         ));
@@ -72,13 +74,13 @@ public class DiscountManager extends ListManager<Discount> {
         LocalDate startDate = getDate("Enter start date", true);  
         LocalDate endDate = getDate("Enter end date", true);
         DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, true);
-        int usage = getInteger("Enter available usage", 1, 20, true);
+        int quantity = getInteger("Enter available quantity", 1, 20, true);
         boolean active = yesOrNo("Set active");
         
         if (startDate != null) foundDiscount.setStartDate(startDate);
         if (endDate != null) foundDiscount.setEndDate(endDate);
         if (type != DiscountType.NONE) foundDiscount.setType(type);
-        if (usage > 0) foundDiscount.setUsageAvailable(usage);
+        if (quantity > 0) foundDiscount.setQuantity(quantity);
         if (active != foundDiscount.isActive()) foundDiscount.setActive(active);
         
         return DiscountDAO.updateDiscountInDB(foundDiscount);
@@ -95,7 +97,7 @@ public class DiscountManager extends ListManager<Discount> {
     }
 
     public void searchDiscount() {
-        display(getDiscountBy("Enter discount's propety"), "List of Discount");
+        display(getDiscountBy("Enter discount's propety"));
     }
 
     public List<Discount> getDiscountBy(String message) {
@@ -111,35 +113,41 @@ public class DiscountManager extends ListManager<Discount> {
                 || item.getStartDate().format(Validator.DATE).contains(propety)
                 || item.getEndDate().format(Validator.DATE).contains(propety)
                 || item.getType().name().equals(propety)
-                || String.valueOf(item.getUsageAvailable()).equals(propety)
+                || String.valueOf(item.getQuantity()).equals(propety)
                 || String.valueOf(item.getValue()).equals(propety))
             {
                 result.add(item);
             }   
         return result;
     }
-    @Override
-    public void display(List<Discount> discounts, String title) {
-        if (checkEmpty(list)) return;
-
-    System.out.println(title);
-    System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------|");
-    System.out.printf("| %-15s | %-15s | %-15s | %-15s | %-15s | %-10s | %-8s | %-6s |\n", 
-                        "Discount Code", "Customer ID", "Start Date", "End Date", "Type", "Value", "Status", "Usage Available");
-    System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------|");
-
-    for (Discount item : discounts) {
-        System.out.printf("| %-15s | %-15s | %-15s | %-15s | %-15s | %-10.2f | %-8s | %-6d |\n", 
-                          item.getCode(),
-                          item.getCustomerID(),
-                          item.getStartDate(),
-                          item.getEndDate(),
-                          item.getType().name(),
-                          item.getValue(),
-                          item.isActive() ? "Active" : "Inactive",
-                          item.getUsageAvailable());
+     @Override
+    public void display(List<Discount> tempList) {
+        if (checkEmpty(tempList)) return; 
+        int discountCodeLength = 0;
+        for (Discount item : list) {
+            discountCodeLength = Math.max(discountCodeLength, item.getCode().length());
+        }
+        
+        int widthLength = discountCodeLength + 12 + 11 + 11 + 17 + 5 + 9 + 5 + 25;
+         for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-" + discountCodeLength + "s | %-8s | %-11s | %-11s | %-17s | %-16s | %-9s | %-5s | \n",
+                "Code", "Customer", "Start" , "End", "Type" , "Available", "Status" , "Value");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        for (Discount item : tempList) {
+            Account foundCustomer = (Account) getACM().searchById(item.getCustomerID());
+            System.out.printf("\n| %-" + discountCodeLength + "s | %-8s | %-11s | %-11s | %-17s | %-16s | %-9s | %-5s |",
+                    item.getId(),
+                    foundCustomer.getUsername(),
+                    item.getStartDate(),
+                    item.getEndDate(),
+                    item.getType(),
+                    item.getQuantity(),
+                    item.isActive(),
+                    item.getValue());
+        }
+        System.out.println();
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.println();
     }
-
-    System.out.println("|--------------------------------------------------------------------------------------------------------------------------------------|");
-}
+   
 }

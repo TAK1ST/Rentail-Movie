@@ -110,7 +110,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     }
 
     public void searchWishlist() {
-        display(getWishlistBy("Enter wishlist's propety"), "List of Wishlist");
+        display(getWishlistBy("Enter wishlist's propety"));
     }
 
     public List<Wishlist> getWishlistBy(String message) {
@@ -132,11 +132,10 @@ public class WishlistManager extends ListManager<Wishlist> {
     }
 
     @Override
-    public void display(List<Wishlist> wishlists, String title) {
+    public void display(List<Wishlist> wishlists) {
         if (checkEmpty(list)) {
             return;
         }
-        System.out.println(title);
         System.out.println("|------------------------------------------------------------------------------------------------");
 
   

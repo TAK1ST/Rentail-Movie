@@ -8,10 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import main.base.ListManager;
-import main.constants.IDPrefix;
 import main.dao.LanguageDAO;
 import main.dto.Language;
-import main.utils.IDGenerator;
 import static main.utils.Input.getString;
 import static main.utils.Validator.getName;
 
@@ -66,7 +64,7 @@ public class LanguageManager extends ListManager<Language> {
     }
 
     public void searchLanguage() {
-        display(getLanguageBy("Enter language's propety"), "List of Language");
+        display(getLanguageBy("Enter language's propety"));
     }
 
     public List<Language> getLanguageBy(String message) {
@@ -85,20 +83,26 @@ public class LanguageManager extends ListManager<Language> {
         return result;
     }
     
-    @Override
-    public void display(List<Language> languages, String title) {
-        if (checkEmpty(list)) return;
-        
-        System.out.println(title);
-        System.out.println("|----------------------------------------------------|");
-        System.out.printf("|%-15s | %-30s |\n", "Language Code", "Language Name");
-        System.out.println("|----------------------------------------------------|");
-
-        for (Language language : languages) {
-            System.out.printf("|%-15s | %-30s |\n",
-                    language.getCode(),
-                    language.getName());
+     @Override
+    public void display(List<Language> tempList) {
+        if (checkEmpty(tempList)) return; 
+        int languageNameLength = 0;
+        for (Language item : list) {
+            languageNameLength = Math.max(languageNameLength, item.getName().length());
         }
-        System.out.println("|----------------------------------------------------|");
+        
+        int widthLength = 2 + languageNameLength + 7;
+         for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-2s | %-" + languageNameLength + "s | \n",
+                "Code", "Name");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        for (Language item : tempList) {
+       System.out.printf("\n| %-2s | %-" + languageNameLength + "s | \n",
+                    item.getCode(),
+                    item.getName());
+        }
+        System.out.println();
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.println();
     }
 }

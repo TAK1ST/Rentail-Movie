@@ -11,8 +11,10 @@ import main.constants.RentalStatus;
 import main.dao.RentalDAO;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getACM;
+import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import main.dto.Movie;
+import main.dto.Profile;
 import main.dto.Rental;
 import main.services.MovieServices;
 import main.services.RentalServices;
@@ -207,7 +209,7 @@ public class RentalManager extends ListManager<Rental> {
     }
 
     public void searchRental() {
-        display(getRentalBy("Enter any rental's propety"), "Search Results");
+        display(getRentalBy("Enter any rental's propety"));
     }
 
     public List<Rental> getRentalBy(String message) {
@@ -233,40 +235,45 @@ public class RentalManager extends ListManager<Rental> {
         }
         return result;
     }
-
-    @Override
-    public void display(List<Rental> rentals, String title) {
-        if (checkEmpty(list)) {
-            return;
+@Override
+    public void display(List<Rental> tempList) {
+        if (checkEmpty(tempList)) return; 
+        int staffNameLength = 0;
+        int customerNameLength = 0;
+        int movieNameLength = 0;
+        
+        for (Rental item : list) {
+            Profile foundStaff = (Profile) getPFM().searchById(item.getStaffID());
+            Profile foundCustomer = (Profile) getPFM().searchById(item.getCustomerID());
+            Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
+            staffNameLength = Math.max(staffNameLength, foundStaff.getFullName().length());
+            customerNameLength = Math.max(customerNameLength, foundCustomer.getFullName().length());
+            movieNameLength = Math.max(movieNameLength, foundMovie.getTitle().length());
         }
         
-        
-        System.out.println(title);
-        System.out.println("|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-        System.out.printf("|%-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | -15%s |\n",
-                "Rental ID", "Customer ID", "Movie ID", "Staff ID", "Rental Date","Return Date" , "Due Date", "Late Fee", "Total Amount","Status");
-        System.out.println("|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-
-        for (Rental item : rentals) {
+        int widthLength = 8 + customerNameLength + movieNameLength + staffNameLength + 10 + 10 + 8 + 6 + 8 + 31;
+         for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-" + customerNameLength + "s | %-" + movieNameLength + "s | %-" + staffNameLength + "s | %-10s | %-10s | %-8s | %-6s | %-8s | \n",
+                "ID", "Customer", "Movie" , "Staff" , "Rental" , "Return", "Late Fee", "Total", "Status");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        for (Rental item : tempList) {
             Account foundStaff = (Account) getACM().searchById(item.getStaffID());
             Account foundCustomer = (Account) getACM().searchById(item.getCustomerID());
             Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
-            
-            System.out.printf("|%-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
+        System.out.printf("\n| %-8s | %-" + customerNameLength + "s | %-" + movieNameLength + "s | %-" + staffNameLength + "s | %-10s | %-10s | %-8s | %-6s | %-8s | \n",
                     item.getId(),
-                    foundCustomer.getId(),
-                    foundMovie.getId(),
-                    foundStaff.getId(),
-                    item.getRentalDate().toString(),
-                    item.getReturnDate() != null ? item.getReturnDate().toString() : "N/A",
-                    item.getDueDate().toString(),
+                    foundCustomer.getUsername(),
+                    foundMovie.getTitle(),
+                    foundStaff.getUsername(),
+                    item.getRentalDate(),
+                    item.getReturnDate(),
+                    item.getDueDate(),
                     item.getLateFee(),
                     item.getTotalAmount(),
-                    item.getStatus().name());
-
+                    item.getStatus());
         }
-
-        System.out.println("|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+        System.out.println();
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.println();
     }
-
 }

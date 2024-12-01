@@ -2,6 +2,7 @@ package main.controllers;
 
 import main.base.ListManager;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -46,10 +47,13 @@ public class AccountManager extends ListManager<Account> {
         list.add(new Account(
                 Constants.DEFAULT_ADMIN_ID,
                 "admin",
-                encryptPassword("1"),
+                "1",
                 "admin@gmail.com",
                 AccRole.ADMIN,
-                AccStatus.OFFLINE
+                AccStatus.OFFLINE,
+                null,
+                null,
+                null
         ));
         AccountDAO.addAccountToDB(list.getLast()); 
     }
@@ -79,7 +83,10 @@ public class AccountManager extends ListManager<Account> {
                 encryptPassword(password),
                 email,
                 AccRole.CUSTOMER,
-                AccStatus.OFFLINE
+                AccStatus.OFFLINE,
+                LocalDate.now(),
+                null,
+                LocalDate.now()
         ));
         return AccountDAO.addAccountToDB(list.getLast());
     }
@@ -104,7 +111,10 @@ public class AccountManager extends ListManager<Account> {
                 password,
                 email,
                 role,
-                AccStatus.OFFLINE
+                AccStatus.OFFLINE,
+                LocalDate.now(),
+                null,
+                LocalDate.now()
         ));
         if (AccountDAO.addAccountToDB(list.getLast())) {
             if (list.getLast().getRole() == AccRole.ADMIN) {
@@ -223,6 +233,7 @@ public class AccountManager extends ListManager<Account> {
         return result;
     }
 
+
     @Override
     public void display(List<Account> tempList) {
         if (checkEmpty(tempList)) {
@@ -236,29 +247,22 @@ public class AccountManager extends ListManager<Account> {
             emailLength = Math.max(emailLength, item.getEmail().length());
         }
         
-        int widthLength = 8 + usernameLength + 8 + emailLength + 13;
+        int widthLength = 8 + usernameLength + 8 + emailLength + 8 + 16;
         
         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |\n",
-                "ID", "Username", "Role", "Email");
+        System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s | %-8s |\n",
+                "ID", "Username", "Role", "Email" , "Status");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Account item : tempList) {
-            System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s |",
+            System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s | %-8s |",
                     item.getId(),
                     item.getUsername(),
                     item.getRole(),
-                    item.getEmail());
+                    item.getEmail(),
+                    item.getStatus());
         }
         System.out.println();
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         System.out.println();
     }
-    
-    public void show() {
-        while (yesOrNo("Sort the list?")) {
-            String[] options = new String[]{"username"};
-            display(sortBy(selectInfo("Sort review by", options, true)));
-        } 
-    }
-    
 }
