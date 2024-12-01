@@ -14,20 +14,6 @@ import static main.utils.LogMessage.errorLog;
  * @author trann
  */
 public class Utility {
-    
-    @SafeVarargs
-    public static <T> T getMax(Comparator<? super T> comparator, T... items) {
-        if (items == null || items.length == 0) {
-            return null; 
-        }
-        T max = items[0];
-        for (T item : items) {
-            if (comparator.compare(item, max) > 0) {
-                max = item;
-            }
-        }
-        return max;
-    }
        
     public static <E extends Enum<E>> void enumListing(String message, Class<E> enumClass) {
         if (!enumClass.isEnum()) {
