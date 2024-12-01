@@ -1,6 +1,8 @@
--- DROP DATABASE movierentalsystemdb;
+-- Create Database and Use it
 CREATE DATABASE IF NOT EXISTS movierentalsystemdb;
 USE movierentalsystemdb;
+
+-- Create Tables
 
 CREATE TABLE IF NOT EXISTS Accounts (
     account_id CHAR(8) PRIMARY KEY,
@@ -13,52 +15,12 @@ CREATE TABLE IF NOT EXISTS Accounts (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS Profiles (
-    account_id CHAR(8),
-    full_name NVARCHAR(60),
-    birthday DATE NOT NULL,
-    address NVARCHAR(255),
-    phone_number CHAR(10),
-    credit DECIMAL(10, 2) DEFAULT 0.00,
-    FOREIGN KEY (account_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS Movies (
-    movie_id CHAR(8) PRIMARY KEY,
-    title NVARCHAR(100) NOT NULL,
-    description TEXT,
-    avg_rating DOUBLE(3, 1) DEFAULT 0.0,
-    release_year YEAR NOT NULL,
-    rental_price DECIMAL(10, 2) NOT NULL,
-    available_copies INT DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS Languages (
-    language_code CHAR(2) PRIMARY KEY,
-    language_name NVARCHAR(100) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS Movie_Language (
-    movie_id CHAR(8) NOT NULL,
-    language_code CHAR(2) NOT NULL,
-    PRIMARY KEY (movie_id, language_code),
-    FOREIGN KEY (movie_id) REFERENCES Movies (movie_id) ON DELETE CASCADE,
-    FOREIGN KEY (language_code) REFERENCES Languages (language_code) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS Genres (
-    genre_name NVARCHAR(100) PRIMARY KEY,
-    description TEXT
-);
-
-CREATE TABLE IF NOT EXISTS Movie_Genre (
-    movie_id CHAR(8) NOT NULL,
-    genre_name NVARCHAR(100) NOT NULL,
-    PRIMARY KEY (movie_id, genre_name),
-    FOREIGN KEY (movie_id) REFERENCES Movies (movie_id) ON DELETE CASCADE,
-    FOREIGN KEY (genre_name) REFERENCES Genres (genre_name) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS Account_Discount (
+    account_id INT NOT NULL,
+    discount_code VARCHAR(50) NOT NULL,
+    PRIMARY KEY (account_id, discount_code),
+    FOREIGN KEY (account_id) REFERENCES Accounts(account_id) ON DELETE CASCADE,
+    FOREIGN KEY (discount_code) REFERENCES Discount(discount_code) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Actors (
@@ -75,6 +37,59 @@ CREATE TABLE IF NOT EXISTS Movie_Actor (
     PRIMARY KEY (movie_id, actor_id),
     FOREIGN KEY (movie_id) REFERENCES Movies (movie_id) ON DELETE CASCADE,
     FOREIGN KEY (actor_id) REFERENCES Actors (actor_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Movie_Discount (
+    discount_code VARCHAR(50) NOT NULL,
+    movie_id INT NOT NULL,
+    PRIMARY KEY (discount_code, movie_id),
+    FOREIGN KEY (discount_code) REFERENCES Discount(discount_code) ON DELETE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES Movie(movie_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Movie_Genre (
+    movie_id CHAR(8) NOT NULL,
+    genre_name NVARCHAR(100) NOT NULL,
+    PRIMARY KEY (movie_id, genre_name),
+    FOREIGN KEY (movie_id) REFERENCES Movies (movie_id) ON DELETE CASCADE,
+    FOREIGN KEY (genre_name) REFERENCES Genres (genre_name) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Movie_Language (
+    movie_id CHAR(8) NOT NULL,
+    language_code CHAR(2) NOT NULL,
+    PRIMARY KEY (movie_id, language_code),
+    FOREIGN KEY (movie_id) REFERENCES Movies (movie_id) ON DELETE CASCADE,
+    FOREIGN KEY (language_code) REFERENCES Languages (language_code) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Movies (
+    movie_id CHAR(8) PRIMARY KEY,
+    title NVARCHAR(100) NOT NULL,
+    description TEXT,
+    avg_rating DOUBLE(3, 1) DEFAULT 0.0,
+    release_year YEAR NOT NULL,
+    rental_price DECIMAL(10, 2) NOT NULL,
+    available_copies INT DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Payments (
+    rental_id CHAR(8),
+    payment_method ENUM('CARD', 'ONLINE', 'BANKING') NOT NULL DEFAULT 'CARD',
+    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (rental_id) REFERENCES Rentals (rental_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Profiles (
+    account_id CHAR(8),
+    full_name NVARCHAR(60),
+    birthday DATE NOT NULL,
+    address NVARCHAR(255),
+    phone_number CHAR(10),
+    credit DECIMAL(10, 2) DEFAULT 0.00,
+    FOREIGN KEY (account_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Rentals (
@@ -104,13 +119,6 @@ CREATE TABLE IF NOT EXISTS Reviews (
     FOREIGN KEY (customer_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Payments (
-    rental_id CHAR(8),
-    payment_method ENUM('CARD', 'ONLINE', 'BANKING') NOT NULL DEFAULT 'CARD',
-    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (rental_id) REFERENCES Rentals (rental_id) ON DELETE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS Wishlists (
     wishlist_id CHAR(8) PRIMARY KEY,
     customer_id CHAR(8) NOT NULL,
@@ -133,18 +141,12 @@ CREATE TABLE IF NOT EXISTS Discounts (
     FOREIGN KEY (customer_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Movie_Discount (
-    discount_code VARCHAR(50) NOT NULL,
-    movie_id INT NOT NULL,
-    PRIMARY KEY (discount_code, movie_id),
-    FOREIGN KEY (discount_code) REFERENCES Discount(discount_code) ON DELETE CASCADE,
-    FOREIGN KEY (movie_id) REFERENCES Movie(movie_id) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS Languages (
+    language_code CHAR(2) PRIMARY KEY,
+    language_name NVARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Account_Discount (
-    account_id INT NOT NULL,
-    discount_code VARCHAR(50) NOT NULL,
-    PRIMARY KEY (account_id, discount_code),
-    FOREIGN KEY (account_id) REFERENCES Accounts(account_id) ON DELETE CASCADE,
-    FOREIGN KEY (discount_code) REFERENCES Discount(discount_code) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS Genres (
+    genre_name NVARCHAR(100) PRIMARY KEY,
+    description TEXT
 );
