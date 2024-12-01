@@ -160,21 +160,18 @@ public class AccountManager extends ListManager<Account> {
 
     public void updatePassword(String accountID, String newPassword) {
         Account foundAccount = (Account) searchById(accountID);
-        if (checkNull(foundAccount)) {
-            return;
-        }
+        if (checkNull(foundAccount)) return;
+        
         foundAccount.setPassword(newPassword);
+        AccountDAO.updatePasswordInDB(accountID, newPassword);
     }
 
     public boolean deleteAccount() throws IOException {
-        if (checkEmpty(list)) {
-            return false;
-        }
-
+        if (checkEmpty(list)) return false;
+      
         Account foundAccount = (Account) getById("Enter user's id");
-        if (checkNull(foundAccount)) {
-            return false;
-        }
+        if (checkNull(foundAccount)) return false;
+       
 
         list.remove(foundAccount);
         return AccountDAO.deleteAccountFromDB(foundAccount.getId());

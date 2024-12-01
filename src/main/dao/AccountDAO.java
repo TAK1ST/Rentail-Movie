@@ -87,10 +87,11 @@ public class AccountDAO {
         return list;
     }
 
-    public static boolean updatePasswordAccountInDB(String userID) {
+    public static boolean updatePasswordInDB(String accountID, String newPassword) {
         String sql = "UPDATE Accounts SET password = ? WHERE account_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(6, userID);
+            preparedStatement.setString(1, newPassword);
+            preparedStatement.setString(2, accountID);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
