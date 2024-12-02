@@ -23,8 +23,8 @@ DROP TABLE IF EXISTS `Account_Discount`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Account_Discount` (
-  `account_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `discount_code` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `account_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `discount_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`account_id`,`discount_code`),
   KEY `discount_code` (`discount_code`),
   CONSTRAINT `Account_Discount_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `Accounts` (`account_id`) ON DELETE CASCADE,
@@ -49,12 +49,12 @@ DROP TABLE IF EXISTS `Accounts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Accounts` (
-  `account_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `account_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `username` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` enum('ADMIN','CUSTOMER','STAFF','PREMIUM') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'CUSTOMER',
-  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('ONLINE','BANNED','OFFLINE') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'OFFLINE',
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('ADMIN','CUSTOMER','STAFF','PREMIUM') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'CUSTOMER',
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('ONLINE','BANNED','OFFLINE') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'OFFLINE',
   `online_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -82,9 +82,9 @@ DROP TABLE IF EXISTS `Actors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Actors` (
-  `actor_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `actor_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `actor_name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `actor_rank` enum('A','B','C','D') COLLATE utf8mb4_unicode_ci DEFAULT 'C',
+  `actor_rank` enum('A','B','C','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'C',
   `actor_description` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   PRIMARY KEY (`actor_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -107,9 +107,9 @@ DROP TABLE IF EXISTS `Discounts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Discounts` (
-  `discount_code` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `customer_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `discount_type` enum('PERCENT','FIXED_AMOUNT','BUY_X_GET_Y_FREE') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'PERCENT',
+  `discount_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `customer_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `discount_type` enum('PERCENT','FIXED_AMOUNT','BUY_X_GET_Y_FREE') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'PERCENT',
   `discount_value` decimal(10,2) NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
@@ -139,7 +139,7 @@ DROP TABLE IF EXISTS `Genres`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Genres` (
   `genre_name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`genre_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -161,7 +161,7 @@ DROP TABLE IF EXISTS `Languages`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Languages` (
-  `language_code` char(2) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `language_code` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `language_name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`language_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -184,9 +184,9 @@ DROP TABLE IF EXISTS `Movie_Actor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Movie_Actor` (
-  `movie_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `actor_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` enum('MAIN','VILLAIN','SUPPORT','CAMEO') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `movie_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `actor_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('MAIN','VILLAIN','SUPPORT','CAMEO') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`movie_id`,`actor_id`),
   KEY `actor_id` (`actor_id`),
   CONSTRAINT `Movie_Actor_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `Movies` (`movie_id`) ON DELETE CASCADE,
@@ -211,7 +211,7 @@ DROP TABLE IF EXISTS `Movie_Genre`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Movie_Genre` (
-  `movie_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `movie_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `genre_name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`movie_id`,`genre_name`),
   KEY `genre_name` (`genre_name`),
@@ -237,8 +237,8 @@ DROP TABLE IF EXISTS `Movie_Language`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Movie_Language` (
-  `movie_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `language_code` char(2) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `movie_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `language_code` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`movie_id`,`language_code`),
   KEY `language_code` (`language_code`),
   CONSTRAINT `Movie_Language_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `Movies` (`movie_id`) ON DELETE CASCADE,
@@ -263,9 +263,9 @@ DROP TABLE IF EXISTS `Movies`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Movies` (
-  `movie_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `movie_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `title` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `avg_rating` double(3,1) DEFAULT '0.0',
   `release_year` date DEFAULT NULL,
   `rental_price` decimal(10,2) NOT NULL,
@@ -293,8 +293,8 @@ DROP TABLE IF EXISTS `Payments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Payments` (
-  `rental_id` char(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `payment_method` enum('CARD','ONLINE','BANKING') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'CARD',
+  `rental_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `payment_method` enum('CARD','ONLINE','BANKING') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'CARD',
   `payment_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   KEY `rental_id` (`rental_id`),
   CONSTRAINT `Payments_ibfk_1` FOREIGN KEY (`rental_id`) REFERENCES `Rentals` (`rental_id`) ON DELETE CASCADE
@@ -318,11 +318,11 @@ DROP TABLE IF EXISTS `Profiles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Profiles` (
-  `account_id` char(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `account_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `full_name` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `birthday` date NOT NULL,
   `address` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-  `phone_number` char(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone_number` char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `credit` decimal(10,2) DEFAULT '0.00',
   KEY `account_id` (`account_id`),
   CONSTRAINT `Profiles_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `Accounts` (`account_id`) ON DELETE CASCADE
@@ -346,14 +346,14 @@ DROP TABLE IF EXISTS `Rentals`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Rentals` (
-  `rental_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `movie_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `staff_id` char(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `customer_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `rental_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `movie_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `staff_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `customer_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `due_date` date NOT NULL,
   `rental_date` date NOT NULL,
   `return_date` date DEFAULT NULL,
-  `status` enum('PENDING','APPROVED','DENIED') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'PENDING',
+  `status` enum('PENDING','APPROVED','DENIED') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'PENDING',
   `total_amount` decimal(10,2) DEFAULT '0.00',
   `late_fee` decimal(10,2) DEFAULT '0.00',
   PRIMARY KEY (`rental_id`),
@@ -383,10 +383,10 @@ DROP TABLE IF EXISTS `Reviews`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Reviews` (
-  `review_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `movie_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `customer_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `review_text` text COLLATE utf8mb4_unicode_ci,
+  `review_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `movie_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `customer_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `review_text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `rating` int DEFAULT NULL,
   `review_date` date NOT NULL,
   PRIMARY KEY (`review_id`),
@@ -415,11 +415,11 @@ DROP TABLE IF EXISTS `Wishlists`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Wishlists` (
-  `wishlist_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `customer_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `movie_id` char(8) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `wishlist_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `customer_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `movie_id` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `added_date` date NOT NULL,
-  `priority` enum('HIGH','MEDIUM','LOW') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'MEDIUM',
+  `priority` enum('HIGH','MEDIUM','LOW') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'MEDIUM',
   PRIMARY KEY (`wishlist_id`),
   KEY `movie_id` (`movie_id`),
   KEY `customer_id` (`customer_id`),
@@ -446,4 +446,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-02 19:19:57
+-- Dump completed on 2024-12-02 19:39:28
