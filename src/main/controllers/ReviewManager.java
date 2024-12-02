@@ -1,12 +1,8 @@
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.controllers;
 
+
 import main.base.ListManager;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,13 +22,10 @@ import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
 import main.utils.Validator;
 
-/**
- *
- * @author trann
- */
+
 public final class ReviewManager extends ListManager<Review> {
     
-    public ReviewManager() throws IOException {
+    public ReviewManager() {
         super(Review.className());
         list = ReviewDAO.getAllReviews();
     }
@@ -178,28 +171,32 @@ public final class ReviewManager extends ListManager<Review> {
 
     @Override
     public void display(List<Review> tempList) {
-        if (checkNull(tempList)) return; 
-        int reviewLength = 0;
-        int customerNameLength = 0;
-        int movieNameLength = 0;
+        if (checkNull(tempList)) {
+            return;
+        } 
+        int commentL = "Comment".length();
+        int customerL = "Customer".length();
+        int movieL = "Movie".length();
         for (Review item : list) {
-            reviewLength = Math.max(reviewLength, item.getReviewText().length());
             Profile foundCustomer = (Profile) getPFM().searchById(item.getCustomerID());
             Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
-            customerNameLength = Math.max(customerNameLength, foundCustomer.getFullName().length());
-            movieNameLength = Math.max(movieNameLength, foundMovie.getTitle().length());
+            
+            commentL = Math.max(commentL, item.getReviewText().length());
+            customerL = Math.max(customerL, foundCustomer.getFullName().length());
+            movieL = Math.max(movieL, foundMovie.getTitle().length());
         }
 
-        
-        int widthLength = 8 + movieNameLength + customerNameLength + reviewLength + 4 + 10 + 19;
+        int widthLength = 8 + movieL + customerL + commentL + 6 + 10 + 19;
          for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + movieNameLength + "s |  %-" + customerNameLength + "s | %-" + reviewLength + "s | %-4s | %-10s | \n",
-                "ID", "Name", "Birthday" , "Address" , "PhoneNumber" , "Credit");
+        System.out.printf("\n| %-8s | %-" + movieL + "s |  %-" + customerL + "s | %-" + commentL + "s | %-6s | %-10s | \n",
+                "ID", "Movie", "Customer" , "Comment" , "Rating" , "Review at");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Review item : tempList) {
-             Account foundCustomer = (Account) getACM().searchById(item.getCustomerID());
+            
+            Account foundCustomer = (Account) getACM().searchById(item.getCustomerID());
             Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
-        System.out.printf("\n| %-8s | %-" + movieNameLength + "s |  %-" + customerNameLength + "s | %-" + reviewLength + "s | %-4s | %-10s | \n",
+            
+            System.out.printf("\n| %-8s | %-" + movieL + "s |  %-" + customerL + "s | %-" + commentL + "s | %-6 s | %-10s | \n",
                     item.getId(),
                     foundMovie.getTitle(),
                     foundCustomer.getUsername(),

@@ -1,9 +1,7 @@
 package main.dto;
 
-import main.exceptions.MethodNotFound;
 import java.time.LocalDate;
 import main.base.Model;
-import static main.utils.LogMessage.errorLog;
 import main.utils.Validator;
 
 public class Profile extends Model {
@@ -56,24 +54,24 @@ public class Profile extends Model {
         return new String[] {"account_id", "full_name", "birthday", "address", "phone_number", "credit"};
     }
 
-    @Override
-    public String getId() {
-        try {
-            throw new MethodNotFound("Profile only has accountId instead of id");
-        } catch (MethodNotFound e) {
-            errorLog("Exception caught: " + e.getMessage());
-            return null;
-        }
-    }
-    
-    @Override
-    public void setId(String id) {
-        try {
-            throw new MethodNotFound("Profile only has accountId instead of id");
-        } catch (MethodNotFound e) {
-            errorLog("Exception caught: " + e.getMessage());
-        }
-    }
+//    @Override
+//    public String getId() {
+//        try {
+//            throw new MethodNotFound("Profile only has accountId instead of id");
+//        } catch (MethodNotFound e) {
+//            errorLog("Exception caught: " + e.getMessage());
+//            return null;
+//        }
+//    }
+//    
+//    @Override
+//    public void setId(String id) {
+//        try {
+//            throw new MethodNotFound("Profile only has accountId instead of id");
+//        } catch (MethodNotFound e) {
+//            errorLog("Exception caught: " + e.getMessage());
+//        }
+//    }
     
     public String getAccountId() {
         return super.getId();

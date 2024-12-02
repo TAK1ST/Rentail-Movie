@@ -15,6 +15,7 @@ import static main.utils.LogMessage.errorLog;
  */
 public class Casting extends Model {
     
+    //movieId is the super Id
     private String actorID;
     private ActorRole role;
 

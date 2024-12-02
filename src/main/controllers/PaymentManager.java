@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package main.controllers;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -16,13 +13,10 @@ import main.dto.Rental;
 import main.dto.Payment;
 import static main.utils.Utility.getEnumValue;
 
-/**
- *
- * @author trann
- */
+
 public class PaymentManager extends ListManager<Payment> {
 
-    public PaymentManager() throws IOException {
+    public PaymentManager() {
         super(Payment.className());
         list = PaymentDAO.getAllPayments();
     }
@@ -112,26 +106,18 @@ public class PaymentManager extends ListManager<Payment> {
             return;
         }
 
-        int widthLength = 8 + 7 + 8 + 10;
-        for (int index = 0; index < widthLength; index++) {
-            System.out.print("-");
-        }
-        System.out.printf("\n| %-8s | %-7s | %-8s | \n",
-                "ID", "Method", "Rental");
-        for (int index = 0; index < widthLength; index++) {
-            System.out.print("-");
-        }
+        int widthLength = 8 + 7 + 7;
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-7s |",
+                "ID", "Method");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Payment item : tempList) {
-
-            System.out.printf("\n| %-8s | %-7s | %-8s | \n",
-                    item.getId(),
-                    item.getMethod(),
-                    item.getRentalId());
+            System.out.printf("\n| %-8s | %-7s |",
+                    item.getRentalId(),
+                    item.getMethod());
         }
         System.out.println();
-        for (int index = 0; index < widthLength; index++) {
-            System.out.print("-");
-        }
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
         System.out.println();
     }
 }

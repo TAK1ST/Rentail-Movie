@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package main.controllers;
 
-import java.io.IOException;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,13 +19,10 @@ import main.utils.IDGenerator;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.getEnumValue;
 
-/**
- *
- * @author trann
- */
+
 public class WishlistManager extends ListManager<Wishlist> {
 
-    public WishlistManager() throws IOException {
+    public WishlistManager() {
         super(Wishlist.className());
         list = WishlistDAO.getAllWishlists();
     }
@@ -158,9 +152,7 @@ public class WishlistManager extends ListManager<Wishlist> {
         if (checkNull(list)) {
             return;
         }
-        
-        
-        
+
         int customerL = "Customer".length();
         int movieL = "Movie Title".length();
         for (Wishlist item : list) {

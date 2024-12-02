@@ -1,36 +1,31 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package main.controllers;
 
-import java.io.IOException;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
 import main.constants.DiscountType;
-import main.constants.IDPrefix;
 import static main.controllers.Managers.getACM;
+import static main.controllers.Managers.getMVM;
 import main.dao.DiscountDAO;
-import main.dto.Account;
+import static main.dao.MiddleTableDAO.addDataToMidTable;
 import main.dto.Discount;
 import main.utils.IDGenerator;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
+import static main.utils.Input.selectByNumbers;
 import static main.utils.Input.yesOrNo;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
 
-/**
- *
- * @author trann
- */
+
 public class DiscountManager extends ListManager<Discount> {
     
-    public DiscountManager() throws IOException {
+    public DiscountManager() {
         super(Discount.className());
         list = DiscountDAO.getAllDiscounts();
     }
@@ -51,10 +46,22 @@ public class DiscountManager extends ListManager<Discount> {
         
         double value = getDouble("Enter value", 1, 20, false);
         if (value == Double.MIN_VALUE) return false;
-
+        
+        String movies = selectByNumbers("Enter movie's id (Comma-separated)", getMVM(), true);
+        if (movies.isEmpty()) return false;
+        
+        String customers = null;
+        if (yesOrNo("Assign to customers right now")) {
+            customers = selectByNumbers("Enter customer's id (Comma-separated)", getACM(), true);
+            if (customers.isEmpty()) return false;
+        }
+        
+        String id = IDGenerator.generateDiscountCode();
+        
         list.add(new Discount(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.DISCOUNT_PREFIX), 
-                null,
+                id, 
+                customers,
+                movies,
                 startDate,
                 endDate,
                 type,
@@ -62,7 +69,13 @@ public class DiscountManager extends ListManager<Discount> {
                 true,
                 value
         ));
-        return DiscountDAO.addDiscountToDB(list.getLast());
+        if (DiscountDAO.addDiscountToDB(list.getLast())) 
+            return (
+                customers != null ? addDataToMidTable("Discount_Account", id, "discount_code", customers,"customer_id") : true
+                        &&
+                addDataToMidTable("Discount_Movie", id, "discount_code", movies, "movie_id")
+            );
+        return false;
     }
 
     public boolean updateDiscount() {
@@ -101,7 +114,7 @@ public class DiscountManager extends ListManager<Discount> {
         List<Discount> result = new ArrayList<>();
         for (Discount item : list) 
             if (item.getCode().equals(propety) 
-                || item.getCustomerID().equals(propety)
+                || item.getCustomerIds().equals(propety)
                 || item.getStartDate().format(Validator.DATE).contains(propety)
                 || item.getEndDate().format(Validator.DATE).contains(propety)
                 || item.getType().name().equals(propety)
@@ -125,7 +138,7 @@ public class DiscountManager extends ListManager<Discount> {
                 result.sort(Comparator.comparing(Discount::getCode));
                 break;
             case "customerId":
-                result.sort(Comparator.comparing(Discount::getCustomerID));
+                result.sort(Comparator.comparing(Discount::getCustomerIds));
                 break;
             case "discountType":
                 result.sort(Comparator.comparing(Discount::getType));
@@ -154,27 +167,23 @@ public class DiscountManager extends ListManager<Discount> {
 
     @Override
     public void display(List<Discount> tempList) {
-        if (checkNull(tempList)) return; 
-        int discountCodeLength = 0;
-        for (Discount item : list) {
-            discountCodeLength = Math.max(discountCodeLength, item.getCode().length());
-        }
+        if (checkNull(tempList)) {
+            return;
+        } 
         
-        int widthLength = discountCodeLength + 12 + 11 + 11 + 17 + 5 + 9 + 5 + 25;
-         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-" + discountCodeLength + "s | %-8s | %-11s | %-11s | %-17s | %-16s | %-9s | %-5s | \n",
-                "Code", "Customer", "Start" , "End", "Type" , "Available", "Status" , "Value");
+        int widthLength = 10 + 12 + 11 + 11 + 17 + 5 + 9 + 5 + 25;
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-8s | %-11s | %-16s | %-8s | %-6s | %-5s |",
+                "Code", "Start date", "End date", "Type" , "Quantity", "Status" , "Value");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Discount item : tempList) {
-            Account foundCustomer = (Account) getACM().searchById(item.getCustomerID());
-            System.out.printf("\n| %-" + discountCodeLength + "s | %-8s | %-11s | %-11s | %-17s | %-16s | %-9s | %-5s |",
-                    item.getId(),
-                    foundCustomer.getUsername(),
-                    item.getStartDate(),
-                    item.getEndDate(),
-                    item.getType(),
+            System.out.printf("\n| %-8s | %-8s | %-11s | %-16s | %-8s | %-6s | %-5s |",
+                    item.getCode(),
+                    item.getStartDate().format(Validator.DATE),
+                    item.getEndDate().format(Validator.DATE),
+                    item.getType().name(),
                     item.getQuantity(),
-                    item.isActive(),
+                    item.isActive() ? "Active" : "...",
                     item.getValue());
         }
         System.out.println();

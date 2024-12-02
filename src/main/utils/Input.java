@@ -10,6 +10,11 @@ import java.util.List;
 import java.util.Scanner;
 import main.base.ListManager;
 import main.base.Model;
+import main.dto.Account;
+import main.dto.Actor;
+import main.dto.Genre;
+import main.dto.Language;
+import main.dto.Movie;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.infoLog;
 import static main.utils.Utility.toInt;
@@ -138,7 +143,7 @@ public class Input {
         String temps = "";
 
         String input = getString(message, enterToPass);
-        if (input.isEmpty()) return null;
+        if (input == null) return null;
         
         String[] inputs = input.split(",");
 
@@ -153,4 +158,40 @@ public class Input {
         return temps;
     }
     
+    public static <T extends Model> List<String> returnNames(String stringList, ListManager<T> manager) {
+        List<String> result = new ArrayList<>();
+
+        String[] ids = stringList.split(",");
+
+        List<T> items = manager.getList();
+
+        for (String id : ids) {
+            for (T item : items) {
+                if (item.getId().equals(id.trim())) {
+                    if (item instanceof Genre) {
+                        Genre res = (Genre) item;
+                        result.add(res.getGenreName()); 
+                    } else if (item instanceof Actor) {
+                        Actor res = (Actor) item;
+                        result.add(res.getActorName()); 
+                    } else if (item instanceof Language) {
+                        Language res = (Language) item;
+                        result.add(res.getName()); 
+                    } else if (item instanceof Account) {
+                        Account res = (Account) item;
+                        result.add(res.getUsername()); 
+                    } else if (item instanceof Movie) {
+                        Movie res = (Movie) item;
+                        result.add(res.getTitle()); 
+                    }
+                    
+                    break; 
+                }
+            }
+        }
+
+        return result;
+    }
+
+
 }

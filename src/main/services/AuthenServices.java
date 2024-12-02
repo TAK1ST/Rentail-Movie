@@ -1,7 +1,5 @@
 package main.services;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import static main.controllers.Managers.getACM;
 import main.dto.Account;
 import static main.utils.Input.getString;
@@ -13,8 +11,8 @@ import static main.utils.Validator.getPassword;
 
 public class AuthenServices {
 
-    public static Account login() throws SQLException {
-        Menu.showTitle("Login");
+    public static Account login() {
+        Menu.showHeader("Login");
         String input = getString("Enter username or email", false);
         if (input.isEmpty()) return null;
         
@@ -25,7 +23,8 @@ public class AuthenServices {
             if (input.equals(item.getUsername()) || input.equals(item.getEmail())) {
                 if (password.equals(item.getPassword())) {
                     return new Account(item);
-                } else {
+                } 
+                else {
                     errorLog("Wrong username/email or password");
                     forgetPassword(item.getId());
                 }
@@ -35,10 +34,10 @@ public class AuthenServices {
         return null;
     }
 
-    public static Account registor() throws IOException {
+    public static Account registor() {
         boolean checkCreate = true;
 
-        Menu.showTitle("Register");
+        Menu.showHeader("Register");
         String[] options = {"Register new account", "Back"};
         Menu.showOptions(options, 1);
         int input = Menu.getChoice("Enter choice", options.length);
@@ -46,7 +45,7 @@ public class AuthenServices {
             case 1:
                 checkCreate = checkCreate && getACM().registorAccount();
                 break;
-            case 2:
+            default:
                 return null;
         }
 
@@ -63,6 +62,9 @@ public class AuthenServices {
     public static void forgetPassword(String accountID) {
         if (yesOrNo("Forgot password")) {
             String newPassword = getPassword("Enter new password", false);
+            if (newPassword.isEmpty()) {
+                return;
+            }
             getACM().updatePassword(accountID, newPassword);
         }
     }

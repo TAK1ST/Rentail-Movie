@@ -24,6 +24,7 @@ import static main.utils.LogMessage.infoLog;
 public class Validator {
     
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final DateTimeFormatter YEAR = DateTimeFormatter.ofPattern("yyyy");
     
     private static final String PASSWORD_PATTERN = "^[a-zA-Z0-9!@#$%&*+\\-_]+$";
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";

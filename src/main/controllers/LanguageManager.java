@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package main.controllers;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -14,13 +11,10 @@ import main.dto.Language;
 import static main.utils.Input.getString;
 import static main.utils.Validator.getName;
 
-/**
- *
- * @author trann
- */
+
 public class LanguageManager extends ListManager<Language> {
     
-    public LanguageManager() throws IOException {
+    public LanguageManager() {
         super(Language.className());
         list = LanguageDAO.getAllLanguages();
     }
@@ -99,19 +93,22 @@ public class LanguageManager extends ListManager<Language> {
  
     @Override
     public void display(List<Language> tempList) {
-        if (checkNull(tempList)) return; 
-        int languageNameLength = 0;
+        if (checkNull(tempList)) {
+            return;
+        } 
+        
+        int nameL = "Language name".length();
         for (Language item : list) {
-            languageNameLength = Math.max(languageNameLength, item.getName().length());
+            nameL = Math.max(nameL, item.getName().length());
         }
         
-        int widthLength = 2 + languageNameLength + 7;
-         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-2s | %-" + languageNameLength + "s | \n",
-                "Code", "Name");
+        int widthLength = 2 + nameL + 7;
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-2s | %-" + nameL + "s |",
+                "Code", "Language name");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Language item : tempList) {
-       System.out.printf("\n| %-2s | %-" + languageNameLength + "s | \n",
+        System.out.printf("\n| %-2s | %-" + nameL + "s |",
                     item.getCode(),
                     item.getName());
         }

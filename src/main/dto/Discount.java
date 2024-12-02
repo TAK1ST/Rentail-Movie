@@ -1,14 +1,14 @@
 package main.dto;
 
-import main.exceptions.MethodNotFound;
 import java.time.LocalDate;
 import main.base.Model;
 import main.constants.DiscountType;
-import static main.utils.LogMessage.errorLog;
+import main.utils.Validator;
 
 public class Discount extends Model {
-
-    private String customerID;
+    
+    private String customerIds;
+    private String movieIds;
     private LocalDate startDate;
     private LocalDate endDate;
     private DiscountType type;
@@ -19,9 +19,20 @@ public class Discount extends Model {
     public Discount() {
     }
 
-    public Discount(String code, String customerID, LocalDate startDate, LocalDate endDate, DiscountType type, int quantity, boolean isActive, double value) {
+    public Discount(
+            String code, 
+            String customerIds, 
+            String movieIds, 
+            LocalDate startDate, 
+            LocalDate endDate, 
+            DiscountType type, 
+            int quantity, 
+            boolean isActive, 
+            double value) 
+    {
         super(code);
-        this.customerID = customerID;
+        this.customerIds = customerIds;
+        this.movieIds = movieIds;
         this.startDate = startDate;
         this.endDate = endDate;
         this.type = type;
@@ -32,7 +43,8 @@ public class Discount extends Model {
 
     public Discount(Discount other) {
         super(other.getCode());
-        this.customerID = other.customerID;
+        this.customerIds = other.customerIds;
+        this.movieIds = other.movieIds;
         this.startDate = other.startDate;
         this.endDate = other.endDate;
         this.type = other.type;
@@ -43,8 +55,16 @@ public class Discount extends Model {
 
     @Override
     public String toString() {
-        return String.format("Discount: %s, %s, %s, %s, %s, %d, %b, %.2f.",
-                this.getCode(), customerID, startDate, endDate, type, quantity, isActive, value);
+        return String.format("Discount: %s, %s, %s, %s, %s, %s, %d, %b, %.2f.",
+                this.getCode(), 
+                customerIds,
+                movieIds,
+                startDate.format(Validator.DATE), 
+                endDate.format(Validator.DATE), 
+                type, 
+                quantity, 
+                isActive, 
+                value);
     }
 
     public static String className() {
@@ -55,25 +75,6 @@ public class Discount extends Model {
     public String[] getSearchOptions() {
         return new String[] {"discount_code", "customer_id", "discount_type", "discount_value", "start_date", "end_date", "quantity", "is_active"};
     }
-    
-    @Override
-    public String getId() {
-        try {
-            throw new MethodNotFound("Discount only has CODE instead of id");
-        } catch (MethodNotFound e) {
-            errorLog("Exception caught: " + e.getMessage());
-            return null;
-        }
-    }
-    
-    @Override
-    public void setId(String id) {
-        try {
-            throw new MethodNotFound("Discount only has CODE instead of id");
-        } catch (MethodNotFound e) {
-            errorLog("Exception caught: " + e.getMessage());
-        }
-    }
 
     public String getCode() {
         return super.getId();
@@ -83,12 +84,20 @@ public class Discount extends Model {
         super.setId(code);
     }
 
-    public String getCustomerID() {
-        return customerID;
+    public String getCustomerIds() {
+        return customerIds;
     }
 
-    public void setCustomerID(String customerID) {
-        this.customerID = customerID;
+    public void setCustomerIds(String customerIds) {
+        this.customerIds = customerIds;
+    }
+
+    public String getMovieIds() {
+        return movieIds;
+    }
+
+    public void setMovieIds(String movieIds) {
+        this.movieIds = movieIds;
     }
 
     public LocalDate getStartDate() {
