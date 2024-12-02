@@ -24,8 +24,9 @@ public class AccountDAO {
                 + "status,"
                 + "online_at,"
                 + "created_at,"
-                + "updated_at"
-                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "updated_at, "
+                + "creability"
+                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
             int count = 0;
@@ -35,13 +36,12 @@ public class AccountDAO {
             ps.setString(++count, account.getEmail());
             ps.setString(++count, account.getRole().name());
             ps.setString(++count, account.getStatus().name());
-
             ps.setDate(++count, account.getOnlineAt() != null ? Date.valueOf(account.getOnlineAt()) : null);
             ps.setDate(++count, account.getCreateAt() != null ? Date.valueOf(account.getCreateAt()) : null);
             ps.setDate(++count, account.getUpdateAt() != null ? Date.valueOf(account.getUpdateAt()) : null);
+            ps.setInt(++count, account.getCreability());
 
-
-//            return ps.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -58,6 +58,7 @@ public class AccountDAO {
                 + "created_at = ?,"
                 + "updated_at = ?,"
                 + "online_at = ?, "
+                + "creability = ?"
                 + "WHERE account_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
@@ -70,6 +71,7 @@ public class AccountDAO {
             ps.setDate(++count, account.getCreateAt() != null ? Date.valueOf(account.getCreateAt()) : null);
             ps.setDate(++count, account.getUpdateAt() != null ? Date.valueOf(account.getUpdateAt()) : null);
             ps.setDate(++count, account.getOnlineAt() != null ? Date.valueOf(account.getOnlineAt()) : null);
+            ps.setInt(++count, account.getCreability());
             ps.setString(++count, account.getId());
 
             return ps.executeUpdate() > 0;
@@ -106,8 +108,8 @@ public class AccountDAO {
                         AccStatus.valueOf(resultSet.getString("status")),
                         resultSet.getDate("created_at") != null ? resultSet.getDate("created_at").toLocalDate() : null,
                         resultSet.getDate("updated_at") != null ? resultSet.getDate("updated_at").toLocalDate() : null,
-                        resultSet.getDate("online_at") != null ? resultSet.getDate("online_at").toLocalDate() : null
-
+                        resultSet.getDate("online_at") != null ? resultSet.getDate("online_at").toLocalDate() : null,
+                        resultSet.getInt("creability")
                 );
                 list.add(account);
             }

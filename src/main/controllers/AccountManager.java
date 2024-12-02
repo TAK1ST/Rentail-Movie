@@ -48,7 +48,8 @@ public class AccountManager extends ListManager<Account> {
                 AccStatus.OFFLINE,
                 null,
                 null,
-                null
+                null,
+                100
         ));
         AccountDAO.addAccountToDB(list.getLast()); 
     }
@@ -81,7 +82,8 @@ public class AccountManager extends ListManager<Account> {
                 AccStatus.OFFLINE,
                 LocalDate.now(),
                 null,
-                LocalDate.now()
+                LocalDate.now(),
+                100
         ));
         return AccountDAO.addAccountToDB(list.getLast());
     }
@@ -109,7 +111,8 @@ public class AccountManager extends ListManager<Account> {
                 AccStatus.OFFLINE,
                 LocalDate.now(),
                 null,
-                LocalDate.now()
+                LocalDate.now(),
+                100
         ));
         if (AccountDAO.addAccountToDB(list.getLast())) {
             if (list.getLast().getRole() == AccRole.ADMIN) {
