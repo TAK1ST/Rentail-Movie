@@ -7,7 +7,7 @@ SOURCE_USER="root"
 SOURCE_PASS="1"
 DB_NAME="movierentalsystemdb"
 BACKUP_DIR="/sync/backup"
-LATEST_DUMP="/sync/backup/latest_dump.sql"
+LATEST_DUMP="/backup/latest_dump.sql"
 
 # Tạo thư mục backup nếu chưa tồn tại
 mkdir -p $BACKUP_DIR
