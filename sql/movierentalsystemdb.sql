@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS Accounts (
     role ENUM('ADMIN', 'CUSTOMER', 'STAFF', 'PREMIUM') DEFAULT 'CUSTOMER' NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL,
     status ENUM('ONLINE', 'BANNED', 'OFFLINE') DEFAULT 'OFFLINE' NOT NULL,
-
     online_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -149,3 +148,57 @@ CREATE TABLE IF NOT EXISTS Wishlists (
     FOREIGN KEY (movie_id) REFERENCES Movies (movie_id) ON DELETE CASCADE,
     FOREIGN KEY (customer_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
 );
+-- TRIGGER
+
+ -- Giảm số lượng bản sao
+DELIMITER //
+CREATE TRIGGER reduce_movie_copies
+AFTER INSERT ON Rentals
+FOR EACH ROW
+BEGIN
+    UPDATE Movies
+    SET available_copies = available_copies - 1
+    WHERE movie_id = NEW.movie_id;
+END; //
+DELIMITER ;
+
+ -- Tăng số lượng bản sao
+DELIMITER //
+CREATE TRIGGER increase_movie_copies
+AFTER UPDATE ON Rentals
+FOR EACH ROW
+BEGIN
+    IF NEW.return_date IS NOT NULL THEN
+        UPDATE Movies
+        SET available_copies = available_copies + 1
+        WHERE movie_id = NEW.movie_id;
+    END IF;
+END; //
+DELIMITER ;
+
+-- Ngừng khuyến mãi khi hết hạn
+DELIMITER //
+CREATE TRIGGER expire_discount
+BEFORE UPDATE ON Discounts
+FOR EACH ROW
+BEGIN
+    IF OLD.end_date < CURRENT_DATE THEN
+        SET NEW.is_active = FALSE;
+    END IF;
+END; //
+DELIMITER;
+SET GLOBAL event_scheduler = ON;
+
+-- Kiểm tra tài khoản BANNED sau mỗi ngày
+DELIMITER //
+CREATE EVENT unban_accounts_event
+ON SCHEDULE EVERY 1 DAY
+DO
+BEGIN
+    -- Kiểm tra các tài khoản bị BANNED và bị cấm hơn 30 ngày
+    UPDATE Accounts
+    SET status = 'OFFLINE'
+    WHERE status = 'BANNED' 
+    AND DATEDIFF(CURRENT_DATE, updated_at) >= 30;
+END; //
+DELIMITER ;
