@@ -1,8 +1,8 @@
 
 package main.controllers;
 
+
 import main.base.ListManager;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,25 +12,31 @@ import main.dto.Movie;
 import static main.controllers.Managers.getATM;
 import static main.controllers.Managers.getGRM;
 import static main.controllers.Managers.getLGM;
+import static main.dao.MiddleTableDAO.addDataToMidTable;
 import main.dao.MovieDAO;
 import main.utils.IDGenerator;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
+import static main.utils.Input.returnNames;
 import static main.utils.Input.selectByNumbers;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
 
-public class MovieManager extends ListManager<Movie> {
-    
-    private static final String[] searchOptions = {"movie_id", "title", "description", "avg_rating", "release_year", "rental_price", "available_copies", "created_at", "updated_at"};
 
-    public MovieManager() throws IOException {
+public class MovieManager extends ListManager<Movie> {
+
+    public MovieManager() {
         super(Movie.className());
         list = MovieDAO.getAllMovies();
     }
 
-    public boolean addMovie() throws IOException {
+    public boolean addMovie() {
+        
+        if (getGRM().isNull("Need genre data")
+                || getATM().isNull("Need actor data")
+                || getLGM().isNull("Need language data"))
+            return false;
         
         String title = getString("Enter title", false);
         if (title.isEmpty()) return false;
@@ -56,8 +62,10 @@ public class MovieManager extends ListManager<Movie> {
         int availableCopies = getInteger("Enter available copies", 0, Integer.MAX_VALUE, false);
         if (availableCopies == Integer.MIN_VALUE) return false;
         
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.MOVIE_PREFIX);
+        
         list.add(new Movie(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.MOVIE_PREFIX),
+                id,
                 title,
                 description,
                 0,
@@ -70,22 +78,34 @@ public class MovieManager extends ListManager<Movie> {
                 LocalDate.now(),
                 null
         ));
-        if (MovieDAO.addMovieToDB(list.getLast())) 
-            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreNames()) &&
-                    MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIDs());
+        if (MovieDAO.addMovieToDB(list.getLast())) {
+            return (
+                addDataToMidTable("Movie_Genre", id, "movie_id", genres, "genre_name") 
+                    &&
+                addDataToMidTable("Movie_Actor", id, "movie_id", actors, "actor_id") 
+                    &&
+                addDataToMidTable("Movie_Language", id, "movie_id", languages, "language_code")
+            );
+        }
         return false;
     }
 
     public boolean addMovie(Movie movie) {
         list.add(movie);
-        if (MovieDAO.addMovieToDB(list.getLast())) 
-            return MovieDAO.addMovieGenres(list.getLast().getId(), list.getLast().getGenreNames()) &&
-                    MovieDAO.addMovieActors(list.getLast().getId(), list.getLast().getActorIDs());
+        if (MovieDAO.addMovieToDB(list.getLast())) {
+            return (
+                addDataToMidTable("Movie_Genre", movie.getId(), "movie_id", movie.getGenreNames(), "genre_name") 
+                    &&
+                addDataToMidTable("Movie_Actor", movie.getId(), "movie_id", movie.getActorIDs(), "actor_id") 
+                    &&
+                addDataToMidTable("Movie_Language", movie.getId(), "movie_id", movie.getLanguageCodes(), "language_code")
+            );
+        }
         return false;
     }
 
     public boolean updateMovie() {
-        if (checkEmpty(list)) return false;    
+        if (checkNull(list)) return false;    
 
         Movie foundMovie = (Movie) getById("Enter movie's id");
         if (checkNull(foundMovie)) return false;
@@ -112,7 +132,7 @@ public class MovieManager extends ListManager<Movie> {
     }
 
     public boolean deleteMovie() {
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
 
         Movie foundMovie = (Movie) getById("Enter movie's id");
         if (checkNull(foundMovie)) return false;
@@ -138,7 +158,7 @@ public class MovieManager extends ListManager<Movie> {
     
     @Override
     public List<Movie> sortList(List<Movie> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -176,28 +196,67 @@ public class MovieManager extends ListManager<Movie> {
     }
     
     @Override
-    public void display(List<Movie> movies) {
-        if (checkEmpty(list)) return;
-        
-        System.out.println("|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-        System.out.printf("|%-10s | %-30s | %-30s | %-10s | %-15s | %-20s | %-10s | %-10s | %15s |\n",
-                "Movie ID", "Title", "Description", "Avg Rating", "Genres", "Actors", "Language", "Release Year", "Available Copies");
-        System.out.println("|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-
-        for (Movie movie : movies) {
-            System.out.printf("|%-10s | %-30s | %-30s | %-10s | %-15s | %-20s | %-10s | %-10s | %-15s\n",
-                    movie.getId(),
-                    movie.getTitle(),
-                    movie.getDescription().isEmpty() ? "N/A" : movie.getDescription() ,
-                    movie.getAvgRating(),
-                    movie.getGenreNames().isEmpty() ? "N/A" : movie.getGenreNames(),
-                    movie.getActorIDs().isEmpty() ? "N/A" : movie.getActorIDs(),
-                    movie.getLanguageCodes().isEmpty() ? "N/A" : movie.getLanguageCodes(),
-                    movie.getReleaseYear(),
-                    movie.getAvailableCopies());
+    public void display(List<Movie> tempList) {
+        if (checkNull(tempList)) {
+            return;
         }
-
-        System.out.println("|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+        
+        int genresL = "Genres".length();
+        int actorsL = "Actors".length();
+        int languagesL = "Languages".length();
+        int titleL = "Title".length();
+        int descriptL = "Description".length();
+        
+        String genres = null, actors = null, languages = null;
+    
+        for (Movie item : tempList) {
+            genres = item.getGenreNames() != null ? String.join(", ", returnNames(item.getGenreNames(), getGRM())) : null;
+            actors = item.getGenreNames() != null ? String.join(", ", returnNames(item.getActorIDs(), getATM())) : null;
+            languages = item.getGenreNames() != null ? String.join(", ", returnNames(item.getLanguageCodes(), getLGM())) : null;
+            
+            System.out.println(genres);
+            
+            genresL =  genres != null ?Math.max(genresL, genres.length()) : genresL;
+            actorsL = actors != null ? Math.max(actorsL, actors.length()) : actorsL;
+            languagesL = languages != null ? Math.max(actorsL, languages.length()) : actorsL;
+            titleL = Math.max(titleL, item.getTitle().length());
+            descriptL = Math.max(descriptL, item.getDescription().length());
+        }
+        
+        if (genresL > 40 && genres != null && genres.length() > 37) {
+            genresL = 40;
+            genres = genres.substring(0, 37) + "...";
+        }
+        if (actorsL > 40 && actors != null && actors.length() > 37) {
+            actorsL = 40;
+            actors = actors.substring(0, 37) + "...";
+        }
+        if (languagesL > 40 && languages != null && languages.length() > 37) {
+            languagesL = 40;
+            languages = languages.substring(0, 37) + "...";
+        }
+        
+        int widthLength = 8 + titleL + descriptL + 6 + genresL + actorsL + languagesL + 12 + 16 + 28;
+        
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-" + titleL + "s | %-" + descriptL + "s | %-6s | %-" + genresL + "s | %-" + actorsL + "s | %-" + languagesL + "s | %-12s | %-16s |\n",
+                "ID", "Title", "Description", "Rating", "Genres", "Actors", "Language", "Release Year", "Available Copies");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        for (Movie item : tempList) {
+            System.out.printf("\n| %-8s | %-" + titleL + "s | %-" + descriptL + "s | %-6s | %-" + genresL + "s | %-" + actorsL + "s | %-" + languagesL + "s | %12s | %16d |",
+                    item.getId(),
+                    item.getTitle(),
+                    item.getDescription().isEmpty() ? "N/A" : item.getDescription() ,
+                    item.getAvgRating(),
+                    genres == null ? "N/A" : genres,
+                    actors == null ? "N/A" : actors,
+                    languages == null ? "N/A" : languages,
+                    item.getReleaseYear().format(Validator.YEAR),
+                    item.getAvailableCopies());
+        }
+        System.out.println();
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.println();
     }
    
 }

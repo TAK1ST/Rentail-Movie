@@ -1,7 +1,8 @@
+
 package main.controllers;
 
+
 import main.base.ListManager;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -9,11 +10,9 @@ import java.util.List;
 import main.constants.AccRole;
 import main.constants.AccStatus;
 import main.dao.AccountDAO;
-import main.constants.Constants;
 import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import main.utils.IDGenerator;
-import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.PassEncryptor.encryptPassword;
@@ -23,21 +22,16 @@ import static main.utils.Validator.getEmail;
 import static main.utils.Validator.getPassword;
 import static main.utils.Validator.getUsername;
 
-/**
- *
- * @author trann
- */
-public class AccountManager extends ListManager<Account> {
-    
-    private static final String[] options = {"account_id", "username", "password", "role", "email", "status", "online_at", "created_at", "updated_at"};
 
-    public AccountManager() throws IOException {
+public class AccountManager extends ListManager<Account> {
+
+    public AccountManager() {
         super(Account.className());
         list = AccountDAO.getAllAccounts();
         setAdmin();
     }
 
-    private void setAdmin() throws IOException {
+    private void setAdmin() {
         if (!list.isEmpty()) {
             for (Account item : list) {
                 if (item.getRole() == AccRole.ADMIN) {
@@ -46,7 +40,7 @@ public class AccountManager extends ListManager<Account> {
             }
         }
         list.add(new Account(
-                Constants.DEFAULT_ADMIN_ID,
+                IDGenerator.DEFAULT_ADMIN_ID,
                 "admin",
                 "1",
                 "admin@gmail.com",
@@ -59,7 +53,7 @@ public class AccountManager extends ListManager<Account> {
         AccountDAO.addAccountToDB(list.getLast()); 
     }
 
-    public boolean registorAccount() throws IOException {
+    public boolean registorAccount() {
         
         String username = getUsername("Enter username", false, list);
         if (username.isEmpty()) return false;
@@ -68,7 +62,7 @@ public class AccountManager extends ListManager<Account> {
         if (password.isEmpty()) return false;
         
         String email = getEmail("Enter email", false);
-        if (password.isEmpty()) return false;
+        if (email.isEmpty()) return false;
         
         String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), AccRole.CUSTOMER);
         if (yesOrNo("Fill in all infomation?")) {
@@ -92,7 +86,7 @@ public class AccountManager extends ListManager<Account> {
         return AccountDAO.addAccountToDB(list.getLast());
     }
 
-    public boolean addAccount(AccRole registorRole) throws IOException {
+    public boolean addAccount(AccRole registorRole) {
 
         String username = getUsername("Enter username", false, list);
         if (username.isEmpty()) return false;
@@ -131,16 +125,16 @@ public class AccountManager extends ListManager<Account> {
         return false;
     }
 
-    public boolean updateAccount(String userID) {
-        if (checkEmpty(list)) {
+    public boolean updateAccount(String accountID) {
+        if (checkNull(list)) {
             return false;
         }
 
         Account foundAccount;
-        if (userID.isEmpty()) {
+        if (accountID.isEmpty()) {
             foundAccount = (Account) getById("Enter user's id");
         } else {
-            foundAccount = (Account) searchById(userID);
+            foundAccount = (Account) searchById(accountID);
         }
         if (checkNull(foundAccount)) {
             return false;
@@ -179,8 +173,8 @@ public class AccountManager extends ListManager<Account> {
         AccountDAO.updatePasswordInDB(accountID, newPassword);
     }
 
-    public boolean deleteAccount() throws IOException {
-        if (checkEmpty(list)) return false;
+    public boolean deleteAccount() {
+        if (checkNull(list)) return false;
       
         Account foundAccount = (Account) getById("Enter user's id");
         if (checkNull(foundAccount)) return false;
@@ -190,8 +184,8 @@ public class AccountManager extends ListManager<Account> {
         return AccountDAO.deleteAccountFromDB(foundAccount.getId());
     }
 
-    public void showMyProfile(String userID) {
-        display(searchById(userID), "My Profile");
+    public void showMyProfile(String accountID) {
+        display(searchById(accountID), "My Profile");
     }
     
     @Override
@@ -211,7 +205,7 @@ public class AccountManager extends ListManager<Account> {
 
     @Override
     public List<Account> sortList(List<Account> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -234,25 +228,25 @@ public class AccountManager extends ListManager<Account> {
 
     @Override
     public void display(List<Account> tempList) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return;
         }
 
-        int usernameLength = 0;
-        int emailLength = 0;
+        int usernameL = "Username".length();
+        int emailL = "Email".length();
         for (Account item : list) {
-            usernameLength = Math.max(usernameLength, item.getUsername().length());
-            emailLength = Math.max(emailLength, item.getEmail().length());
+            usernameL = Math.max(usernameL, item.getUsername().length());
+            emailL = Math.max(emailL, item.getEmail().length());
         }
         
-        int widthLength = 8 + usernameLength + 8 + emailLength + 8 + 16;
+        int widthLength = 8 + usernameL + 8 + emailL + 8 + 16;
         
         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s | %-8s |\n",
+        System.out.printf("\n| %-8s | %-" + usernameL + "s | %-8s | %-" + emailL+ "s | %-8s |\n",
                 "ID", "Username", "Role", "Email" , "Status");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Account item : tempList) {
-            System.out.printf("\n| %-8s | %-" + usernameLength + "s | %-8s | %-" + emailLength + "s | %-8s |",
+            System.out.printf("\n| %-8s | %-" + usernameL+ "s | %-8s | %-" + emailL + "s | %-8s |",
                     item.getId(),
                     item.getUsername(),
                     item.getRole(),

@@ -1,13 +1,14 @@
 package main.dto;
 
-import main.exceptions.MethodNotFound;
 import main.base.Model;
 import main.constants.PaymentMethod;
-import static main.utils.LogMessage.errorLog;
 
 public class Payment extends Model {
     
     private PaymentMethod method;
+    
+    public Payment() {
+    }
 
     public Payment(String retalID, PaymentMethod method) {
         super(retalID); 
@@ -28,23 +29,9 @@ public class Payment extends Model {
         return "Payment";
     }    
     
-    @Override
-    public String getId() {
-        try {
-            throw new MethodNotFound("Payment only has retalId instead of id");
-        } catch (MethodNotFound e) {
-            errorLog("Exception caught: " + e.getMessage());
-            return null;
-        }
-    }
-    
-    @Override
-    public void setId(String id) {
-        try {
-            throw new MethodNotFound("Payment only has retalId instead of id");
-        } catch (MethodNotFound e) {
-            errorLog("Exception caught: " + e.getMessage());
-        }
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"rental_id", "payment_method", "payment_date"};
     }
     
     public String getRentalId() {

@@ -8,11 +8,11 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import main.dao.RentalDAO;
-import main.constants.Constants;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRTM;
 import main.dto.Movie;
 import main.dto.Rental;
+import main.utils.IDGenerator;
 import static main.utils.Input.getInteger;
 import static main.utils.Validator.getDate;
 
@@ -38,9 +38,9 @@ public class RentalServices {
         // admin test logic
     
     public static boolean returnMovie() {
-        if (getRTM().checkEmpty(getRTM().getList())) return false; 
+        if (getRTM().checkNull(getRTM().getList())) return false; 
         
-        Rental foundRental = getRTM().getRentalByAccountMovie(Constants.DEFAULT_ADMIN_ID);
+        Rental foundRental = getRTM().getRentalByAccountMovie(IDGenerator.DEFAULT_ADMIN_ID);
         if (getRTM().checkNull(foundRental)) return false;
         
         Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
@@ -61,7 +61,7 @@ public class RentalServices {
     }
     
     public static boolean extendReturnDate() {
-        Rental foundRental = getRTM().getRentalByAccountMovie(Constants.DEFAULT_ADMIN_ID);
+        Rental foundRental = getRTM().getRentalByAccountMovie(IDGenerator.DEFAULT_ADMIN_ID);
         if (getRTM().checkNull(foundRental)) return false;
         
         Movie foundMovie = getMVM().searchById(foundRental.getMovieId());

@@ -4,8 +4,6 @@
  */
 package main.views;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import main.dto.Account;
 import static main.services.AuthenServices.login;
 import static main.services.AuthenServices.registor;
@@ -17,7 +15,7 @@ import static main.utils.LogMessage.infoLog;
  * @author trann
  */
 public class AuthenPannel {
-    public static Account getAccounts() throws IOException, SQLException {
+    public static Account getAccounts() {
         Account account;
         do {
             if(yesOrNo("\nHave account?"))  

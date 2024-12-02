@@ -9,6 +9,9 @@ public class Actor extends Model {
     private ActorRank rank;
     private String description;
     
+    public Actor() {
+    }
+    
     public Actor(String id, String actorName, ActorRank rank, String description) {
         super(id);
         this.actorName = actorName;
@@ -30,6 +33,11 @@ public class Actor extends Model {
 
     public static String className() {
         return "Actor";
+    }
+    
+    @Override
+    public String[] getSearchOptions() {
+        return new String[] {"actor_id", "actor_name", "actor_rank", "actor_description"};
     }
 
     public String getActorName() {

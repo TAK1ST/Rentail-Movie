@@ -16,6 +16,9 @@ public class Rental extends Model {
     private double lateFee;
     private double totalAmount;
     private RentalStatus status;
+    
+    public Rental() {
+    }
 
     public Rental(
             String id, 
@@ -53,8 +56,7 @@ public class Rental extends Model {
         this.totalAmount = other.totalAmount;
         this.status = other.status;
     }
-
-    //Methods    
+  
     @Override
     public String toString() {
         return String.format("Rental: %s, %s, %s, %s, %s, %s, %s, %.2f, %.2f, %s.",
@@ -72,6 +74,11 @@ public class Rental extends Model {
 
     public static String className() {
         return "Rental";
+    }
+    
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"rental_id", "movie_id", "staff_id", "customer_id", "due_date", "rental_date", "return_date", "status", "total_amount", "late_fee"};
     }
 
     public String getCustomerID() {
