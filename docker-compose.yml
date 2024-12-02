@@ -13,6 +13,7 @@ services:
       MYSQL_DATABASE: "movierentalsystemdb"
       MYSQL_PASSWORD: "1"
       SYNC_INTERVAL: "2"
+      MYSQL_USER: "Team"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d

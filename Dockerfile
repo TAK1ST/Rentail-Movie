@@ -19,7 +19,7 @@ RUN mkdir -p /var/run/mysqld && \
 COPY sync/sync-db.sh /sync/
 RUN chmod +x /sync/sync-db.sh
 
-RUN echo "*/2 * * * * /sync/sync-db.sh >> /var/log/cron.log 2>&1" | crontab -
+RUN echo "*/1 * * * * /sync/sync-db.sh >> /var/log/cron.log 2>&1" | crontab -
 
 COPY mysql.cnf /etc/mysql/conf.d/
 

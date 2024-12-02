@@ -1,4 +1,3 @@
-DROP DATABASE movierentalsystemdb;
 CREATE DATABASE IF NOT EXISTS movierentalsystemdb;
 USE movierentalsystemdb;
 
