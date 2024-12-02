@@ -28,7 +28,7 @@ public class MiddleTableDAO {
     }
     
     public static String getSubIdsByMainId(String middleTableName, String mainId, String mainAttr, String subAttr) {
-        String sql = "SELECT " + subAttr + "FROM " + middleTableName + " WHERE " + mainAttr + " = ?";
+        String sql = "SELECT " + subAttr + " FROM " + middleTableName + " WHERE " + mainAttr + " = ?";
         StringBuilder subIds = new StringBuilder();
         try (Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement(sql)) {

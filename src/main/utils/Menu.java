@@ -82,7 +82,7 @@ public class Menu {
         for (int index = 0; index < MENU_WIDTH; index++) System.out.print("-");
         System.out.printf("\n|%" + (begin - 1) + "s%-"+ (MENU_WIDTH/2 + half - 1) +"s|\n", " ", title);
         for (int index = 0; index < MENU_WIDTH; index++) System.out.print("-");
-        System.out.println("\n");
+        System.out.println();
     }
     
     public static void showHeader(String header) {

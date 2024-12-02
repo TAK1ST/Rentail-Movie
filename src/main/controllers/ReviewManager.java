@@ -30,45 +30,58 @@ public final class ReviewManager extends ListManager<Review> {
         list = ReviewDAO.getAllReviews();
     }
 
-    public boolean addReview(String customID) {
-        List<Review> foundReview = searchBy(customID);
+    public boolean addReview(String customerID) {
+        Account foundAccount = (Account) getACM().searchById(customerID);
+        if (getACM().checkNull(foundAccount)) {
+            return false;
+        }
+        
+        List<Review> foundReview = searchBy(customerID);
         for (Review item : foundReview) {
-            if (item.getCustomerID().equals(customID)) {
+            if (item.getCustomerID().equals(customerID)) {
                 errorLog("Already review this movie");
                 return false;
             }
         }
 
         Movie foundMovie = (Movie) getMVM().getById("Enter movie'id");
-
-        if (getMVM().checkNull(foundMovie)) return false;
+        if (getMVM().checkNull(foundMovie)) {
+            return false;
+        }
         
         int rating = getInteger("Enter rating", 1, 5, false);
-        if (rating == Integer.MIN_VALUE) return false;
-
-
-        list.add(new Review(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.REVIEW_PREFIX),
-                customID,
-                foundMovie.getId(),
-                rating,
-                getString("Enter comment", true),
-                LocalDate.now()));
-
-        return ReviewDAO.addReviewToDB(list.getLast());
-    }
-
-    public boolean updateReview() {
-        if (checkNull(list)) {
+        if (rating == Integer.MIN_VALUE) {
             return false;
         }
 
-        String input = getString("Enter movie'id", false);
-        if (input.isEmpty()) return false;
+        list.add(new Review(
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.REVIEW_PREFIX),
+                customerID,
+                foundMovie.getId(),
+                rating,
+                getString("Enter comment", true),
+                LocalDate.now()
+        ));
+        return ReviewDAO.addReviewToDB(list.getLast());
+    }
+
+    public boolean updateReview(String customerID) {
+        if (checkNull(list)) {
+            return false;
+        }
         
-        Review foundReview = searchBy(input).getFirst();
-        Movie foundMovie = (Movie) getMVM().searchById(input);
-        if (checkNull(foundReview) || getMVM().checkNull(foundMovie)) {
+        Account foundAccount = (Account) getACM().searchById(customerID);
+        if (getACM().checkNull(foundAccount)) {
+            return false;
+        }
+        
+        String movieID = getString("Enter movie's id", false);
+        if (movieID.isEmpty()) {
+            return false;
+        }
+
+        Review foundReview = searchReviewByAccAndMovie(customerID, movieID);
+        if (checkNull(foundReview)) {
             return false;
         }
 
@@ -78,20 +91,37 @@ public final class ReviewManager extends ListManager<Review> {
         if (rating > 0) {
             foundReview.setRating(rating);
         }
-
         if (!reviewText.isEmpty()) {
             foundReview.setReviewText(reviewText);
         }
-
         return ReviewDAO.updateReviewInDB(foundReview);
     }
+    
+    private Review searchReviewByAccAndMovie(String customerID, String movieID) {
+        for (Review item : list) {
+            if (item.getCustomerID().equals(customerID) && item.getMovieID().equals(movieID)) {
+                return item;
+            }
+        }
+        return null;
+    }
 
-    public boolean deleteReview() {
+    public boolean deleteReview(String customerID) {
         if (checkNull(list)) {
             return false;
         }
 
-        Review foundReview = (Review) getById("Enter review' id");
+        Account foundAccount = (Account) getACM().searchById(customerID);
+        if (getACM().checkNull(foundAccount)) {
+            return false;
+        }
+        
+        String movieID = getString("Enter movie's id", false);
+        if (movieID.isEmpty()) {
+            return false;
+        }
+
+        Review foundReview = searchReviewByAccAndMovie(customerID, movieID);
         if (checkNull(foundReview)) {
             return false;
         }
@@ -101,11 +131,13 @@ public final class ReviewManager extends ListManager<Review> {
     }
     
     public void displayAMovieReviews() {
-        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
-        if (getMVM().checkNull(foundMovie)) {
+        
+        String movieID = getString("Enter movie's id", false);
+        if (movieID.isEmpty()) {
             return;
         }
-        List<Review> movieReview = searchBy(foundMovie.getId());
+        
+        List<Review> movieReview = searchBy(movieID);
         if (checkNull(movieReview)) {
             return;
         }
@@ -114,9 +146,9 @@ public final class ReviewManager extends ListManager<Review> {
     }
 
     public void myReviews(String customID) {
-        List<Review> movieReview = searchBy(customID);
+        List<Review> myReviews = searchBy(customID);
 
-        displayWithSort(movieReview, new Review());
+        displayWithSort(myReviews, new Review());
     }
 
     @Override
@@ -177,32 +209,33 @@ public final class ReviewManager extends ListManager<Review> {
         int commentL = "Comment".length();
         int customerL = "Customer".length();
         int movieL = "Movie".length();
-        for (Review item : list) {
+        for (Review item : tempList) {
             Profile foundCustomer = (Profile) getPFM().searchById(item.getCustomerID());
             Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
             
             commentL = Math.max(commentL, item.getReviewText().length());
-            customerL = Math.max(customerL, foundCustomer.getFullName().length());
-            movieL = Math.max(movieL, foundMovie.getTitle().length());
+            customerL = foundCustomer != null ? Math.max(customerL, foundCustomer.getFullName().length()) : customerL;
+            movieL = foundMovie != null ? Math.max(movieL, foundMovie.getTitle().length()) : movieL;
         }
 
-        int widthLength = 8 + movieL + customerL + commentL + 6 + 10 + 19;
-         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + movieL + "s |  %-" + customerL + "s | %-" + commentL + "s | %-6s | %-10s | \n",
+        int widthLength = 8 + movieL + customerL + commentL + 6 + 10 + 20;
+        
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-" + movieL + "s |  %-" + customerL + "s | %-" + commentL + "s | %-6s | %-10s |\n",
                 "ID", "Movie", "Customer" , "Comment" , "Rating" , "Review at");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Review item : tempList) {
             
-            Account foundCustomer = (Account) getACM().searchById(item.getCustomerID());
+            Profile foundCustomer = (Profile) getPFM().searchById(item.getCustomerID());
             Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
             
-            System.out.printf("\n| %-8s | %-" + movieL + "s |  %-" + customerL + "s | %-" + commentL + "s | %-6 s | %-10s | \n",
+            System.out.printf("\n| %-8s | %-" + movieL + "s |  %-" + customerL + "s | %-" + commentL + "s | %6d | %-10s |",
                     item.getId(),
-                    foundMovie.getTitle(),
-                    foundCustomer.getUsername(),
+                    foundMovie != null ? foundMovie.getTitle() : "...",
+                    foundCustomer != null ? foundCustomer.getFullName() : "...",
                     item.getReviewText(),
                     item.getRating(),
-                    item.getReviewDate());
+                    item.getReviewDate().format(Validator.DATE));
         }
         System.out.println();
         for (int index = 0; index < widthLength; index++) System.out.print("-");

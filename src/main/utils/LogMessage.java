@@ -22,4 +22,8 @@ public class LogMessage {
         System.out.printf("[SUCCESS] %s.\n", message);
     }
     
+    public static void debugLog() {
+        System.out.println("[FLAG]");
+    }
+    
 }

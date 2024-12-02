@@ -196,8 +196,8 @@ public class MovieManager extends ListManager<Movie> {
     }
     
     @Override
-    public void display(List<Movie> movies) {
-        if (checkNull(list)) {
+    public void display(List<Movie> tempList) {
+        if (checkNull(tempList)) {
             return;
         }
         
@@ -209,10 +209,12 @@ public class MovieManager extends ListManager<Movie> {
         
         String genres = null, actors = null, languages = null;
     
-        for (Movie item : movies) {
+        for (Movie item : tempList) {
             genres = item.getGenreNames() != null ? String.join(", ", returnNames(item.getGenreNames(), getGRM())) : null;
             actors = item.getGenreNames() != null ? String.join(", ", returnNames(item.getActorIDs(), getATM())) : null;
             languages = item.getGenreNames() != null ? String.join(", ", returnNames(item.getLanguageCodes(), getLGM())) : null;
+            
+            System.out.println(genres);
             
             genresL =  genres != null ?Math.max(genresL, genres.length()) : genresL;
             actorsL = actors != null ? Math.max(actorsL, actors.length()) : actorsL;
@@ -221,34 +223,34 @@ public class MovieManager extends ListManager<Movie> {
             descriptL = Math.max(descriptL, item.getDescription().length());
         }
         
-        if (genresL > 40 && genres != null)  {
+        if (genresL > 40 && genres != null && genres.length() > 37) {
             genresL = 40;
             genres = genres.substring(0, 37) + "...";
         }
-        if (actorsL > 40 && actors != null) {
+        if (actorsL > 40 && actors != null && actors.length() > 37) {
             actorsL = 40;
             actors = actors.substring(0, 37) + "...";
         }
-        if (languagesL > 40 && languages != null) {
+        if (languagesL > 40 && languages != null && languages.length() > 37) {
             languagesL = 40;
             languages = languages.substring(0, 37) + "...";
         }
         
-        int widthLength = 8 + titleL + descriptL + genresL + 8 + actorsL + 8 + 16;
+        int widthLength = 8 + titleL + descriptL + 6 + genresL + actorsL + languagesL + 12 + 16 + 28;
         
         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + titleL + "s | %-" + descriptL + "s | %-6s | %-" + genresL + "s | %-" + actorsL + "s | %-" + languagesL + "s | %-12s | %-16s |",
+        System.out.printf("\n| %-8s | %-" + titleL + "s | %-" + descriptL + "s | %-6s | %-" + genresL + "s | %-" + actorsL + "s | %-" + languagesL + "s | %-12s | %-16s |\n",
                 "ID", "Title", "Description", "Rating", "Genres", "Actors", "Language", "Release Year", "Available Copies");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Movie item : movies) {
-            System.out.printf("\n| %-8s | %-" + titleL + "s | %-" + descriptL + "s | %-6s | %-" + genresL + "s | %-" + actorsL + "s | %-" + languagesL + "s | %-12s | %16d |",
+        for (Movie item : tempList) {
+            System.out.printf("\n| %-8s | %-" + titleL + "s | %-" + descriptL + "s | %-6s | %-" + genresL + "s | %-" + actorsL + "s | %-" + languagesL + "s | %12s | %16d |",
                     item.getId(),
                     item.getTitle(),
                     item.getDescription().isEmpty() ? "N/A" : item.getDescription() ,
                     item.getAvgRating(),
-                    genres == null ? "N/A" : item.getGenreNames(),
-                    actors == null ? "N/A" : item.getActorIDs(),
-                    languages == null ? "N/A" : item.getLanguageCodes(),
+                    genres == null ? "N/A" : genres,
+                    actors == null ? "N/A" : actors,
+                    languages == null ? "N/A" : languages,
                     item.getReleaseYear().format(Validator.YEAR),
                     item.getAvailableCopies());
         }

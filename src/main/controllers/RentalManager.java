@@ -292,25 +292,25 @@ public class RentalManager extends ListManager<Rental> {
             movieL = Math.max(movieL, foundMovie.getTitle().length());
         }
         
-        int widthLength = 8 + customerL + movieL + staffL + 10 + 10 + 8 + 6 + 8 + 28;
-         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + customerL + "s | %-" + movieL + "s | %-" + staffL + "s | %-10s | %-10s | %-10% | %-8s | %-6s | %-8s |",
+        int widthLength = 8 + customerL + movieL + staffL + 11 + 10 + 11 + 8 + 6 + 8 + 31;
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-" + customerL + "s | %-" + movieL + "s | %-" + staffL + "s | %-11s | %-10s | %-11s | %-8s | %-6s | %-8s |\n",
                 "ID", "Customer", "Movie" , "Staff" , "Rental date" , "Due date", "Return date", "Late Fee", "Total", "Status");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Rental item : tempList) {
             Account foundStaff = (Account) getACM().searchById(item.getStaffID());
             Account foundCustomer = (Account) getACM().searchById(item.getCustomerID());
             Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
-            System.out.printf("\n| %-8s | %-" + customerL + "s | %-" + movieL + "s | %-" + staffL + "s | %-10s | %-10s | %-10s | %-6.2f | %-4.2f | %-8s |",
+            System.out.printf("\n| %-8s | %-" + customerL + "s | %-" + movieL + "s | %-" + staffL + "s | %-11s | %-10s | %-11s | %8s | %6s | %-8s |",
                     item.getId(),
                     foundCustomer.getUsername(),
                     foundMovie.getTitle(),
-                    foundStaff != null ? foundStaff.getUsername() : "Null",
+                    foundStaff != null ? foundStaff.getUsername() : "...",
                     item.getRentalDate(),
-                    item.getDueDate() != null ? item.getDueDate() : "Null",
-                    item.getReturnDate(), 
-                    item.getLateFee(),
-                    item.getTotalAmount(),
+                    item.getDueDate(),
+                    item.getReturnDate() != null ? item.getDueDate() : "...", 
+                    item.getLateFee() == 0f ? "0" : String.format("%05.2f", item.getLateFee()),
+                    item.getTotalAmount() == 0f ? "0" : String.format("%03.2f", item.getTotalAmount()),
                     item.getStatus());
         }
         System.out.println();

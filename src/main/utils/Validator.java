@@ -14,6 +14,7 @@ import java.util.Scanner;
 import main.dto.Account;
 import static main.utils.Input.askToExit;
 import static main.utils.Input.getString;
+import static main.utils.LogMessage.debugLog;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.infoLog;
 
@@ -69,6 +70,7 @@ public class Validator {
                 if(askToExit()) return "";
                 continue;
             } 
+            
             isUnique = true;
             for(Account item : list) 
                 if (item.getUsername().equals(input)) {
@@ -120,24 +122,30 @@ public class Validator {
     }
 
     public static void confirmPassword(String message, String password) {
-        String confirm;
         do {
             System.out.printf("%s: ", message);
-            confirm = scanner.nextLine();
-
-            if(!confirm.equals(password)) {
+            String input = scanner.nextLine();
+            
+            if (input.isEmpty()) {
+                errorLog("Password must not be empty");
+                if(askToExit()) return;
+                continue;
+            }
+            if(!input.equals(password)) {
                 errorLog("Password Unmatch");
                 if(askToExit()) return;
-            }
-            
-        } while (!confirm.equals(password));
+                continue;
+            } else 
+                return;
+        } while (true);
     }
     
     public static String getName(String message, boolean enterToPass) {
         String input = "";
         boolean pass = false;
         do {
-            if (enterToPass) infoLog("Press Enter to skip");
+            if (enterToPass) 
+                infoLog("Press Enter to skip");
             
             System.out.printf("%s: ", message);
             input = scanner.nextLine(); 
@@ -165,7 +173,8 @@ public class Validator {
         String input = "";
         boolean pass = false;
         do {
-            if (enterToPass) infoLog("Press Enter to skip");
+            if (enterToPass) 
+                infoLog("Press Enter to skip");
             
             System.out.printf("%s: ", message);
             input = scanner.nextLine(); 
@@ -198,7 +207,8 @@ public class Validator {
         String input = "";
         boolean pass = false;
         do {
-            if (enterToPass) infoLog("Press Enter to skip");
+            if (enterToPass) 
+                infoLog("Press Enter to skip");
             
             input = getString(message, enterToPass);
             if (input.isEmpty() && enterToPass) 
@@ -229,7 +239,8 @@ public class Validator {
         String input = "";
         boolean pass = false;
         do {
-            if (enterToPass) infoLog("Press Enter to skip");
+            if (enterToPass) 
+                infoLog("Press Enter to skip");
             
             input = getString(message, enterToPass);
             if (input.isEmpty() && enterToPass) 
@@ -259,7 +270,8 @@ public class Validator {
     public static LocalDate getDate(String message, boolean enterToPass) {
         String input = "";
         do {
-            if (enterToPass) infoLog("Press Enter to skip");
+            if (enterToPass) 
+                infoLog("Press Enter to skip");
             
             System.out.printf("%s (%s): ", message, "dd/MM/yyyy");
             input = scanner.nextLine(); 
@@ -270,11 +282,11 @@ public class Validator {
                 errorLog("Date must not be empty");
                 if(askToExit()) return null;
             }
-
             if (!isValidDate(input)) {
                 errorLog("Date must be right format dd/MM/yyyy");
                 if(askToExit()) return null;
             }
+            
         } while (!isValidDate(input));
 
         return LocalDate.parse(input, DATE);

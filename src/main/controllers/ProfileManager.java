@@ -150,19 +150,19 @@ public class ProfileManager extends ListManager<Profile> {
             addressL = Math.max(addressL, item.getAddress().length());
         }
         
-        int widthLength = 8 + nameL + 10 + addressL + 10 + 4 + 19;
+        int widthLength = 8 + nameL + 10 + addressL + 12 + 6 + 19;
          for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + nameL + "s | %-10s | %-" + addressL + "s | %-10s | %-6s |",
-                "ID", "Full Name", "Birthday" , "Address" , "PhoneNumber" , "Credit");
+        System.out.printf("\n| %-8s | %-" + nameL + "s | %-10s | %-" + addressL + "s | %-12s | %-6s |\n",
+                "ID", "Full Name", "Birthday" , "Address" , "Phone number" , "Credit");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Profile item : tempList) {
-        System.out.printf("\n| %-8s | %-" + nameL + "s | %-10s | %-" + addressL + "s | %-10s | %-4.2f |",
+        System.out.printf("\n| %-8s | %-" + nameL + "s | %-10s | %-" + addressL + "s | %-12s | %6s |",
                     item.getId(),
                     item.getFullName(),
                     item.getBirthday(),
                     item.getAddress(),
                     item.getPhoneNumber(),
-                    item.getCredit());
+                    item.getCredit() == 0f ? "0" : String.format("%-3.2f", item.getCredit()));
         }
         System.out.println();
         for (int index = 0; index < widthLength; index++) System.out.print("-");

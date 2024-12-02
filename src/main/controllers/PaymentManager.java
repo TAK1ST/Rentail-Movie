@@ -108,7 +108,7 @@ public class PaymentManager extends ListManager<Payment> {
 
         int widthLength = 8 + 7 + 7;
         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-7s |",
+        System.out.printf("\n| %-8s | %-7s |\n",
                 "ID", "Method");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Payment item : tempList) {

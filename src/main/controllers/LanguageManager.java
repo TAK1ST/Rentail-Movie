@@ -102,13 +102,13 @@ public class LanguageManager extends ListManager<Language> {
             nameL = Math.max(nameL, item.getName().length());
         }
         
-        int widthLength = 2 + nameL + 7;
+        int widthLength = 4 + nameL + 7;
         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-2s | %-" + nameL + "s |",
+        System.out.printf("\n| %-4s | %-" + nameL + "s |\n",
                 "Code", "Language name");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Language item : tempList) {
-        System.out.printf("\n| %-2s | %-" + nameL + "s |",
+        System.out.printf("\n| %-4s | %-" + nameL + "s |",
                     item.getCode(),
                     item.getName());
         }

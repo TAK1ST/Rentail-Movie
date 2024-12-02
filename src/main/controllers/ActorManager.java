@@ -123,7 +123,7 @@ public class ActorManager extends ListManager<Actor> {
         
         int widthLength = 8 + actorL + 5 + descriptL + 13;
         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + actorL + "s | %-5s | %-" + descriptL + "s |",
+        System.out.printf("\n| %-8s | %-" + actorL + "s | %-5s | %-" + descriptL + "s |\n",
                 "ID", "Name", "Rank" , "Description");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Actor item : tempList) {

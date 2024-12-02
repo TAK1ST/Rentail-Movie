@@ -106,7 +106,7 @@ public class GenreManager extends ListManager<Genre> {
         
         int widthLength =  genreL +  descriptL + 7;
          for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-" + genreL + "s | %-" + descriptL + "s |",
+        System.out.printf("\n| %-" + genreL + "s | %-" + descriptL + "s |\n",
                 "Name", "Description");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Genre item : tempList) {

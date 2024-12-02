@@ -30,8 +30,7 @@ public class Input {
     private static int getBackIn = 3;
     
     public static boolean askToExit() {
-        getBackIn--;
-        if (getBackIn == 0) {
+        if (--getBackIn == 0) {
             getBackIn = 3;
             return !yesOrNo("\nContinue");
         }
@@ -132,9 +131,12 @@ public class Input {
                 System.out.printf("%2d. %-25s ", index, infoLists[index]);
         }
         System.out.println("\n");
-        if (!enterToPass) 
-            return infoLists[getInteger("Enter an option", 0, infoLists.length - 1, enterToPass)];
-        else 
+        if (!enterToPass) {
+            int option = getInteger("Enter an option", 0, infoLists.length - 1, enterToPass);
+            if (option == Integer.MIN_VALUE)
+                return "";
+            return infoLists[option];
+        } else 
             return "";
     }
     
@@ -168,19 +170,28 @@ public class Input {
         for (String id : ids) {
             for (T item : items) {
                 if (item.getId().equals(id.trim())) {
-                    if (item instanceof Genre) {
+                    if (item instanceof Genre) 
+                    {
                         Genre res = (Genre) item;
                         result.add(res.getGenreName()); 
-                    } else if (item instanceof Actor) {
+                    } 
+                    else if (item instanceof Actor) 
+                    {
                         Actor res = (Actor) item;
                         result.add(res.getActorName()); 
-                    } else if (item instanceof Language) {
+                    } 
+                    else if (item instanceof Language) 
+                    {
                         Language res = (Language) item;
                         result.add(res.getName()); 
-                    } else if (item instanceof Account) {
+                    } 
+                    else if (item instanceof Account) 
+                    {
                         Account res = (Account) item;
                         result.add(res.getUsername()); 
-                    } else if (item instanceof Movie) {
+                    } 
+                    else if (item instanceof Movie) 
+                    {
                         Movie res = (Movie) item;
                         result.add(res.getTitle()); 
                     }

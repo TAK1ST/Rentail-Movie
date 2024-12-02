@@ -62,7 +62,7 @@ public class AccountManager extends ListManager<Account> {
         if (password.isEmpty()) return false;
         
         String email = getEmail("Enter email", false);
-        if (password.isEmpty()) return false;
+        if (email.isEmpty()) return false;
         
         String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), AccRole.CUSTOMER);
         if (yesOrNo("Fill in all infomation?")) {
@@ -125,16 +125,16 @@ public class AccountManager extends ListManager<Account> {
         return false;
     }
 
-    public boolean updateAccount(String userID) {
+    public boolean updateAccount(String accountID) {
         if (checkNull(list)) {
             return false;
         }
 
         Account foundAccount;
-        if (userID.isEmpty()) {
+        if (accountID.isEmpty()) {
             foundAccount = (Account) getById("Enter user's id");
         } else {
-            foundAccount = (Account) searchById(userID);
+            foundAccount = (Account) searchById(accountID);
         }
         if (checkNull(foundAccount)) {
             return false;
@@ -184,8 +184,8 @@ public class AccountManager extends ListManager<Account> {
         return AccountDAO.deleteAccountFromDB(foundAccount.getId());
     }
 
-    public void showMyProfile(String userID) {
-        display(searchById(userID), "My Profile");
+    public void showMyProfile(String accountID) {
+        display(searchById(accountID), "My Profile");
     }
     
     @Override

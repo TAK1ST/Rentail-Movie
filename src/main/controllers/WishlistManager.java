@@ -148,14 +148,14 @@ public class WishlistManager extends ListManager<Wishlist> {
     }
 
     @Override
-    public void display(List<Wishlist> wishlists) {
+    public void display(List<Wishlist> tempList) {
         if (checkNull(list)) {
             return;
         }
 
         int customerL = "Customer".length();
         int movieL = "Movie Title".length();
-        for (Wishlist item : list) {
+        for (Wishlist item : tempList) {
             Account foundAccount = (Account) getACM().searchById(item.getCustomerId());
             Movie foundMovie = (Movie) getMVM().getById(item.getMovieId());
             
@@ -166,11 +166,11 @@ public class WishlistManager extends ListManager<Wishlist> {
         int widthLength = 8 + movieL + customerL + 10 + 8 + 16;
         
         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + movieL + "s | %-" + customerL + "s | %-10s | %-8s |%n",
+        System.out.printf("\n| %-8s | %-" + movieL + "s | %-" + customerL + "s | %-10s | %-8s |\n",
                 "ID", "Movie Titlte", "Customer", "Added Date", "Priority");
-        System.out.println("|------------------------------------------------------------------------------------------------");
-        for (Wishlist item : wishlists) {
-            System.out.printf("\n| %-8s | %-" + movieL + "s | %-" + customerL + "s | %-10s | %-8s |%n",
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        for (Wishlist item : tempList) {
+            System.out.printf("\n| %-8s | %-" + movieL + "s | %-" + customerL + "s | %-10s | %-8s |",
                     item.getId(),
                     item.getMovieId(),
                     item.getCustomerId(),

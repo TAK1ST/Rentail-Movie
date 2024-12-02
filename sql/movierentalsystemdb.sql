@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS Accounts (
     status ENUM('ONLINE', 'BANNED', 'OFFLINE') DEFAULT 'OFFLINE' NOT NULL,
     online_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    creability INT DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS Languages (
@@ -37,14 +38,13 @@ CREATE TABLE IF NOT EXISTS Movies (
 );
 
 CREATE TABLE IF NOT EXISTS Discounts (
-    discount_code VARCHAR(50) PRIMARY KEY,
+    discount_code CHAR(8) PRIMARY KEY,
     discount_type ENUM('PERCENT', 'FIXED_AMOUNT', 'BUY_X_GET_Y_FREE') NOT NULL DEFAULT 'PERCENT',
     discount_value DECIMAL(10, 2) NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     quantity INT DEFAULT 1,
-    is_active BOOLEAN DEFAULT TRUE,
-    FOREIGN KEY (customer_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
+    is_active BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS Actors (
@@ -81,15 +81,15 @@ CREATE TABLE IF NOT EXISTS Movie_Language (
 
 CREATE TABLE IF NOT EXISTS Discount_Account (
     customer_id CHAR(8) NOT NULL,
-    discount_code VARCHAR(50) NOT NULL,
+    discount_code CHAR(8) NOT NULL,
     PRIMARY KEY (customer_id, discount_code),
-    FOREIGN KEY (customer_id) REFERENCES Accounts(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (customer_id) REFERENCES Accounts(account_id) ON DELETE CASCADE,
     FOREIGN KEY (discount_code) REFERENCES Discounts(discount_code) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Discount_Movie (
     movie_id CHAR(8) NOT NULL,
-    discount_code VARCHAR(50) NOT NULL,
+    discount_code CHAR(8) NOT NULL,
     PRIMARY KEY (movie_id, discount_code),
     FOREIGN KEY (movie_id) REFERENCES Movies(movie_id) ON DELETE CASCADE,
     FOREIGN KEY (discount_code) REFERENCES Discounts(discount_code) ON DELETE CASCADE
@@ -114,7 +114,6 @@ CREATE TABLE IF NOT EXISTS Rentals (
 CREATE TABLE IF NOT EXISTS Payments (
     rental_id CHAR(8),
     payment_method ENUM('CARD', 'ONLINE', 'BANKING') NOT NULL DEFAULT 'CARD',
-    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (rental_id) REFERENCES Rentals (rental_id) ON DELETE CASCADE
 );
 

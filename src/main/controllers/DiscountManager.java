@@ -171,20 +171,20 @@ public class DiscountManager extends ListManager<Discount> {
             return;
         } 
         
-        int widthLength = 10 + 12 + 11 + 11 + 17 + 5 + 9 + 5 + 25;
+        int widthLength = 8 + 10 + 10 + 16 + 8 + 6 + 5 + 22;
         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-8s | %-11s | %-16s | %-8s | %-6s | %-5s |",
+        System.out.printf("\n| %-8s | %-10s | %-10s | %-16s | %-8s | %-6s | %-5s |\n",
                 "Code", "Start date", "End date", "Type" , "Quantity", "Status" , "Value");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Discount item : tempList) {
-            System.out.printf("\n| %-8s | %-8s | %-11s | %-16s | %-8s | %-6s | %-5s |",
+            System.out.printf("\n| %-8s | %-10s | %-10s | %-16s | %8d | %-6s | %5s |",
                     item.getCode(),
                     item.getStartDate().format(Validator.DATE),
                     item.getEndDate().format(Validator.DATE),
                     item.getType().name(),
                     item.getQuantity(),
                     item.isActive() ? "Active" : "...",
-                    item.getValue());
+                    item.getValue() == 0f ? "0" : String.format("%02.2f", item.getValue()));
         }
         System.out.println();
         for (int index = 0; index < widthLength; index++) System.out.print("-");

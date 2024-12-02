@@ -207,8 +207,8 @@ public class AdminPannel {
             null,
             new MenuOption[]{
                 new MenuOption("Add review", () -> getRVM().addReview(IDGenerator.DEFAULT_ADMIN_ID), ASK_FOR_AGAIN),
-                new MenuOption("Delete review", () -> getRVM().deleteReview(), ASK_FOR_AGAIN),
-                new MenuOption("Update review", () -> getRVM().updateReview(), ASK_FOR_AGAIN),
+                new MenuOption("Delete review", () -> getRVM().deleteReview(IDGenerator.DEFAULT_ADMIN_ID), ASK_FOR_AGAIN),
+                new MenuOption("Update review", () -> getRVM().updateReview(IDGenerator.DEFAULT_ADMIN_ID), ASK_FOR_AGAIN),
                 new MenuOption("Search review", () -> getRVM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Show all review", () -> getRVM().displayWithSort(new Review())),
                 new MenuOption("Back", EXIT_MENU)
