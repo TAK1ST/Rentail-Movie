@@ -24,13 +24,8 @@ public class Language extends Model {
         return String.format("Language: %s, %s.", this.getCode(), name);
     }
 
-    public static String className() {
-        return "Language";
-    }
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"language_code", "language_name"};
+    public static String[] getAttributes() {
+        return new String[] {"Language", "Code", "Language name"};
     }
 
     public String getCode() {

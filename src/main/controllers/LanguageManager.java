@@ -15,7 +15,7 @@ import static main.utils.Validator.getName;
 public class LanguageManager extends ListManager<Language> {
     
     public LanguageManager() {
-        super(Language.className());
+        super(Language.getAttributes());
         list = LanguageDAO.getAllLanguages();
     }
 
@@ -75,18 +75,16 @@ public class LanguageManager extends ListManager<Language> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Language.getAttributes();
         List<Language> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "languageCode":
-                result.sort(Comparator.comparing(Language::getCode));
-                break;
-            case "languageName":
-                result.sort(Comparator.comparing(Language::getName));
-                break;
-            default:
-                result.sort(Comparator.comparing(Language::getCode)); 
-                break;
+
+        int index = 0;
+        if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Language::getCode));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Language::getName));
+        } else {
+            result.sort(Comparator.comparing(Language::getCode));
         }
         return result;
     }

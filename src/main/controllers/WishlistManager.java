@@ -23,7 +23,7 @@ import static main.utils.Utility.getEnumValue;
 public class WishlistManager extends ListManager<Wishlist> {
 
     public WishlistManager() {
-        super(Wishlist.className());
+        super(Wishlist.getAttributes());
         list = WishlistDAO.getAllWishlists();
     }
 
@@ -123,26 +123,22 @@ public class WishlistManager extends ListManager<Wishlist> {
             return null;
         }
 
+        String[] options = Wishlist.getAttributes(); 
         List<Wishlist> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "wishlistId":
-                result.sort(Comparator.comparing(Wishlist::getId));
-                break;
-            case "customerId":
-                result.sort(Comparator.comparing(Wishlist::getCustomerId));
-                break;
-            case "movieId":
-                result.sort(Comparator.comparing(Wishlist::getMovieId));
-                break;
-            case "addedDate":
-                result.sort(Comparator.comparing(Wishlist::getAddedDate));
-                break;
-            case "priority":
-                result.sort(Comparator.comparing(Wishlist::getPriority));
-                break;
-            default:
-                result.sort(Comparator.comparing(Wishlist::getId));
-                break;
+
+        int index = 0;
+        if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Wishlist::getId));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Wishlist::getCustomerId));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Wishlist::getMovieId));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Wishlist::getAddedDate));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Wishlist::getPriority));
+        } else {
+            result.sort(Comparator.comparing(Wishlist::getId));
         }
         return result;
     }

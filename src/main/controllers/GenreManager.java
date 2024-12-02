@@ -15,7 +15,7 @@ import static main.utils.Validator.getName;
 public class GenreManager extends ListManager<Genre> {
     
     public GenreManager() {
-        super(Genre.className());
+        super(Genre.getAttributes());
         list = GenreDAO.getAllGenres();
     }
 
@@ -75,18 +75,16 @@ public class GenreManager extends ListManager<Genre> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Genre.getAttributes();
         List<Genre> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "genreName":
-                result.sort(Comparator.comparing(Genre::getGenreName));
-                break;
-            case "description":
-                result.sort(Comparator.comparing(Genre::getDescription));
-                break;
-            default:
-                result.sort(Comparator.comparing(Genre::getGenreName)); 
-                break;
+
+        int index = 0;
+        if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Genre::getGenreName));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Genre::getDescription));
+        } else {
+            result.sort(Comparator.comparing(Genre::getGenreName));
         }
         return result;
     }

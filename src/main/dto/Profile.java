@@ -45,13 +45,8 @@ public class Profile extends Model {
                 birthday.format(Validator.DATE));
     }
 
-    public static String className() {
-        return "Profile";
-    }
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"account_id", "full_name", "birthday", "address", "phone_number", "credit"};
+    public static String[] getAttributes() {
+        return new String[] {"Profile", "Id", "Full name", "Birthday", "Address", "Phone number", "Credit"};
     }
 
 //    @Override

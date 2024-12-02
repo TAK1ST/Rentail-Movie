@@ -30,7 +30,7 @@ public class CustomerPannel {
                 new MenuOption("Show my profile", 
                         () -> getACM().showMyProfile(account.getId()), ENTER_TO_CONTINUE),
                 new MenuOption("Update profile", 
-                        () -> getACM().updateAccount(account.getId()), ASK_FOR_AGAIN),
+                        () -> getACM().updateAccount(), ASK_FOR_AGAIN),
                 new MenuOption("Display movie list", 
                         () -> getMVM().display(), ENTER_TO_CONTINUE),
                 new MenuOption("Search movie", 

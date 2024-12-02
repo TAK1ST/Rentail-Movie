@@ -26,7 +26,7 @@ import static main.utils.Validator.getDate;
 public class DiscountManager extends ListManager<Discount> {
     
     public DiscountManager() {
-        super(Discount.className());
+        super(Discount.getAttributes());
         list = DiscountDAO.getAllDiscounts();
     }
 
@@ -131,36 +131,28 @@ public class DiscountManager extends ListManager<Discount> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Discount.getAttributes();
         List<Discount> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "discountCode":
-                result.sort(Comparator.comparing(Discount::getCode));
-                break;
-            case "customerId":
-                result.sort(Comparator.comparing(Discount::getCustomerIds));
-                break;
-            case "discountType":
-                result.sort(Comparator.comparing(Discount::getType));
-                break;
-            case "discountValue":
-                result.sort(Comparator.comparing(Discount::getValue));
-                break;
-            case "startDate":
-                result.sort(Comparator.comparing(Discount::getStartDate));
-                break;
-            case "endDate":
-                result.sort(Comparator.comparing(Discount::getEndDate));
-                break;
-            case "quantity":
-                result.sort(Comparator.comparing(Discount::getQuantity));
-                break;
-            case "isActive":
-                result.sort(Comparator.comparing(Discount::isActive));
-                break;
-            default:
-                result.sort(Comparator.comparing(Discount::getCode)); 
-                break;
+        
+        int index = 0;
+        if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Discount::getCode));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Discount::getCustomerIds));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Discount::getType));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Discount::getValue));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Discount::getStartDate));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Discount::getEndDate));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Discount::getQuantity));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Discount::isActive));
+        } else {
+            result.sort(Comparator.comparing(Discount::getCode)); // Default case
         }
         return result;
     }

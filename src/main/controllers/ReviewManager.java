@@ -26,7 +26,7 @@ import main.utils.Validator;
 public final class ReviewManager extends ListManager<Review> {
     
     public ReviewManager() {
-        super(Review.className());
+        super(Review.getAttributes());
         list = ReviewDAO.getAllReviews();
     }
 
@@ -148,7 +148,7 @@ public final class ReviewManager extends ListManager<Review> {
     public void myReviews(String customID) {
         List<Review> myReviews = searchBy(customID);
 
-        displayWithSort(myReviews, new Review());
+        displayWithSort(myReviews);
     }
 
     @Override
@@ -173,30 +173,24 @@ public final class ReviewManager extends ListManager<Review> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Review.getAttributes();
         List<Review> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "reviewId":
-                result.sort(Comparator.comparing(Review::getId));
-                break;
-            case "movieId":
-                result.sort(Comparator.comparing(Review::getMovieID));
-                break;
-            case "customerId":
-                result.sort(Comparator.comparing(Review::getCustomerID));
-                break;
-            case "reviewText":
-                result.sort(Comparator.comparing(Review::getReviewText));
-                break;
-            case "rating":
-                result.sort(Comparator.comparing(Review::getRating));
-                break;
-            case "reviewDate":
-                result.sort(Comparator.comparing(Review::getReviewDate));
-                break;
-            default:
-                result.sort(Comparator.comparing(Review::getId)); 
-                break;
+
+        int index = 0;
+        if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Review::getId));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Review::getMovieID));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Review::getCustomerID));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Review::getReviewText));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Review::getRating));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Review::getReviewDate));
+        } else {
+            result.sort(Comparator.comparing(Review::getId)); // Default case
         }
         return result;
     }

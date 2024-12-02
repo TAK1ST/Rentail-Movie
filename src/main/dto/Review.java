@@ -42,16 +42,10 @@ public class Review extends Model {
                 reviewDate.format(Validator.DATE),
                 reviewText);
     }
-    
-    public static String className() {
-        return "Review";
+     
+    public static String[] getAttributes() {
+        return new String[] {"Review", "Id", "Movie Id", "Customer Id", "Review text", "Rating", "Review date"};
     }
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"review_id", "movie_id", "customer_id", "review_text", "rating", "review_date"};
-    }
-
 
     public String getMovieID() {
         return movieID;

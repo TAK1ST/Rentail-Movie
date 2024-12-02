@@ -39,13 +39,8 @@ public class Casting extends Model {
         return String.format("Casting: %s, %s, %s.", this.getMovieID(), actorID, role);
     }
 
-    public static String className() {
-        return "Casting";
-    }
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"movie_id", "actor_id", "role"};
+    public static String[] getAttributes() {
+        return new String[] {"Casting", "Movie Id", "Actor Id", "Role"};
     }
 
     @Override

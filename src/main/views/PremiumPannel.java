@@ -29,7 +29,7 @@ public class PremiumPannel {
                 new Menu.MenuOption("Show my profile", 
                         () -> getACM().showMyProfile(account.getId()), ENTER_TO_CONTINUE),
                 new Menu.MenuOption("Update profile", 
-                        () -> getACM().updateAccount(account.getId()), ASK_FOR_AGAIN),
+                        () -> getACM().updateAccount(), ASK_FOR_AGAIN),
                 new Menu.MenuOption("Display movie list", 
                         () -> getMVM().display(), ENTER_TO_CONTINUE),
                 new Menu.MenuOption("Search movie", 

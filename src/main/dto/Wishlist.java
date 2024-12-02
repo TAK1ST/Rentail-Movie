@@ -41,14 +41,9 @@ public class Wishlist extends Model {
                 priority
         );
     }
-
-    public static String className() {
-        return "Wishlist";
-    }
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"wishlist_id", "customer_id", "movie_id", "added_date", "priority"};
+     
+    public static String[] getAttributes() {
+        return new String[] {"Wishlist", "Id", "Customer Id", "Movie Id", "Added date", "Priority"};
     }
 
     public String getMovieId() {

@@ -71,14 +71,20 @@ public class Rental extends Model {
                 totalAmount,
                 status);
     }
-
-    public static String className() {
-        return "Rental";
-    }
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"rental_id", "movie_id", "staff_id", "customer_id", "due_date", "rental_date", "return_date", "status", "total_amount", "late_fee"};
+      
+    public static String[] getAttributes() {
+        return new String[] {
+            "Rental",
+            "Id", 
+            "Movie Id", 
+            "Staff Id", 
+            "Custome Id", 
+            "Due date", 
+            "Rental date", 
+            "Return date", 
+            "Status", 
+            "Total amount", 
+            "Late fee"};
     }
 
     public String getCustomerID() {

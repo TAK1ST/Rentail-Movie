@@ -21,7 +21,7 @@ import static main.utils.Validator.getPhoneNumber;
 public class ProfileManager extends ListManager<Profile> {
       
     public ProfileManager() {
-        super(Profile.className());
+        super(Profile.getAttributes());
         list = ProfileDAO.getAllProfiles();
     }
 
@@ -109,30 +109,24 @@ public class ProfileManager extends ListManager<Profile> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Profile.getAttributes();
         List<Profile> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "accountId":
-                result.sort(Comparator.comparing(Profile::getAccountId));
-                break;
-            case "fullName":
-                result.sort(Comparator.comparing(Profile::getFullName));
-                break;
-            case "birthday":
-                result.sort(Comparator.comparing(Profile::getBirthday));
-                break;
-            case "address":
-                result.sort(Comparator.comparing(Profile::getAddress));
-                break;
-            case "phoneNumber":
-                result.sort(Comparator.comparing(Profile::getPhoneNumber));
-                break;
-            case "credit":
-                result.sort(Comparator.comparing(Profile::getCredit));
-                break;
-            default:
-                result.sort(Comparator.comparing(Profile::getAccountId)); // Default to accountId
-                break;
+
+        int index = 0;
+        if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Profile::getAccountId));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Profile::getFullName));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Profile::getBirthday));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Profile::getAddress));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Profile::getPhoneNumber));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Profile::getCredit));
+        } else {
+            result.sort(Comparator.comparing(Profile::getAccountId)); // Default case
         }
         return result;
     }

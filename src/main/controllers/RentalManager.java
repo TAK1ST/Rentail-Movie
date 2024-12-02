@@ -31,7 +31,7 @@ import static main.utils.Validator.getDate;
 public class RentalManager extends ListManager<Rental> {
 
     public RentalManager() {
-        super(Rental.className());
+        super(Rental.getAttributes());
         list = RentalDAO.getAllRentals();
     }
 
@@ -232,42 +232,32 @@ public class RentalManager extends ListManager<Rental> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Rental.getAttributes();
         List<Rental> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "rentalId":
-                result.sort(Comparator.comparing(Rental::getId));
-                break;
-            case "movieId":
-                result.sort(Comparator.comparing(Rental::getMovieId));
-                break;
-            case "staffId":
-                result.sort(Comparator.comparing(Rental::getStaffID));
-                break;
-            case "customerId":
-                result.sort(Comparator.comparing(Rental::getCustomerID));
-                break;
-            case "dueDate":
-                result.sort(Comparator.comparing(Rental::getDueDate));
-                break;
-            case "rentalDate":
-                result.sort(Comparator.comparing(Rental::getRentalDate));
-                break;
-            case "returnDate":
-                result.sort(Comparator.comparing(Rental::getReturnDate));
-                break;
-            case "status":
-                result.sort(Comparator.comparing(Rental::getStatus));
-                break;
-            case "totalAmount":
-                result.sort(Comparator.comparing(Rental::getTotalAmount));
-                break;
-            case "lateFee":
-                result.sort(Comparator.comparing(Rental::getLateFee));
-                break;
-            default:
-                result.sort(Comparator.comparing(Rental::getId));
-                break;
+
+        int index = 0;
+        if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Rental::getId));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Rental::getMovieId));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Rental::getStaffID));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Rental::getCustomerID));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Rental::getDueDate));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Rental::getRentalDate));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Rental::getReturnDate));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Rental::getStatus));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Rental::getTotalAmount));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Rental::getLateFee));
+        } else {
+            result.sort(Comparator.comparing(Rental::getId)); // Default case
         }
         return result;
     }

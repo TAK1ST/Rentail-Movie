@@ -31,13 +31,8 @@ public class Actor extends Model {
         return String.format("Actor: %s, %s, %s, %s.", super.getId(), actorName, rank, description);
     }
 
-    public static String className() {
-        return "Actor";
-    }
-    
-    @Override
-    public String[] getSearchOptions() {
-        return new String[] {"actor_id", "actor_name", "actor_rank", "actor_description"};
+    public static String[] getAttributes() {
+        return new String[] {"Actor", "Id", "Name", "Rank", "Description"};
     }
 
     public String getActorName() {

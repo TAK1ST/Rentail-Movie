@@ -66,14 +66,9 @@ public class Discount extends Model {
                 isActive, 
                 value);
     }
-
-    public static String className() {
-        return "Discount";
-    }
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"discount_code", "customer_id", "discount_type", "discount_value", "start_date", "end_date", "quantity", "is_active"};
+     
+    public static String[] getAttributes() {
+        return new String[] {"Discount", "Code", "Customer Id", "Type", "Value", "Start date", "End date", "Quantity", "Status"};
     }
 
     public String getCode() {

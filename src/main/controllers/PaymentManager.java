@@ -17,7 +17,7 @@ import static main.utils.Utility.getEnumValue;
 public class PaymentManager extends ListManager<Payment> {
 
     public PaymentManager() {
-        super(Payment.className());
+        super(Payment.getAttributes());
         list = PaymentDAO.getAllPayments();
     }
 
@@ -84,19 +84,18 @@ public class PaymentManager extends ListManager<Payment> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Payment.getAttributes();
         List<Payment> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "rentalId":
-                result.sort(Comparator.comparing(Payment::getRentalId));
-                break;
-            case "paymentMethod":
-                result.sort(Comparator.comparing(Payment::getMethod));
-                break;
-            default:
-                result.sort(Comparator.comparing(Payment::getRentalId));
-                break;
+
+        int index = 0;
+        if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Payment::getRentalId));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Payment::getMethod));
+        } else {
+            result.sort(Comparator.comparing(Payment::getRentalId)); 
         }
+
         return result;
     }
 

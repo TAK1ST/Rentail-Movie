@@ -19,7 +19,7 @@ import static main.utils.Validator.getName;
 public class ActorManager extends ListManager<Actor> {
     
     public ActorManager() {
-        super(Actor.className());
+        super(Actor.getAttributes());
         list = ActorDAO.getAllActors();
     }
     
@@ -78,22 +78,19 @@ public class ActorManager extends ListManager<Actor> {
         if (checkNull(list)) {
             return null;
         }
+        String[] options = Actor.getAttributes();
+        List<Actor> result = new ArrayList<>(tempList);
 
-        List<Actor> result = new ArrayList<>(list);
-            switch (property) {
-                case "actorName":
-                    result.sort(Comparator.comparing(Actor::getActorName));
-                    break;
-                case "rank":
-                    result.sort(Comparator.comparing(Actor::getRank));
-                    break;
-                case "description":
-                    result.sort(Comparator.comparing(Actor::getDescription));
-                    break;
-                default:
-                    result.sort(Comparator.comparing(Actor::getId));
-                    break;
-            }
+        int index = 0;
+        if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Actor::getActorName));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Actor::getRank));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Actor::getDescription));
+        } else {
+            result.sort(Comparator.comparing(Actor::getId));
+        }
         return result;
     }
     

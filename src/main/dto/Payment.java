@@ -23,15 +23,10 @@ public class Payment extends Model {
     @Override
     public String toString() {
         return String.format("Payment: %s, %s.", this.getRentalId(), method);
-    }
-
-    public static String className() {
-        return "Payment";
-    }    
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"rental_id", "payment_method", "payment_date"};
+    }  
+     
+    public static String[] getAttributes() {
+        return new String[] {"Payment", "Id", "Method"};
     }
     
     public String getRentalId() {

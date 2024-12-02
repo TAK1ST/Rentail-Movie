@@ -69,4 +69,14 @@ public class Utility {
         }
     }
     
+    public static String truncateString(String str, int maxLength) {
+        if (str == null) {
+            return "";
+        }
+        if (str.length() > maxLength) {
+            return str.substring(0, maxLength - 3) + "...";
+        }
+        return str;
+    }
+    
 }

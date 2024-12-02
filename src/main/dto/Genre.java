@@ -24,13 +24,9 @@ public class Genre extends Model {
         return String.format("Genre: %s, %s.", this.getGenreName(), description);
     }
     
-    public static String className() {
-        return "Genre";
-    }
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"genre_name", "description"};
+      
+    public static String[] getAttributes() {
+        return new String[] {"Genre", "Name", "Description"};
     }
 
     public String getGenreName() {

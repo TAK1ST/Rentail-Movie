@@ -26,32 +26,8 @@ import static main.utils.Validator.getUsername;
 public class AccountManager extends ListManager<Account> {
 
     public AccountManager() {
-        super(Account.className());
+        super(Account.getAttributes());
         list = AccountDAO.getAllAccounts();
-        setAdmin();
-    }
-
-    private void setAdmin() {
-        if (!list.isEmpty()) {
-            for (Account item : list) {
-                if (item.getRole() == AccRole.ADMIN) {
-                    return;
-                }
-            }
-        }
-        list.add(new Account(
-                IDGenerator.DEFAULT_ADMIN_ID,
-                "admin",
-                "1",
-                "admin@gmail.com",
-                AccRole.ADMIN,
-                AccStatus.OFFLINE,
-                null,
-                null,
-                null,
-                100
-        ));
-        AccountDAO.addAccountToDB(list.getLast()); 
     }
 
     public boolean registorAccount() {
@@ -88,7 +64,7 @@ public class AccountManager extends ListManager<Account> {
         return AccountDAO.addAccountToDB(list.getLast());
     }
 
-    public boolean addAccount(AccRole registorRole) {
+    public boolean addAccount() {
 
         String username = getUsername("Enter username", false, list);
         if (username.isEmpty()) return false;
@@ -99,7 +75,7 @@ public class AccountManager extends ListManager<Account> {
         String email = getEmail("Enter your email", false);
         if (email.isEmpty()) return false;
         
-        AccRole role = (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole;
+        AccRole role = (AccRole)getEnumValue("Choose a role", AccRole.class, false);
         String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), role);
 
         list.add(new Account(
@@ -112,13 +88,12 @@ public class AccountManager extends ListManager<Account> {
                 LocalDate.now(),
                 null,
                 LocalDate.now(),
-                100
+                role != AccRole.ADMIN ? 100 : 0
         ));
         if (AccountDAO.addAccountToDB(list.getLast())) {
             if (list.getLast().getRole() == AccRole.ADMIN) {
                 return true;
             }
-
             if (!getPFM().addProfile(id)) {
                 errorLog("Cannot registor info");
                 return false;
@@ -128,17 +103,11 @@ public class AccountManager extends ListManager<Account> {
         return false;
     }
 
-    public boolean updateAccount(String accountID) {
+    public boolean updateAccount() {
         if (checkNull(list)) {
             return false;
         }
-
-        Account foundAccount;
-        if (accountID.isEmpty()) {
-            foundAccount = (Account) getById("Enter user's id");
-        } else {
-            foundAccount = (Account) searchById(accountID);
-        }
+        Account foundAccount = (Account) getById("Enter user's id");
         if (checkNull(foundAccount)) {
             return false;
         }
@@ -211,21 +180,30 @@ public class AccountManager extends ListManager<Account> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Account.getAttributes();
         List<Account> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "username": result.sort(Comparator.comparing(Account::getUsername)); break;
-            case "password": result.sort(Comparator.comparing(Account::getPassword)); break;
-            case "email": result.sort(Comparator.comparing(Account::getEmail)); break;
-            case "role": result.sort(Comparator.comparing(Account::getRole)); break;
-            case "status": result.sort(Comparator.comparing(Account::getStatus)); break;
-            case "createAt": result.sort(Comparator.comparing(Account::getCreateAt)); break;
-            case "updateAt": result.sort(Comparator.comparing(Account::getUpdateAt)); break;
-            case "onlineAt": result.sort(Comparator.comparing(Account::getOnlineAt)); break;
-            default: 
-                result.sort(Comparator.comparing(Account::getId));
-                break;
+
+        int index = 0;
+        if (property.equals(options[++index])) { 
+            result.sort(Comparator.comparing(Account::getUsername));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Account::getPassword));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Account::getEmail));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Account::getRole));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Account::getStatus));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Account::getCreateAt));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Account::getUpdateAt));
+        } else if (property.equals(options[++index])) {
+            result.sort(Comparator.comparing(Account::getOnlineAt));
+        } else {
+            result.sort(Comparator.comparing(Account::getId));
         }
+
         return result;
     }
 

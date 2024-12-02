@@ -1,6 +1,7 @@
 package main.base;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import static main.utils.Input.getString;
@@ -14,10 +15,10 @@ public abstract class ListManager<T extends Model> {
     public List<T> list = new ArrayList<>();
     
     private boolean isNotSaved = false;
-    private final String className;
+    private final String[] attributes;
 
-    public ListManager(String className) {
-        this.className = className;
+    public ListManager(String[] attributes) {
+        this.attributes = attributes;
         this.isNotSaved = false;
     }
     
@@ -50,7 +51,7 @@ public abstract class ListManager<T extends Model> {
     }
     
     public void search() {
-        display(getBy(String.format("Enter any %s's propety", className.toLowerCase())));
+        display(getBy(String.format("Enter any %s's propety", attributes[0].toLowerCase())));
     }
 
     public List<T> getBy(String message) {
@@ -65,7 +66,7 @@ public abstract class ListManager<T extends Model> {
         if (item != null) {
             return false;
         }
-        infoLog(String.format("\nNo %s's data.\n", className));
+        infoLog(String.format("\nNo %s's data.\n", attributes[0]));
         return true;
     }
 
@@ -73,11 +74,11 @@ public abstract class ListManager<T extends Model> {
         if (!tempList.isEmpty()) {
             return false;
         }
-        infoLog(String.format("\nNo %s's data.\n", className));
+        infoLog(String.format("\nNo %s's data.\n", attributes[0]));
         return true;
     }
 
-    public void setNotSave() {
+    public void setSave(boolean saving) {
         isNotSaved = true;
     }
 
@@ -110,7 +111,7 @@ public abstract class ListManager<T extends Model> {
         List<T> temp = new ArrayList<>(tempList);
         do {
             display(temp);
-            if (yesOrNo("Sort list")) {
+            if (yesOrNo("\nSort list")) {
                 String propety = selectInfo("Sort by", options, false);
                 if (propety.isEmpty()) return;
                 
@@ -119,16 +120,16 @@ public abstract class ListManager<T extends Model> {
         } while(true);
     }
     
-    public void displayWithSort(List<T> tempList, T t) {
-        displayWithSort(tempList, t.getSearchOptions());
+    public void displayWithSort(List<T> tempList) {
+        displayWithSort(tempList, Arrays.copyOfRange(attributes, 1, attributes.length));
     }
     
     public void displayWithSort(String[] options) {
         displayWithSort(list, options);
     }
     
-    public void displayWithSort(T t) {
-        displayWithSort(list, t.getSearchOptions());
+    public void displayWithSort() {
+        displayWithSort(list, Arrays.copyOfRange(attributes, 1, attributes.length));
     }
     
 }

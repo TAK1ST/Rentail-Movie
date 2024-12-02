@@ -19,7 +19,7 @@ public class Account extends Model {
     private int creability;
     
     public Account() {
-    };
+    }
 
     public Account(
             String id, 
@@ -73,14 +73,20 @@ public class Account extends Model {
                 creability
         );
     }
-
-    public static String className() {
-        return "Account";
-    }
     
-    @Override
-    public String[] getSearchOptions() {
-        return new String[] {"Id", "Username", "Password", "Role", "Email", "Status", "Online at", "Created at", "Updated at", "Creability"};
+    public static String[] getAttributes() {
+        return new String[] {
+            "Account",
+            "Id", 
+            "Username", 
+            "Password", 
+            "Role", 
+            "Email", 
+            "Status", 
+            "Online at", 
+            "Created at", 
+            "Updated at", 
+            "Creability"};
     }
 
     public String getUsername() {
