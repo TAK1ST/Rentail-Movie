@@ -23,3 +23,9 @@ Rating and Feedback: Customers can rate movies on a scale of 1-5 stars and leave
 Apply Discount Codes: Users can apply discount codes during the rental transaction (e.g., percentage discount, fixed amount discount, or "Buy 1 Get 1 Free" programs).
 ### 2.6. Wishlist Management
 Add Movies to Wishlist: Users can create a wishlist and add movies to it for easy access and future rentals.
+## Authors
+- **Tran Ngoc Thien** - (https://github.com/thiengthb)
+- **Tran Anh Kiet** - (https://github.com/TAK1ST)
+- **Ngo Hoang Thai Duong** - (https://github.com/NgoHoangThaiDuong)
+## ERD
+![Movie Rental ERD](ERD_MovieRentalSystem.drawio.png)
