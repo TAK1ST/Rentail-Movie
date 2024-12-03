@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS movierentalsystemdb;
 USE movierentalsystemdb;
-
+-- drop database movierentalsystemdb;
 CREATE TABLE IF NOT EXISTS Accounts (
     account_id CHAR(8) PRIMARY KEY,
     username NVARCHAR(50) UNIQUE NOT NULL,
@@ -184,7 +184,9 @@ BEGIN
         SET NEW.is_active = FALSE;
     END IF;
 END; //
-DELIMITER;
+DELIMITER ;
+
+-- Tạo event tự động kiểm tra tài khoản BANNED sau mỗi ngày
 SET GLOBAL event_scheduler = ON;
 
 -- Kiểm tra tài khoản BANNED sau mỗi ngày
@@ -214,4 +216,5 @@ BEGIN
     )
     WHERE movie_id = NEW.movie_id;
 END; //
-DELIMITER;
+DELIMITER ;
+

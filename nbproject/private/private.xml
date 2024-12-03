@@ -3,6 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/AccountManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/Managers.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/config/Database.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/ActorManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/MovieManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/ProfileManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/RentalManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/ReviewManager.java</file>
+=======
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dto/Wishlist.java</file>
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dto/Account.java</file>
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/services/AuthenServices.java</file>
@@ -42,6 +52,7 @@
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/ActorManager.java</file>
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dto/Actor.java</file>
             <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/IDGenerator.java</file>
+>>>>>>> 52704f4a9e4dd3aac45a1c692e0f03170dbc2ced
         </group>
     </open-files>
 </project-private>

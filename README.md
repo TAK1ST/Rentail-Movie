@@ -23,6 +23,12 @@ Rating and Feedback: Customers can rate movies on a scale of 1-5 stars and leave
 Apply Discount Codes: Users can apply discount codes during the rental transaction (e.g., percentage discount, fixed amount discount, or "Buy 1 Get 1 Free" programs).
 ### 2.6. Wishlist Management
 Add Movies to Wishlist: Users can create a wishlist and add movies to it for easy access and future rentals.
+
+## Technologies Used
+Java – for backend API development.
+MySQL – for database management.
+Docker – for containerization of the application and database.
+
 ## Authors
 - **Tran Ngoc Thien** - (https://github.com/thiengthb)
 - **Tran Anh Kiet** - (https://github.com/TAK1ST)
