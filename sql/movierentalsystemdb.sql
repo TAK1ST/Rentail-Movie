@@ -203,4 +203,18 @@ BEGIN
 END; //
 DELIMITER ;
 
+DELIMITER //
+CREATE TRIGGER update_avg_rating
+AFTER INSERT ON Reviews
+FOR EACH ROW
+BEGIN
+    UPDATE Movies
+    SET avg_rating = (
+        SELECT AVG(rating) 
+        FROM Reviews 
+        WHERE movie_id = NEW.movie_id
+    )
+    WHERE movie_id = NEW.movie_id;
+END; //
+DELIMITER ;
 
