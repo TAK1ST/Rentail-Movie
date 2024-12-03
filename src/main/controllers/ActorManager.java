@@ -11,6 +11,7 @@ import main.constants.IDPrefix;
 import main.dao.ActorDAO;
 import main.dto.Actor;
 import main.utils.IDGenerator;
+import main.utils.InfosTable;
 import static main.utils.Input.getString;
 import static main.utils.Utility.getEnumValue;
 import static main.utils.Validator.getName;
@@ -19,7 +20,7 @@ import static main.utils.Validator.getName;
 public class ActorManager extends ListManager<Actor> {
     
     public ActorManager() {
-        super(Actor.getAttributes());
+        super(Actor.className(), Actor.getAttributes());
         list = ActorDAO.getAllActors();
     }
     
@@ -81,12 +82,11 @@ public class ActorManager extends ListManager<Actor> {
         String[] options = Actor.getAttributes();
         List<Actor> result = new ArrayList<>(tempList);
 
-        int index = 0;
-        if (property.equals(options[++index])) {
+        if (property.equals(options[0])) {
             result.sort(Comparator.comparing(Actor::getActorName));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[1])) {
             result.sort(Comparator.comparing(Actor::getRank));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[2])) {
             result.sort(Comparator.comparing(Actor::getDescription));
         } else {
             result.sort(Comparator.comparing(Actor::getId));
@@ -106,33 +106,31 @@ public class ActorManager extends ListManager<Actor> {
     }
     
     @Override
-    public void display(List<Actor> tempList) {
+    public void show(List<Actor> tempList) {
         if (checkNull(tempList)) { 
             return;
         } 
         
-        int actorL = "Name".length();
-        int descriptL = "Description".length();
-        for (Actor item : list) {
-            actorL = Math.max(actorL, item.getActorName().length());
-            descriptL = Math.max(descriptL, item.getDescription().length());
-        }
+        InfosTable.getTitle(Actor.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getId(), 
+                        item.getActorName(), 
+                        item.getRank(), 
+                        item.getDescription()
+                )
+        );
         
-        int widthLength = 8 + actorL + 5 + descriptL + 13;
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + actorL + "s | %-5s | %-" + descriptL + "s |\n",
-                "ID", "Name", "Rank" , "Description");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Actor item : tempList) {
-            System.out.printf("\n| %-8s | %-" + actorL + "s | %-5s | %-" + descriptL + "s |",
-                    item.getId(),
-                    item.getActorName(),
-                    item.getRank(),
-                    item.getDescription());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getId(), 
+                        item.getActorName(), 
+                        item.getRank(), 
+                        item.getDescription()
+                )
+        );
+        InfosTable.showFooter();
     }
    
 }

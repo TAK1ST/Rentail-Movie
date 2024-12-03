@@ -8,6 +8,7 @@ import java.util.List;
 import main.base.ListManager;
 import main.dao.LanguageDAO;
 import main.dto.Language;
+import main.utils.InfosTable;
 import static main.utils.Input.getString;
 import static main.utils.Validator.getName;
 
@@ -15,7 +16,7 @@ import static main.utils.Validator.getName;
 public class LanguageManager extends ListManager<Language> {
     
     public LanguageManager() {
-        super(Language.getAttributes());
+        super(Language.className(), Language.getAttributes());
         list = LanguageDAO.getAllLanguages();
     }
 
@@ -79,9 +80,9 @@ public class LanguageManager extends ListManager<Language> {
         List<Language> result = new ArrayList<>(tempList);
 
         int index = 0;
-        if (property.equals(options[++index])) {
+        if (property.equals(options[1])) {
             result.sort(Comparator.comparing(Language::getCode));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[2])) {
             result.sort(Comparator.comparing(Language::getName));
         } else {
             result.sort(Comparator.comparing(Language::getCode));
@@ -90,28 +91,26 @@ public class LanguageManager extends ListManager<Language> {
     }
  
     @Override
-    public void display(List<Language> tempList) {
+    public void show(List<Language> tempList) {
         if (checkNull(tempList)) {
             return;
         } 
         
-        int nameL = "Language name".length();
-        for (Language item : list) {
-            nameL = Math.max(nameL, item.getName().length());
-        }
+        InfosTable.getTitle(Language.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getCode(),
+                        item.getName()
+                )
+        );
         
-        int widthLength = 4 + nameL + 7;
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-4s | %-" + nameL + "s |\n",
-                "Code", "Language name");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Language item : tempList) {
-        System.out.printf("\n| %-4s | %-" + nameL + "s |",
-                    item.getCode(),
-                    item.getName());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getCode(),
+                        item.getName()
+                )
+        );
+        InfosTable.showFooter();
     }
 }

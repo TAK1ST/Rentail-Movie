@@ -5,7 +5,7 @@
 package main.utils;
 
 import java.time.LocalDate;
-import java.util.Comparator;
+import java.time.format.DateTimeFormatter;
 import static main.utils.Input.getInteger;
 import static main.utils.LogMessage.errorLog;
 
@@ -60,6 +60,12 @@ public class Utility {
         return LocalDate.parse(date, Validator.DATE);
     }
     
+    public static String formatDate(LocalDate date, DateTimeFormatter format) {
+        if (date == null) return null;
+        else 
+            return date.format(format);
+    }
+    
     public static int toInt(String input) {
         try {
             return Integer.parseInt(input);
@@ -67,16 +73,6 @@ public class Utility {
             errorLog("Can not convert to Number");
             return Integer.MIN_VALUE;
         }
-    }
-    
-    public static String truncateString(String str, int maxLength) {
-        if (str == null) {
-            return "";
-        }
-        if (str.length() > maxLength) {
-            return str.substring(0, maxLength - 3) + "...";
-        }
-        return str;
     }
     
 }

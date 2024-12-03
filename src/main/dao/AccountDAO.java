@@ -108,7 +108,7 @@ public class AccountDAO {
                     haveDefaultAdmin = true;
                 }
                 
-                String username = rs.getString("account_id");
+                String username = rs.getString("username");
                 if (rs.getString("username").equals("admin") 
                     && !rs.getString("account_id").equals(IDGenerator.DEFAULT_ADMIN_ID)) 
                 {

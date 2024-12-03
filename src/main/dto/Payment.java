@@ -22,11 +22,24 @@ public class Payment extends Model {
 
     @Override
     public String toString() {
-        return String.format("Payment: %s, %s.", this.getRentalId(), method);
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s.",
+                className(),
+                attr[count++], this.getRentalId(),
+                attr[count++], method
+        );
     }  
      
+    public static String className() {
+        return "Payment";
+    }
+    
     public static String[] getAttributes() {
-        return new String[] {"Payment", "Id", "Method"};
+        return new String[] {"Id", "Method"};
     }
     
     public String getRentalId() {

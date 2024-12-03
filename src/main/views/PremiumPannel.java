@@ -31,7 +31,7 @@ public class PremiumPannel {
                 new Menu.MenuOption("Update profile", 
                         () -> getACM().updateAccount(), ASK_FOR_AGAIN),
                 new Menu.MenuOption("Display movie list", 
-                        () -> getMVM().display(), ENTER_TO_CONTINUE),
+                        () -> getMVM().display(true), ENTER_TO_CONTINUE),
                 new Menu.MenuOption("Search movie", 
                         () -> getMVM().search(), ASK_FOR_AGAIN),
                 new Menu.MenuOption("Rent movie", 

@@ -1,4 +1,3 @@
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -15,6 +14,7 @@ import main.dto.Actor;
 import main.dto.Genre;
 import main.dto.Language;
 import main.dto.Movie;
+import main.dto.Profile;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.infoLog;
 import static main.utils.Utility.toInt;
@@ -128,7 +128,7 @@ public class Input {
         System.out.println("\n" + message + ": ");
         for (int index = 0; index < infoLists.length; index++) {
                 if (index % 4 == 0) System.out.println();
-                System.out.printf("%2d. %-25s ", index, infoLists[index]);
+                System.out.printf("[%02d] %-25s ", index, infoLists[index]);
         }
         System.out.println("\n");
         if (!enterToPass) {
@@ -141,7 +141,7 @@ public class Input {
     }
     
     public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager, boolean enterToPass) {
-        manager.display();
+        manager.display(false);
         String temps = "";
 
         String input = getString(message, enterToPass);
@@ -160,49 +160,47 @@ public class Input {
         return temps;
     }
     
-    public static <T extends Model> List<String> returnNames(String stringList, ListManager<T> manager) {
-        List<String> result = new ArrayList<>();
-
-        String[] ids = stringList.split(",");
-
+    public static <T extends Model> String[] returnNames(String stringList, ListManager<T> manager) {
+        if (stringList.isEmpty() || stringList.isBlank())
+            return new String[] {};
+        
         List<T> items = manager.getList();
-
+        String[] ids = stringList.split(",");
+        
+        List<String> result = new ArrayList<>();
         for (String id : ids) {
             for (T item : items) {
                 if (item.getId().equals(id.trim())) {
-                    if (item instanceof Genre) 
-                    {
+                    if (item instanceof Genre) {
                         Genre res = (Genre) item;
                         result.add(res.getGenreName()); 
                     } 
-                    else if (item instanceof Actor) 
-                    {
+                    else if (item instanceof Actor) {
                         Actor res = (Actor) item;
                         result.add(res.getActorName()); 
                     } 
-                    else if (item instanceof Language) 
-                    {
+                    else if (item instanceof Language) {
                         Language res = (Language) item;
                         result.add(res.getName()); 
                     } 
-                    else if (item instanceof Account) 
-                    {
+                    else if (item instanceof Account) {
                         Account res = (Account) item;
                         result.add(res.getUsername()); 
                     } 
-                    else if (item instanceof Movie) 
-                    {
+                    else if (item instanceof Movie) {
                         Movie res = (Movie) item;
                         result.add(res.getTitle()); 
+                    } 
+                    else if (item instanceof Profile) {
+                        Profile res = (Profile) item;
+                        result.add(res.getFullName()); 
                     }
-                    
                     break; 
                 }
             }
         }
 
-        return result;
+        return result.toArray(new String[0]);
     }
-
 
 }

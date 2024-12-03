@@ -1,10 +1,10 @@
 package main.base;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import static main.utils.Input.getString;
+import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.selectInfo;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.infoLog;
@@ -16,8 +16,10 @@ public abstract class ListManager<T extends Model> {
     
     private boolean isNotSaved = false;
     private final String[] attributes;
+    private final String className;
 
-    public ListManager(String[] attributes) {
+    public ListManager(String className, String[] attributes) {
+        this.className = className;
         this.attributes = attributes;
         this.isNotSaved = false;
     }
@@ -51,7 +53,7 @@ public abstract class ListManager<T extends Model> {
     }
     
     public void search() {
-        display(getBy(String.format("Enter any %s's propety", attributes[0].toLowerCase())));
+        show(getBy(String.format("Enter any %s's propety", className.toLowerCase())));
     }
 
     public List<T> getBy(String message) {
@@ -66,7 +68,7 @@ public abstract class ListManager<T extends Model> {
         if (item != null) {
             return false;
         }
-        infoLog(String.format("\nNo %s's data.\n", attributes[0]));
+        infoLog(String.format("\nNo %s's data.\n", className));
         return true;
     }
 
@@ -74,7 +76,7 @@ public abstract class ListManager<T extends Model> {
         if (!tempList.isEmpty()) {
             return false;
         }
-        infoLog(String.format("\nNo %s's data.\n", attributes[0]));
+        infoLog(String.format("\nNo %s's data.\n", className));
         return true;
     }
 
@@ -90,27 +92,29 @@ public abstract class ListManager<T extends Model> {
         return list;
     }
     
-    public void display(T item, String header) {
+    public void show(T item, String header) {
         if (checkNull(item)) return;
-        if (!header.isBlank()) Menu.showHeader(header);
-        System.out.println(item);
+        if (!header.isEmpty()) Menu.showHeader(header);
+        System.out.println(item.toString());
     }
     
-    public void display(List<T> tempList) {
+    public void show(List<T> tempList) {
         if (checkNull(tempList)) return;
         tempList.forEach(item -> System.out.println(item));
     }
     
-    public void display() {
-        display(list);
+    public void show() {
+        show(list);
     }
     
-    public void displayWithSort(List<T> tempList, String[] options) {
+    public void showWithSort(List<T> tempList, String[] options) {
         if (checkNull(tempList)) return;
         
         List<T> temp = new ArrayList<>(tempList);
         do {
-            display(temp);
+            show(temp);
+            if (options == null)
+                return;
             if (yesOrNo("\nSort list")) {
                 String propety = selectInfo("Sort by", options, false);
                 if (propety.isEmpty()) return;
@@ -120,16 +124,70 @@ public abstract class ListManager<T extends Model> {
         } while(true);
     }
     
-    public void displayWithSort(List<T> tempList) {
-        displayWithSort(tempList, Arrays.copyOfRange(attributes, 1, attributes.length));
+    public void showWithGetDetail(List<T> tempList, boolean showDetail) {
+        show(tempList);
+        
+        if (!showDetail)
+            return;
+        
+        while (yesOrNo(String.format("\nDisplay %s details", className.toLowerCase()))) {
+            show(getById(String.format("Enter %s's id", className.toLowerCase())), "");
+        }
     }
     
-    public void displayWithSort(String[] options) {
-        displayWithSort(list, options);
+    public void displaySortDetail() {
+        display(list, attributes, true);
     }
     
-    public void displayWithSort() {
-        displayWithSort(list, Arrays.copyOfRange(attributes, 1, attributes.length));
+    public void display(List<T> tempList, String[] options, boolean showDetail) {
+        if (checkNull(tempList)) return;
+        
+        List<T> temp = new ArrayList<>(tempList);
+        do {
+            show(temp);
+            if (options == null)
+                return;
+            if (yesOrNo("\nSort list")) {
+                String propety = selectInfo("Sort by", options, false);
+                if (propety.isEmpty()) return;
+                
+                sortList(temp, propety);
+            } 
+            else if (yesOrNo(String.format("\nDisplay %s details", className.toLowerCase()))) {
+                show(getById(String.format("Enter %s's id", className.toLowerCase())), "");
+                pressEnterToContinue();
+            }
+            else 
+                return;
+        } while(true);
+    }
+    
+    public void display(List<T> tempList, String[] options) {
+        display(tempList, options, false);
+    }
+    
+    public void display(List<T> tempList, boolean showDetail) {
+        display(list, null, showDetail);
+    }
+    
+    public void display(String[] options, boolean showDetail) {
+        display(list, options, showDetail);
+    }
+    
+    public void display(List<T> tempList) {
+        display(tempList, null, false);
+    }
+    
+    public void display(String[] options) {
+        display(list, options, false);
+    }
+    
+    public void display(boolean showDetail) {
+        display(list, null, showDetail);
+    }
+    
+    public void display() {
+        display(list, null, false);
     }
     
 }

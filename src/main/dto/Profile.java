@@ -36,17 +36,31 @@ public class Profile extends Model {
 
     @Override
     public String toString() {
-        return String.format("User: %s, %s, %s, %s, %s, %s.",
-                super.getId(),
-                fullName,
-                phoneNumber,
-                address,
-                credit,
-                birthday.format(Validator.DATE));
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %.2f,\n"
+                + "%s: %s.",
+                className(),
+                attr[count++], this.getAccountId(),
+                attr[count++], fullName,
+                attr[count++], phoneNumber,
+                attr[count++], address,
+                attr[count++], credit,
+                attr[count++], birthday
+        );
     }
 
+    public static String className() {
+        return "Profile";
+    }
+    
     public static String[] getAttributes() {
-        return new String[] {"Profile", "Id", "Full name", "Birthday", "Address", "Phone number", "Credit"};
+        return new String[] {"Id", "Full name", "Phone number", "Address", "Credit", "Birthday"};
     }
 
 //    @Override

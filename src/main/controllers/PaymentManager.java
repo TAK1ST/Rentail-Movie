@@ -11,13 +11,14 @@ import static main.controllers.Managers.getRTM;
 import main.dao.PaymentDAO;
 import main.dto.Rental;
 import main.dto.Payment;
+import main.utils.InfosTable;
 import static main.utils.Utility.getEnumValue;
 
 
 public class PaymentManager extends ListManager<Payment> {
 
     public PaymentManager() {
-        super(Payment.getAttributes());
+        super(Payment.className(), Payment.getAttributes());
         list = PaymentDAO.getAllPayments();
     }
 
@@ -87,10 +88,9 @@ public class PaymentManager extends ListManager<Payment> {
         String[] options = Payment.getAttributes();
         List<Payment> result = new ArrayList<>(tempList);
 
-        int index = 0;
-        if (property.equals(options[++index])) {
+        if (property.equals(options[0])) {
             result.sort(Comparator.comparing(Payment::getRentalId));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[1])) {
             result.sort(Comparator.comparing(Payment::getMethod));
         } else {
             result.sort(Comparator.comparing(Payment::getRentalId)); 
@@ -100,23 +100,26 @@ public class PaymentManager extends ListManager<Payment> {
     }
 
     @Override
-    public void display(List<Payment> tempList) {
+    public void show(List<Payment> tempList) {
         if (checkNull(tempList)) {
             return;
         }
 
-        int widthLength = 8 + 7 + 7;
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-7s |\n",
-                "ID", "Method");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Payment item : tempList) {
-            System.out.printf("\n| %-8s | %-7s |",
-                    item.getRentalId(),
-                    item.getMethod());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.getTitle(Payment.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getRentalId(),
+                        item.getMethod()
+                )
+        );
+        
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getRentalId(),
+                        item.getMethod()
+                )
+        );
+        InfosTable.showFooter();
     }
 }

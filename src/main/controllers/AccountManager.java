@@ -16,6 +16,8 @@ import main.utils.IDGenerator;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.PassEncryptor.encryptPassword;
+import main.utils.InfosTable;
+import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
 import static main.utils.Validator.getEmail;
@@ -26,7 +28,7 @@ import static main.utils.Validator.getUsername;
 public class AccountManager extends ListManager<Account> {
 
     public AccountManager() {
-        super(Account.getAttributes());
+        super(Account.className(), Account.getAttributes());
         list = AccountDAO.getAllAccounts();
     }
 
@@ -157,7 +159,7 @@ public class AccountManager extends ListManager<Account> {
     }
 
     public void showMyProfile(String accountID) {
-        display(searchById(accountID), "My Profile");
+        show(searchById(accountID), "My Profile");
     }
     
     @Override
@@ -183,23 +185,24 @@ public class AccountManager extends ListManager<Account> {
         String[] options = Account.getAttributes();
         List<Account> result = new ArrayList<>(tempList);
 
-        int index = 0;
-        if (property.equals(options[++index])) { 
+        if (property.equals(options[1])) { 
             result.sort(Comparator.comparing(Account::getUsername));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[2])) {
             result.sort(Comparator.comparing(Account::getPassword));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[3])) {
             result.sort(Comparator.comparing(Account::getEmail));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[4])) {
             result.sort(Comparator.comparing(Account::getRole));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[5])) {
             result.sort(Comparator.comparing(Account::getStatus));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[6])) {
             result.sort(Comparator.comparing(Account::getCreateAt));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[7])) {
             result.sort(Comparator.comparing(Account::getUpdateAt));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[8])) {
             result.sort(Comparator.comparing(Account::getOnlineAt));
+        } else if (property.equals(options[9])) {
+            result.sort(Comparator.comparing(Account::getCreability));
         } else {
             result.sort(Comparator.comparing(Account::getId));
         }
@@ -208,35 +211,44 @@ public class AccountManager extends ListManager<Account> {
     }
 
     @Override
-    public void display(List<Account> tempList) {
+    public void show(List<Account> tempList) {
         if (checkNull(tempList)) {
             return;
         }
+        
+        InfosTable.getTitle(Account.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getId(), 
+                        item.getUsername(),
+                        item.getPassword(),
+                        item.getEmail(),
+                        item.getRole(),
+                        item.getStatus(),
+                        formatDate(item.getCreateAt(), Validator.DATE),
+                        formatDate(item.getUpdateAt(), Validator.DATE),
+                        formatDate(item.getOnlineAt(), Validator.DATE),
+                        item.getCreability()
+                )
+        );
+        
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getId(), 
+                        item.getUsername(),
+                        item.getPassword(),
+                        item.getEmail(),
+                        item.getRole(),
+                        item.getStatus(),
+                        formatDate(item.getCreateAt(), Validator.DATE),
+                        formatDate(item.getUpdateAt(), Validator.DATE),
+                        formatDate(item.getOnlineAt(), Validator.DATE),
+                        item.getCreability()
+                )
+        );
+        InfosTable.showFooter();
 
-        int usernameL = "Username".length();
-        int emailL = "Email".length();
-        for (Account item : list) {
-            usernameL = Math.max(usernameL, item.getUsername().length());
-            emailL = Math.max(emailL, item.getEmail().length());
-        }
-        
-        int widthLength = 8 + usernameL + 8 + emailL + 8 + 16;
-        
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + usernameL + "s | %-8s | %-" + emailL+ "s | %-8s |\n",
-                "ID", "Username", "Role", "Email" , "Status");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Account item : tempList) {
-            System.out.printf("\n| %-8s | %-" + usernameL+ "s | %-8s | %-" + emailL + "s | %-8s |",
-                    item.getId(),
-                    item.getUsername(),
-                    item.getRole(),
-                    item.getEmail(),
-                    item.getStatus());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
     }
     
 }

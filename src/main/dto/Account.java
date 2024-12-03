@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import main.base.Model;
 import main.constants.AccRole;
 import main.constants.AccStatus;
+import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
 public class Account extends Model {
@@ -60,23 +61,40 @@ public class Account extends Model {
 
     @Override
     public String toString() {
-        return String.format("Account: %s, %s, %s, %s, %s, %s, %s, %s, %s, %d.",
-                super.getId(),
-                username,
-                password,
-                email,
-                role,
-                status,
-                createAt.format(Validator.DATE),
-                updateAt.format(Validator.DATE),
-                onlineAt.format(Validator.DATE),
-                creability
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %d.",
+                className(),
+                attr[count++], super.getId(),
+                attr[count++], username,
+                attr[count++], password,
+                attr[count++], email,
+                attr[count++], role,
+                attr[count++], status,
+                attr[count++], formatDate(createAt, Validator.DATE),
+                attr[count++], formatDate(updateAt, Validator.DATE),
+                attr[count++], formatDate(onlineAt, Validator.DATE),
+                attr[count++], creability
         );
+    }
+    
+    public static String className() {
+        return "Account";
     }
     
     public static String[] getAttributes() {
         return new String[] {
-            "Account",
             "Id", 
             "Username", 
             "Password", 

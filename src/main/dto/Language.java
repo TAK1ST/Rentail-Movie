@@ -21,11 +21,24 @@ public class Language extends Model {
 
     @Override
     public String toString() {
-        return String.format("Language: %s, %s.", this.getCode(), name);
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s.",
+                className(),
+                attr[count++], this.getCode(),
+                attr[count++], name
+        );
     }
 
+    public static String className() {
+        return "Language";
+    }
+    
     public static String[] getAttributes() {
-        return new String[] {"Language", "Code", "Language name"};
+        return new String[] {"Code", "Language name"};
     }
 
     public String getCode() {

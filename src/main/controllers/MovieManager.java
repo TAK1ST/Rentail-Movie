@@ -15,12 +15,13 @@ import static main.controllers.Managers.getLGM;
 import static main.dao.MiddleTableDAO.addDataToMidTable;
 import main.dao.MovieDAO;
 import main.utils.IDGenerator;
+import main.utils.InfosTable;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.Input.returnNames;
 import static main.utils.Input.selectByNumbers;
-import static main.utils.Utility.truncateString;
+import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
 
@@ -28,7 +29,7 @@ import static main.utils.Validator.getDate;
 public class MovieManager extends ListManager<Movie> {
 
     public MovieManager() {
-        super(Movie.getAttributes());
+        super(Movie.className(), Movie.getAttributes());
         list = MovieDAO.getAllMovies();
     }
 
@@ -166,21 +167,21 @@ public class MovieManager extends ListManager<Movie> {
         List<Movie> result = new ArrayList<>(tempList);
 
         int index = 0;
-        if (property.equals(options[++index])) {
+        if (property.equals(options[0])) {
             result.sort(Comparator.comparing(Movie::getTitle));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[1])) {
             result.sort(Comparator.comparing(Movie::getDescription));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[2])) {
             result.sort(Comparator.comparing(Movie::getAvgRating));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[3])) {
             result.sort(Comparator.comparing(Movie::getReleaseYear));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[4])) {
             result.sort(Comparator.comparing(Movie::getRentalPrice));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[5])) {
             result.sort(Comparator.comparing(Movie::getAvailableCopies));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[6])) {
             result.sort(Comparator.comparing(Movie::getCreateDate));
-        } else if (property.equals(options[++index])) {
+        } else if (property.equals(options[7])) {
             result.sort(Comparator.comparing(Movie::getUpdateDate));
         } else {
             result.sort(Comparator.comparing(Movie::getId)); // Default case
@@ -189,59 +190,48 @@ public class MovieManager extends ListManager<Movie> {
     }
     
     @Override
-    public void display(List<Movie> tempList) {
+    public void show(List<Movie> tempList) {
         if (checkNull(tempList)) {
             return;
         }
-        
-        int genresL = "Genres".length();
-        int actorsL = "Actors".length();
-        int languagesL = "Languages".length();
-        int titleL = "Title".length();
-        int descriptL = "Description".length();
-    
-        for (Movie item : tempList) {
-            String genres = item.getGenreNames() != null ? String.join(", ", returnNames(item.getGenreNames(), getGRM())) : null;
-            String actors = item.getActorIDs() != null ? String.join(", ", returnNames(item.getActorIDs(), getATM())) : null;
-            String languages = item.getLanguageCodes() != null ? String.join(", ", returnNames(item.getLanguageCodes(), getLGM())) : null;
             
-            genresL =  genres != null ? Math.max(genresL, genres.length()) : genresL;
-            actorsL = actors != null ? Math.max(actorsL, actors.length()) : actorsL;
-            languagesL = languages != null ? Math.max(languagesL, languages.length()) : languagesL;
-            titleL = Math.max(titleL, item.getTitle().length());
-            descriptL = Math.max(descriptL, item.getDescription().length());
-        }
+        InfosTable.getTitle(Movie.getAttributes());
         
-        genresL = genresL > 40 ? 40 : genresL;
-        actorsL = actorsL > 40 ? 40 : actorsL;
-        languagesL = languagesL > 40 ? 40 : languagesL;
-        descriptL = descriptL > 40 ? 40 : descriptL;
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getId(),
+                        item.getTitle(),
+                        String.join(", ", returnNames(item.getGenreNames(), getGRM())),
+                        String.join(", ", returnNames(item.getActorIDs(), getATM())),
+                        String.join(", ", returnNames(item.getLanguageCodes(), getLGM())),
+                        item.getDescription(),
+                        item.getAvgRating(),
+                        formatDate(item.getReleaseYear(), Validator.YEAR),
+                        item.getRentalPrice(),
+                        item.getAvailableCopies(),
+                        formatDate(item.getCreateDate(), Validator.DATE),
+                        formatDate(item.getUpdateDate(), Validator.DATE)
+                )
+        );
         
-        int widthLength = 8 + titleL + descriptL + 6 + genresL + actorsL + languagesL + 12 + 16 + 28;
-        
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + titleL + "s | %-" + descriptL + "s | %-6s | %-" + genresL + "s | %-" + actorsL + "s | %-" + languagesL + "s | %-12s | %-16s |\n",
-                "ID", "Title", "Description", "Rating", "Genres", "Actors", "Language", "Release Year", "Available Copies");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Movie item : tempList) {
-            String genres = item.getGenreNames() != null ? String.join(", ", returnNames(item.getGenreNames(), getGRM())) : null;
-            String actors = item.getActorIDs() != null ? String.join(", ", returnNames(item.getActorIDs(), getATM())) : null;
-            String languages = item.getLanguageCodes() != null ? String.join(", ", returnNames(item.getLanguageCodes(), getLGM())) : null;
-            
-            System.out.printf("\n| %-8s | %-" + titleL + "s | %-" + descriptL + "s | %-6s | %-" + genresL + "s | %-" + actorsL + "s | %-" + languagesL + "s | %12s | %16d |",
-                    item.getId(),
-                    item.getTitle(),
-                    item.getDescription().isEmpty() ? "..." : truncateString(item.getDescription(), 40),
-                    item.getAvgRating(),
-                    genres == null ? "..." : truncateString(genres, 40),
-                    actors == null ? "..." : truncateString(actors, 40),
-                    languages == null ? "..." : truncateString(languages, 40),
-                    item.getReleaseYear().format(Validator.YEAR),
-                    item.getAvailableCopies());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getId(),
+                        item.getTitle(),
+                        String.join(", ", returnNames(item.getGenreNames(), getGRM())),
+                        String.join(", ", returnNames(item.getActorIDs(), getATM())),
+                        String.join(", ", returnNames(item.getLanguageCodes(), getLGM())),
+                        item.getDescription(),
+                        item.getAvgRating(),
+                        formatDate(item.getReleaseYear(), Validator.YEAR),
+                        item.getRentalPrice(),
+                        item.getAvailableCopies(),
+                        formatDate(item.getCreateDate(), Validator.DATE),
+                        formatDate(item.getUpdateDate(), Validator.DATE)
+                )
+        );
+        InfosTable.showFooter();
     }
    
 }

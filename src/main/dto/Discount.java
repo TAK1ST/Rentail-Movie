@@ -3,6 +3,7 @@ package main.dto;
 import java.time.LocalDate;
 import main.base.Model;
 import main.constants.DiscountType;
+import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
 public class Discount extends Model {
@@ -55,20 +56,38 @@ public class Discount extends Model {
 
     @Override
     public String toString() {
-        return String.format("Discount: %s, %s, %s, %s, %s, %s, %d, %b, %.2f.",
-                this.getCode(), 
-                customerIds,
-                movieIds,
-                startDate.format(Validator.DATE), 
-                endDate.format(Validator.DATE), 
-                type, 
-                quantity, 
-                isActive, 
-                value);
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %.2f,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %d,\n"
+                + "%s: %b.",
+                className(),
+                attr[count++], super.getId(),
+                attr[count++], customerIds,
+                attr[count++], movieIds,
+                attr[count++], type.name(),
+                attr[count++], value,
+                attr[count++], formatDate(startDate, Validator.DATE),
+                attr[count++], formatDate(endDate, Validator.DATE),
+                attr[count++], quantity,
+                attr[count++], isActive
+        );
     }
      
+    public static String className() {
+        return "Discount";
+    }
+    
     public static String[] getAttributes() {
-        return new String[] {"Discount", "Code", "Customer Id", "Type", "Value", "Start date", "End date", "Quantity", "Status"};
+        return new String[] {"Code", "Customer Id", "Movie Id", "Type", "Value", "Start date", "End date", "Quantity", "Status"};
     }
 
     public String getCode() {
