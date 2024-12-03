@@ -14,6 +14,11 @@ public class Review extends Model {
     
     public Review() {
     }
+    
+    public Review(String movieID, String customerID) {
+        this.customerID = customerID;
+        this.movieID = movieID;
+    }
 
     public Review(String id, String movieID, String customerID, int rating, String reviewText, LocalDate reviewDate) {
         super(id);

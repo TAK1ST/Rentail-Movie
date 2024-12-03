@@ -9,6 +9,10 @@ public class Payment extends Model {
     
     public Payment() {
     }
+    
+    public Payment(String retalID) {
+        super(retalID); 
+    }
 
     public Payment(String retalID, PaymentMethod method) {
         super(retalID); 

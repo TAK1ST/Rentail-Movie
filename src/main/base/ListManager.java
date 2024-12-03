@@ -24,6 +24,7 @@ public abstract class ListManager<T extends Model> {
         this.isNotSaved = false;
     }
     
+    public abstract T getInputs(boolean[] options, T oldData);
     public abstract List<T> sortList(List<T> tempList, String propety);
     public abstract List<T> searchBy(String property);
     
@@ -40,7 +41,7 @@ public abstract class ListManager<T extends Model> {
     }
 
     public T getById(String message) {
-        return searchById(getString(message, false));
+        return searchById(getString(message, null));
     }
 
     public T searchById(String id) {
@@ -57,7 +58,7 @@ public abstract class ListManager<T extends Model> {
     }
 
     public List<T> getBy(String message) {
-        return searchBy(getString(message, false));
+        return searchBy(getString(message, null));
     }
 
     public void sortById() {

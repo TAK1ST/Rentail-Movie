@@ -1,6 +1,4 @@
-
 package main.controllers;
-
 
 import main.base.ListManager;
 import java.util.ArrayList;
@@ -13,6 +11,7 @@ import main.dto.Actor;
 import main.utils.IDGenerator;
 import main.utils.InfosTable;
 import static main.utils.Input.getString;
+import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.getEnumValue;
 import static main.utils.Validator.getName;
 
@@ -24,54 +23,73 @@ public class ActorManager extends ListManager<Actor> {
         list = ActorDAO.getAllActors();
     }
     
-    public boolean addActor() {
+    public boolean add(Actor actor) {
+        if (checkNull(actor) || checkNull(list)) return false;
         
-        String name = getName("Enter actor's name", false);
-        if (name.isEmpty()) return false;
-        
-        ActorRank rank = (ActorRank) getEnumValue("Enter actor's rank", ActorRank.class, false);
-        if (rank == ActorRank.NONE) return false;
-        
-        String description = getString("Enter actor's description", false);
-        if (description.isEmpty()) return false;
-        
-        list.add(new Actor(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.ACTOR_PREFIX), 
-                name, 
-                rank,
-                description
-        ));
+        list.add(actor);
         return ActorDAO.addActorToDB(list.getLast());
     }
 
-    public boolean updateActor() {
-        if (checkNull(list)) return false;
+    public boolean update(Actor actor) {
+        if (checkNull(actor) || checkNull(list)) return false;
 
-        Actor foundActor = (Actor)getById("Enter actor's id");
-        if (checkNull(foundActor)) return false;
-        
-        String name = getName("Enter actor's name", true);     
-        ActorRank rank = (ActorRank) getEnumValue("Enter actor's status", ActorRank.class, true);
-        String description = getString("Enter actor's description", false);
-        
-        if (!name.isEmpty()) 
-            foundActor.setActorName(name);
-        if (rank != ActorRank.NONE)
-            foundActor.setRank(rank);
-        if (description.isEmpty()) 
-            foundActor.setDescription(description);
-        
-        return ActorDAO.updateActorInDB(foundActor);
+        Actor newActor = getInputs(new boolean[] {true, true, true}, actor);
+        if (newActor != null)
+            actor = newActor;
+        else 
+            return false;
+        return ActorDAO.updateActorInDB(newActor);
     }
 
-    public boolean deleteActor() { 
-        if (checkNull(list)) return false;       
+    public boolean delete(Actor actor) { 
+        if (checkNull(actor) || checkNull(list)) return false;     
 
-        Actor foundActor = (Actor)getById("Enter actor's id");
-        if (checkNull(foundActor)) return false;
-
-        list.remove(foundActor);
-        return ActorDAO.deleteActorFromDB(foundActor.getId());
+        if (!list.remove(actor)) {
+            errorLog("Actor not found");
+            return false;
+        }
+        return ActorDAO.deleteActorFromDB(actor.getId());
+    }
+    
+    @Override
+    public Actor getInputs(boolean[] options, Actor oldData) {
+        if (options.length < 3) {
+            errorLog("Not enough option length");
+            return null;
+        }
+        
+        String actorNames = null, description = null;
+        ActorRank rank = ActorRank.NONE;
+        
+        if (oldData != null) {
+            actorNames = oldData.getActorName();
+            description = oldData.getDescription();
+            rank = oldData.getRank();
+        }
+        
+        if (options[0]) {
+            actorNames = getName("Enter genre name", actorNames);
+            if (actorNames == null) return null;
+        }
+        if (options[1]) {
+            description = getString("Enter description", description);
+            if (description == null) return null;
+        }
+        if (options[2]) {
+            rank = (ActorRank)getEnumValue("Choose actor rank", ActorRank.class, rank);
+            if (rank == ActorRank.NONE) return null;
+        }
+        
+        String id = (oldData == null) ? IDGenerator.generateID(list.isEmpty() ? null : list.getLast().getId(), IDPrefix.ACTOR_PREFIX)
+                :
+            oldData.getId();
+        
+        return new Actor(
+                id, 
+                actorNames, 
+                rank,
+                description
+        );
     }
     
     @Override

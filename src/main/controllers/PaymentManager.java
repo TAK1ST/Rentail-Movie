@@ -1,6 +1,4 @@
-
 package main.controllers;
-
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,6 +10,7 @@ import main.dao.PaymentDAO;
 import main.dto.Rental;
 import main.dto.Payment;
 import main.utils.InfosTable;
+import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.getEnumValue;
 
 
@@ -22,50 +21,63 @@ public class PaymentManager extends ListManager<Payment> {
         list = PaymentDAO.getAllPayments();
     }
 
-    public boolean addPayment(String rentalID) {
-        Rental foundRental = (Rental) getRTM().searchById(rentalID);
-        if (getRTM().checkNull(foundRental)) return false;
+    public boolean add(Payment payment) {
+         if (checkNull(payment) || checkNull(list)) return false;
         
-        PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false);
-        if (method == PaymentMethod.NONE) return false;
-        
-        list.add(new Payment(
-                rentalID, 
-                method
-        ));
+        list.add(payment);
         return PaymentDAO.addPaymentToDB(list.getLast());
     }
 
-    public boolean updatePayment() {
-        if (checkNull(list)) {
+    public boolean update(Payment payment) {
+        if (checkNull(payment) || checkNull(list)) return false;
+
+        Payment newPayment = getInputs(new boolean[] {true, true}, payment);
+        if (newPayment != null)
+            payment = newPayment;
+        else 
             return false;
-        }
-
-        Payment foundPayment = (Payment) getById("Enter payment code");
-        if (checkNull(foundPayment)) {
-            return false;
-        }
-
-        PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false);
-        if (method != PaymentMethod.NONE) {
-            foundPayment.setMethod(method);
-        }
-
-        return PaymentDAO.updatePaymentInDB(foundPayment);
+        return PaymentDAO.updatePaymentInDB(newPayment);
     }
 
-    public boolean deletePayment() {
-        if (checkNull(list)) {
+    public boolean delete(Payment payment) {
+        if (checkNull(payment) || checkNull(list)) return false;     
+
+        if (!list.remove(payment)) {
+            errorLog("Payment not found");
             return false;
         }
-
-        Payment foundPayment = (Payment) getById("Enter payment code");
-        if (checkNull(foundPayment)) {
-            return false;
+        return PaymentDAO.deletePaymentFromDB(payment.getId());
+    }
+    
+    @Override
+    public Payment getInputs(boolean[] options, Payment oldData) {
+        if (options.length < 2) {
+            errorLog("Not enough option length");
+            return null;
         }
-
-        list.remove(foundPayment);
-        return PaymentDAO.deletePaymentFromDB(foundPayment.getId());
+        Rental rental = null;
+        PaymentMethod method = PaymentMethod.NONE;
+        
+        if (oldData != null) {
+            rental = (Rental) getRTM().searchById(oldData.getId());
+            if (getRTM().checkNull(rental)) return null;
+            
+            method = oldData.getMethod();
+        }
+        
+        if (options[0] && rental == null) {
+            rental = (Rental) getRTM().getById("Enter rental's id");
+            if (getRTM().checkNull(rental)) return null;
+        }
+        if (options[1]) {
+            method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, method);
+            if (method == PaymentMethod.NONE) return null;
+        }
+        
+        return new Payment(
+                rental.getId(), 
+                method
+        );
     }
 
     @Override

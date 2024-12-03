@@ -15,6 +15,11 @@ public class Wishlist extends Model {
     
     public Wishlist() {
     }
+    
+    public Wishlist(String movieID, String customerID) {
+        this.movieID = movieID;
+        this.customerID = customerID;
+    }
 
     public Wishlist(String id, String movieID, String customerID, LocalDate addedDate, WishlistPriority priority) {
         super(id);
