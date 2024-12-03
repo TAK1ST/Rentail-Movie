@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.dao;
 
 import java.sql.Connection;
@@ -13,72 +9,70 @@ import java.util.List;
 import main.dto.Genre;
 import main.config.Database;
 
-/**
- *
- * @author trann
- */
 public class GenreDAO {
-    
+
     public static boolean addGenreToDB(Genre genre) {
         String sql = "INSERT INTO Genres (genre_name, description) VALUES (?, ?)";
         try (Connection connection = Database.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, genre.getGenreName());
-            preparedStatement.setString(2, genre.getDescription());
+            int count = 0;
+            ps.setString(++count, genre.getGenreName());
+            ps.setString(++count, genre.getDescription());
 
-            return preparedStatement.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); 
         }
         return false;
     }
-    
+
     public static boolean updateGenreInDB(Genre genre) {
         String sql = "UPDATE Genres SET description = ? WHERE genre_name = ?";
         try (Connection connection = Database.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, genre.getDescription());
-            preparedStatement.setString(2, genre.getGenreName());
-            
-            return preparedStatement.executeUpdate() > 0;
+            int count = 0;
+            ps.setString(++count, genre.getDescription());
+            ps.setString(++count, genre.getGenreName());
+
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); 
         }
         return false;
     }
-    
-    public static boolean deleteGenreFromDB(String genre_name) {
+
+    public static boolean deleteGenreFromDB(String genreName) {
         String sql = "DELETE FROM Genres WHERE genre_name = ?";
         try (Connection connection = Database.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, genre_name);
-            return preparedStatement.executeUpdate() > 0;
+            ps.setString(1, genreName);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); 
         }
         return false;
     }
-    
+
     public static List<Genre> getAllGenres() {
         String sql = "SELECT * FROM Genres";
-        List<Genre> list = new ArrayList<>();
+        List<Genre> genres = new ArrayList<>();
         try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet resultSet = ps.executeQuery()) {
 
             while (resultSet.next()) {
                 Genre genre = new Genre(
-                    resultSet.getString("genre_name"),
-                    resultSet.getString("description")
+                        resultSet.getString("genre_name"),
+                        resultSet.getString("description")
                 );
-                list.add(genre);
+                genres.add(genre);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return list;
+        return genres;
     }
 }

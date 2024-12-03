@@ -6,6 +6,7 @@ package main.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
 import main.constants.IDPrefix;
@@ -14,7 +15,6 @@ import static main.controllers.Managers.getRTM;
 import main.dao.PaymentDAO;
 import main.dto.Rental;
 import main.dto.Payment;
-import main.utils.IDGenerator;
 import static main.utils.Input.getString;
 import static main.utils.Utility.getEnumValue;
 
@@ -23,13 +23,15 @@ import static main.utils.Utility.getEnumValue;
  * @author trann
  */
 public class PaymentManager extends ListManager<Payment> {
+    
+    private static final String[] searchOptions = {"rental_id", "payment_method", "payment_date"};
 
     public PaymentManager() throws IOException {
         super(Payment.className());
         list = PaymentDAO.getAllPayments();
     }
 
-      public boolean addPayment(String rentalID) {
+    public boolean addPayment(String rentalID) {
         Rental foundRental = (Rental) getRTM().searchById(rentalID);
         if (getRTM().checkNull(foundRental)) return false;
         
@@ -37,9 +39,8 @@ public class PaymentManager extends ListManager<Payment> {
         if (method == PaymentMethod.NONE) return false;
         
         list.add(new Payment(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.PAYMENT_PREFIX), 
-                method,
-                foundRental.getId()
+                rentalID, 
+                method
         ));
         return PaymentDAO.addPaymentToDB(list.getLast());
     }
@@ -56,7 +57,7 @@ public class PaymentManager extends ListManager<Payment> {
 
         PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false);
         if (method != PaymentMethod.NONE) {
-            foundPayment.setPaymentMethods(method);
+            foundPayment.setMethod(method);
         }
 
         return PaymentDAO.updatePaymentInDB(foundPayment);
@@ -76,26 +77,38 @@ public class PaymentManager extends ListManager<Payment> {
         return PaymentDAO.deletePaymentFromDB(foundPayment.getId());
     }
 
-    public void searchPayment() {
-        display(getPaymentBy("Enter payment's propety"));
-    }
-
-    public List<Payment> getPaymentBy(String message) {
-        return searchBy(getString(message, false));
-    }
-
     @Override
     public List<Payment> searchBy(String propety) {
         List<Payment> result = new ArrayList<>();
         for (Payment item : list) {
             if (item.getId().equals(propety)
-                    || item.getPaymentMethods().name().equals(propety)) {
+                    || item.getMethod().name().equals(propety)) {
                 result.add(item);
             }
         }
         return result;
     }
 
+    @Override
+    public List<Payment> sortList(List<Payment> tempList, String property) {
+        if (checkEmpty(tempList)) {
+            return null;
+        }
+
+        List<Payment> result = new ArrayList<>(tempList);
+        switch (property) {
+            case "rentalId":
+                result.sort(Comparator.comparing(Payment::getRentalId));
+                break;
+            case "paymentMethod":
+                result.sort(Comparator.comparing(Payment::getMethod));
+                break;
+            default:
+                result.sort(Comparator.comparing(Payment::getRentalId));
+                break;
+        }
+        return result;
+    }
 
     @Override
     public void display(List<Payment> tempList) {
@@ -116,7 +129,7 @@ public class PaymentManager extends ListManager<Payment> {
 
             System.out.printf("\n| %-8s | %-7s | %-8s | \n",
                     item.getId(),
-                    item.getPaymentMethods(),
+                    item.getMethod(),
                     item.getRentalId());
         }
         System.out.println();

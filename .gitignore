@@ -1,7 +1,7 @@
 /dist/
 /build/
-/src/test/
 /lib/
-/nbproject/
+/src/test/
 .env
-
+ERD_MovieRentalSystem.drawio
+/build/

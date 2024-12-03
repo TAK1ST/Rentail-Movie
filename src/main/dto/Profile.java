@@ -1,6 +1,6 @@
 package main.dto;
 
-import exceptions.MethodNotFound;
+import main.exceptions.MethodNotFound;
 import java.time.LocalDate;
 import main.base.Model;
 import static main.utils.LogMessage.errorLog;

@@ -24,7 +24,7 @@ public class RentalServices {
     
     public static void myHistoryRental(String userID) {
         List<Rental> rentalList = getRTM().searchBy(userID);
-        getRTM().display(rentalList, "My Rental History");
+        getRTM().display(rentalList);
     }
     
     public static double calculateOverdueFine(LocalDate returnDate, double movieRentalPrice) {

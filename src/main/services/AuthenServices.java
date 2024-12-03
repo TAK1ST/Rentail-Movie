@@ -9,7 +9,6 @@ import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.successLog;
 import main.utils.Menu;
-import static main.utils.PassEncryptor.validatePassword;
 import static main.utils.Validator.getPassword;
 
 public class AuthenServices {

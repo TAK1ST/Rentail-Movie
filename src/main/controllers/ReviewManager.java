@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import main.constants.IDPrefix;
 import static main.controllers.Managers.getACM;
@@ -23,7 +24,6 @@ import main.dto.Review;
 import main.utils.IDGenerator;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
-import static main.utils.Input.selectInfo;
 import static main.utils.LogMessage.errorLog;
 import main.utils.Validator;
 
@@ -33,12 +33,14 @@ import main.utils.Validator;
  */
 public final class ReviewManager extends ListManager<Review> {
 
+    private static final String[] searchOptions = {"review_id", "movie_id", "customer_id", "review_text", "rating", "review_date"};
+    
     public ReviewManager() throws IOException {
         super(Review.className());
         list = ReviewDAO.getAllReviews();
     }
 
-    public boolean makeReview(String customID) {
+    public boolean addReview(String customID) {
         List<Review> foundReview = searchBy(customID);
         for (Review item : foundReview) {
             if (item.getCustomerID().equals(customID)) {
@@ -107,13 +109,24 @@ public final class ReviewManager extends ListManager<Review> {
         list.remove(foundReview);
         return ReviewDAO.deleteReviewFromDB(foundReview.getId());
     }
+    
+    public void displayAMovieReviews() {
+        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
+        if (getMVM().checkNull(foundMovie)) {
+            return;
+        }
+        List<Review> movieReview = searchBy(foundMovie.getId());
+        if (checkEmpty(movieReview)) {
+            return;
+        }
 
-    public void searchReview() {
-        display(getReviewBy("Enter review's propety to search"));
+        display(movieReview);
     }
 
-    public List<Review> getReviewBy(String message) {
-        return searchBy(getString(message, false));
+    public void myReviews(String customID) {
+        List<Review> movieReview = searchBy(customID);
+
+        displayWithSort(movieReview, searchOptions);
     }
 
     @Override
@@ -133,44 +146,38 @@ public final class ReviewManager extends ListManager<Review> {
         return result;
     }
 
-    public void sortBy(String propety) {
-        if (checkEmpty(list)) {
-            return;
+    @Override
+    public List<Review> sortList(List<Review> tempList, String property) {
+        if (checkEmpty(tempList)) {
+            return null;
         }
 
-        switch (propety) {
+        List<Review> result = new ArrayList<>(tempList);
+        switch (property) {
+            case "reviewId":
+                result.sort(Comparator.comparing(Review::getId));
+                break;
+            case "movieId":
+                result.sort(Comparator.comparing(Review::getMovieID));
+                break;
+            case "customerId":
+                result.sort(Comparator.comparing(Review::getCustomerID));
+                break;
+            case "reviewText":
+                result.sort(Comparator.comparing(Review::getReviewText));
+                break;
             case "rating":
-                Collections.sort(list, (item1, item2) -> Double.compare(item1.getRating(), item2.getRating()));
+                result.sort(Comparator.comparing(Review::getRating));
+                break;
+            case "reviewDate":
+                result.sort(Comparator.comparing(Review::getReviewDate));
                 break;
             default:
-                sortById();
+                result.sort(Comparator.comparing(Review::getId)); 
                 break;
         }
+        return result;
     }
-
-    public void displayAMovieReviews() {
-        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
-        if (getMVM().checkNull(foundMovie)) {
-            return;
-        }
-
-        List<Review> movieReviews = searchBy(foundMovie.getId());
-
-        String[] options = new String[]{"id", "rating"};
-        sortBy(selectInfo("Sort review by", options, true));
-
-        display(movieReviews);
-    }
-
-    public void myReviews(String customID) {
-        List<Review> movieReviews = searchBy(customID);
-
-        String[] options = new String[]{"id", "rating"};
-        sortBy(selectInfo("Sort review by", options, true));
-
-        display(movieReviews);
-    }
-
 
     @Override
     public void display(List<Review> tempList) {

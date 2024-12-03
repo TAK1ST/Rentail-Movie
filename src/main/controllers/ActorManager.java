@@ -3,6 +3,7 @@ package main.controllers;
 import main.base.ListManager;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import main.constants.ActorRank;
 import main.constants.IDPrefix;
@@ -18,6 +19,8 @@ import static main.utils.Validator.getName;
  * @author trann
  */
 public class ActorManager extends ListManager<Actor> {
+    
+    private static final String[] searchOptions = {"actor_id", "actor_name", "actor_rank", "actor_description"};
     
     public ActorManager() throws IOException {
         super(Actor.className());
@@ -73,13 +76,29 @@ public class ActorManager extends ListManager<Actor> {
         list.remove(foundActor);
         return ActorDAO.deleteActorFromDB(foundActor.getId());
     }
+    
+    @Override
+    public List<Actor> sortList(List<Actor> tempList, String property) {
+        if (checkEmpty(list)) {
+            return null;
+        }
 
-    public void searchActor() {
-        display(getActorBy("Enter actor's propety"));
-    }
-
-    public List<Actor> getActorBy(String message) {
-        return searchBy(getString(message, false));
+        List<Actor> result = new ArrayList<>(list);
+            switch (property) {
+                case "actorName":
+                    result.sort(Comparator.comparing(Actor::getActorName));
+                    break;
+                case "rank":
+                    result.sort(Comparator.comparing(Actor::getRank));
+                    break;
+                case "description":
+                    result.sort(Comparator.comparing(Actor::getDescription));
+                    break;
+                default:
+                    result.sort(Comparator.comparing(Actor::getId));
+                    break;
+            }
+        return result;
     }
     
     @Override
@@ -120,5 +139,5 @@ public class ActorManager extends ListManager<Actor> {
         System.out.println();
     }
    
-    }
+}
 

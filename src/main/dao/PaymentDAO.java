@@ -13,15 +13,16 @@ import main.constants.PaymentMethod;
 public class PaymentDAO {
     
     public static boolean addPaymentToDB(Payment payment) {
-        String sql = "INSERT INTO Payments (payment_id, payment_method, rental_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Payments (rental_id, payment_method) VALUES (?, ?)";
         try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            PreparedStatement ps = connection.prepareStatement(sql)) {
+            
+            int count = 0;
+            ps.setString(++count, payment.getId());
+            ps.setString(++count, payment.getMethod().name());
+            ps.setString(++count, payment.getRentalId());
 
-            preparedStatement.setString(1, payment.getId());
-            preparedStatement.setString(2, payment.getPaymentMethods().name());
-            preparedStatement.setString(3, payment.getRentalId());
-
-            return preparedStatement.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -29,28 +30,29 @@ public class PaymentDAO {
     }
     
     public static boolean updatePaymentInDB(Payment payment) {
-        String sql = "UPDATE Payments SET payment_method = ?, rental_id = ? WHERE payment_id = ?";
+        String sql = "UPDATE Payments SET payment_method = ? WHERE rental_id = ?";
         try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            
+            int count = 0;
+            ps.setString(++count, payment.getMethod().name());
+            ps.setString(++count, payment.getRentalId());
+            ps.setString(++count, payment.getId());
 
-            preparedStatement.setString(1, payment.getPaymentMethods().name());
-            preparedStatement.setString(2, payment.getRentalId());
-            preparedStatement.setString(3, payment.getId());
-
-            return preparedStatement.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
     
-    public static boolean deletePaymentFromDB(String paymentId) {
-        String sql = "DELETE FROM Payments WHERE payment_id = ?";
+    public static boolean deletePaymentFromDB(String rentalId) {
+        String sql = "DELETE FROM Payments WHERE rental_id = ?";
         try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, paymentId);
-            return preparedStatement.executeUpdate() > 0;
+            ps.setString(1, rentalId);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -61,14 +63,13 @@ public class PaymentDAO {
         String sql = "SELECT * FROM Payments";
         List<Payment> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet resultSet = ps.executeQuery()) {
 
             while (resultSet.next()) {
                 Payment payment = new Payment(
-                    resultSet.getString("payment_id"),
-                    PaymentMethod.valueOf(resultSet.getString("payment_method")),
-                    resultSet.getString("rental_id")
+                    resultSet.getString("rental_id"),
+                    PaymentMethod.valueOf(resultSet.getString("payment_method"))
                 );
                 list.add(payment);
             }

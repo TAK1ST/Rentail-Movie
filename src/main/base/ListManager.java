@@ -2,23 +2,27 @@ package main.base;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import static main.utils.Input.getString;
+import static main.utils.Input.selectInfo;
+import static main.utils.Input.yesOrNo;
+import static main.utils.LogMessage.infoLog;
 import main.utils.Menu;
-import static main.utils.Utility.extractNumber;
 
 public abstract class ListManager<T extends Model> {
 
     public List<T> list = new ArrayList<>();
-    protected boolean isNotSaved = false;
+    
+    private boolean isNotSaved = false;
     private final String className;
 
-    public ListManager(String className) throws IOException {
+    public ListManager(String className) {
         this.className = className;
         this.isNotSaved = false;
     }
 
+    public abstract List<T> sortList(List<T> tempList, String propety);
     public abstract List<T> searchBy(String property);
     
 
@@ -34,20 +38,24 @@ public abstract class ListManager<T extends Model> {
         }
         return null;
     }
+    
+    public void search() {
+        display(getBy(String.format("Enter any %s's propety", className.toLowerCase())));
+    }
+
+    public List<T> getBy(String message) {
+        return searchBy(getString(message, false));
+    }
 
     public void sortById() {
-        Collections.sort(list, (item1, item2) ->  {
-            long num1 = extractNumber(item1.getId());
-            long num2 = extractNumber(item2.getId());
-            return Long.compare(num1, num2);
-        });
+        list.sort(Comparator.comparing(Model::getId));
     }
 
     public boolean checkNull(T item) {
         if (item != null) {
             return false;
         }
-        System.out.printf("\nNo %s's data.\n", className);
+        infoLog(String.format("\nNo %s's data.\n", className));
         return true;
     }
 
@@ -55,7 +63,7 @@ public abstract class ListManager<T extends Model> {
         if (!list.isEmpty()) {
             return false;
         }
-        System.out.printf("\nNo %s's data.\n", className);
+        infoLog(String.format("\nNo %s's data.\n", className));
         return true;
     }
 
@@ -84,6 +92,20 @@ public abstract class ListManager<T extends Model> {
     
     public void displayList() {
         display(list);
+    }
+    
+    public void displayWithSort(List<T> tempList, String[] options) {
+        List<T> temp = new ArrayList<>(tempList);
+        
+        String propety = selectInfo("Sort by", options, false);
+        if (propety.isEmpty()) return;
+        
+        do {
+            display(tempList);
+            if (yesOrNo("Sort list")) {
+                sortList(temp, propety);
+            } else return;
+        } while(true);
     }
     
 }

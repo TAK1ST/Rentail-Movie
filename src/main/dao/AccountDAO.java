@@ -1,6 +1,7 @@
 package main.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,24 +12,36 @@ import main.config.Database;
 import main.constants.AccRole;
 import main.constants.AccStatus;
 
-/**
- *
- * @author kiet
- */
 public class AccountDAO {
 
     public static boolean addAccountToDB(Account account) {
-        String sql = "INSERT INTO Accounts (account_id, email, password, username, role, status) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        String sql = "INSERT INTO Accounts ("
+                + "account_id,"
+                + "username,"
+                + "password,"
+                + "email,"
+                + "role,"
+                + "status,"
+                + "online_at,"
+                + "created_at,"
+                + "updated_at"
+                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            
+            int count = 0;
+            ps.setString(++count, account.getId());
+            ps.setString(++count, account.getUsername());
+            ps.setString(++count, account.getPassword());
+            ps.setString(++count, account.getEmail());
+            ps.setString(++count, account.getRole().name());
+            ps.setString(++count, account.getStatus().name());
 
-            preparedStatement.setString(1, account.getId());
-            preparedStatement.setString(2, account.getEmail());
-            preparedStatement.setString(3, account.getPassword());
-            preparedStatement.setString(4, account.getUsername());
-            preparedStatement.setString(5, account.getRole().name());
-            preparedStatement.setString(6, account.getStatus().name());
+            ps.setDate(++count, account.getOnlineAt() != null ? Date.valueOf(account.getOnlineAt()) : null);
+            ps.setDate(++count, account.getCreateAt() != null ? Date.valueOf(account.getCreateAt()) : null);
+            ps.setDate(++count, account.getUpdateAt() != null ? Date.valueOf(account.getUpdateAt()) : null);
 
-            return preparedStatement.executeUpdate() > 0;
+
+//            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -36,29 +49,42 @@ public class AccountDAO {
     }
 
     public static boolean updateAccountInDB(Account account) {
-        String sql = "UPDATE Accounts SET email = ?, password = ?, username = ?, role = ?, status = ? WHERE account_id = ?";
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        String sql = "UPDATE Accounts SET "
+                + "username = ?,"
+                + "password = ?, "
+                + "email = ?, "
+                + "role = ?, "
+                + "status = ?,"
+                + "created_at = ?,"
+                + "updated_at = ?,"
+                + "online_at = ?, "
+                + "WHERE account_id = ?";
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            
+            int count = 0;
+            ps.setString(++count, account.getUsername());
+            ps.setString(++count, account.getPassword());
+            ps.setString(++count, account.getEmail());
+            ps.setString(++count, account.getRole().name());
+            ps.setString(++count, account.getStatus().name());
+            ps.setDate(++count, account.getCreateAt() != null ? Date.valueOf(account.getCreateAt()) : null);
+            ps.setDate(++count, account.getUpdateAt() != null ? Date.valueOf(account.getUpdateAt()) : null);
+            ps.setDate(++count, account.getOnlineAt() != null ? Date.valueOf(account.getOnlineAt()) : null);
+            ps.setString(++count, account.getId());
 
-            preparedStatement.setString(1, account.getEmail());
-            preparedStatement.setString(2, account.getPassword());
-            preparedStatement.setString(3, account.getUsername());
-            preparedStatement.setString(4, account.getRole().name());
-            preparedStatement.setString(5, account.getStatus().name());
-            preparedStatement.setString(6, account.getId());
-
-            return preparedStatement.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    public static boolean deleteAccountFromDB(String userID) {
+    public static boolean deleteAccountFromDB(String accountID) {
         String sql = "DELETE FROM Accounts WHERE account_id = ?";
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, userID);
-            return preparedStatement.executeUpdate() > 0;
+            ps.setString(1, accountID);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -68,7 +94,7 @@ public class AccountDAO {
     public static List<Account> getAllAccounts() {
         String sql = "SELECT * FROM Accounts";
         List<Account> list = new ArrayList<>();
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet resultSet = ps.executeQuery()) {
 
             while (resultSet.next()) {
                 Account account = new Account(
@@ -77,7 +103,11 @@ public class AccountDAO {
                         resultSet.getString("password"),
                         resultSet.getString("email"),
                         AccRole.valueOf(resultSet.getString("role")),
-                        AccStatus.valueOf(resultSet.getString("status"))
+                        AccStatus.valueOf(resultSet.getString("status")),
+                        resultSet.getDate("created_at") != null ? resultSet.getDate("created_at").toLocalDate() : null,
+                        resultSet.getDate("updated_at") != null ? resultSet.getDate("updated_at").toLocalDate() : null,
+                        resultSet.getDate("online_at") != null ? resultSet.getDate("online_at").toLocalDate() : null
+
                 );
                 list.add(account);
             }
@@ -89,10 +119,10 @@ public class AccountDAO {
 
     public static boolean updatePasswordInDB(String accountID, String newPassword) {
         String sql = "UPDATE Accounts SET password = ? WHERE account_id = ?";
-        try (Connection connection = Database.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, newPassword);
-            preparedStatement.setString(2, accountID);
-            return preparedStatement.executeUpdate() > 0;
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setString(2, accountID);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }

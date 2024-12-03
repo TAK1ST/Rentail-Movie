@@ -1,6 +1,6 @@
 package main.dto;
 
-import exceptions.MethodNotFound;
+import main.exceptions.MethodNotFound;
 import main.base.Model;
 import main.constants.PaymentMethod;
 import static main.utils.LogMessage.errorLog;
@@ -55,11 +55,11 @@ public class Payment extends Model {
         super.setId(id);
     }
 
-    public PaymentMethod getPaymentMethods() {
+    public PaymentMethod getMethod() {
         return method;
     }
 
-    public void setPaymentMethods(PaymentMethod method) {
+    public void setMethod(PaymentMethod method) {
         this.method = method;
     }
     
