@@ -16,14 +16,17 @@ import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Wishlist;
 import main.utils.IDGenerator;
+import main.utils.InfosTable;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
+import main.utils.Validator;
 
 
 public class WishlistManager extends ListManager<Wishlist> {
 
     public WishlistManager() {
-        super(Wishlist.className());
+        super(Wishlist.className(), Wishlist.getAttributes());
         list = WishlistDAO.getAllWishlists();
     }
 
@@ -123,63 +126,53 @@ public class WishlistManager extends ListManager<Wishlist> {
             return null;
         }
 
+        String[] options = Wishlist.getAttributes(); 
         List<Wishlist> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "wishlistId":
-                result.sort(Comparator.comparing(Wishlist::getId));
-                break;
-            case "customerId":
-                result.sort(Comparator.comparing(Wishlist::getCustomerId));
-                break;
-            case "movieId":
-                result.sort(Comparator.comparing(Wishlist::getMovieId));
-                break;
-            case "addedDate":
-                result.sort(Comparator.comparing(Wishlist::getAddedDate));
-                break;
-            case "priority":
-                result.sort(Comparator.comparing(Wishlist::getPriority));
-                break;
-            default:
-                result.sort(Comparator.comparing(Wishlist::getId));
-                break;
+
+        if (property.equals(options[0])) {
+            result.sort(Comparator.comparing(Wishlist::getId));
+        } else if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Wishlist::getCustomerId));
+        } else if (property.equals(options[2])) {
+            result.sort(Comparator.comparing(Wishlist::getMovieId));
+        } else if (property.equals(options[3])) {
+            result.sort(Comparator.comparing(Wishlist::getAddedDate));
+        } else if (property.equals(options[4])) {
+            result.sort(Comparator.comparing(Wishlist::getPriority));
+        } else {
+            result.sort(Comparator.comparing(Wishlist::getId));
         }
         return result;
     }
 
     @Override
-    public void display(List<Wishlist> tempList) {
+    public void show(List<Wishlist> tempList) {
         if (checkNull(list)) {
             return;
         }
 
-        int customerL = "Customer".length();
-        int movieL = "Movie Title".length();
-        for (Wishlist item : tempList) {
-            Account foundAccount = (Account) getACM().searchById(item.getCustomerId());
-            Movie foundMovie = (Movie) getMVM().getById(item.getMovieId());
-            
-            customerL = Math.max(customerL, foundAccount.getUsername().length());
-            movieL = Math.max(movieL, foundMovie.getTitle().length());
-        }
+        InfosTable.getTitle(Wishlist.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getId(), 
+                        item.getMovieId(),
+                        item.getCustomerId(),
+                        formatDate(item.getAddedDate(), Validator.DATE),
+                        item.getPriority()
+                )
+        );
         
-        int widthLength = 8 + movieL + customerL + 10 + 8 + 16;
-        
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + movieL + "s | %-" + customerL + "s | %-10s | %-8s |\n",
-                "ID", "Movie Titlte", "Customer", "Added Date", "Priority");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Wishlist item : tempList) {
-            System.out.printf("\n| %-8s | %-" + movieL + "s | %-" + customerL + "s | %-10s | %-8s |",
-                    item.getId(),
-                    item.getMovieId(),
-                    item.getCustomerId(),
-                    item.getAddedDate(),
-                    item.getPriority().name());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getId(), 
+                        item.getMovieId(),
+                        item.getCustomerId(),
+                        formatDate(item.getAddedDate(), Validator.DATE),
+                        item.getPriority()
+                )
+        );
+        InfosTable.showFooter();
     }
 
 }

@@ -10,8 +10,10 @@ import static main.controllers.Managers.getACM;
 import main.dao.ProfileDAO;
 import main.dto.Account;
 import main.dto.Profile;
+import main.utils.InfosTable;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getString;
+import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
 import static main.utils.Validator.getName;
@@ -21,7 +23,7 @@ import static main.utils.Validator.getPhoneNumber;
 public class ProfileManager extends ListManager<Profile> {
       
     public ProfileManager() {
-        super(Profile.className());
+        super(Profile.className(), Profile.getAttributes());
         list = ProfileDAO.getAllProfiles();
     }
 
@@ -109,63 +111,56 @@ public class ProfileManager extends ListManager<Profile> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Profile.getAttributes();
         List<Profile> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "accountId":
-                result.sort(Comparator.comparing(Profile::getAccountId));
-                break;
-            case "fullName":
-                result.sort(Comparator.comparing(Profile::getFullName));
-                break;
-            case "birthday":
-                result.sort(Comparator.comparing(Profile::getBirthday));
-                break;
-            case "address":
-                result.sort(Comparator.comparing(Profile::getAddress));
-                break;
-            case "phoneNumber":
-                result.sort(Comparator.comparing(Profile::getPhoneNumber));
-                break;
-            case "credit":
-                result.sort(Comparator.comparing(Profile::getCredit));
-                break;
-            default:
-                result.sort(Comparator.comparing(Profile::getAccountId)); // Default to accountId
-                break;
+
+        if (property.equals(options[0])) {
+            result.sort(Comparator.comparing(Profile::getAccountId));
+        } else if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Profile::getFullName));
+        } else if (property.equals(options[2])) {
+            result.sort(Comparator.comparing(Profile::getBirthday));
+        } else if (property.equals(options[3])) {
+            result.sort(Comparator.comparing(Profile::getAddress));
+        } else if (property.equals(options[4])) {
+            result.sort(Comparator.comparing(Profile::getPhoneNumber));
+        } else if (property.equals(options[5])) {
+            result.sort(Comparator.comparing(Profile::getCredit));
+        } else {
+            result.sort(Comparator.comparing(Profile::getAccountId)); // Default case
         }
         return result;
     }
     
     @Override
-    public void display(List<Profile> tempList) {
+    public void show(List<Profile> tempList) {
         if (checkNull(tempList)) {
             return;
         } 
         
-        int nameL = "Full name".length();
-        int addressL = "Address".length();
-        for (Profile item : list) {
-            nameL = Math.max(nameL, item.getFullName().length());
-            addressL = Math.max(addressL, item.getAddress().length());
-        }
+        InfosTable.getTitle(Profile.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getAccountId(), 
+                        item.getFullName(),
+                        item.getPhoneNumber(),
+                        item.getAddress(),
+                        item.getCredit(),
+                        formatDate(item.getBirthday(), Validator.DATE)
+                )
+        );
         
-        int widthLength = 8 + nameL + 10 + addressL + 12 + 6 + 19;
-         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + nameL + "s | %-10s | %-" + addressL + "s | %-12s | %-6s |\n",
-                "ID", "Full Name", "Birthday" , "Address" , "Phone number" , "Credit");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Profile item : tempList) {
-        System.out.printf("\n| %-8s | %-" + nameL + "s | %-10s | %-" + addressL + "s | %-12s | %6s |",
-                    item.getId(),
-                    item.getFullName(),
-                    item.getBirthday(),
-                    item.getAddress(),
-                    item.getPhoneNumber(),
-                    item.getCredit() == 0f ? "0" : String.format("%-3.2f", item.getCredit()));
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getAccountId(), 
+                        item.getFullName(),
+                        item.getPhoneNumber(),
+                        item.getAddress(),
+                        item.getCredit(),
+                        formatDate(item.getBirthday(), Validator.DATE)
+                )
+        );
+        InfosTable.showFooter();
     }
 }

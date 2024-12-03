@@ -2,7 +2,7 @@ USE movierentalsystemdb;
 
 INSERT INTO Accounts (account_id, username, password, role, email, status, online_at, created_at, updated_at, creability)
 VALUES
-('AD000001', 'admin', '1', 'ADMIN', 'admin1@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 50),
+('AD000001', 'admin', '123421', 'ADMIN', 'admin1@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 50),
 ('CU000002', 'staff_user1', 'securepass2', 'STAFF', 'staff1@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 20),
 ('CU000003', 'customer_user1', 'securepass3', 'CUSTOMER', 'customer1@example.com', 'ONLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 10),
 ('CU000004', 'customer_user2', 'securepass4', 'CUSTOMER', 'customer2@example.com', 'ONLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 15),

@@ -11,22 +11,22 @@ import main.constants.IDPrefix;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
 import main.dao.ReviewDAO;
-import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import main.dto.Movie;
-import main.dto.Profile;
 import main.dto.Review;
 import main.utils.IDGenerator;
+import main.utils.InfosTable;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
 
 public final class ReviewManager extends ListManager<Review> {
     
     public ReviewManager() {
-        super(Review.className());
+        super(Review.className(), Review.getAttributes());
         list = ReviewDAO.getAllReviews();
     }
 
@@ -142,13 +142,12 @@ public final class ReviewManager extends ListManager<Review> {
             return;
         }
 
-        display(movieReview);
+        show(movieReview);
     }
 
     public void myReviews(String customID) {
         List<Review> myReviews = searchBy(customID);
-
-        displayWithSort(myReviews, new Review());
+        display(myReviews, Review.getAttributes(), true);
     }
 
     @Override
@@ -173,72 +172,56 @@ public final class ReviewManager extends ListManager<Review> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Review.getAttributes();
         List<Review> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "reviewId":
-                result.sort(Comparator.comparing(Review::getId));
-                break;
-            case "movieId":
-                result.sort(Comparator.comparing(Review::getMovieID));
-                break;
-            case "customerId":
-                result.sort(Comparator.comparing(Review::getCustomerID));
-                break;
-            case "reviewText":
-                result.sort(Comparator.comparing(Review::getReviewText));
-                break;
-            case "rating":
-                result.sort(Comparator.comparing(Review::getRating));
-                break;
-            case "reviewDate":
-                result.sort(Comparator.comparing(Review::getReviewDate));
-                break;
-            default:
-                result.sort(Comparator.comparing(Review::getId)); 
-                break;
+
+        if (property.equals(options[0])) {
+            result.sort(Comparator.comparing(Review::getId));
+        } else if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Review::getMovieID));
+        } else if (property.equals(options[2])) {
+            result.sort(Comparator.comparing(Review::getCustomerID));
+        } else if (property.equals(options[3])) {
+            result.sort(Comparator.comparing(Review::getReviewText));
+        } else if (property.equals(options[4])) {
+            result.sort(Comparator.comparing(Review::getRating));
+        } else if (property.equals(options[5])) {
+            result.sort(Comparator.comparing(Review::getReviewDate));
+        } else {
+            result.sort(Comparator.comparing(Review::getId)); // Default case
         }
         return result;
     }
 
     @Override
-    public void display(List<Review> tempList) {
+    public void show(List<Review> tempList) {
         if (checkNull(tempList)) {
             return;
         } 
-        int commentL = "Comment".length();
-        int customerL = "Customer".length();
-        int movieL = "Movie".length();
-        for (Review item : tempList) {
-            Profile foundCustomer = (Profile) getPFM().searchById(item.getCustomerID());
-            Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
-            
-            commentL = Math.max(commentL, item.getReviewText().length());
-            customerL = foundCustomer != null ? Math.max(customerL, foundCustomer.getFullName().length()) : customerL;
-            movieL = foundMovie != null ? Math.max(movieL, foundMovie.getTitle().length()) : movieL;
-        }
-
-        int widthLength = 8 + movieL + customerL + commentL + 6 + 10 + 20;
         
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + movieL + "s |  %-" + customerL + "s | %-" + commentL + "s | %-6s | %-10s |\n",
-                "ID", "Movie", "Customer" , "Comment" , "Rating" , "Review at");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Review item : tempList) {
-            
-            Profile foundCustomer = (Profile) getPFM().searchById(item.getCustomerID());
-            Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
-            
-            System.out.printf("\n| %-8s | %-" + movieL + "s |  %-" + customerL + "s | %-" + commentL + "s | %6d | %-10s |",
-                    item.getId(),
-                    foundMovie != null ? foundMovie.getTitle() : "...",
-                    foundCustomer != null ? foundCustomer.getFullName() : "...",
-                    item.getReviewText(),
-                    item.getRating(),
-                    item.getReviewDate().format(Validator.DATE));
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.getTitle(Review.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getId(), 
+                        item.getMovieID(),
+                        item.getCustomerID(),
+                        item.getRating(),
+                        item.getReviewText(),
+                        formatDate(item.getReviewDate(), Validator.DATE)
+                )
+        );
+        
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getId(), 
+                        item.getMovieID(),
+                        item.getCustomerID(),
+                        item.getRating(),
+                        item.getReviewText(),
+                        formatDate(item.getReviewDate(), Validator.DATE)
+                )
+        );
+        InfosTable.showFooter();
     }
 }

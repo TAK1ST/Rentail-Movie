@@ -5,7 +5,7 @@
 package main.utils;
 
 import java.time.LocalDate;
-import java.util.Comparator;
+import java.time.format.DateTimeFormatter;
 import static main.utils.Input.getInteger;
 import static main.utils.LogMessage.errorLog;
 
@@ -58,6 +58,12 @@ public class Utility {
     
     public static LocalDate toDate(String date){
         return LocalDate.parse(date, Validator.DATE);
+    }
+    
+    public static String formatDate(LocalDate date, DateTimeFormatter format) {
+        if (date == null) return null;
+        else 
+            return date.format(format);
     }
     
     public static int toInt(String input) {

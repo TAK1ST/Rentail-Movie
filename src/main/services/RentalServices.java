@@ -3,11 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package main.services;
-import main.base.ListManager;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import main.constants.RentalStatus;
 import main.dao.RentalDAO;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRTM;
@@ -38,34 +37,34 @@ public class RentalServices {
     
         // admin test logic
     
-        public static boolean returnMovie() {
-            if (getRTM().checkNull(getRTM().getList())) return false; 
+    public static boolean returnMovie() {
+        if (getRTM().checkNull(getRTM().getList())) return false; 
+        
+        Rental foundRental = getRTM().getRentalByAccountMovie(IDGenerator.DEFAULT_ADMIN_ID);
+        if (getRTM().checkNull(foundRental)) return false;
+        
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieID());
+        if (getMVM().checkNull(foundMovie)) return false;
+        
+        double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
 
-            Rental foundRental = getRTM().getRentalByAccountMovie(IDGenerator.DEFAULT_ADMIN_ID);
-            if (getRTM().checkNull(foundRental)) return false;
-
-            Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
-            if (getMVM().checkNull(foundMovie)) return false;
-
-            double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
-
-            if (overdueFine > 0) {
-                foundRental.setLateFee(foundRental.getLateFee()+ overdueFine);  
-                foundRental.setTotalAmount(foundRental.getTotalAmount() + foundRental.getLateFee()); 
-            }
-
-            boolean isSuccess = RentalDAO.updateRentalInDB(foundRental);
-            if (isSuccess) {
-                MovieServices.adjustAvailableCopy(getRTM().getList().getLast().getMovieId(), 1);
-            }  
-            return true;
+        if (overdueFine > 0) {
+            foundRental.setLateFee(foundRental.getLateFee()+ overdueFine);  
+            foundRental.setTotalAmount(foundRental.getTotalAmount() + foundRental.getLateFee()); 
         }
+
+        boolean isSuccess = RentalDAO.updateRentalInDB(foundRental);
+        if (isSuccess) {
+            MovieServices.adjustAvailableCopy(getRTM().getList().getLast().getMovieID(), 1);
+        }  
+        return true;
+    }
     
     public static boolean extendReturnDate() {
         Rental foundRental = getRTM().getRentalByAccountMovie(IDGenerator.DEFAULT_ADMIN_ID);
         if (getRTM().checkNull(foundRental)) return false;
         
-        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieID());
         if (getMVM().checkNull(foundMovie)) return false;
         
         int extraDate = getInteger("How many days to rent", 1, 365, false);

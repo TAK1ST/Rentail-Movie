@@ -10,14 +10,18 @@ import main.base.ListManager;
 import main.constants.DiscountType;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
+import static main.controllers.Managers.getPFM;
 import main.dao.DiscountDAO;
 import static main.dao.MiddleTableDAO.addDataToMidTable;
 import main.dto.Discount;
 import main.utils.IDGenerator;
+import main.utils.InfosTable;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
+import static main.utils.Input.returnNames;
 import static main.utils.Input.selectByNumbers;
 import static main.utils.Input.yesOrNo;
+import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
@@ -26,7 +30,7 @@ import static main.utils.Validator.getDate;
 public class DiscountManager extends ListManager<Discount> {
     
     public DiscountManager() {
-        super(Discount.className());
+        super(Discount.className(), Discount.getAttributes());
         list = DiscountDAO.getAllDiscounts();
     }
 
@@ -131,64 +135,67 @@ public class DiscountManager extends ListManager<Discount> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Discount.getAttributes();
         List<Discount> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "discountCode":
-                result.sort(Comparator.comparing(Discount::getCode));
-                break;
-            case "customerId":
-                result.sort(Comparator.comparing(Discount::getCustomerIds));
-                break;
-            case "discountType":
-                result.sort(Comparator.comparing(Discount::getType));
-                break;
-            case "discountValue":
-                result.sort(Comparator.comparing(Discount::getValue));
-                break;
-            case "startDate":
-                result.sort(Comparator.comparing(Discount::getStartDate));
-                break;
-            case "endDate":
-                result.sort(Comparator.comparing(Discount::getEndDate));
-                break;
-            case "quantity":
-                result.sort(Comparator.comparing(Discount::getQuantity));
-                break;
-            case "isActive":
-                result.sort(Comparator.comparing(Discount::isActive));
-                break;
-            default:
-                result.sort(Comparator.comparing(Discount::getCode)); 
-                break;
+        
+        if (property.equals(options[0])) {
+            result.sort(Comparator.comparing(Discount::getCode));
+        } else if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Discount::getCustomerIds));
+        } else if (property.equals(options[2])) {
+            result.sort(Comparator.comparing(Discount::getType));
+        } else if (property.equals(options[3])) {
+            result.sort(Comparator.comparing(Discount::getValue));
+        } else if (property.equals(options[4])) {
+            result.sort(Comparator.comparing(Discount::getStartDate));
+        } else if (property.equals(options[5])) {
+            result.sort(Comparator.comparing(Discount::getEndDate));
+        } else if (property.equals(options[6])) {
+            result.sort(Comparator.comparing(Discount::getQuantity));
+        } else if (property.equals(options[7])) {
+            result.sort(Comparator.comparing(Discount::isActive));
+        } else {
+            result.sort(Comparator.comparing(Discount::getCode)); // Default case
         }
         return result;
     }
 
     @Override
-    public void display(List<Discount> tempList) {
+    public void show(List<Discount> tempList) {
         if (checkNull(tempList)) {
             return;
         } 
         
-        int widthLength = 8 + 10 + 10 + 16 + 8 + 6 + 5 + 22;
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-10s | %-10s | %-16s | %-8s | %-6s | %-5s |\n",
-                "Code", "Start date", "End date", "Type" , "Quantity", "Status" , "Value");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Discount item : tempList) {
-            System.out.printf("\n| %-8s | %-10s | %-10s | %-16s | %8d | %-6s | %5s |",
-                    item.getCode(),
-                    item.getStartDate().format(Validator.DATE),
-                    item.getEndDate().format(Validator.DATE),
-                    item.getType().name(),
+        InfosTable.getTitle(Discount.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                    item.getCode(), 
+                    String.join(", ", returnNames(item.getCustomerIds(), getPFM())),
+                    String.join(", ", returnNames(item.getMovieIds(), getMVM())),
+                    item.getType(),
+                    item.getValue(),
+                    formatDate(item.getStartDate(), Validator.DATE), 
+                    formatDate(item.getEndDate(), Validator.DATE),
                     item.getQuantity(),
-                    item.isActive() ? "Active" : "...",
-                    item.getValue() == 0f ? "0" : String.format("%02.2f", item.getValue()));
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
-    }
-   
+                    item.isActive()
+                )
+        );
+        
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                    item.getCode(), 
+                    String.join(", ", returnNames(item.getCustomerIds(), getPFM())),
+                    String.join(", ", returnNames(item.getMovieIds(), getMVM())),
+                    item.getType(),
+                    item.getValue(),
+                    formatDate(item.getStartDate(), Validator.DATE), 
+                    formatDate(item.getEndDate(), Validator.DATE),
+                    item.getQuantity(),
+                    item.isActive()
+                )
+        );
+        InfosTable.showFooter();
+        
+    }   
 }

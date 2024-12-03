@@ -25,16 +25,18 @@ import main.dto.Rental;
 import main.services.MovieServices;
 import main.services.RentalServices;
 import main.utils.IDGenerator;
+import main.utils.InfosTable;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
 
 public class RentalManager extends ListManager<Rental> {
 
     public RentalManager() {
-        super(Rental.className());
+        super(Rental.className(), Rental.getAttributes());
         list = RentalDAO.getAllRentals();
     }
 
@@ -84,7 +86,7 @@ public class RentalManager extends ListManager<Rental> {
                 RentalStatus.PENDING
         ));
         if (RentalDAO.addRentalToDB(list.getLast())) {
-            return MovieServices.adjustAvailableCopy(list.getLast().getMovieId(), -1);
+            return MovieServices.adjustAvailableCopy(list.getLast().getMovieID(), -1);
         }
 
         return false;
@@ -102,7 +104,7 @@ public class RentalManager extends ListManager<Rental> {
 
         List<Rental> temp = searchBy(userID);
         for (Rental item : temp) {
-            if (item.getMovieId().equals(foundMovie.getId())) {
+            if (item.getMovieID().equals(foundMovie.getId())) {
                 return item;
             }
         }
@@ -120,7 +122,7 @@ public class RentalManager extends ListManager<Rental> {
             return false;
         }
 
-        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieID());
         if (getMVM().checkNull(foundMovie)) {
             return false;
         }
@@ -133,7 +135,7 @@ public class RentalManager extends ListManager<Rental> {
         }
 
         if (RentalDAO.updateRentalInDB(foundRental)) {
-            return MovieServices.adjustAvailableCopy(list.getLast().getMovieId(), +1);
+            return MovieServices.adjustAvailableCopy(list.getLast().getMovieID(), +1);
         }
 
         return false;
@@ -156,7 +158,7 @@ public class RentalManager extends ListManager<Rental> {
             foundMovie = (Movie) getMVM().searchById(input);
         }
         if (getMVM().checkNull(foundMovie)) {
-            foundMovie = (Movie) getMVM().searchById(foundRental.getMovieId());
+            foundMovie = (Movie) getMVM().searchById(foundRental.getMovieID());
         }
         if (getMVM().checkNull(foundMovie)) {
             return false;
@@ -186,7 +188,7 @@ public class RentalManager extends ListManager<Rental> {
             return false;
         }
 
-        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieID());
         if (getMVM().checkNull(foundMovie)) {
             return false;
         }
@@ -240,48 +242,37 @@ public class RentalManager extends ListManager<Rental> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Rental.getAttributes();
         List<Rental> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "rentalId":
-                result.sort(Comparator.comparing(Rental::getId));
-                break;
-            case "movieId":
-                result.sort(Comparator.comparing(Rental::getMovieId));
-                break;
-            case "staffId":
-                result.sort(Comparator.comparing(Rental::getStaffID));
-                break;
-            case "customerId":
-                result.sort(Comparator.comparing(Rental::getCustomerID));
-                break;
-            case "dueDate":
-                result.sort(Comparator.comparing(Rental::getDueDate));
-                break;
-            case "rentalDate":
-                result.sort(Comparator.comparing(Rental::getRentalDate));
-                break;
-            case "returnDate":
-                result.sort(Comparator.comparing(Rental::getReturnDate));
-                break;
-            case "status":
-                result.sort(Comparator.comparing(Rental::getStatus));
-                break;
-            case "totalAmount":
-                result.sort(Comparator.comparing(Rental::getTotalAmount));
-                break;
-            case "lateFee":
-                result.sort(Comparator.comparing(Rental::getLateFee));
-                break;
-            default:
-                result.sort(Comparator.comparing(Rental::getId));
-                break;
+
+        if (property.equals(options[0])) {
+            result.sort(Comparator.comparing(Rental::getId));
+        } else if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Rental::getMovieID));
+        } else if (property.equals(options[2])) {
+            result.sort(Comparator.comparing(Rental::getStaffID));
+        } else if (property.equals(options[3])) {
+            result.sort(Comparator.comparing(Rental::getCustomerID));
+        } else if (property.equals(options[4])) {
+            result.sort(Comparator.comparing(Rental::getDueDate));
+        } else if (property.equals(options[5])) {
+            result.sort(Comparator.comparing(Rental::getRentalDate));
+        } else if (property.equals(options[6])) {
+            result.sort(Comparator.comparing(Rental::getReturnDate));
+        } else if (property.equals(options[7])) {
+            result.sort(Comparator.comparing(Rental::getStatus));
+        } else if (property.equals(options[8])) {
+            result.sort(Comparator.comparing(Rental::getTotalAmount));
+        } else if (property.equals(options[9])) {
+            result.sort(Comparator.comparing(Rental::getLateFee));
+        } else {
+            result.sort(Comparator.comparing(Rental::getId)); // Default case
         }
         return result;
     }
 
     @Override
-    public void display(List<Rental> tempList) {
+    public void show(List<Rental> tempList) {
         if (checkNull(tempList)) {
             return;
         }
@@ -330,12 +321,28 @@ public class RentalManager extends ListManager<Rental> {
             System.out.print("-");
         }
         System.out.println();
+
+        InfosTable.showTitle();
+        tempList.forEach(item
+                -> InfosTable.displayByLine(
+                        item.getId(),
+                        item.getMovieID(),
+                        item.getCustomerID(),
+                        item.getStaffID(),
+                        formatDate(item.getDueDate(), Validator.DATE),
+                        formatDate(item.getRentalDate(), Validator.DATE),
+                        formatDate(item.getReturnDate(), Validator.DATE),
+                        item.getStatus(),
+                        item.getTotalAmount(),
+                        item.getLateFee()
+                )
+        );
+        InfosTable.showFooter();
     }
 
-    // Lấy số lượng nhiệm vụ đang chờ duyệt (PENDING) của nhân viên
+    // Lấy số lượng nhiệm vụ PENDING của nhân viên
     public int getPendingTasks(String staffId) {
         int pendingCount = 0;
-        // Duyệt qua tất cả các rental và kiểm tra trạng thái
         for (Rental rental : list) {
             if (rental.getStaffID().equals(staffId) && rental.getStatus() == RentalStatus.PENDING) {
                 pendingCount++;
@@ -344,10 +351,9 @@ public class RentalManager extends ListManager<Rental> {
         return pendingCount;
     }
 
-// Lấy số lượng nhiệm vụ đã hoàn thành (APPROVED) của nhân viên
+// Lấy số lượng nhiệm vụ APPROVED của nhân viên
     public int getCompletedTasks(String staffId) {
         int completedCount = 0;
-        // Duyệt qua tất cả các rental và kiểm tra trạng thái
         for (Rental item : list) {
             if (item.getStaffID().equals(staffId) && item.getStatus() == RentalStatus.APPROVED) {
                 completedCount++;
@@ -355,18 +361,16 @@ public class RentalManager extends ListManager<Rental> {
         }
         return completedCount;
     }
-    // Phương thức tính toán creability cho nhân viên, bao gồm điểm thưởng và trừ theo thời gian duyệt
+    //tính toán creability cho nhân viên
 
     public double calculateCreability(String staffId) {
-        int completedTasks = getCompletedTasks(staffId); // Tính số lượng nhiệm vụ đã hoàn thành
-        int pendingTasks = getPendingTasks(staffId); // Tính số lượng nhiệm vụ đang chờ duyệt
-        double timeBonus = calculateTimeBonus(staffId); // Tính điểm thưởng hoặc trừ vì thời gian duyệt
+        int completedTasks = getCompletedTasks(staffId); 
+        int pendingTasks = getPendingTasks(staffId); 
+        double timeBonus = calculateTimeBonus(staffId); 
 
-        // Công thức tính creability: creability = (hoàn thành task / (hoàn thành task + pending task)) + bonus vì thời gian
         return (double) completedTasks / (completedTasks + pendingTasks + 1) + timeBonus;
     }
-    // Phương thức tính toán bonus hoặc penalty cho nhân viên dựa trên thời gian duyệt
-
+    //  tính toán bonus hoặc penalty cho nhân viên dựa trên thời gian duyệt
     private double calculateTimeBonus(String staffId) {
         int lateCount = 0;
         int earlyCount = 0;
@@ -377,17 +381,17 @@ public class RentalManager extends ListManager<Rental> {
             ps.setString(1, staffId);
             ResultSet rs = ps.executeQuery();
 
-            // Duyệt qua từng rental và tính toán thời gian duyệt
+    
             while (rs.next()) {
                 Date rentalDate = rs.getDate("rental_date");
-                 long timeDifference = System.currentTimeMillis() - rentalDate.getTime(); // Tính sự khác biệt thời gian
-                long daysDifference = timeDifference / (1000 * 60 * 60 * 24);  // Số ngày chênh lệch
+                long timeDifference = System.currentTimeMillis() - rentalDate.getTime(); 
+                long daysDifference = timeDifference / (1000 * 60 * 60 * 24);  
 
                 // Giả sử thời gian duyệt tiêu chuẩn là 2 ngày kể từ rental_date
                 if (daysDifference > 2) {
-                    lateCount++; // Trễ
+                    lateCount++; 
                 } else if (daysDifference <= 0) {
-                    earlyCount++; // Duyệt ngay trong ngày thuê (hoặc sớm)
+                    earlyCount++; 
                 }
             }
         } catch (SQLException e) {
@@ -395,24 +399,23 @@ public class RentalManager extends ListManager<Rental> {
         }
 
         // Tính điểm thưởng/penalty dựa trên số ngày trễ hoặc sớm
-        double timeBonus = (earlyCount * 0.1) - (lateCount * 0.1); // Điểm thưởng hoặc trừ cho mỗi trường hợp
+        double timeBonus = (earlyCount * 0.1) - (lateCount * 0.1);
         return timeBonus;
     }
 // Tìm staff có creability cao nhất và số lượng nhiệm vụ ít nhất
 
     public String findStaffForRentalApproval() {
-        List<Account> staffList = getACM().getList(); // Lấy danh sách tất cả staff
+        List<Account> staffList = getACM().getList(); 
         String selectedStaffId = null;
         double highestCreability = -1;
         int lowestPendingTasks = Integer.MAX_VALUE;
 
-        // Duyệt qua tất cả staff và tính toán creability cũng như số lượng pending tasks
         for (Account staff : staffList) {
             String staffId = staff.getId();
             double creability = calculateCreability(staffId);
             int pendingTasks = getPendingTasks(staffId);
 
-            // Chọn staff có creability cao nhất và số lượng nhiệm vụ "PENDING" thấp nhất
+            // Chọn staff có creability cao nhất và số lượng "PENDING" thấp nhất
             if (creability > highestCreability || (creability == highestCreability && pendingTasks < lowestPendingTasks)) {
                 highestCreability = creability;
                 lowestPendingTasks = pendingTasks;
@@ -420,26 +423,24 @@ public class RentalManager extends ListManager<Rental> {
             }
         }
 
-        return selectedStaffId; // Trả về ID của staff được chọn
+        return selectedStaffId;
     }
 // Phân công duyệt thuê phim cho rental đang ở trạng thái PENDING
-
     public boolean assignStaffToPendingRental(String rentalId) {
         Rental rental = getById(rentalId);
         if (rental == null || rental.getStatus() != RentalStatus.PENDING) {
-            return false; // Rental không tồn tại hoặc không ở trạng thái PENDING
+            return false; 
         }
 
-        // Tìm staff phù hợp
         String staffId = findStaffForRentalApproval();
         if (staffId == null) {
-            return false; // Không tìm thấy staff phù hợp
+            return false;
         }
 
-        // Cập nhật thông tin rental với staff mới
-        rental.setStaffID(staffId);
-        rental.setStatus(RentalStatus.PENDING); // Cập nhật trạng thái (hoặc trạng thái thích hợp khác)
 
-        return RentalDAO.updateRentalInDB(rental); // Cập nhật rental vào DB
+        rental.setStaffID(staffId);
+        rental.setStatus(RentalStatus.PENDING); 
+
+        return RentalDAO.updateRentalInDB(rental); 
     }
 }
