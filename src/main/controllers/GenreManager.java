@@ -1,8 +1,8 @@
 
 package main.controllers;
 
+
 import main.base.ListManager;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -11,15 +11,10 @@ import main.dto.Genre;
 import static main.utils.Input.getString;
 import static main.utils.Validator.getName;
 
-/**
- *
- * @author trann
- */
+
 public class GenreManager extends ListManager<Genre> {
     
-    private static final String[] searchOptions = {"genre_name", "description"};
-    
-    public GenreManager() throws IOException {
+    public GenreManager() {
         super(Genre.className());
         list = GenreDAO.getAllGenres();
     }
@@ -39,7 +34,7 @@ public class GenreManager extends ListManager<Genre> {
     }
 
     public boolean updateGenre() {
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
 
         Genre foundGenre = (Genre)getById("Enter genre");
         if (checkNull(foundGenre)) return false;
@@ -54,7 +49,7 @@ public class GenreManager extends ListManager<Genre> {
     }
 
     public boolean deleteGenre() { 
-        if (checkEmpty(list)) return false;       
+        if (checkNull(list)) return false;       
 
         Genre foundGenre = (Genre)getById("Enter genre");
         if (checkNull(foundGenre)) return false;
@@ -77,7 +72,7 @@ public class GenreManager extends ListManager<Genre> {
     
     @Override
     public List<Genre> sortList(List<Genre> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -98,21 +93,24 @@ public class GenreManager extends ListManager<Genre> {
 
     @Override
     public void display(List<Genre> tempList) {
-        if (checkEmpty(tempList)) return; 
-        int genreNameLength = 0;
-        int descriptionLength = 0;
+        if (checkNull(tempList)) {
+            return;
+        } 
+        
+        int genreL = "Name".length();
+        int descriptL = "Description".length();
         for (Genre item : list) {
-            genreNameLength = Math.max(genreNameLength, item.getGenreName().length());
-            descriptionLength = Math.max(descriptionLength, item.getDescription().length());
+            genreL = Math.max(genreL, item.getGenreName().length());
+            descriptL = Math.max(descriptL, item.getDescription().length());
         }
         
-        int widthLength =  genreNameLength +  descriptionLength + 7;
+        int widthLength =  genreL +  descriptL + 7;
          for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-" + genreNameLength + "s | %-" + descriptionLength + "s | \n",
+        System.out.printf("\n| %-" + genreL + "s | %-" + descriptL + "s |\n",
                 "Name", "Description");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Genre item : tempList) {
-        System.out.printf("\n| %-" + genreNameLength + "s | %-" + descriptionLength + "s | \n",
+        System.out.printf("\n| %-" + genreL + "s | %-" + descriptL + "s |",
                     item.getGenreName(),
                     item.getDescription());
         }

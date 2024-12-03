@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dto.Movie;
 import main.config.Database;
+import static main.dao.MiddleTableDAO.getSubIdsByMainId;
 
 /**
  *
@@ -32,7 +33,6 @@ public class MovieDAO {
                 + "available_copies, "
                 + "created_at, "
                 + "updated_at "
-
                 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
@@ -48,57 +48,6 @@ public class MovieDAO {
             ps.setDate(++count, Date.valueOf(movie.getUpdateDate()));
 
             return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public static boolean addMovieGenres(String movieID, String genreIDs) {
-        String sql = "INSERT INTO Movie_Genre (movie_id, genre_name) VALUES (?, ?)";
-        try (Connection conn = Database.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            for (String genreID : genreIDs.split(", ")) {
-                ps.setString(1, movieID);
-                ps.setString(2, genreID);
-                ps.addBatch();  
-            }
-            ps.executeBatch();  
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public static boolean addMovieActors(String movieID, String actorIDs) {
-        String sql = "INSERT INTO Movie_Actor (movie_id, actor_id) VALUES (?, ?)";
-        try (Connection conn = Database.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            for (String actorID : actorIDs.split(", ")) {
-                ps.setString(1, movieID);
-                ps.setString(2, actorID);
-                ps.addBatch();
-            }
-            ps.executeBatch();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public static boolean addMovieLanguage(String movieID, String languageCodes) {
-        String sql = "INSERT INTO Movie_Genre (movie_id, language_code) VALUES (?, ?)";
-        try (Connection conn = Database.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            for (String languageCode : languageCodes.split(", ")) {
-                ps.setString(1, movieID);
-                ps.setString(2, languageCode);
-                ps.addBatch();  
-            }
-            ps.executeBatch();  
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -151,22 +100,22 @@ public class MovieDAO {
     public static List<Movie> getAllMovies() {
         String sql = "SELECT * FROM Movies";
         List<Movie> list = new ArrayList<>();
-        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet resultSet = ps.executeQuery()) {
-            while (resultSet.next()) {
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
 
                 Movie movie = new Movie(
-                        resultSet.getString("movie_id"),
-                        resultSet.getString("title"),
-                        resultSet.getString("description"),
-                        resultSet.getDouble("avg_rating"),
-                        getGenresByMovieId(resultSet.getString("movie_id")),
-                        getActorsByMovieId(resultSet.getString("movie_id")),
-                        getLanguagesByMovieId(resultSet.getString("movie_id")),
-                        resultSet.getDate("release_year").toLocalDate(),
-                        resultSet.getDouble("rental_price"),
-                        resultSet.getInt("available_copies"),
-                        resultSet.getDate("created_at").toLocalDate(),
-                        resultSet.getDate("updated_at").toLocalDate()
+                        rs.getString("movie_id"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getDouble("avg_rating"),
+                        getSubIdsByMainId("Movie_Genre", rs.getString("movie_id"), "movie_id", "genre_name"),
+                        getSubIdsByMainId("Movie_Actor", rs.getString("movie_id"), "movie_id", "actor_id"),
+                        getSubIdsByMainId("Movie_Language", rs.getString("movie_id"), "movie_id", "language_code"),
+                        rs.getDate("release_year").toLocalDate(),
+                        rs.getDouble("rental_price"),
+                        rs.getInt("available_copies"),
+                        rs.getDate("created_at").toLocalDate(),
+                        rs.getDate("updated_at").toLocalDate()
                 );
                 list.add(movie);
             }
@@ -175,70 +124,5 @@ public class MovieDAO {
         }
         return list;
     }
-
-    private static String getGenresByMovieId(String movieID) {
-        String sql = "SELECT genre_name FROM Movie_Genre WHERE movie_id = ?";
-        StringBuilder genres = new StringBuilder();
-        try (Connection connection = Database.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setString(1, movieID);
-
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                if (genres.length() > 0) {
-                    genres.append(", ");
-                }
-                genres.append(rs.getString("genre_name"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return genres.toString();
-    }
-
-    private static String getActorsByMovieId(String movieID) {
-        String sql = "SELECT actor_id FROM Movie_Actor WHERE movie_id = ?";
-        StringBuilder actors = new StringBuilder();
-        try (Connection connection = Database.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setString(1, movieID);
-
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                if (actors.length() > 0) {
-                    actors.append(", ");
-                }
-                actors.append(rs.getString("actor_id"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return actors.toString();
-    }
-
-    
-    private static String getLanguagesByMovieId(String movieID) {
-        String sql = "SELECT language_code FROM Movie_Language WHERE movie_id = ?";
-        StringBuilder languages = new StringBuilder();
-        try (Connection connection = Database.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setString(1, movieID);
-
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                if (languages.length() > 0) {
-                    languages.append(", ");
-                }
-                languages.append(rs.getString("language_code"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return languages.toString();
-    }
-
 
 }

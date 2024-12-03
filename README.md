@@ -28,3 +28,10 @@ Add Movies to Wishlist: Users can create a wishlist and add movies to it for eas
 Java – for backend API development.
 MySQL – for database management.
 Docker – for containerization of the application and database.
+
+## Authors
+- **Tran Ngoc Thien** - (https://github.com/thiengthb)
+- **Tran Anh Kiet** - (https://github.com/TAK1ST)
+- **Ngo Hoang Thai Duong** - (https://github.com/NgoHoangThaiDuong)
+## ERD
+![Movie Rental ERD](ERD_MovieRentalSystem.drawio.png)

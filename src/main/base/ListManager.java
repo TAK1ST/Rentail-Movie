@@ -1,6 +1,5 @@
 package main.base;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,10 +20,21 @@ public abstract class ListManager<T extends Model> {
         this.className = className;
         this.isNotSaved = false;
     }
-
+    
     public abstract List<T> sortList(List<T> tempList, String propety);
     public abstract List<T> searchBy(String property);
     
+    public boolean isNull() {
+        return list.isEmpty();
+    }
+    
+    public boolean isNull(String message) {
+        if (list.isEmpty()) {
+            infoLog(message);
+            return false;
+        }
+        return true;
+    }
 
     public T getById(String message) {
         return searchById(getString(message, false));
@@ -59,8 +69,8 @@ public abstract class ListManager<T extends Model> {
         return true;
     }
 
-    public boolean checkEmpty(List<T> list) {
-        if (!list.isEmpty()) {
+    public boolean checkNull(List<T> tempList) {
+        if (!tempList.isEmpty()) {
             return false;
         }
         infoLog(String.format("\nNo %s's data.\n", className));
@@ -85,27 +95,40 @@ public abstract class ListManager<T extends Model> {
         System.out.println(item);
     }
     
-    public void display(List<T> inputList) {
-        if (checkEmpty(inputList)) return;
-        inputList.forEach(item -> System.out.println(item));
+    public void display(List<T> tempList) {
+        if (checkNull(tempList)) return;
+        tempList.forEach(item -> System.out.println(item));
     }
     
-    public void displayList() {
+    public void display() {
         display(list);
     }
     
     public void displayWithSort(List<T> tempList, String[] options) {
+        if (checkNull(tempList)) return;
+        
         List<T> temp = new ArrayList<>(tempList);
-        
-        String propety = selectInfo("Sort by", options, false);
-        if (propety.isEmpty()) return;
-        
         do {
-            display(tempList);
+            display(temp);
             if (yesOrNo("Sort list")) {
+                String propety = selectInfo("Sort by", options, false);
+                if (propety.isEmpty()) return;
+                
                 sortList(temp, propety);
             } else return;
         } while(true);
+    }
+    
+    public void displayWithSort(List<T> tempList, T t) {
+        displayWithSort(tempList, t.getSearchOptions());
+    }
+    
+    public void displayWithSort(String[] options) {
+        displayWithSort(list, options);
+    }
+    
+    public void displayWithSort(T t) {
+        displayWithSort(list, t.getSearchOptions());
     }
     
 }

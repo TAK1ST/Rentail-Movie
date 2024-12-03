@@ -1,7 +1,8 @@
+
 package main.controllers;
 
+
 import main.base.ListManager;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -14,15 +15,10 @@ import static main.utils.Input.getString;
 import static main.utils.Utility.getEnumValue;
 import static main.utils.Validator.getName;
 
-/**
- *
- * @author trann
- */
+
 public class ActorManager extends ListManager<Actor> {
     
-    private static final String[] searchOptions = {"actor_id", "actor_name", "actor_rank", "actor_description"};
-    
-    public ActorManager() throws IOException {
+    public ActorManager() {
         super(Actor.className());
         list = ActorDAO.getAllActors();
     }
@@ -48,7 +44,7 @@ public class ActorManager extends ListManager<Actor> {
     }
 
     public boolean updateActor() {
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
 
         Actor foundActor = (Actor)getById("Enter actor's id");
         if (checkNull(foundActor)) return false;
@@ -68,7 +64,7 @@ public class ActorManager extends ListManager<Actor> {
     }
 
     public boolean deleteActor() { 
-        if (checkEmpty(list)) return false;       
+        if (checkNull(list)) return false;       
 
         Actor foundActor = (Actor)getById("Enter actor's id");
         if (checkNull(foundActor)) return false;
@@ -79,7 +75,7 @@ public class ActorManager extends ListManager<Actor> {
     
     @Override
     public List<Actor> sortList(List<Actor> tempList, String property) {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return null;
         }
 
@@ -114,21 +110,24 @@ public class ActorManager extends ListManager<Actor> {
     
     @Override
     public void display(List<Actor> tempList) {
-        if (checkEmpty(tempList)) return; 
-        int actorNameLength = 0;
-        int descriptionLength = 0;
+        if (checkNull(tempList)) { 
+            return;
+        } 
+        
+        int actorL = "Name".length();
+        int descriptL = "Description".length();
         for (Actor item : list) {
-            actorNameLength = Math.max(actorNameLength, item.getActorName().length());
-            descriptionLength = Math.max(descriptionLength, item.getDescription().length());
+            actorL = Math.max(actorL, item.getActorName().length());
+            descriptL = Math.max(descriptL, item.getDescription().length());
         }
         
-        int widthLength = 8 + actorNameLength + 5 + descriptionLength + 13;
-         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + actorNameLength + "s | %-5s | %-" + descriptionLength + "s | \n",
+        int widthLength = 8 + actorL + 5 + descriptL + 13;
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-" + actorL + "s | %-5s | %-" + descriptL + "s |\n",
                 "ID", "Name", "Rank" , "Description");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Actor item : tempList) {
-            System.out.printf("\n| %-8s | %-" + actorNameLength + "s | %-5s | %-" + descriptionLength + "s |",
+            System.out.printf("\n| %-8s | %-" + actorL + "s | %-5s | %-" + descriptL + "s |",
                     item.getId(),
                     item.getActorName(),
                     item.getRank(),

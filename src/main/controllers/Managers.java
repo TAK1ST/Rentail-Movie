@@ -1,12 +1,7 @@
 
 package main.controllers;
 
-import java.io.IOException;
 
-/**
- *
- * @author trann
- */
 public class Managers {
     
     private static AccountManager   ACM = null;
@@ -21,7 +16,7 @@ public class Managers {
     private static RentalManager    RTM = null;
     private static WishlistManager  WLM = null;
     
-    public static boolean initAll() throws IOException {
+    public static boolean initAll() {
         return  initACM() &&
                 initATM() &&
                 initDCM() &&
@@ -35,67 +30,67 @@ public class Managers {
                 initWLM();
     }
     
-    public static boolean initACM() throws IOException {
+    public static boolean initACM() {
         if (ACM != null) return false;
         ACM = new AccountManager();
         return true;
     }
     
-    public static boolean initATM() throws IOException {
+    public static boolean initATM() {
         if (ATM != null) return false;
         ATM = new ActorManager();
         return true;
     }
     
-    public static boolean initDCM() throws IOException {
+    public static boolean initDCM() {
         if (DCM != null) return false;
         DCM = new DiscountManager();
         return true;
     }
     
-    public static boolean initGRM() throws IOException {
+    public static boolean initGRM() {
         if (GRM != null) return false;
         GRM = new GenreManager();
         return true;
     }
     
-    public static boolean initMVM() throws IOException {
+    public static boolean initMVM() {
         if (MVM != null) return false;
         MVM = new MovieManager();
         return true;
     }
     
-    public static boolean initLGM() throws IOException {
+    public static boolean initLGM() {
         if (LGM != null) return false;
         LGM = new LanguageManager();
         return true;
     }
     
-    public static boolean initPMM() throws IOException {
+    public static boolean initPMM() {
         if (PMM != null) return false;
         PMM = new PaymentManager();
         return true;
     }
     
-    public static boolean initPFM() throws IOException {
+    public static boolean initPFM() {
         if (PFM != null) return false;
         PFM = new ProfileManager();
         return true;
     }
     
-    public static boolean initRVM() throws IOException {
+    public static boolean initRVM() {
         if (RVM != null) return false;
         RVM = new ReviewManager();
         return true;
     }
     
-    public static boolean initRTM() throws IOException {
+    public static boolean initRTM() {
         if (RTM != null) return false;
         RTM = new RentalManager();
         return true;
     }
     
-    public static boolean initWLM() throws IOException {
+    public static boolean initWLM() {
         if (WLM != null) return false;
         WLM = new WishlistManager();
         return true;

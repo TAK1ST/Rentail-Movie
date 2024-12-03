@@ -1,32 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package main.controllers;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
-import main.constants.IDPrefix;
 import main.constants.PaymentMethod;
 import static main.controllers.Managers.getRTM;
 import main.dao.PaymentDAO;
 import main.dto.Rental;
 import main.dto.Payment;
-import static main.utils.Input.getString;
 import static main.utils.Utility.getEnumValue;
 
-/**
- *
- * @author trann
- */
-public class PaymentManager extends ListManager<Payment> {
-    
-    private static final String[] searchOptions = {"rental_id", "payment_method", "payment_date"};
 
-    public PaymentManager() throws IOException {
+public class PaymentManager extends ListManager<Payment> {
+
+    public PaymentManager() {
         super(Payment.className());
         list = PaymentDAO.getAllPayments();
     }
@@ -46,7 +36,7 @@ public class PaymentManager extends ListManager<Payment> {
     }
 
     public boolean updatePayment() {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -64,7 +54,7 @@ public class PaymentManager extends ListManager<Payment> {
     }
 
     public boolean deletePayment() {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -91,7 +81,7 @@ public class PaymentManager extends ListManager<Payment> {
 
     @Override
     public List<Payment> sortList(List<Payment> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -112,30 +102,22 @@ public class PaymentManager extends ListManager<Payment> {
 
     @Override
     public void display(List<Payment> tempList) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return;
         }
 
-        int widthLength = 8 + 7 + 8 + 10;
-        for (int index = 0; index < widthLength; index++) {
-            System.out.print("-");
-        }
-        System.out.printf("\n| %-8s | %-7s | %-8s | \n",
-                "ID", "Method", "Rental");
-        for (int index = 0; index < widthLength; index++) {
-            System.out.print("-");
-        }
+        int widthLength = 8 + 7 + 7;
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-7s |\n",
+                "ID", "Method");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Payment item : tempList) {
-
-            System.out.printf("\n| %-8s | %-7s | %-8s | \n",
-                    item.getId(),
-                    item.getMethod(),
-                    item.getRentalId());
+            System.out.printf("\n| %-8s | %-7s |",
+                    item.getRentalId(),
+                    item.getMethod());
         }
         System.out.println();
-        for (int index = 0; index < widthLength; index++) {
-            System.out.print("-");
-        }
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
         System.out.println();
     }
 }

@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package main.controllers;
 
-import java.io.IOException;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,17 +16,13 @@ import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Wishlist;
 import main.utils.IDGenerator;
-import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.getEnumValue;
 
-/**
- *
- * @author trann
- */
+
 public class WishlistManager extends ListManager<Wishlist> {
 
-    public WishlistManager() throws IOException {
+    public WishlistManager() {
         super(Wishlist.className());
         list = WishlistDAO.getAllWishlists();
     }
@@ -64,7 +57,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     }
 
     public boolean updateWishlist() {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -97,7 +90,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     }
 
     public boolean deleteWishlist() {
-        if (checkEmpty(list)) {
+        if (checkNull(list)) {
             return false;
         }
 
@@ -108,14 +101,6 @@ public class WishlistManager extends ListManager<Wishlist> {
 
         list.remove(foundWishlist);
         return WishlistDAO.deleteWishlistFromDB(foundWishlist.getId());
-    }
-
-    public void searchWishlist() {
-        display(getWishlistBy("Enter wishlist's propety"));
-    }
-
-    public List<Wishlist> getWishlistBy(String message) {
-        return searchBy(getString(message, false));
     }
 
     @Override
@@ -134,7 +119,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     
     @Override
     public List<Wishlist> sortList(List<Wishlist> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -162,28 +147,39 @@ public class WishlistManager extends ListManager<Wishlist> {
         return result;
     }
 
-
     @Override
-    public void display(List<Wishlist> wishlists) {
-        if (checkEmpty(list)) {
+    public void display(List<Wishlist> tempList) {
+        if (checkNull(list)) {
             return;
         }
-        System.out.println("|------------------------------------------------------------------------------------------------");
 
-  
-        System.out.printf("|%-15s | %-15s | %-15s | %-10s | %-20s |%n",
-                "Wishlist ID", "Movie ID", "Customer ID", "Added Date", "Priority");
-        System.out.println("|------------------------------------------------------------------------------------------------");
-        for (Wishlist item : wishlists) {
-            System.out.printf("|%-15s | %-15s | %-15s | %-10s | %-20s |%n",
+        int customerL = "Customer".length();
+        int movieL = "Movie Title".length();
+        for (Wishlist item : tempList) {
+            Account foundAccount = (Account) getACM().searchById(item.getCustomerId());
+            Movie foundMovie = (Movie) getMVM().getById(item.getMovieId());
+            
+            customerL = Math.max(customerL, foundAccount.getUsername().length());
+            movieL = Math.max(movieL, foundMovie.getTitle().length());
+        }
+        
+        int widthLength = 8 + movieL + customerL + 10 + 8 + 16;
+        
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.printf("\n| %-8s | %-" + movieL + "s | %-" + customerL + "s | %-10s | %-8s |\n",
+                "ID", "Movie Titlte", "Customer", "Added Date", "Priority");
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        for (Wishlist item : tempList) {
+            System.out.printf("\n| %-8s | %-" + movieL + "s | %-" + customerL + "s | %-10s | %-8s |",
                     item.getId(),
                     item.getMovieId(),
                     item.getCustomerId(),
                     item.getAddedDate(),
                     item.getPriority().name());
         }
-
-        System.out.println("|------------------------------------------------------------------------------------------------");
+        System.out.println();
+        for (int index = 0; index < widthLength; index++) System.out.print("-");
+        System.out.println();
     }
 
 }

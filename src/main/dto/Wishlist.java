@@ -11,6 +11,9 @@ public class Wishlist extends Model {
     private String customerID;
     private LocalDate addedDate;
     private WishlistPriority priority;
+    
+    public Wishlist() {
+    }
 
     public Wishlist(String id, String movieID, String customerID, LocalDate addedDate, WishlistPriority priority) {
         super(id);
@@ -41,6 +44,11 @@ public class Wishlist extends Model {
 
     public static String className() {
         return "Wishlist";
+    }
+    
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"wishlist_id", "customer_id", "movie_id", "added_date", "priority"};
     }
 
     public String getMovieId() {
