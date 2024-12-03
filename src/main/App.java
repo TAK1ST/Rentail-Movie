@@ -34,10 +34,10 @@ public class App {
                 CustomerPannel.show(account);
                 break;
             case STAFF:
-                StaffPannel.show();
+                StaffPannel.show(account);
                 break;
             case PREMIUM:
-                PremiumPannel.show();
+                PremiumPannel.show(account);
                 break;
             default:
                 errorLog("User role is undefine");

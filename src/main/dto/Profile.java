@@ -1,9 +1,7 @@
 package main.dto;
 
-import main.exceptions.MethodNotFound;
 import java.time.LocalDate;
 import main.base.Model;
-import static main.utils.LogMessage.errorLog;
 import main.utils.Validator;
 
 public class Profile extends Model {
@@ -13,6 +11,9 @@ public class Profile extends Model {
     private String address;
     private double credit;
     private LocalDate birthday;
+    
+    public Profile() {
+    }
 
     public Profile(String accountID, String fullName, String phoneNumber, String address, double credit, LocalDate birthday) {
         super(accountID);
@@ -45,27 +46,32 @@ public class Profile extends Model {
     }
 
     public static String className() {
-        return "User";
-    }
-
-    @Override
-    public String getId() {
-        try {
-            throw new MethodNotFound("Profile only has accountId instead of id");
-        } catch (MethodNotFound e) {
-            errorLog("Exception caught: " + e.getMessage());
-            return null;
-        }
+        return "Profile";
     }
     
-    @Override
-    public void setId(String id) {
-        try {
-            throw new MethodNotFound("Profile only has accountId instead of id");
-        } catch (MethodNotFound e) {
-            errorLog("Exception caught: " + e.getMessage());
-        }
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"account_id", "full_name", "birthday", "address", "phone_number", "credit"};
     }
+
+//    @Override
+//    public String getId() {
+//        try {
+//            throw new MethodNotFound("Profile only has accountId instead of id");
+//        } catch (MethodNotFound e) {
+//            errorLog("Exception caught: " + e.getMessage());
+//            return null;
+//        }
+//    }
+//    
+//    @Override
+//    public void setId(String id) {
+//        try {
+//            throw new MethodNotFound("Profile only has accountId instead of id");
+//        } catch (MethodNotFound e) {
+//            errorLog("Exception caught: " + e.getMessage());
+//        }
+//    }
     
     public String getAccountId() {
         return super.getId();

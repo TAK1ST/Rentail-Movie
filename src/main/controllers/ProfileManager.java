@@ -1,7 +1,7 @@
 package main.controllers;
 
+
 import main.base.ListManager;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,20 +17,15 @@ import static main.utils.Validator.getDate;
 import static main.utils.Validator.getName;
 import static main.utils.Validator.getPhoneNumber;
 
-/**
- *
- * @author trann
- */
+
 public class ProfileManager extends ListManager<Profile> {
-    
-    private static final String[] searchOptions = {"account_id", "full_name", "birthday", "address", "phone_number", "credit"};
       
-    public ProfileManager() throws IOException {
+    public ProfileManager() {
         super(Profile.className());
         list = ProfileDAO.getAllProfiles();
     }
 
-    public boolean addProfile(String accountID) throws IOException { 
+    public boolean addProfile(String accountID) { 
         
         Account foundAccount = (Account) getACM().searchById(accountID);
         if (getACM().checkNull(foundAccount)) return false;
@@ -59,7 +54,7 @@ public class ProfileManager extends ListManager<Profile> {
     }
 
     public boolean updateProfile(String userID) {
-        if (checkEmpty(list)) return false;
+        if (checkNull(list)) return false;
 
         Profile foundProfile;
         if (userID.isEmpty()) {
@@ -84,8 +79,8 @@ public class ProfileManager extends ListManager<Profile> {
         return ProfileDAO.updateProfileInDB(foundProfile);
     }
 
-    public boolean deleteProfile() throws IOException { 
-        if (checkEmpty(list)) return false;
+    public boolean deleteProfile() { 
+        if (checkNull(list)) return false;
 
         Profile foundProfile = (Profile)getById("Enter user's id");
         if (checkNull(foundProfile)) return false;
@@ -111,7 +106,7 @@ public class ProfileManager extends ListManager<Profile> {
 
     @Override
     public List<Profile> sortList(List<Profile> tempList, String property) {
-        if (checkEmpty(tempList)) {
+        if (checkNull(tempList)) {
             return null;
         }
 
@@ -144,27 +139,30 @@ public class ProfileManager extends ListManager<Profile> {
     
     @Override
     public void display(List<Profile> tempList) {
-        if (checkEmpty(tempList)) return; 
-        int fullNameLength = 0;
-        int addressLength = 0;
+        if (checkNull(tempList)) {
+            return;
+        } 
+        
+        int nameL = "Full name".length();
+        int addressL = "Address".length();
         for (Profile item : list) {
-            fullNameLength = Math.max(fullNameLength, item.getFullName().length());
-            addressLength = Math.max(addressLength, item.getAddress().length());
+            nameL = Math.max(nameL, item.getFullName().length());
+            addressL = Math.max(addressL, item.getAddress().length());
         }
         
-        int widthLength = 8 + fullNameLength + 10 + addressLength + 10 + 4 + 19;
+        int widthLength = 8 + nameL + 10 + addressL + 12 + 6 + 19;
          for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + fullNameLength + "s | %-10s | %-" + addressLength + "s | %-11s | %-6s | \n",
-                "ID", "Name", "Birthday" , "Address" , "PhoneNumber" , "Credit");
+        System.out.printf("\n| %-8s | %-" + nameL + "s | %-10s | %-" + addressL + "s | %-12s | %-6s |\n",
+                "ID", "Full Name", "Birthday" , "Address" , "Phone number" , "Credit");
         for (int index = 0; index < widthLength; index++) System.out.print("-");
         for (Profile item : tempList) {
-        System.out.printf("\n| %-8s | %-" + fullNameLength + "s | %-10s | %-" + addressLength + "s | %-11s | %-6s | \n",
+        System.out.printf("\n| %-8s | %-" + nameL + "s | %-10s | %-" + addressL + "s | %-12s | %6s |",
                     item.getId(),
                     item.getFullName(),
                     item.getBirthday(),
                     item.getAddress(),
                     item.getPhoneNumber(),
-                    item.getCredit());
+                    item.getCredit() == 0f ? "0" : String.format("%-3.2f", item.getCredit()));
         }
         System.out.println();
         for (int index = 0; index < widthLength; index++) System.out.print("-");

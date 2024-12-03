@@ -4,7 +4,6 @@
  */
 package main.utils;
 
-import java.io.IOException;
 import java.util.List;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.pressEnterToContinue;
@@ -28,7 +27,7 @@ public class Menu {
                                         MenuAction[] actionsBefore,
                                         MenuOption[] options, 
                                         MenuAction[] actionsFinally,
-                                        Object... params) throws IOException {
+                                        Object... params) {
         if (options == null) {
             errorLog("Please add option to menu");
             return;
@@ -83,7 +82,7 @@ public class Menu {
         for (int index = 0; index < MENU_WIDTH; index++) System.out.print("-");
         System.out.printf("\n|%" + (begin - 1) + "s%-"+ (MENU_WIDTH/2 + half - 1) +"s|\n", " ", title);
         for (int index = 0; index < MENU_WIDTH; index++) System.out.print("-");
-        System.out.println("\n");
+        System.out.println();
     }
     
     public static void showHeader(String header) {
@@ -143,12 +142,12 @@ public class Menu {
     
     @FunctionalInterface
     public interface MenuAction {
-        public void performAction() throws IOException;
+        public void performAction();
     }
     
     @FunctionalInterface
     public interface BoolAction {
-        public boolean performAction() throws IOException;
+        public boolean performAction();
     }
 
     public static class MenuOption {

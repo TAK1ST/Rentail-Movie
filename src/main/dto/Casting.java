@@ -15,9 +15,13 @@ import static main.utils.LogMessage.errorLog;
  */
 public class Casting extends Model {
     
+    //movieId is the super Id
     private String actorID;
     private ActorRole role;
 
+    public Casting() {
+    }
+    
     public Casting(String movieID, String actorID, ActorRole role) {
         super(movieID);
         this.actorID = actorID;
@@ -39,6 +43,11 @@ public class Casting extends Model {
         return "Casting";
     }
     
+    @Override    
+    public String[] getSearchOptions() {
+        return new String[] {"movie_id", "actor_id", "role"};
+    }
+
     @Override
     public String getId() {
         try {

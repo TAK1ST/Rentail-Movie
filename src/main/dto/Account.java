@@ -16,6 +16,9 @@ public class Account extends Model {
     private LocalDate createAt;
     private LocalDate updateAt;
     private LocalDate onlineAt;
+    
+    public Account() {
+    };
 
     public Account(
             String id, 
@@ -68,6 +71,11 @@ public class Account extends Model {
 
     public static String className() {
         return "Account";
+    }
+    
+    @Override
+    public String[] getSearchOptions() {
+        return new String[] {"account_id", "username", "password", "role", "email", "status", "online_at", "created_at", "updated_at"};
     }
 
     public String getUsername() {
