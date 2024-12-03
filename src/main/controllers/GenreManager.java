@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import main.dao.GenreDAO;
 import main.dto.Genre;
+import main.utils.InfosTable;
 import static main.utils.Input.getString;
 import static main.utils.Validator.getName;
 
@@ -15,7 +16,7 @@ import static main.utils.Validator.getName;
 public class GenreManager extends ListManager<Genre> {
     
     public GenreManager() {
-        super(Genre.className());
+        super(Genre.className(), Genre.getAttributes());
         list = GenreDAO.getAllGenres();
     }
 
@@ -75,47 +76,40 @@ public class GenreManager extends ListManager<Genre> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Genre.getAttributes();
         List<Genre> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "genreName":
-                result.sort(Comparator.comparing(Genre::getGenreName));
-                break;
-            case "description":
-                result.sort(Comparator.comparing(Genre::getDescription));
-                break;
-            default:
-                result.sort(Comparator.comparing(Genre::getGenreName)); 
-                break;
+
+        if (property.equals(options[0])) {
+            result.sort(Comparator.comparing(Genre::getGenreName));
+        } else if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Genre::getDescription));
+        } else {
+            result.sort(Comparator.comparing(Genre::getGenreName));
         }
         return result;
     }
 
     @Override
-    public void display(List<Genre> tempList) {
+    public void show(List<Genre> tempList) {
         if (checkNull(tempList)) {
             return;
         } 
         
-        int genreL = "Name".length();
-        int descriptL = "Description".length();
-        for (Genre item : list) {
-            genreL = Math.max(genreL, item.getGenreName().length());
-            descriptL = Math.max(descriptL, item.getDescription().length());
-        }
+        InfosTable.getTitle(Genre.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getGenreName(), 
+                        item.getDescription()
+                )
+        );
         
-        int widthLength =  genreL +  descriptL + 7;
-         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-" + genreL + "s | %-" + descriptL + "s |\n",
-                "Name", "Description");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Genre item : tempList) {
-        System.out.printf("\n| %-" + genreL + "s | %-" + descriptL + "s |",
-                    item.getGenreName(),
-                    item.getDescription());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getGenreName(), 
+                        item.getDescription()
+                )
+        );
+        InfosTable.showFooter();
     }
 }

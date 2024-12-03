@@ -43,7 +43,7 @@ public class RentalServices {
         Rental foundRental = getRTM().getRentalByAccountMovie(IDGenerator.DEFAULT_ADMIN_ID);
         if (getRTM().checkNull(foundRental)) return false;
         
-        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieID());
         if (getMVM().checkNull(foundMovie)) return false;
         
         double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
@@ -55,7 +55,7 @@ public class RentalServices {
 
         boolean isSuccess = RentalDAO.updateRentalInDB(foundRental);
         if (isSuccess) {
-            MovieServices.adjustAvailableCopy(getRTM().getList().getLast().getMovieId(), 1);
+            MovieServices.adjustAvailableCopy(getRTM().getList().getLast().getMovieID(), 1);
         }  
         return true;
     }
@@ -64,7 +64,7 @@ public class RentalServices {
         Rental foundRental = getRTM().getRentalByAccountMovie(IDGenerator.DEFAULT_ADMIN_ID);
         if (getRTM().checkNull(foundRental)) return false;
         
-        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieID());
         if (getMVM().checkNull(foundMovie)) return false;
         
         int extraDate = getInteger("How many days to rent", 1, 365, false);

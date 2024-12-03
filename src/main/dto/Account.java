@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import main.base.Model;
 import main.constants.AccRole;
 import main.constants.AccStatus;
+import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
 public class Account extends Model {
@@ -16,9 +17,10 @@ public class Account extends Model {
     private LocalDate createAt;
     private LocalDate updateAt;
     private LocalDate onlineAt;
+    private int creability;
     
     public Account() {
-    };
+    }
 
     public Account(
             String id, 
@@ -29,7 +31,8 @@ public class Account extends Model {
             AccStatus status, 
             LocalDate createAt, 
             LocalDate updateAt,
-            LocalDate onlineAt) 
+            LocalDate onlineAt,
+            int creability) 
     {
         super(id);
         this.username = username;
@@ -40,6 +43,7 @@ public class Account extends Model {
         this.createAt = createAt;
         this.updateAt = updateAt;
         this.onlineAt = onlineAt;
+        this.creability = creability;
     }
 
     public Account(Account other) {
@@ -52,30 +56,55 @@ public class Account extends Model {
         this.createAt = other.createAt;
         this.updateAt = other.updateAt;
         this.onlineAt = other.onlineAt;
+        this.creability = other.creability;
     }
 
     @Override
     public String toString() {
-        return String.format("Account: %s, %s, %s, %s, %s, %s, %s, %s, %s.",
-                super.getId(),
-                username,
-                password,
-                email,
-                role,
-                status,
-                createAt.format(Validator.DATE),
-                updateAt.format(Validator.DATE),
-                onlineAt.format(Validator.DATE)
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %d.",
+                className(),
+                attr[count++], super.getId(),
+                attr[count++], username,
+                attr[count++], password,
+                attr[count++], email,
+                attr[count++], role,
+                attr[count++], status,
+                attr[count++], formatDate(createAt, Validator.DATE),
+                attr[count++], formatDate(updateAt, Validator.DATE),
+                attr[count++], formatDate(onlineAt, Validator.DATE),
+                attr[count++], creability
         );
     }
-
+    
     public static String className() {
         return "Account";
     }
     
-    @Override
-    public String[] getSearchOptions() {
-        return new String[] {"account_id", "username", "password", "role", "email", "status", "online_at", "created_at", "updated_at"};
+    public static String[] getAttributes() {
+        return new String[] {
+            "Id", 
+            "Username", 
+            "Password", 
+            "Role", 
+            "Email", 
+            "Status", 
+            "Online at", 
+            "Created at", 
+            "Updated at", 
+            "Creability"};
     }
 
     public String getUsername() {
@@ -140,6 +169,14 @@ public class Account extends Model {
 
     public void setOnlineAt(LocalDate onlineAt) {
         this.onlineAt = onlineAt;
+    }
+
+    public int getCreability() {
+        return creability;
+    }
+
+    public void setCreability(int creability) {
+        this.creability = creability;
     }
     
 }

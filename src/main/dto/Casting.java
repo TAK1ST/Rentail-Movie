@@ -36,16 +36,26 @@ public class Casting extends Model {
     
     @Override
     public String toString() {
-        return String.format("Casting: %s, %s, %s.", this.getMovieID(), actorID, role);
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s.",
+                className(),
+                attr[count++], this.getMovieID(),
+                attr[count++], actorID,
+                attr[count++], role
+        );
     }
-
+    
     public static String className() {
         return "Casting";
     }
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"movie_id", "actor_id", "role"};
+
+    public static String[] getAttributes() {
+        return new String[] {"Movie Id", "Actor Id", "Role"};
     }
 
     @Override

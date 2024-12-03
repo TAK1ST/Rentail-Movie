@@ -3,6 +3,7 @@ package main.dto;
 import main.base.Model;
 import java.time.LocalDate;
 import main.constants.WishlistPriority;
+import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
 public class Wishlist extends Model {
@@ -33,22 +34,30 @@ public class Wishlist extends Model {
 
     @Override
     public String toString() {
-        return String.format("Wishlist: %s, %s, %s, %s, %s.",
-                super.getId(),
-                movieID,
-                customerID,
-                addedDate.format(Validator.DATE),
-                priority
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s.",
+                className(),
+                attr[count++], super.getId(),
+                attr[count++], movieID,
+                attr[count++], customerID,
+                attr[count++], formatDate(addedDate, Validator.DATE),
+                attr[count++], priority
         );
     }
-
+    
     public static String className() {
         return "Wishlist";
     }
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"wishlist_id", "customer_id", "movie_id", "added_date", "priority"};
+     
+    public static String[] getAttributes() {
+        return new String[] {"Id", "Movie Id", "Customer Id", "Added date", "Priority"};
     }
 
     public String getMovieId() {

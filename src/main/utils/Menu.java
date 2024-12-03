@@ -45,7 +45,7 @@ public class Menu {
                 System.out.printf(format, (index + INIT_NUM), options[index].optionText);
             }
             for (int index = 0; index < MENU_WIDTH; index++) System.out.print("-");
-            System.out.println("\n");
+            System.out.println();
             
             if (actionsFinally != null)
                 for (MenuAction action : actionsFinally) 

@@ -28,16 +28,27 @@ public class Actor extends Model {
 
     @Override
     public String toString() {
-        return String.format("Actor: %s, %s, %s, %s.", super.getId(), actorName, rank, description);
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s.",
+                className(),
+                attr[count++], super.getId(),
+                attr[count++], actorName,
+                attr[count++], rank,
+                attr[count++], description
+        );
     }
-
+    
     public static String className() {
         return "Actor";
     }
-    
-    @Override
-    public String[] getSearchOptions() {
-        return new String[] {"actor_id", "actor_name", "actor_rank", "actor_description"};
+
+    public static String[] getAttributes() {
+        return new String[] {"Id", "Name", "Rank", "Description"};
     }
 
     public String getActorName() {
