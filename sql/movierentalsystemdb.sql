@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS movierentalsystemdb;
 USE movierentalsystemdb;
-
+-- drop database movierentalsystemdb;
 CREATE TABLE IF NOT EXISTS Accounts (
     account_id CHAR(8) PRIMARY KEY,
     username NVARCHAR(50) UNIQUE NOT NULL,
@@ -184,7 +184,9 @@ BEGIN
         SET NEW.is_active = FALSE;
     END IF;
 END; //
-DELIMITER;
+DELIMITER ;
+
+-- Tạo event tự động kiểm tra tài khoản BANNED sau mỗi ngày
 SET GLOBAL event_scheduler = ON;
 
 -- Kiểm tra tài khoản BANNED sau mỗi ngày
@@ -200,3 +202,19 @@ BEGIN
     AND DATEDIFF(CURRENT_DATE, updated_at) >= 30;
 END; //
 DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER update_avg_rating
+AFTER INSERT ON Reviews
+FOR EACH ROW
+BEGIN
+    UPDATE Movies
+    SET avg_rating = (
+        SELECT AVG(rating) 
+        FROM Reviews 
+        WHERE movie_id = NEW.movie_id
+    )
+    WHERE movie_id = NEW.movie_id;
+END; //
+DELIMITER ;
+
