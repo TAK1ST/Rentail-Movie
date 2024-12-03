@@ -1,6 +1,4 @@
-
 package main.controllers;
-
 
 import main.base.ListManager;
 import java.time.LocalDate;
@@ -21,6 +19,7 @@ import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.Input.returnNames;
 import static main.utils.Input.selectByNumbers;
+import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
@@ -33,40 +32,109 @@ public class MovieManager extends ListManager<Movie> {
         list = MovieDAO.getAllMovies();
     }
 
-    public boolean addMovie() {
+    public boolean add(Movie movie) {
+        if (checkNull(movie) || checkNull(list)) return false;
+        
+        list.add(movie);
+        if (MovieDAO.addMovieToDB(movie)) {
+            return (
+                addDataToMidTable("Movie_Genre", movie.getId(), "movie_id", movie.getGenreNames(), "genre_name") 
+                    &&
+                addDataToMidTable("Movie_Actor", movie.getId(), "movie_id", movie.getActorIDs(), "actor_id") 
+                    &&
+                addDataToMidTable("Movie_Language", movie.getId(), "movie_id", movie.getLanguageCodes(), "language_code")
+            );
+        }
+        return false;
+    }
+
+    public boolean update(Movie movie) {
+        if (checkNull(movie) || checkNull(list)) return false;
+
+        Movie newMoive = getInputs(new boolean[] {true, true, true, true, true, true, true, true}, movie);
+        if (newMoive != null)
+            movie = newMoive;
+        else 
+            return false;
+        return MovieDAO.updateMovieInDB(newMoive);
+    }
+
+    public boolean delete(Movie movie) {
+        if (checkNull(movie) || checkNull(list)) return false;     
+
+        if (!list.remove(movie)) {
+            errorLog("Movie not found");
+            return false;
+        }
+        return MovieDAO.deleteMovieFromDB(movie.getId());
+    }
+    
+    @Override
+    public Movie getInputs(boolean[] options, Movie oldData) {
+        if (options.length < 8) {
+            errorLog("Not enough option length");
+            return null;
+        }
         
         if (getGRM().isNull("Need genre data")
                 || getATM().isNull("Need actor data")
                 || getLGM().isNull("Need language data"))
-            return false;
+            return null;
         
-        String title = getString("Enter title", false);
-        if (title.isEmpty()) return false;
+        String title = null, description = null, genres = null, actors = null, languages = null;
+        LocalDate releaseDate = null;
+        double price = 0f;
+        int availableCopies = 0;
         
-        String description = getString("Enter description", false);
-        if (description.isEmpty()) return false;
+        if (oldData != null) {
+            title = oldData.getTitle();
+            description = oldData.getDescription();
+            genres = oldData.getGenreNames();
+            actors = oldData.getActorIDs();
+            languages = oldData.getLanguageCodes();
+            releaseDate = oldData.getReleaseYear();
+            price = oldData.getRentalPrice();
+            availableCopies = oldData.getAvailableCopies();
+        }
         
-        String genres = selectByNumbers("Enter genres (Comma-separated)", getGRM(), true);
-        if (genres.isEmpty()) return false;
+        if (options[0]) {
+            title = getString("Enter title", title);
+            if (title == null) return null;
+        }
+        if (options[1]) {
+            description = getString("Enter description", description);
+            if (description == null) return null;
+        }
+        if (options[2]) {
+            genres = selectByNumbers("Enter genres (Comma-separated)", getGRM(), genres);
+            if (genres == null) return null;
+        }
+        if (options[3]) {
+            actors = selectByNumbers("Enter actors (Comma-separated)", getATM(), actors);
+            if (actors == null) return null;
+        }
+        if (options[4]) {
+            languages = selectByNumbers("Enter languages (Comma-separated)", getLGM(), languages);
+            if (languages == null) return null;
+        }
+        if (options[5]) {
+            releaseDate = getDate("Enter release date", releaseDate);
+            if (releaseDate == null) return null;
+        }
+        if (options[6]) {
+            price = getDouble("Enter rental price", 0, Double.MAX_VALUE, price);
+            if (price == Double.MIN_VALUE) return null;
+        }
+        if (options[7]) {
+            availableCopies = getInteger("Enter available copies", 0, Integer.MAX_VALUE, availableCopies);
+            if (availableCopies == Integer.MIN_VALUE) return null;
+        }
         
-        String actors = selectByNumbers("Enter actors (Comma-separated)", getATM(), true);
-        if (actors.isEmpty()) return false;
+        String id = (oldData == null) ? IDGenerator.generateID(list.isEmpty() ? null : list.getLast().getId(), IDPrefix.MOVIE_PREFIX)
+            :
+        oldData.getId();
         
-        String languages = selectByNumbers("Enter languages (Comma-separated)", getLGM(), true);
-        if (languages.isEmpty()) return false;
-        
-        LocalDate releaseDate = getDate("Enter release date", false);
-        if (releaseDate == null) return false;
-        
-        double price = getDouble("Enter rental price", 0, Double.MAX_VALUE, false);
-        if (price == Double.MIN_VALUE) return false;
-        
-        int availableCopies = getInteger("Enter available copies", 0, Integer.MAX_VALUE, false);
-        if (availableCopies == Integer.MIN_VALUE) return false;
-        
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.MOVIE_PREFIX);
-        
-        list.add(new Movie(
+        return new Movie(
                 id,
                 title,
                 description,
@@ -79,68 +147,7 @@ public class MovieManager extends ListManager<Movie> {
                 availableCopies,
                 LocalDate.now(),
                 null
-        ));
-        if (MovieDAO.addMovieToDB(list.getLast())) {
-            return (
-                addDataToMidTable("Movie_Genre", id, "movie_id", genres, "genre_name") 
-                    &&
-                addDataToMidTable("Movie_Actor", id, "movie_id", actors, "actor_id") 
-                    &&
-                addDataToMidTable("Movie_Language", id, "movie_id", languages, "language_code")
-            );
-        }
-        return false;
-    }
-
-    public boolean addMovie(Movie movie) {
-        list.add(movie);
-        if (MovieDAO.addMovieToDB(list.getLast())) {
-            return (
-                addDataToMidTable("Movie_Genre", movie.getId(), "movie_id", movie.getGenreNames(), "genre_name") 
-                    &&
-                addDataToMidTable("Movie_Actor", movie.getId(), "movie_id", movie.getActorIDs(), "actor_id") 
-                    &&
-                addDataToMidTable("Movie_Language", movie.getId(), "movie_id", movie.getLanguageCodes(), "language_code")
-            );
-        }
-        return false;
-    }
-
-    public boolean updateMovie() {
-        if (checkNull(list)) return false;    
-
-        Movie foundMovie = (Movie) getById("Enter movie's id");
-        if (checkNull(foundMovie)) return false;
-
-        String title = getString("Enter title", true);
-        String description = getString("Enter description", true);
-        LocalDate releaseYear = getDate("Enter release date", true);
-        Double rentalPrice = getDouble("Enter rental price", 0, Double.MAX_VALUE, true);
-
-        if (!title.isEmpty()) 
-            foundMovie.setTitle(title);
-
-        if (!description.isEmpty()) 
-            foundMovie.setDescription(description);
-
-        if (releaseYear != null) 
-            foundMovie.setReleaseYear(releaseYear);
-
-        if (rentalPrice > 0) 
-            foundMovie.setRentalPrice(rentalPrice);
-
-        
-        return MovieDAO.updateMovieInDB(foundMovie);
-    }
-
-    public boolean deleteMovie() {
-        if (checkNull(list)) return false;
-
-        Movie foundMovie = (Movie) getById("Enter movie's id");
-        if (checkNull(foundMovie)) return false;
-
-        list.remove(foundMovie);
-        return MovieDAO.deleteMovieFromDB(foundMovie.getId());
+        );
     }
 
     @Override
@@ -166,7 +173,6 @@ public class MovieManager extends ListManager<Movie> {
         String[] options = Movie.getAttributes();
         List<Movie> result = new ArrayList<>(tempList);
 
-        int index = 0;
         if (property.equals(options[0])) {
             result.sort(Comparator.comparing(Movie::getTitle));
         } else if (property.equals(options[1])) {

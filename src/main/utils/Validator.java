@@ -4,6 +4,7 @@
  */
 package main.utils;
 
+import static java.lang.Integer.getInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -14,7 +15,6 @@ import java.util.Scanner;
 import main.dto.Account;
 import static main.utils.Input.askToExit;
 import static main.utils.Input.getString;
-import static main.utils.LogMessage.debugLog;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.infoLog;
 
@@ -34,40 +34,36 @@ public class Validator {
     
     private static final Scanner scanner = new Scanner(System.in);
     
-    public static String getUsername(String message, boolean enterToPass, List<Account> list) {
-        String input = "";
+    public static String getUsername(String message, String oldData, List<Account> list) {
+        String input = null;
         boolean isUnique = false;
         do {
-            if (enterToPass) infoLog("Press Enter to skip");
-            
-            System.out.printf("%s: ", message);
-            input = scanner.nextLine();   
-            if (input.isEmpty() && enterToPass) 
-                return "";
+            input = getString(message, oldData);
+            if (input == null) return null;
 
             if (input.isEmpty()) {
                 errorLog("Username must not be empty");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (input.length() < 4) {
                 errorLog("Username must be at least 4 character");   
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (input.contains(" ")) {
                 errorLog("Username must not contain space");    
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (Character.isDigit(input.charAt(0))) {
                 errorLog("Username must not begin with number"); 
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (input.matches(".*" + NAME_SPECIAL_CHAR_PATTERN + ".*")) {
                 errorLog("Username contains special characters");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             } 
             
@@ -75,43 +71,40 @@ public class Validator {
             for(Account item : list) 
                 if (item.getUsername().equals(input)) {
                     errorLog("Username has already exist");
-                    if(askToExit()) return "";
+                    if(askToExit()) return null;
                     isUnique = false;
                 }
         } while (!isUnique);
         return input;
     }
     
-    public static String getPassword(String message, boolean enterToPass) {
-        String input = "";
+    public static String getPassword(String message, String oldData) {
+        String input = null;
         boolean pass = false;
         do {
-            if (enterToPass) infoLog("Press Enter to skip");
-            
-            System.out.printf("%s: ", message);
-            input = scanner.nextLine();
-            if (input.isEmpty() && enterToPass) 
-                return "";
+            input = getString(message, oldData);
+            if (input == null) 
+                return null;
             
             if (input.isEmpty()) {
                 errorLog("Password must not be empty");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (input.length() < 6) {
                 errorLog("Password must be at least 6 character");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (input.contains(" ")) {
                 errorLog("Password must not contain space");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (!input.matches(PASSWORD_PATTERN)) {
                 errorLog("Password contains forbidden characters");
                 infoLog("!,@,#,$,%,&,*,-,_,+ are allowed");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             confirmPassword("Confirm password", input);
@@ -134,32 +127,27 @@ public class Validator {
             if(!input.equals(password)) {
                 errorLog("Password Unmatch");
                 if(askToExit()) return;
-                continue;
             } else 
                 return;
         } while (true);
     }
     
-    public static String getName(String message, boolean enterToPass) {
-        String input = "";
+    public static String getName(String message, String oldData) {
+        String input = null;
         boolean pass = false;
         do {
-            if (enterToPass) 
-                infoLog("Press Enter to skip");
-            
-            System.out.printf("%s: ", message);
-            input = scanner.nextLine(); 
-            if (input.isEmpty() && enterToPass) 
-               return "";
+            input = getString(message, oldData);
+            if (input == null) 
+                return null;
             
             if (input.isEmpty()) {
                 errorLog("Name must not be empty");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (input.matches(".*" + FULLNAME_SPECIAL_CHAR_PATTERN + ".*")) {
                 errorLog("Name must not have special characters");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             pass = true;
@@ -169,31 +157,27 @@ public class Validator {
         return input.trim();
     }
     
-    public static String getFullName(String message, boolean enterToPass) {
-        String input = "";
+    public static String getFullName(String message, String oldData) {
+        String input = null;
         boolean pass = false;
         do {
-            if (enterToPass) 
-                infoLog("Press Enter to skip");
-            
-            System.out.printf("%s: ", message);
-            input = scanner.nextLine(); 
-            if (input.isEmpty() && enterToPass) 
-               return "";
+            input = getString(message, oldData);
+            if (input == null) 
+                return null;
             
             if (input.isEmpty()) {
                 errorLog("Full name must not be empty");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (input.matches(".*\\d.*")) {
                 errorLog("Full name must not contain number");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (input.matches(".*" + FULLNAME_SPECIAL_CHAR_PATTERN + ".*")) {
                 errorLog("Full name must not have special characters");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             pass = true;
@@ -203,62 +187,56 @@ public class Validator {
         return input.trim();
     }
     
-    public static String getPhoneNumber(String message, boolean enterToPass) {
-        String input = "";
+    public static String getPhoneNumber(String message, String oldData) {
+        String input = null;
         boolean pass = false;
         do {
-            if (enterToPass) 
-                infoLog("Press Enter to skip");
-            
-            input = getString(message, enterToPass);
-            if (input.isEmpty() && enterToPass) 
-                return "";
+            input = getString(message, oldData);
+            if (input == null) 
+                return null;
 
             if (input.isEmpty()) {
                 errorLog("Phone number must not be empty");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (input.contains(" ")) {
                 errorLog("Contains space");   
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
-            if (input.replaceAll("\\D", "").length() != 10) {
+            if (input.replaceAll("\\D", null).length() != 10) {
                 errorLog("Phone number must be 10 digit");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             pass = true;
         } while (!pass);
 
-        return input.replaceAll("\\D", "");
+        return input.replaceAll("\\D", null);
     }
 
-    public static String getEmail(String message, boolean enterToPass) {
-        String input = "";
+    public static String getEmail(String message, String oldData) {
+        String input = null;
         boolean pass = false;
         do {
-            if (enterToPass) 
-                infoLog("Press Enter to skip");
-            
-            input = getString(message, enterToPass);
-            if (input.isEmpty() && enterToPass) 
-                return "";
+            input = getString(message, oldData);
+            if (input == null) 
+                return null;
 
             if (input.isEmpty()) {
                 errorLog("Email must not be empty");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (input.contains(" ")) {
                 errorLog("Contains space");      
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             if (!input.matches(EMAIL_PATTERN)) {
                 errorLog("Email format is wrong");
-                if(askToExit()) return "";
+                if(askToExit()) return null;
                 continue;
             }
             pass = true;
@@ -267,16 +245,12 @@ public class Validator {
         return input;
     }
     
-    public static LocalDate getDate(String message, boolean enterToPass) {
-        String input = "";
+    public static LocalDate getDate(String message, LocalDate oldData) {
+        String input = null;
         do {
-            if (enterToPass) 
-                infoLog("Press Enter to skip");
-            
-            System.out.printf("%s (%s): ", message, "dd/MM/yyyy");
-            input = scanner.nextLine(); 
-            if (input.isEmpty() && enterToPass) 
-               return null;
+            input = getString("%s (%s): "+ message + "dd/MM/yyyy", oldData.toString());
+            if (input == null) 
+                return null;
             
             if (input.isEmpty()) {
                 errorLog("Date must not be empty");
@@ -292,19 +266,22 @@ public class Validator {
         return LocalDate.parse(input, DATE);
     }
     
-    public static LocalTime getTime() {
+    public static LocalTime getTime(LocalTime oldData) {
         int hours, minutes, seconds;
 
         while (true) {
             try {
-                System.out.print("Enter hours (0-23): ");
-                hours = Integer.parseInt(scanner.nextLine());
-
-                System.out.print("Enter minutes (0-59): ");
-                minutes = Integer.parseInt(scanner.nextLine());
-
-                System.out.print("Enter seconds (0-59): ");
-                seconds = Integer.parseInt(scanner.nextLine());
+                hours = getInteger("Enter hours (0-23)", Integer.MIN_VALUE);
+                if (hours == Integer.MIN_VALUE) 
+                    return oldData;
+                
+                minutes = getInteger("Enter minutes (0-59)", Integer.MIN_VALUE);
+                if (minutes == Integer.MIN_VALUE) 
+                    return oldData;
+                
+                seconds = getInteger("Enter seconds (0-59)", Integer.MIN_VALUE);
+                if (seconds == Integer.MIN_VALUE) 
+                    return oldData;
 
                 if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59 || seconds < 0 || seconds > 59) {
                     throw new IllegalArgumentException("Invalid time. Please try again.");
@@ -317,9 +294,9 @@ public class Validator {
         }
     }
     
-    public static LocalDateTime getDateTime() {
-        LocalDate date = getDate("Enter date", false);
-        LocalTime time = getTime();
+    public static LocalDateTime getDateTime(String message, LocalDateTime oldData) {
+        LocalDate date = getDate("Enter date", oldData.toLocalDate());
+        LocalTime time = getTime(oldData.toLocalTime());
  
         return date.atTime(time);
     }

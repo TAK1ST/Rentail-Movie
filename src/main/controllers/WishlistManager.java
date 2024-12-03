@@ -1,6 +1,4 @@
-
 package main.controllers;
-
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,6 +19,7 @@ import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
+import static main.utils.Validator.getDate;
 
 
 public class WishlistManager extends ListManager<Wishlist> {
@@ -30,80 +29,84 @@ public class WishlistManager extends ListManager<Wishlist> {
         list = WishlistDAO.getAllWishlists();
     }
 
-    public boolean addWishlist(String customerID) {
-        Account foundAccount = (Account) getACM().searchById(customerID);
-        if (getACM().checkNull(foundAccount)) {
-            return false;
-        }
-
-        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
-        if (getMVM().checkNull(foundMovie)) {
-            return false;
-        }
-
-        for (Wishlist item : list) {
-            if (item.getCustomerId().equals(foundAccount.getId()) && item.getMovieId().equals(foundMovie.getId())) {
-                errorLog("This movie already added");
-                return false;
-            }
-        }
-        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, false);
-        if (priority == WishlistPriority.NONE) return false;
-        list.add(new Wishlist(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.WISHLIST_PREFIX),
-                foundMovie.getId(),
-                foundAccount.getId(),
-                LocalDate.now(),
-                priority
-        ));
+    public boolean add(Wishlist wishlist) {
+        if (checkNull(wishlist) || checkNull(list)) return false;
+        
+        list.add(wishlist);
         return WishlistDAO.addWishlistToDB(list.getLast());
     }
 
-    public boolean updateWishlist() {
-        if (checkNull(list)) {
+    public boolean update(Wishlist wishlist) {
+        if (checkNull(wishlist) || checkNull(list)) return false;
+
+        Wishlist newWishlist = getInputs(new boolean[] {true, true, true, true}, wishlist);
+        if (newWishlist != null)
+            wishlist = newWishlist;
+        else 
             return false;
-        }
-
-        Wishlist foundWishlist = (Wishlist) getById("Enter wishlist' id");
-        if (checkNull(foundWishlist)) {
-            return false;
-        }
-
-        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
-        if (getMVM().checkNull(foundMovie)) {
-            return false;
-        }
-
-
-        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose wishlist type", WishlistPriority.class, true);
-        
-        if(!foundMovie.getId().equals(foundWishlist.getMovieId())) {
-            foundWishlist.setMovieId(foundMovie.getId());
-        }
-
-        if (priority != WishlistPriority.NONE) {
-            foundWishlist.setPriority(priority);
-        }
-
-        if (!foundMovie.getId().equals(foundWishlist.getMovieId()) || priority != WishlistPriority.NONE) {
-            foundWishlist.setAddedDate(LocalDate.now());
-        }
-
-        return WishlistDAO.updateWishlistInDB(foundWishlist);
+        return WishlistDAO.updateWishlistInDB(newWishlist);
     }
 
-    public boolean deleteWishlist() {
-        if (checkNull(list)) {
+    public boolean delete(Wishlist wishlist) {
+        if (checkNull(wishlist) || checkNull(list)) return false;     
+
+        if (!list.remove(wishlist)) {
+            errorLog("WishList not found");
             return false;
         }
-
-        Wishlist foundWishlist = (Wishlist) getById("Enter wishlist's id");
-        if (checkNull(foundWishlist)) {
-            return false;
+        return WishlistDAO.deleteWishlistFromDB(wishlist.getId());
+    }
+    
+    @Override
+    public Wishlist getInputs(boolean[] options, Wishlist oldData) {
+        if (options.length < 4) {
+            errorLog("Not enough option length");
+            return null;
         }
-
-        list.remove(foundWishlist);
-        return WishlistDAO.deleteWishlistFromDB(foundWishlist.getId());
+        
+        Movie movie = null;
+        Account customer = null;
+        WishlistPriority priority = WishlistPriority.NONE;
+        LocalDate addedDate = null;
+        
+        if (oldData != null) {
+            movie = (Movie) getMVM().searchById(oldData.getMovieId());
+            if (getMVM().checkNull(movie)) return null;
+            
+            customer = (Account) getACM().searchById(oldData.getCustomerId());
+            if (getACM().checkNull(customer)) return null;
+            
+            priority = oldData.getPriority();
+            addedDate = oldData.getAddedDate();
+        }
+        
+        if (options[0]) {
+            movie = (Movie) getMVM().getById("Enter movie's id");
+            if (getMVM().checkNull(movie)) return null;
+        }
+        if (options[1]) {
+            customer = (Account) getACM().getById("Enter customer's id");
+            if (getACM().checkNull(customer)) return null;
+        }
+        if (options[2]) {
+            priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, priority);
+            if (priority == WishlistPriority.NONE) return null;
+        }
+        if (options[3]) {
+            addedDate = oldData == null ? LocalDate.now() : getDate("Enter date", addedDate);
+        }
+        
+        String id = (oldData == null) ? IDGenerator.generateID(list.isEmpty() ? null : list.getLast().getId(), IDPrefix.WISHLIST_PREFIX)
+                :
+            oldData.getId();
+        
+        return new Wishlist(
+                id,
+                movie.getId(),
+                customer.getId(),
+                addedDate,
+                priority
+        );
     }
 
     @Override
