@@ -10,10 +10,8 @@ import main.constants.IDPrefix;
 import main.constants.payment.PaymentMethod;
 import main.constants.payment.PaymentStatus;
 import static main.controllers.Managers.getACM;
-import static main.controllers.Managers.getRTM;
 import main.dao.PaymentDAO;
 import main.dto.Account;
-import main.dto.Rental;
 import main.dto.Payment;
 import main.utils.IDGenerator;
 import main.utils.InfosTable;
@@ -59,9 +57,8 @@ public class PaymentManager extends ListManager<Payment> {
     @Override
     public Payment getInputs(boolean[] options, Payment oldData) {
         if (options == null) {
-            options = new boolean[] { true, true, true, true };
+            options = new boolean[] {true, true, true, true};
         }
-        
         if (options.length < 4) {
             errorLog("Not enough option length");
             return null;
@@ -126,8 +123,12 @@ public class PaymentManager extends ListManager<Payment> {
     public List<Payment> searchBy(String propety) {
         List<Payment> result = new ArrayList<>();
         for (Payment item : list) {
-            if (item.getId().equals(propety)
-                    || item.getMethod().name().equals(propety)) {
+            if (item == null)
+                continue;
+            if ((item.getId() != null && item.getId().equals(propety))
+                    || (item.getMethod() != null && item.getMethod().name().equals(propety))
+                ) 
+            {
                 result.add(item);
             }
         }
@@ -136,23 +137,24 @@ public class PaymentManager extends ListManager<Payment> {
 
     @Override
     public List<Payment> sortList(List<Payment> tempList, String property) {
-        if (checkNull(tempList)) {
-            return null;
-        }
+        if (checkNull(tempList)) return null;
+        
+        if (property == null) return tempList;
+        
         String[] options = Payment.getAttributes();
         List<Payment> result = new ArrayList<>(tempList);
 
-        if (property.equals(options[0])) {
+        if (property.equalsIgnoreCase(options[0])) {
             result.sort(Comparator.comparing(Payment::getId));
-        } else if (property.equals(options[1])) {
+        } else if (property.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Payment::getCustomerID));
-        } else if (property.equals(options[2])) {
+        } else if (property.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Payment::getAmount));
-        } else if (property.equals(options[3])) {
+        } else if (property.equalsIgnoreCase(options[3])) {
             result.sort(Comparator.comparing(Payment::getMethod));
-        } else if (property.equals(options[4])) {
+        } else if (property.equalsIgnoreCase(options[4])) {
             result.sort(Comparator.comparing(Payment::getTransactionTime));
-        } else if (property.equals(options[5])) {
+        } else if (property.equalsIgnoreCase(options[5])) {
             result.sort(Comparator.comparing(Payment::getStatus));
         } else {
             result.sort(Comparator.comparing(Payment::getId)); 

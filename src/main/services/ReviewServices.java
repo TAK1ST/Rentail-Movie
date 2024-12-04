@@ -32,7 +32,6 @@ public class ReviewServices {
         if (getRVM().checkNull(movieReviews)) return;
         
         getMVM().show(movie, "");
-        getRVM().display(movieReviews);
         
         InfosTable.getTitle("Username", "Rating", "Comment", "Date");
         movieReviews.forEach(item -> 

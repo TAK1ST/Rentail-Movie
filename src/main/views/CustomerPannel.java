@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.views;
 
 import static main.controllers.Managers.getMVM;
@@ -18,19 +14,16 @@ import main.services.ReviewServices;
 import main.services.WishlistServices;
 import main.utils.Menu;
 import main.utils.Menu.MenuOption;
-import static main.utils.Menu.MenuOption.Finally.ASK_FOR_AGAIN;
-import static main.utils.Menu.MenuOption.Finally.ENTER_TO_CONTINUE;
-import static main.utils.Menu.MenuOption.Finally.EXIT_MENU;
+import static main.utils.Menu.MenuOption.After.ASK_FOR_AGAIN;
+import static main.utils.Menu.MenuOption.After.ENTER_TO_CONTINUE;
+import static main.utils.Menu.MenuOption.After.EXIT_MENU;
 
-/**
- *
- * @author trann
- */
+
 public class CustomerPannel {
     
     public static void show(Account account) {
         Menu.showManagerMenu(
-            "Movie Rental (Customer)",
+            "Movie Rental (Customer)", 3,
             null,
             new MenuOption[]{
                 new MenuOption("Show my profile", 
@@ -69,7 +62,7 @@ public class CustomerPannel {
                         () -> CustomerServices.deleteAccount(account), EXIT_MENU),
                 new MenuOption("Log Out", EXIT_MENU),
             },
-            null
+            null, null
         );
     }
     

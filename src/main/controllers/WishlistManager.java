@@ -117,10 +117,13 @@ public class WishlistManager extends ListManager<Wishlist> {
     public List<Wishlist> searchBy(String propety) {
         List<Wishlist> result = new ArrayList<>();
         for (Wishlist item : list) {
-            if (item.getId().equals(propety)
-                    || item.getMovieId().equals(propety)
-                    || item.getCustomerId().equals(propety)
-                    || item.getPriority().name().equals(propety)) {
+            if (item == null)
+                continue;
+            if ((item.getId() != null && item.getId().equals(propety))
+                    || (item.getMovieId() != null && item.getMovieId().equals(propety))
+                    || (item.getCustomerId() != null && item.getCustomerId().equals(propety))
+                    || (item.getPriority() != null && item.getPriority().name().equals(propety))) 
+            {
                 result.add(item);
             }
         }
@@ -129,22 +132,22 @@ public class WishlistManager extends ListManager<Wishlist> {
     
     @Override
     public List<Wishlist> sortList(List<Wishlist> tempList, String property) {
-        if (checkNull(tempList)) {
-            return null;
-        }
+        if (checkNull(tempList)) return null;
+        
+        if (property == null) return tempList;
 
         String[] options = Wishlist.getAttributes(); 
         List<Wishlist> result = new ArrayList<>(tempList);
-
-        if (property.equals(options[0])) {
+        
+        if (property.equalsIgnoreCase(options[0])) {
             result.sort(Comparator.comparing(Wishlist::getId));
-        } else if (property.equals(options[1])) {
+        } else if (property.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Wishlist::getCustomerId));
-        } else if (property.equals(options[2])) {
+        } else if (property.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Wishlist::getMovieId));
-        } else if (property.equals(options[3])) {
+        } else if (property.equalsIgnoreCase(options[3])) {
             result.sort(Comparator.comparing(Wishlist::getAddedDate));
-        } else if (property.equals(options[4])) {
+        } else if (property.equalsIgnoreCase(options[4])) {
             result.sort(Comparator.comparing(Wishlist::getPriority));
         } else {
             result.sort(Comparator.comparing(Wishlist::getId));
@@ -160,24 +163,30 @@ public class WishlistManager extends ListManager<Wishlist> {
 
         InfosTable.getTitle(Wishlist.getAttributes());
         tempList.forEach(item -> 
-                InfosTable.calcLayout(
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
                         item.getId(), 
                         item.getMovieId(),
                         item.getCustomerId(),
                         formatDate(item.getAddedDate(), Validator.DATE),
                         item.getPriority()
-                )
+                );
+            }
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
-                InfosTable.displayByLine(
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
                         item.getId(), 
                         item.getMovieId(),
                         item.getCustomerId(),
                         formatDate(item.getAddedDate(), Validator.DATE),
                         item.getPriority()
-                )
+                );
+            }
         );
         InfosTable.showFooter();
     }

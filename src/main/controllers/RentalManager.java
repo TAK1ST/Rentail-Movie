@@ -65,7 +65,10 @@ public class RentalManager extends ListManager<Rental> {
     
     @Override
     public Rental getInputs(boolean[] options, Rental oldData) {
-        if (options.length < 4) {
+        if (options == null) {
+            options = new boolean[] {true, true, true, true, true};
+        } 
+        if (options.length < 5) {
             errorLog("Not enough option length");
             return null;
         }
@@ -88,6 +91,7 @@ public class RentalManager extends ListManager<Rental> {
             status = oldData.getStatus();
             dueDate = oldData.getDueDate();
             returnDate = oldData.getReturnDate();
+            lateFee = oldData.getLateFee();
         }
         
         String id = (oldData == null) ? IDGenerator.generateID(list.isEmpty() ? null : list.getLast().getId(), IDPrefix.RENTAL_PREFIX)
@@ -156,16 +160,18 @@ public class RentalManager extends ListManager<Rental> {
     public List<Rental> searchBy(String propety) {
         List<Rental> result = new ArrayList<>();
         for (Rental item : list) {
-            if (item.getId().equals(propety)
-                    || item.getCustomerID().equals(propety)
-                    || item.getMovieID().equals(propety)
-                    || item.getStaffID().equals(propety)
-                    || item.getRentalDate().format(Validator.DATE).contains(propety.trim())
-                    || item.getDueDate().format(Validator.DATE).contains(propety.trim())
-                    || item.getReturnDate().format(Validator.DATE).contains(propety.trim())
+            if (item == null)
+                continue;
+            if ((item.getId() != null && item.getId().equals(propety))
+                    || (item.getCustomerID() != null && item.getCustomerID().equals(propety))
+                    || (item.getMovieID() != null && item.getMovieID().equals(propety))
+                    || (item.getStaffID() != null && item.getStaffID().equals(propety))
+                    || (item.getRentalDate() != null && item.getRentalDate().format(Validator.DATE).contains(propety.trim()))
+                    || (item.getDueDate() != null && item.getDueDate().format(Validator.DATE).contains(propety.trim()))
+                    || (item.getReturnDate() != null && item.getReturnDate().format(Validator.DATE).contains(propety.trim()))
                     || String.valueOf(item.getTotalAmount()).equals(propety)
                     || String.valueOf(item.getLateFee()).equals(propety)
-                    || propety.trim().toLowerCase().contains(item.getStatus().toString().toLowerCase())) {
+                    || (item.getStatus() != null && item.getStatus().name().equals(propety.toLowerCase().trim()))) {
                 result.add(item);
             }
         }
@@ -174,31 +180,32 @@ public class RentalManager extends ListManager<Rental> {
 
     @Override
     public List<Rental> sortList(List<Rental> tempList, String property) {
-        if (checkNull(tempList)) {
-            return null;
-        }
+        if (checkNull(tempList)) return null;
+        
+        if (property == null) return tempList;
+        
         String[] options = Rental.getAttributes();
         List<Rental> result = new ArrayList<>(tempList);
 
-        if (property.equals(options[0])) {
+        if (property.equalsIgnoreCase(options[0])) {
             result.sort(Comparator.comparing(Rental::getId));
-        } else if (property.equals(options[1])) {
+        } else if (property.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Rental::getMovieID));
-        } else if (property.equals(options[2])) {
+        } else if (property.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Rental::getStaffID));
-        } else if (property.equals(options[3])) {
+        } else if (property.equalsIgnoreCase(options[3])) {
             result.sort(Comparator.comparing(Rental::getCustomerID));
-        } else if (property.equals(options[4])) {
+        } else if (property.equalsIgnoreCase(options[4])) {
             result.sort(Comparator.comparing(Rental::getDueDate));
-        } else if (property.equals(options[5])) {
+        } else if (property.equalsIgnoreCase(options[5])) {
             result.sort(Comparator.comparing(Rental::getRentalDate));
-        } else if (property.equals(options[6])) {
+        } else if (property.equalsIgnoreCase(options[6])) {
             result.sort(Comparator.comparing(Rental::getReturnDate));
-        } else if (property.equals(options[7])) {
+        } else if (property.equalsIgnoreCase(options[7])) {
             result.sort(Comparator.comparing(Rental::getStatus));
-        } else if (property.equals(options[8])) {
+        } else if (property.equalsIgnoreCase(options[8])) {
             result.sort(Comparator.comparing(Rental::getTotalAmount));
-        } else if (property.equals(options[9])) {
+        } else if (property.equalsIgnoreCase(options[9])) {
             result.sort(Comparator.comparing(Rental::getLateFee));
         } else {
             result.sort(Comparator.comparing(Rental::getId)); // Default case
@@ -213,7 +220,9 @@ public class RentalManager extends ListManager<Rental> {
         }
         InfosTable.getTitle(Rental.getAttributes());
         tempList.forEach(item ->
-                InfosTable.calcLayout(
+            {
+                if (item != null) 
+                    InfosTable.calcLayout(
                         item.getId(),
                         item.getMovieID(),
                         item.getCustomerID(),
@@ -224,12 +233,15 @@ public class RentalManager extends ListManager<Rental> {
                         item.getStatus(),
                         item.getTotalAmount(),
                         item.getLateFee()
-                )
+                );
+            }
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
-                InfosTable.displayByLine(
+            {
+                if (item != null) 
+                    InfosTable.displayByLine(
                         item.getId(),
                         item.getMovieID(),
                         item.getCustomerID(),
@@ -240,7 +252,8 @@ public class RentalManager extends ListManager<Rental> {
                         item.getStatus(),
                         item.getTotalAmount(),
                         item.getLateFee()
-                )
+                );
+            }
         );
         InfosTable.showFooter();
     }

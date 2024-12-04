@@ -56,6 +56,9 @@ public class ProfileManager extends ListManager<Profile> {
     
     @Override
     public Profile getInputs(boolean[] options, Profile oldData) {
+        if (options == null) {
+            options = new boolean[] {true, true, true, true};
+        }
         if (options.length < 4) {
             errorLog("Not enough option length");
             return null;
@@ -104,37 +107,42 @@ public class ProfileManager extends ListManager<Profile> {
     @Override
     public List<Profile> searchBy(String propety) {
         List<Profile> result = new ArrayList<>();
-        for (Profile item : list) 
-            if (item.getId().equals(propety)
+        for (Profile item : list) {
+            if (item == null)
+                continue;
+            if ((item.getId() != null && item.getId().equals(propety))
                     || (item.getFullName()      != null && propety.trim().toLowerCase().contains(item.getFullName().trim().toLowerCase())) 
                     || (item.getPhoneNumber()   != null && item.getPhoneNumber().equals(propety))
                     || (item.getAddress()       != null && item.getAddress().trim().toLowerCase().contains(propety))
                     || (item.getBirthday()      != null && item.getBirthday().format(Validator.DATE).contains(propety.trim()))
-                    || String.valueOf(item.getCredit()).equals(propety)
-            ) result.add(item);
-        
+                    || String.valueOf(item.getCredit()).equals(propety)) 
+            {
+                result.add(item);
+            }
+        }
         return result;
     }
 
     @Override
     public List<Profile> sortList(List<Profile> tempList, String property) {
-        if (checkNull(tempList)) {
-            return null;
-        }
+        if (checkNull(tempList)) return null;
+        
+        if (property == null) return tempList;
+        
         String[] options = Profile.getAttributes();
         List<Profile> result = new ArrayList<>(tempList);
 
-        if (property.equals(options[0])) {
+        if (property.equalsIgnoreCase(options[0])) {
             result.sort(Comparator.comparing(Profile::getAccountId));
-        } else if (property.equals(options[1])) {
+        } else if (property.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Profile::getFullName));
-        } else if (property.equals(options[2])) {
+        } else if (property.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Profile::getBirthday));
-        } else if (property.equals(options[3])) {
+        } else if (property.equalsIgnoreCase(options[3])) {
             result.sort(Comparator.comparing(Profile::getAddress));
-        } else if (property.equals(options[4])) {
+        } else if (property.equalsIgnoreCase(options[4])) {
             result.sort(Comparator.comparing(Profile::getPhoneNumber));
-        } else if (property.equals(options[5])) {
+        } else if (property.equalsIgnoreCase(options[5])) {
             result.sort(Comparator.comparing(Profile::getCredit));
         } else {
             result.sort(Comparator.comparing(Profile::getAccountId)); // Default case
@@ -150,26 +158,32 @@ public class ProfileManager extends ListManager<Profile> {
         
         InfosTable.getTitle(Profile.getAttributes());
         tempList.forEach(item -> 
-                InfosTable.calcLayout(
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
                         item.getAccountId(), 
                         item.getFullName(),
                         item.getPhoneNumber(),
                         item.getAddress(),
                         item.getCredit(),
                         formatDate(item.getBirthday(), Validator.DATE)
-                )
+                );
+            }
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
-                InfosTable.displayByLine(
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
                         item.getAccountId(), 
                         item.getFullName(),
                         item.getPhoneNumber(),
                         item.getAddress(),
                         item.getCredit(),
                         formatDate(item.getBirthday(), Validator.DATE)
-                )
+                );
+            }
         );
         InfosTable.showFooter();
     }

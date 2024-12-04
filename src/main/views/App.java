@@ -1,4 +1,3 @@
-
 package main.views;
 
 import java.io.IOException;
@@ -8,13 +7,7 @@ import main.config.Database;
 import main.controllers.Managers;
 import main.dto.Account;
 import static main.utils.Input.yesOrNo;
-import main.views.AdminPannel;
-import main.views.AuthenPannel;
-import main.views.CustomerPannel;
 import static main.utils.LogMessage.errorLog;
-import static main.utils.statisticUtils.getTop5RevenueGeneratingMovies;
-import main.views.PremiumPannel;
-import main.views.StaffPannel;
 
 public class App {
 

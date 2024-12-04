@@ -1,13 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.views;
 
 import static main.controllers.Managers.getACM;
-import static main.controllers.Managers.getDCM;
 import static main.controllers.Managers.getMVM;
-import static main.controllers.Managers.getRTM;
 import static main.controllers.Managers.getRVM;
 import static main.controllers.Managers.getWLM;
 import main.dto.Account;
@@ -19,19 +13,16 @@ import main.services.RentalServices;
 import main.services.ReviewServices;
 import main.services.WishlistServices;
 import main.utils.Menu;
-import static main.utils.Menu.MenuOption.Finally.ASK_FOR_AGAIN;
-import static main.utils.Menu.MenuOption.Finally.ENTER_TO_CONTINUE;
-import static main.utils.Menu.MenuOption.Finally.EXIT_MENU;
+import static main.utils.Menu.MenuOption.After.ASK_FOR_AGAIN;
+import static main.utils.Menu.MenuOption.After.ENTER_TO_CONTINUE;
+import static main.utils.Menu.MenuOption.After.EXIT_MENU;
 
-/**
- *
- * @author trann
- */
+
 public class PremiumPannel {
     
     public static void show(Account account) {
         Menu.showManagerMenu(
-            "Movie Rental (Premium)",
+            "Movie Rental (Premium)", 3,
             null,
             new Menu.MenuOption[]{
                 new Menu.MenuOption("Show my profile", 
@@ -70,7 +61,7 @@ public class PremiumPannel {
                         () -> CustomerServices.deleteAccount(account), EXIT_MENU),
                 new Menu.MenuOption("Log Out", EXIT_MENU),
             },
-            null
+            null, null
         );
     }
     

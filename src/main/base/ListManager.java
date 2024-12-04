@@ -111,16 +111,17 @@ public abstract class ListManager<T extends Model> {
     public void showWithSort(List<T> tempList, String[] options) {
         if (checkNull(tempList)) return;
         
+        String propety = null;
         List<T> temp = new ArrayList<>(tempList);
         do {
-            show(temp);
+            show(sortList(temp, propety));
             if (options == null)
                 return;
             if (yesOrNo("\nSort list")) {
-                String propety = selectInfo("Sort by", options, false);
-                if (propety.isEmpty()) return;
+                propety= selectInfo("Sort by", options, false);
+                if (propety == null) return;
                 
-                sortList(temp, propety);
+                
             } else return;
         } while(true);
     }
@@ -143,16 +144,16 @@ public abstract class ListManager<T extends Model> {
     public void display(List<T> tempList, String[] options, boolean showDetail) {
         if (checkNull(tempList)) return;
         
+        String propety = null;
         List<T> temp = new ArrayList<>(tempList);
         do {
-            show(temp);
+            show(sortList(temp, propety));
             if (options == null)
                 return;
             if (yesOrNo("\nSort list")) {
-                String propety = selectInfo("Sort by", options, false);
-                if (propety.isEmpty()) return;
-                
-                sortList(temp, propety);
+                propety = selectInfo("Sort by", options, false);
+                infoLog(propety);
+                if (propety == null) return;
             } 
             else if (yesOrNo(String.format("\nDisplay %s details", className.toLowerCase()))) {
                 show(getById(String.format("Enter %s's id", className.toLowerCase())), "");
@@ -190,5 +191,7 @@ public abstract class ListManager<T extends Model> {
     public void display() {
         display(list, null, false);
     }
+    
+    
     
 }
