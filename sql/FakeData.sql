@@ -1,4 +1,5 @@
-USE movierentalsystemdb;
+
+-- USE movierentalsystemdb;
 
 INSERT INTO Accounts VALUES 
 ('AD000001', 'admin_user', 'password123', 'ADMIN', 'admin@mail.com', 'OFFLINE', DEFAULT, DEFAULT, DEFAULT, 10),

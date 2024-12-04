@@ -11,8 +11,7 @@ import main.config.Database;
 public class statisticUtils {
 
     public static Map<String, Double> getTop5RevenueGeneratingMovies() {
-        String sql
-                = "SELECT m.title,"
+        String sql = "SELECT m.title,"
                 + " SUM(r.total_amount + COALESCE(r.late_fee, 0)) as total_revenue "
                 + "FROM Movies m "
                 + "JOIN Rentals r ON m.movie_id = r.movie_id "

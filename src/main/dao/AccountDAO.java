@@ -125,7 +125,7 @@ public class AccountDAO {
                         rs.getDate("created_at") != null ? rs.getDate("created_at").toLocalDate() : null,
                         rs.getDate("updated_at") != null ? rs.getDate("updated_at").toLocalDate() : null,
                         rs.getDate("online_at") != null ? rs.getDate("online_at").toLocalDate() : null,
-                        rs.getInt("creability")
+                        rs.getInt("creability") > 100 ? 100 : rs.getInt("creability")
                 );
                 list.add(account);
             }
