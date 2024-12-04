@@ -74,6 +74,7 @@ public class AccountManager extends ListManager<Account> {
         int creability = 100;
         String username = null, password = null, email = null;
         AccRole role = null;
+        LocalDate createAt = null, onlineAt = null, updateAt = null;
         
         if (oldData != null) {
             username = oldData.getUsername();
@@ -81,6 +82,9 @@ public class AccountManager extends ListManager<Account> {
             email = oldData.getEmail();
             role = oldData.getRole();
             creability = oldData.getCreability();
+            createAt = oldData.getCreateAt();
+            onlineAt = oldData.getOnlineAt();
+            updateAt = oldData.getUpdateAt();
         } 
         
         if (options[0]) {
@@ -115,9 +119,9 @@ public class AccountManager extends ListManager<Account> {
                 email,
                 role,
                 AccStatus.OFFLINE,
-                oldData == null ? LocalDate.now() : oldData.getCreateAt(),
-                oldData == null ? null : LocalDate.now(),
-                oldData == null ? null : oldData.getOnlineAt(),
+                createAt == null ? LocalDate.now() : createAt,
+                (updateAt == null || createAt == null) ? null : LocalDate.now(),
+                onlineAt == null ? null : onlineAt,
                 creability
         );
     }

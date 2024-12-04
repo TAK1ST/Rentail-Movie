@@ -1,4 +1,4 @@
-package main.utils;
+package main.services;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import main.config.Database;
 
-public class statisticUtils {
+public class StatisticServices {
 
     public static Map<String, Double> getTop5RevenueGeneratingMovies() {
         String sql

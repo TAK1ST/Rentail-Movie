@@ -8,6 +8,7 @@ import main.controllers.Managers;
 import main.dto.Account;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
+import static main.services.StatisticServices.getTop5RevenueGeneratingMovies;
 
 public class App {
 
