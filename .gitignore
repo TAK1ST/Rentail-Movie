@@ -1,0 +1,21 @@
+# Ignore the user library
+/lib/
+
+# Ignore my own test package
+/src/test/
+
+# Ignore environment variables
+.env
+
+# Ignore NetBeans project private files
+nbproject/private/
+
+# Ignore build files
+/build/
+/dist/
+
+# Ignore generated files
+nbproject/genfiles.properties
+nbproject/build-impl.xml
+nbproject/Makefile-impl.mk
+nbproject/output/
