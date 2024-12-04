@@ -15,11 +15,6 @@ import org.junit.Test;
 
 public class MovieServicesTest {
 
-    @Before
-    public void setUp() {
-        test.TestDatabaseSetup.cleanTestDatabase();
-    }
-
     @Test
     public void testCalculateAverageRating() throws SQLException{
         // Given

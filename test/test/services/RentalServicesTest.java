@@ -24,8 +24,8 @@ import static org.junit.Assert.assertTrue;
 public class RentalServicesTest {
 
     @BeforeClass
-    public static void setUpClass() {
-        test.TestDatabaseSetup.setupTestDatabase();
+    public static void setUpClass() throws SQLException {
+//        test.TestDatabaseSetup.testAddAccount();
     }
 
 //    @Before
@@ -50,7 +50,7 @@ public class RentalServicesTest {
     }
 
 //    @Test
-//    
+
 //    public void testReturnMovie() {
 //        // Given
 //        String movieId = "MOV00001";

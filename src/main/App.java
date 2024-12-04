@@ -1,8 +1,8 @@
-
 package main;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 import main.config.Database;
 import main.controllers.Managers;
 import main.dto.Account;
@@ -11,22 +11,28 @@ import main.views.AdminPannel;
 import main.views.AuthenPannel;
 import main.views.CustomerPannel;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.statisticUtils.getTop5RevenueGeneratingMovies;
 import main.views.PremiumPannel;
 import main.views.StaffPannel;
 
-
 public class App {
+
     public static void run() throws IOException, SQLException {
         Database.connect();
+        Map<String, Double> top5RevenueGeneratingMovies = getTop5RevenueGeneratingMovies();
+        System.out.println("Top 5 Revenue Generating Movies:");
+        top5RevenueGeneratingMovies.forEach((title, revenue)
+                -> System.out.println("Movie: " + title + ", Revenue: $" + revenue)
+        );
+        System.out.println();
         Managers.initAll();
         do {
             redirect(AuthenPannel.getAccounts());
-        } 
-        while(!yesOrNo("Exit"));
+        } while (!yesOrNo("Exit"));
     }
-    
+
     private static void redirect(Account account) throws IOException {
-        switch(account.getRole()) {
+        switch (account.getRole()) {
             case ADMIN:
                 AdminPannel.show();
                 break;

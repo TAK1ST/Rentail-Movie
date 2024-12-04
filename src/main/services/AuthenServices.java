@@ -14,17 +14,44 @@ public class AuthenServices {
     public static Account login() {
         Menu.showHeader("Login");
         String input = getString("Enter username or email", false);
-        if (input.isEmpty()) return null;
-        
+        if (input.isEmpty()) {
+            return null;
+        }
+
         String password = getString("Enter password", false);
-        if (password.isEmpty()) return null;
+        if (password.isEmpty()) {
+            return null;
+        }
 
         for (Account item : getACM().getList()) {
             if (input.equals(item.getUsername()) || input.equals(item.getEmail())) {
                 if (password.equals(item.getPassword())) {
                     return new Account(item);
-                } 
-                else {
+                } else {
+                    errorLog("Wrong username/email or password");
+                    forgetPassword(item.getId());
+                }
+
+            }
+        }
+        return null;
+    }
+
+    public static Account loginTest(String input, String password) {
+        Menu.showHeader("Login");
+        if (input.isEmpty()) {
+            return null;
+        }
+
+        if (password.isEmpty()) {
+            return null;
+        }
+
+        for (Account item : getACM().getList()) {
+            if (input.equals(item.getUsername()) || input.equals(item.getEmail())) {
+                if (password.equals(item.getPassword())) {
+                    return new Account(item);
+                } else {
                     errorLog("Wrong username/email or password");
                     forgetPassword(item.getId());
                 }

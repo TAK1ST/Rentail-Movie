@@ -22,7 +22,6 @@ public class WishlistServicesTest {
 
     @Before
     public void setUp() {
-        test.TestDatabaseSetup.cleanTestDatabase();
         wishlistServices = new WishlistServices();
     }
 
