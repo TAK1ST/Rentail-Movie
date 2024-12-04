@@ -5,7 +5,7 @@
 package main.views;
 
 import java.util.Map;
-import static main.utils.statisticUtils.*;
+import static main.services.StatisticServices.*;
 
 /**
  *

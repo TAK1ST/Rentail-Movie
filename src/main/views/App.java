@@ -2,8 +2,6 @@ package main.views;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Map;
-import main.config.Database;
 import main.controllers.Managers;
 import main.dto.Account;
 import static main.utils.Input.yesOrNo;
