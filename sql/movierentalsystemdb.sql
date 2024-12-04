@@ -111,9 +111,13 @@ CREATE TABLE IF NOT EXISTS Rentals (
 );
 
 CREATE TABLE IF NOT EXISTS Payments (
-    rental_id CHAR(8),
-    payment_method ENUM('CARD', 'ONLINE', 'BANKING') NOT NULL DEFAULT 'CARD',
-    FOREIGN KEY (rental_id) REFERENCES Rentals (rental_id) ON DELETE CASCADE
+    payment_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    payment_method ENUM('ONLINE', 'CARD', 'BANKING') NOT NULL,
+    transaction_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('PENDING', 'COMPLETED', 'FAILED') DEFAULT 'PENDING',
+    FOREIGN KEY (customer_id) REFERENCES Accounts(account_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Profiles (
