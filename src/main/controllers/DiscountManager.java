@@ -96,46 +96,48 @@ public class DiscountManager extends ListManager<Discount> {
             active = oldData.isActive();
             applyForWho = oldData.getApplyForWho();
             applyForWhat = oldData.getApplyForWhat();
+            quantity = oldData.getQuantity();
+            value = oldData.getValue();
         }
         
         if (options[0]) {
-            startDate = getDate("Enter start date", oldData.getStartDate());
+            startDate = getDate("Enter start date", startDate);
             if (startDate == null) return null;
         }
         if (options[1]) {
-            endDate = getDate("Enter end date", oldData.getEndDate());
+            endDate = getDate("Enter end date", endDate);
             if (endDate == null) return null;
         }
         if (options[2]) {
-            type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, oldData.getType());
+            type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, type);
             if (type == DiscountType.NONE) return null;
         }
         if (options[3]) {
-            applyForWho = (ApplyForWho) getEnumValue("Apply for who", ApplyForWho.class, oldData.getApplyForWho());
+            applyForWho = (ApplyForWho) getEnumValue("Apply for who", ApplyForWho.class, applyForWho);
             if (type == DiscountType.NONE) return null;
         }
         if (options[4]) {
-            applyForWhat = (ApplyForWhat) getEnumValue("Apply for what", ApplyForWhat.class, oldData.getApplyForWhat());
+            applyForWhat = (ApplyForWhat) getEnumValue("Apply for what", ApplyForWhat.class, applyForWhat);
             if (type == DiscountType.NONE) return null;
         }
         if (options[5]) {
-            quantity = getInteger("Enter available quantity", 1, 1000, oldData.getQuantity());
+            quantity = getInteger("Enter available quantity", 1, 1000, quantity);
             if (quantity == Integer.MIN_VALUE) return null;
         }
         if (options[6]) {
-            value = getDouble("Enter value", 1, 20, oldData.getValue());
+            value = getDouble("Enter value", 1, Double.MAX_VALUE, value);
             if (value == Double.MIN_VALUE) return null;
         }
         if (options[7] && applyForWhat == ApplyForWhat.SPECIFIC_MOVIES && yesOrNo("Assign to movie's right now")) {
-            movies = selectByNumbers("Enter movie's id (Comma-separated)", getMVM(), oldData.getMovieIds());
+            movies = selectByNumbers("Enter movie's id (Comma-separated)", getMVM(), movies);
             if (movies.isEmpty()) return null;
         }
         if (options[8] && applyForWho == ApplyForWho.SPECIFIC_USERS && yesOrNo("Assign to customers right now")) {
-            customers = selectByNumbers("Enter customer's id (Comma-separated)", getACM(), oldData.getCustomerIds());
+            customers = selectByNumbers("Enter customer's id (Comma-separated)", getACM(), customers);
             if (customers.isEmpty()) return null;
         }
         if (options[9]) {
-            active = oldData == null ? yesOrNo("Set active") : oldData.isActive();
+            active = oldData == null ? yesOrNo("Set active") : active;
         }
         
         String id = (oldData == null) ? IDGenerator.generateDiscountCode()
@@ -160,43 +162,47 @@ public class DiscountManager extends ListManager<Discount> {
     @Override
     public List<Discount> searchBy(String propety) {
         List<Discount> result = new ArrayList<>();
-        for (Discount item : list) 
+        for (Discount item : list) {
+            if (item == null)
+                continue;
             if (item.getCode().equals(propety) 
-                || item.getCustomerIds().equals(propety)
-                || item.getStartDate().format(Validator.DATE).contains(propety)
-                || item.getEndDate().format(Validator.DATE).contains(propety)
-                || item.getType().name().equals(propety)
+                || (item.getCustomerIds() != null && item.getCustomerIds().equals(propety))
+                || (item.getStartDate() != null && item.getStartDate().format(Validator.DATE).contains(propety))
+                || (item.getEndDate() != null && item.getEndDate().format(Validator.DATE).contains(propety))
+                || (item.getType() != null && item.getType().name().equals(propety))
                 || String.valueOf(item.getQuantity()).equals(propety)
                 || String.valueOf(item.getValue()).equals(propety))
             {
                 result.add(item);
             }   
+        }
         return result;
     }
     
     @Override
     public List<Discount> sortList(List<Discount> tempList, String property) {
-        if (checkNull(tempList)) {
-            return null;
-        }
+        if (checkNull(tempList)) return null;
+        
+        if (property == null) return tempList;
+        
         String[] options = Discount.getAttributes();
         List<Discount> result = new ArrayList<>(tempList);
         
-        if (property.equals(options[0])) {
+        if (property.equalsIgnoreCase(options[0])) {
             result.sort(Comparator.comparing(Discount::getCode));
-        } else if (property.equals(options[1])) {
+        } else if (property.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Discount::getCustomerIds));
-        } else if (property.equals(options[2])) {
+        } else if (property.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Discount::getType));
-        } else if (property.equals(options[3])) {
+        } else if (property.equalsIgnoreCase(options[3])) {
             result.sort(Comparator.comparing(Discount::getValue));
-        } else if (property.equals(options[4])) {
+        } else if (property.equalsIgnoreCase(options[4])) {
             result.sort(Comparator.comparing(Discount::getStartDate));
-        } else if (property.equals(options[5])) {
+        } else if (property.equalsIgnoreCase(options[5])) {
             result.sort(Comparator.comparing(Discount::getEndDate));
-        } else if (property.equals(options[6])) {
+        } else if (property.equalsIgnoreCase(options[6])) {
             result.sort(Comparator.comparing(Discount::getQuantity));
-        } else if (property.equals(options[7])) {
+        } else if (property.equalsIgnoreCase(options[7])) {
             result.sort(Comparator.comparing(Discount::isActive));
         } else {
             result.sort(Comparator.comparing(Discount::getCode)); // Default case
@@ -212,6 +218,7 @@ public class DiscountManager extends ListManager<Discount> {
         
         InfosTable.getTitle(Discount.getAttributes());
         tempList.forEach(item -> 
+            {if (item != null)
                 InfosTable.calcLayout(
                     item.getCode(), 
                     String.join(", ", returnNames(item.getCustomerIds(), getPFM())),
@@ -222,11 +229,12 @@ public class DiscountManager extends ListManager<Discount> {
                     formatDate(item.getEndDate(), Validator.DATE),
                     item.getQuantity(),
                     item.isActive()
-                )
+            );}
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
+            {if (item != null)
                 InfosTable.displayByLine(
                     item.getCode(), 
                     String.join(", ", returnNames(item.getCustomerIds(), getPFM())),
@@ -237,7 +245,7 @@ public class DiscountManager extends ListManager<Discount> {
                     formatDate(item.getEndDate(), Validator.DATE),
                     item.getQuantity(),
                     item.isActive()
-                )
+            );}
         );
         InfosTable.showFooter();
         

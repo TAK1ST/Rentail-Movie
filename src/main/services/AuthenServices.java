@@ -47,6 +47,7 @@ public class AuthenServices {
         Menu.showHeader("Register");
         String[] options = {"Register new account", "Back"};
         Menu.showOptions(options, 1);
+        
         int input = Menu.getChoice("Enter choice", options.length);
         switch (input) {
             case 1:

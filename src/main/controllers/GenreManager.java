@@ -50,7 +50,9 @@ public class GenreManager extends ListManager<Genre> {
     
     @Override
     public Genre getInputs(boolean[] options, Genre oldData) {
-        
+        if (options == null) {
+            options = new boolean[] {true, true};
+        }
         if (options.length < 2) {
             errorLog("Not enough option length");
             return null;
@@ -81,26 +83,30 @@ public class GenreManager extends ListManager<Genre> {
     @Override
     public List<Genre> searchBy(String propety) {
         List<Genre> result = new ArrayList<>();
-        for (Genre item : list) 
-            if (item.getId().equals(propety) 
-                || item.getGenreName().contains(propety.trim().toLowerCase())) 
+        for (Genre item : list) {
+            if (item == null)
+                continue;
+            if ((item.getId() != null && item.getId().equals(propety)) 
+                || (item.getGenreName() != null && item.getGenreName().contains(propety.trim().toLowerCase())))
             {
                 result.add(item);
             }   
+        }
         return result;
     }
     
     @Override
     public List<Genre> sortList(List<Genre> tempList, String property) {
-        if (checkNull(tempList)) {
-            return null;
-        }
+        if (checkNull(tempList)) return null;
+        
+        if (property == null) return tempList;
+        
         String[] options = Genre.getAttributes();
         List<Genre> result = new ArrayList<>(tempList);
 
-        if (property.equals(options[0])) {
+        if (property.equalsIgnoreCase(options[0])) {
             result.sort(Comparator.comparing(Genre::getGenreName));
-        } else if (property.equals(options[1])) {
+        } else if (property.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Genre::getDescription));
         } else {
             result.sort(Comparator.comparing(Genre::getGenreName));
@@ -116,18 +122,24 @@ public class GenreManager extends ListManager<Genre> {
         
         InfosTable.getTitle(Genre.getAttributes());
         tempList.forEach(item -> 
-                InfosTable.calcLayout(
-                        item.getGenreName(), 
-                        item.getDescription()
-                )
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
+                            item.getGenreName(), 
+                            item.getDescription()
+                    );
+            }
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
-                InfosTable.displayByLine(
-                        item.getGenreName(), 
-                        item.getDescription()
-                )
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
+                            item.getGenreName(), 
+                            item.getDescription()
+                    );
+            }
         );
         InfosTable.showFooter();
     }

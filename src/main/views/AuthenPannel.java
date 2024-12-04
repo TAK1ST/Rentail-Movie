@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.views;
 
 import main.dto.Account;
@@ -10,10 +6,7 @@ import static main.services.AuthenServices.registor;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.infoLog;
 
-/**
- *
- * @author trann
- */
+
 public class AuthenPannel {
     public static Account getAccounts() {
         Account account;

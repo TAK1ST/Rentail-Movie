@@ -129,11 +129,13 @@ public final class ReviewManager extends ListManager<Review> {
         List<Review> result = new ArrayList<>();
 
         for (Review item : list) {
-            if (item.getId().equals(propety)
-                    || item.getMovieID().equals(propety)
-                    || item.getReviewText().trim().toLowerCase().contains(propety.trim().toLowerCase())
-                    || item.getReviewDate().format(Validator.DATE).contains(propety.trim())
-                    || item.getCustomerID().equals(propety)
+            if (item == null)
+                continue;
+            if ((item.getId() != null && item.getId().equals(propety))
+                    || (item.getMovieID() != null && item.getMovieID().equals(propety))
+                    || (item.getReviewText() != null && item.getReviewText().trim().toLowerCase().contains(propety.trim().toLowerCase()))
+                    || (item.getReviewDate() != null && item.getReviewDate().format(Validator.DATE).contains(propety.trim()))
+                    || (item.getCustomerID() != null && item.getCustomerID().equals(propety))
                     || String.valueOf(item.getRating()).equals(propety)) {
                 result.add(item);
             }
@@ -143,23 +145,24 @@ public final class ReviewManager extends ListManager<Review> {
 
     @Override
     public List<Review> sortList(List<Review> tempList, String property) {
-        if (checkNull(tempList)) {
-            return null;
-        }
+        if (checkNull(tempList)) return null;
+        
+        if (property == null) return tempList;
+        
         String[] options = Review.getAttributes();
         List<Review> result = new ArrayList<>(tempList);
 
-        if (property.equals(options[0])) {
+        if (property.equalsIgnoreCase(options[0])) {
             result.sort(Comparator.comparing(Review::getId));
-        } else if (property.equals(options[1])) {
+        } else if (property.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Review::getMovieID));
-        } else if (property.equals(options[2])) {
+        } else if (property.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Review::getCustomerID));
-        } else if (property.equals(options[3])) {
+        } else if (property.equalsIgnoreCase(options[3])) {
             result.sort(Comparator.comparing(Review::getReviewText));
-        } else if (property.equals(options[4])) {
+        } else if (property.equalsIgnoreCase(options[4])) {
             result.sort(Comparator.comparing(Review::getRating));
-        } else if (property.equals(options[5])) {
+        } else if (property.equalsIgnoreCase(options[5])) {
             result.sort(Comparator.comparing(Review::getReviewDate));
         } else {
             result.sort(Comparator.comparing(Review::getId)); // Default case
@@ -175,26 +178,32 @@ public final class ReviewManager extends ListManager<Review> {
         
         InfosTable.getTitle(Review.getAttributes());
         tempList.forEach(item -> 
-                InfosTable.calcLayout(
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
                         item.getId(), 
                         item.getMovieID(),
                         item.getCustomerID(),
                         item.getRating(),
                         item.getReviewText(),
                         formatDate(item.getReviewDate(), Validator.DATE)
-                )
+                );
+            }
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
-                InfosTable.displayByLine(
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
                         item.getId(), 
                         item.getMovieID(),
                         item.getCustomerID(),
                         item.getRating(),
                         item.getReviewText(),
                         formatDate(item.getReviewDate(), Validator.DATE)
-                )
+                );
+            }
         );
         InfosTable.showFooter();
     }

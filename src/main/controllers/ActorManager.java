@@ -94,17 +94,18 @@ public class ActorManager extends ListManager<Actor> {
     
     @Override
     public List<Actor> sortList(List<Actor> tempList, String property) {
-        if (checkNull(list)) {
-            return null;
-        }
+        if (checkNull(list)) return null;
+        
+        if (property == null) return tempList;
+        
         String[] options = Actor.getAttributes();
         List<Actor> result = new ArrayList<>(tempList);
 
-        if (property.equals(options[0])) {
+        if (property.equalsIgnoreCase(options[0])) {
             result.sort(Comparator.comparing(Actor::getActorName));
-        } else if (property.equals(options[1])) {
+        } else if (property.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Actor::getRank));
-        } else if (property.equals(options[2])) {
+        } else if (property.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Actor::getDescription));
         } else {
             result.sort(Comparator.comparing(Actor::getId));
@@ -115,11 +116,14 @@ public class ActorManager extends ListManager<Actor> {
     @Override
     public List<Actor> searchBy(String propety) {
         List<Actor> result = new ArrayList<>();
-        for (Actor item : list) 
-            if (item.getId().equals(propety)
-                || item.getActorName().contains(propety.trim().toLowerCase())
+        for (Actor item : list) {
+            if (item == null) 
+                continue;
+            if ((item.getId() != null && item.getId().equals(propety))
+                || (item.getActorName() != null && item.getActorName().contains(propety.trim().toLowerCase()))
             ) 
             result.add(item);
+        }
         return result;
     }
     
@@ -131,22 +135,26 @@ public class ActorManager extends ListManager<Actor> {
         
         InfosTable.getTitle(Actor.getAttributes());
         tempList.forEach(item -> 
-                InfosTable.calcLayout(
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
                         item.getId(), 
                         item.getActorName(), 
                         item.getRank(), 
-                        item.getDescription()
-                )
+                        item.getDescription());
+            }
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
-                InfosTable.displayByLine(
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
                         item.getId(), 
                         item.getActorName(), 
                         item.getRank(), 
-                        item.getDescription()
-                )
+                        item.getDescription());
+            }
         );
         InfosTable.showFooter();
     }

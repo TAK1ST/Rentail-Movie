@@ -71,6 +71,9 @@ public class MovieManager extends ListManager<Movie> {
     
     @Override
     public Movie getInputs(boolean[] options, Movie oldData) {
+        if (options == null) {
+            options = new boolean[] {true, true, true, true, true, true, true, true};
+        }
         if (options.length < 8) {
             errorLog("Not enough option length");
             return null;
@@ -154,11 +157,14 @@ public class MovieManager extends ListManager<Movie> {
     public List<Movie> searchBy(String property) {
         List<Movie> result = new ArrayList<>();
         for (Movie item : list) {
-            if (item.getId().equals(property)
-                    || item.getTitle().contains(property.trim().toLowerCase())
-                    || item.getDescription().contains(property.trim().toLowerCase())
-                    || item.getReleaseYear().format(Validator.DATE).contains(property)
-                    || String.valueOf(item.getRentalPrice()).contains(property)) {
+            if (item == null)
+                continue;
+            if ((item.getId() == null && item.getId().equals(property))
+                    || (item.getTitle() == null && item.getTitle().contains(property.trim().toLowerCase()))
+                    || (item.getDescription() == null && item.getDescription().contains(property.trim().toLowerCase()))
+                    || (item.getReleaseYear() == null && item.getReleaseYear().format(Validator.YEAR).contains(property))
+                    || String.valueOf(item.getRentalPrice()).contains(property)) 
+            { 
                 result.add(item);
             }
         }
@@ -167,27 +173,28 @@ public class MovieManager extends ListManager<Movie> {
     
     @Override
     public List<Movie> sortList(List<Movie> tempList, String property) {
-        if (checkNull(tempList)) {
-            return null;
-        }
+        if (checkNull(tempList)) return null;
+        
+        if (property == null) return tempList;
+        
         String[] options = Movie.getAttributes();
         List<Movie> result = new ArrayList<>(tempList);
 
-        if (property.equals(options[0])) {
+        if (property.equalsIgnoreCase(options[0])) {
             result.sort(Comparator.comparing(Movie::getTitle));
-        } else if (property.equals(options[1])) {
+        } else if (property.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Movie::getDescription));
-        } else if (property.equals(options[2])) {
+        } else if (property.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Movie::getAvgRating));
-        } else if (property.equals(options[3])) {
+        } else if (property.equalsIgnoreCase(options[3])) {
             result.sort(Comparator.comparing(Movie::getReleaseYear));
-        } else if (property.equals(options[4])) {
+        } else if (property.equalsIgnoreCase(options[4])) {
             result.sort(Comparator.comparing(Movie::getRentalPrice));
-        } else if (property.equals(options[5])) {
+        } else if (property.equalsIgnoreCase(options[5])) {
             result.sort(Comparator.comparing(Movie::getAvailableCopies));
-        } else if (property.equals(options[6])) {
+        } else if (property.equalsIgnoreCase(options[6])) {
             result.sort(Comparator.comparing(Movie::getCreateDate));
-        } else if (property.equals(options[7])) {
+        } else if (property.equalsIgnoreCase(options[7])) {
             result.sort(Comparator.comparing(Movie::getUpdateDate));
         } else {
             result.sort(Comparator.comparing(Movie::getId)); // Default case
@@ -202,9 +209,10 @@ public class MovieManager extends ListManager<Movie> {
         }
             
         InfosTable.getTitle(Movie.getAttributes());
-        
         tempList.forEach(item -> 
-                InfosTable.calcLayout(
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
                         item.getId(),
                         item.getTitle(),
                         String.join(", ", returnNames(item.getGenreNames(), getGRM())),
@@ -217,12 +225,15 @@ public class MovieManager extends ListManager<Movie> {
                         item.getAvailableCopies(),
                         formatDate(item.getCreateDate(), Validator.DATE),
                         formatDate(item.getUpdateDate(), Validator.DATE)
-                )
+                );
+            }
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
-                InfosTable.displayByLine(
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
                         item.getId(),
                         item.getTitle(),
                         String.join(", ", returnNames(item.getGenreNames(), getGRM())),
@@ -235,7 +246,8 @@ public class MovieManager extends ListManager<Movie> {
                         item.getAvailableCopies(),
                         formatDate(item.getCreateDate(), Validator.DATE),
                         formatDate(item.getUpdateDate(), Validator.DATE)
-                )
+                );
+            }
         );
         InfosTable.showFooter();
     }

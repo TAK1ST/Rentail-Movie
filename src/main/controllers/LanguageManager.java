@@ -51,7 +51,9 @@ public class LanguageManager extends ListManager<Language> {
     
     @Override
     public Language getInputs(boolean[] options, Language oldData) {
-        
+        if (options == null) {
+            options = new boolean[] {true, true};
+        }
         if (options.length < 2) {
             errorLog("Not enough option length");
             return null;
@@ -81,26 +83,30 @@ public class LanguageManager extends ListManager<Language> {
     @Override
     public List<Language> searchBy(String propety) {
         List<Language> result = new ArrayList<>();
-        for (Language item : list) 
-            if (item.getCode().equals(propety) 
-                || item.getName().contains(propety.trim().toLowerCase())) 
+        for (Language item : list) {
+            if (item == null) 
+                continue;
+            if ((item.getCode() != null && item.getCode().equals(propety))
+                || (item.getName() != null && item.getName().contains(propety.trim().toLowerCase())))
             {
                 result.add(item);
             }   
+        }
         return result;
     }
     
     @Override
     public List<Language> sortList(List<Language> tempList, String property) {
-        if (checkNull(tempList)) {
-            return null;
-        }
+        if (checkNull(tempList)) return null;
+        
+        if (property == null) return tempList;
+        
         String[] options = Language.getAttributes();
         List<Language> result = new ArrayList<>(tempList);
 
-        if (property.equals(options[1])) {
+        if (property.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Language::getCode));
-        } else if (property.equals(options[2])) {
+        } else if (property.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Language::getName));
         } else {
             result.sort(Comparator.comparing(Language::getCode));
@@ -116,18 +122,24 @@ public class LanguageManager extends ListManager<Language> {
         
         InfosTable.getTitle(Language.getAttributes());
         tempList.forEach(item -> 
-                InfosTable.calcLayout(
-                        item.getCode(),
-                        item.getName()
-                )
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
+                            item.getCode(),
+                            item.getName()
+                    );
+            }
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
-                InfosTable.displayByLine(
-                        item.getCode(),
-                        item.getName()
-                )
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
+                            item.getCode(),
+                            item.getName()
+                    );
+            }
         );
         InfosTable.showFooter();
     }
