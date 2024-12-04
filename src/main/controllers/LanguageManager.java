@@ -1,6 +1,4 @@
-
 package main.controllers;
-
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,54 +6,76 @@ import java.util.List;
 import main.base.ListManager;
 import main.dao.LanguageDAO;
 import main.dto.Language;
+import main.utils.InfosTable;
 import static main.utils.Input.getString;
+import static main.utils.LogMessage.errorLog;
 import static main.utils.Validator.getName;
 
 
 public class LanguageManager extends ListManager<Language> {
     
     public LanguageManager() {
-        super(Language.className());
+        super(Language.className(), Language.getAttributes());
         list = LanguageDAO.getAllLanguages();
     }
 
-    public boolean addLanguage() {
-        String code = getString("Enter language code", false);
-        if (code.isEmpty()) return false;
+    public boolean add(Language language) {
+        if (checkNull(language) || checkNull(list)) return false;
         
-        String name = getName("Enter language name", false);
-        if (name.isEmpty()) return false;
-        
-        list.add(new Language(
-                code, 
-                name
-        ));
+        list.add(language);
         return LanguageDAO.addLanguageToDB(list.getLast());
     }
 
-    public boolean updateLanguage() {
-        if (checkNull(list)) return false;
-
-        Language foundLanguage = (Language)getById("Enter language code");
-        if (checkNull(foundLanguage)) return false;
+    public boolean update(Language language) {
+        if (checkNull(language) || checkNull(list)) return false;
         
-        String code = getString("Enter language code", true);
-        String name = getName("Enter language name", true);
+        Language newLanguage = getInputs(new boolean[] {true, true}, language);
+        if (newLanguage != null)
+           language = newLanguage;
+        else 
+            return false;  
         
-        if (!code.isEmpty()) foundLanguage.setCode(code);  
-        if (!name.isEmpty()) foundLanguage.setName(name);  
-        
-        return LanguageDAO.updateLanguageInDB(foundLanguage);
+        return LanguageDAO.updateLanguageInDB(newLanguage);
     }
 
-    public boolean deleteLanguage() { 
-        if (checkNull(list)) return false;       
+    public boolean delete(Language language) { 
+        if (checkNull(language) || checkNull(list)) return false;
 
-        Language foundLanguage = (Language)getById("Enter language codde");
-        if (checkNull(foundLanguage)) return false;
-
-        list.remove(foundLanguage);   
-        return LanguageDAO.deleteLanguageFromDB(foundLanguage.getId());
+        if (!list.remove(language)) {
+            errorLog("Language not found");
+            return false;
+        }
+        list.remove(language);   
+        return LanguageDAO.deleteLanguageFromDB(language.getId());
+    }
+    
+    @Override
+    public Language getInputs(boolean[] options, Language oldData) {
+        
+        if (options.length < 2) {
+            errorLog("Not enough option length");
+            return null;
+        }
+        
+        String code = null, name = null;
+        if (oldData != null) {
+            code = oldData.getCode();
+            name = oldData.getName();
+        }
+        
+        if (options[0]) {
+            code = getString("Enter language code", code);
+            if (code == null) return null;
+        }
+        if (options[1]) {
+            name = getName("Enter language name", name);
+            if (name == null) return null;
+        }
+        
+        return new Language (
+                code, 
+                name
+        );
     }
    
     @Override
@@ -75,45 +95,40 @@ public class LanguageManager extends ListManager<Language> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Language.getAttributes();
         List<Language> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "languageCode":
-                result.sort(Comparator.comparing(Language::getCode));
-                break;
-            case "languageName":
-                result.sort(Comparator.comparing(Language::getName));
-                break;
-            default:
-                result.sort(Comparator.comparing(Language::getCode)); 
-                break;
+
+        if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Language::getCode));
+        } else if (property.equals(options[2])) {
+            result.sort(Comparator.comparing(Language::getName));
+        } else {
+            result.sort(Comparator.comparing(Language::getCode));
         }
         return result;
     }
  
     @Override
-    public void display(List<Language> tempList) {
+    public void show(List<Language> tempList) {
         if (checkNull(tempList)) {
             return;
         } 
         
-        int nameL = "Language name".length();
-        for (Language item : list) {
-            nameL = Math.max(nameL, item.getName().length());
-        }
+        InfosTable.getTitle(Language.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getCode(),
+                        item.getName()
+                )
+        );
         
-        int widthLength = 4 + nameL + 7;
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-4s | %-" + nameL + "s |\n",
-                "Code", "Language name");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Language item : tempList) {
-        System.out.printf("\n| %-4s | %-" + nameL + "s |",
-                    item.getCode(),
-                    item.getName());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getCode(),
+                        item.getName()
+                )
+        );
+        InfosTable.showFooter();
     }
 }

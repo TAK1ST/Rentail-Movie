@@ -1,4 +1,3 @@
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -15,6 +14,7 @@ import main.dto.Actor;
 import main.dto.Genre;
 import main.dto.Language;
 import main.dto.Movie;
+import main.dto.Profile;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.infoLog;
 import static main.utils.Utility.toInt;
@@ -42,34 +42,36 @@ public class Input {
         scanner.nextLine();
     }
     
-    public static String getString(String message, boolean enterToPass) {
-            String result = "";
+    public static String getString(String message, String oldData) {
+            String result = null;
             do {
-                if (enterToPass) infoLog("Press Enter to skip");
+                if (oldData != null && !oldData.isEmpty()) 
+                    infoLog("Press Enter to skip");
                 
                 System.out.print(message + ": ");
                 result = scanner.nextLine();
-                if(result.isEmpty() && enterToPass) 
-                    return "";
+                if(result.isEmpty() && oldData != null && !oldData.isEmpty()) 
+                    return oldData;
                 
                 if(result.isEmpty()) {
                     errorLog("Please input");
-                    if(askToExit()) return "";
+                    if(askToExit()) return null;
                 }
             } while (result.isEmpty());
 
             return result;
         }
 
-    public static int getInteger(String message, int min, int max, boolean enterToPass) {
+    public static int getInteger(String message, int min, int max, int oldData) {
         int number;
         while (true) {
-            if (enterToPass) infoLog("Press Enter to skip");
+            if (oldData != Integer.MIN_VALUE) 
+                infoLog("Press Enter to skip");
             
             System.out.printf("%s (%d -> %d): ", message, min, max);
             String input = scanner.nextLine();
-            if (input.isEmpty() && enterToPass) {
-                return Integer.MIN_VALUE;
+            if (input.isEmpty() && oldData != Integer.MIN_VALUE) {
+                return oldData;
             }
             if(input.isEmpty()) {
                 errorLog("Please input");
@@ -89,15 +91,16 @@ public class Input {
         }
     }
 
-    public static double getDouble(String message, double min, double max, boolean enterToPass) {
+    public static double getDouble(String message, double min, double max, double oldData) {
         double number;
         while (true) {
-            if (enterToPass) infoLog("Press Enter to skip");
+            if (oldData != Double.MIN_VALUE) 
+                infoLog("Press Enter to skip");
             
             System.out.printf("%s (%.2f -> %.2f): ", message, min, max);
             String input = scanner.nextLine();
-            if (input.isEmpty() && enterToPass) {
-                return Double.MIN_VALUE;
+            if (input.isEmpty() && oldData != Double.MIN_VALUE) {
+                return oldData;
             }
             if(input.isEmpty()) {
                 errorLog("Please input");
@@ -128,24 +131,24 @@ public class Input {
         System.out.println("\n" + message + ": ");
         for (int index = 0; index < infoLists.length; index++) {
                 if (index % 4 == 0) System.out.println();
-                System.out.printf("%2d. %-25s ", index, infoLists[index]);
+                System.out.printf("[%02d] %-25s ", index, infoLists[index]);
         }
         System.out.println("\n");
         if (!enterToPass) {
-            int option = getInteger("Enter an option", 0, infoLists.length - 1, enterToPass);
+            int option = getInteger("Enter an option", 0, infoLists.length - 1, Integer.MIN_VALUE);
             if (option == Integer.MIN_VALUE)
-                return "";
+                return null;
             return infoLists[option];
         } else 
-            return "";
+            return null;
     }
     
-    public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager, boolean enterToPass) {
-        manager.display();
-        String temps = "";
+    public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager, String oldData) {
+        manager.display(false);
+        String temps = null;
 
-        String input = getString(message, enterToPass);
-        if (input == null) return null;
+        String input = getString(message, null);
+        if (input == null) return oldData;
         
         String[] inputs = input.split(",");
 
@@ -160,49 +163,47 @@ public class Input {
         return temps;
     }
     
-    public static <T extends Model> List<String> returnNames(String stringList, ListManager<T> manager) {
-        List<String> result = new ArrayList<>();
-
-        String[] ids = stringList.split(",");
-
+    public static <T extends Model> String[] returnNames(String stringList, ListManager<T> manager) {
+        if (stringList.isEmpty() || stringList.isBlank())
+            return new String[] {};
+        
         List<T> items = manager.getList();
-
+        String[] ids = stringList.split(",");
+        
+        List<String> result = new ArrayList<>();
         for (String id : ids) {
             for (T item : items) {
                 if (item.getId().equals(id.trim())) {
-                    if (item instanceof Genre) 
-                    {
+                    if (item instanceof Genre) {
                         Genre res = (Genre) item;
                         result.add(res.getGenreName()); 
                     } 
-                    else if (item instanceof Actor) 
-                    {
+                    else if (item instanceof Actor) {
                         Actor res = (Actor) item;
                         result.add(res.getActorName()); 
                     } 
-                    else if (item instanceof Language) 
-                    {
+                    else if (item instanceof Language) {
                         Language res = (Language) item;
                         result.add(res.getName()); 
                     } 
-                    else if (item instanceof Account) 
-                    {
+                    else if (item instanceof Account) {
                         Account res = (Account) item;
                         result.add(res.getUsername()); 
                     } 
-                    else if (item instanceof Movie) 
-                    {
+                    else if (item instanceof Movie) {
                         Movie res = (Movie) item;
                         result.add(res.getTitle()); 
+                    } 
+                    else if (item instanceof Profile) {
+                        Profile res = (Profile) item;
+                        result.add(res.getFullName()); 
                     }
-                    
                     break; 
                 }
             }
         }
 
-        return result;
+        return result.toArray(new String[0]);
     }
-
 
 }

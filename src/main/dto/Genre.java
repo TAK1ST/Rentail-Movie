@@ -21,16 +21,24 @@ public class Genre extends Model {
     
     @Override
     public String toString() {
-        return String.format("Genre: %s, %s.", this.getGenreName(), description);
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s.",
+                className(),
+                attr[count++], this.getGenreName(),
+                attr[count++], description
+        );
     }
     
     public static String className() {
         return "Genre";
     }
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"genre_name", "description"};
+      
+    public static String[] getAttributes() {
+        return new String[] {"Name", "Description"};
     }
 
     public String getGenreName() {

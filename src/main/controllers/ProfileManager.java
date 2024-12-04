@@ -1,6 +1,5 @@
 package main.controllers;
 
-
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,8 +9,10 @@ import static main.controllers.Managers.getACM;
 import main.dao.ProfileDAO;
 import main.dto.Account;
 import main.dto.Profile;
-import static main.utils.Input.getDouble;
+import main.utils.InfosTable;
 import static main.utils.Input.getString;
+import static main.utils.LogMessage.errorLog;
+import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
 import static main.utils.Validator.getName;
@@ -21,72 +22,83 @@ import static main.utils.Validator.getPhoneNumber;
 public class ProfileManager extends ListManager<Profile> {
       
     public ProfileManager() {
-        super(Profile.className());
+        super(Profile.className(), Profile.getAttributes());
         list = ProfileDAO.getAllProfiles();
     }
 
-    public boolean addProfile(String accountID) { 
+    public boolean add(Profile profile) { 
+        if (checkNull(profile) || checkNull(list)) return false;
         
-        Account foundAccount = (Account) getACM().searchById(accountID);
-        if (getACM().checkNull(foundAccount)) return false;
+        list.add(profile);
+        return ProfileDAO.addProfileToDB(profile);
+    }
+
+    public boolean update(Profile profile) {
+        if (checkNull(profile) || checkNull(list)) return false;
+
+        Profile newProfile = getInputs(new boolean[] {true, true, true, true}, profile);
+        if (newProfile != null)
+            profile = newProfile;
+        else 
+            return false;
+        return ProfileDAO.updateProfileInDB(newProfile);
+    }
+
+    public boolean delete(Profile profile) { 
+        if (checkNull(profile) || checkNull(list)) return false;     
+
+        if (!list.remove(profile)) {
+            errorLog("Profile not found");
+            return false;
+        }
+        return ProfileDAO.deleteProfileFromDB(profile.getId());
+    }
+    
+    @Override
+    public Profile getInputs(boolean[] options, Profile oldData) {
+        if (options.length < 4) {
+            errorLog("Not enough option length");
+            return null;
+        }
         
-        String name = getName("Enter full name", false);
-        if (name.isEmpty()) return false;
+        Account foundAccount = (Account) getACM().searchById(oldData.getId());
+        if (getACM().checkNull(foundAccount)) return null;
         
-        String phoneNumber = getPhoneNumber("Enter your phone number", false);
-        if (phoneNumber.isEmpty()) return false;
+        String name = null, phoneNumber = null, address = null;
+        LocalDate birthday = null;
         
-        String address = getString("Enter your address", false);
-        if (address.isEmpty()) return false;
+        if (oldData != null) {
+            name = oldData.getFullName();
+            phoneNumber = oldData.getPhoneNumber();
+            address = oldData.getAddress();
+            birthday = oldData.getBirthday();
+        }
         
-        LocalDate birthday = getDate("Enter your birthday", false);
-        if (birthday == null) return false;
+        if (options[0]) {
+            name = getName("Enter full name", name);
+            if (name == null) return null;
+        }
+        if (options[1]) {
+            phoneNumber = getPhoneNumber("Enter your phone number", phoneNumber);
+            if (phoneNumber == null) return null;
+        }
+        if (options[2]) {
+            address = getString("Enter your address", address);
+            if (address == null) return null;
+        }
+        if (options[3]) {
+            birthday = getDate("Enter your birthday", birthday);
+            if (birthday == null) return null;
+        }
         
-        list.add(new Profile(
-                accountID, 
+        return new Profile(
+                oldData.getId(), 
                 name, 
                 phoneNumber, 
                 address,
                 0,
                 birthday
-        ));
-        return ProfileDAO.addProfileToDB(list.getLast());
-    }
-
-    public boolean updateProfile(String userID) {
-        if (checkNull(list)) return false;
-
-        Profile foundProfile;
-        if (userID.isEmpty()) {
-            foundProfile = (Profile)getById("Enter user's id");
-        } else {
-            foundProfile = (Profile)searchById(userID);
-        }        
-        if (checkNull(foundProfile)) return false;
-
-        String newFullName = getName("Enter full name", true);
-        String newAddress = getString("Enter address", true); 
-        String newPhoneNumber = getPhoneNumber("Enter phone number", true);
-        double newCredit = getDouble("Enter credit", 0, Double.MAX_VALUE, true);
-        LocalDate newBirthday = getDate("Enter birthday", true);
-
-        if (!newFullName.isEmpty()) foundProfile.setFullName(newFullName);
-        if (!newAddress.isEmpty()) foundProfile.setAddress(newAddress);
-        if (!newPhoneNumber.isEmpty()) foundProfile.setPhoneNumber(newPhoneNumber);
-        if (newCredit > 0) foundProfile.setCredit(newCredit);
-        if (newBirthday != null) foundProfile.setBirthday(newBirthday);
-         
-        return ProfileDAO.updateProfileInDB(foundProfile);
-    }
-
-    public boolean deleteProfile() { 
-        if (checkNull(list)) return false;
-
-        Profile foundProfile = (Profile)getById("Enter user's id");
-        if (checkNull(foundProfile)) return false;
-
-        list.remove(foundProfile);
-        return ProfileDAO.deleteProfileFromDB(foundProfile.getId());
+        );
     }
     
     @Override
@@ -109,63 +121,56 @@ public class ProfileManager extends ListManager<Profile> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Profile.getAttributes();
         List<Profile> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "accountId":
-                result.sort(Comparator.comparing(Profile::getAccountId));
-                break;
-            case "fullName":
-                result.sort(Comparator.comparing(Profile::getFullName));
-                break;
-            case "birthday":
-                result.sort(Comparator.comparing(Profile::getBirthday));
-                break;
-            case "address":
-                result.sort(Comparator.comparing(Profile::getAddress));
-                break;
-            case "phoneNumber":
-                result.sort(Comparator.comparing(Profile::getPhoneNumber));
-                break;
-            case "credit":
-                result.sort(Comparator.comparing(Profile::getCredit));
-                break;
-            default:
-                result.sort(Comparator.comparing(Profile::getAccountId)); // Default to accountId
-                break;
+
+        if (property.equals(options[0])) {
+            result.sort(Comparator.comparing(Profile::getAccountId));
+        } else if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Profile::getFullName));
+        } else if (property.equals(options[2])) {
+            result.sort(Comparator.comparing(Profile::getBirthday));
+        } else if (property.equals(options[3])) {
+            result.sort(Comparator.comparing(Profile::getAddress));
+        } else if (property.equals(options[4])) {
+            result.sort(Comparator.comparing(Profile::getPhoneNumber));
+        } else if (property.equals(options[5])) {
+            result.sort(Comparator.comparing(Profile::getCredit));
+        } else {
+            result.sort(Comparator.comparing(Profile::getAccountId)); // Default case
         }
         return result;
     }
     
     @Override
-    public void display(List<Profile> tempList) {
+    public void show(List<Profile> tempList) {
         if (checkNull(tempList)) {
             return;
         } 
         
-        int nameL = "Full name".length();
-        int addressL = "Address".length();
-        for (Profile item : list) {
-            nameL = Math.max(nameL, item.getFullName().length());
-            addressL = Math.max(addressL, item.getAddress().length());
-        }
+        InfosTable.getTitle(Profile.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getAccountId(), 
+                        item.getFullName(),
+                        item.getPhoneNumber(),
+                        item.getAddress(),
+                        item.getCredit(),
+                        formatDate(item.getBirthday(), Validator.DATE)
+                )
+        );
         
-        int widthLength = 8 + nameL + 10 + addressL + 12 + 6 + 19;
-         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + nameL + "s | %-10s | %-" + addressL + "s | %-12s | %-6s |\n",
-                "ID", "Full Name", "Birthday" , "Address" , "Phone number" , "Credit");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Profile item : tempList) {
-        System.out.printf("\n| %-8s | %-" + nameL + "s | %-10s | %-" + addressL + "s | %-12s | %6s |",
-                    item.getId(),
-                    item.getFullName(),
-                    item.getBirthday(),
-                    item.getAddress(),
-                    item.getPhoneNumber(),
-                    item.getCredit() == 0f ? "0" : String.format("%-3.2f", item.getCredit()));
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getAccountId(), 
+                        item.getFullName(),
+                        item.getPhoneNumber(),
+                        item.getAddress(),
+                        item.getCredit(),
+                        formatDate(item.getBirthday(), Validator.DATE)
+                )
+        );
+        InfosTable.showFooter();
     }
 }

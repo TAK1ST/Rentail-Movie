@@ -1,6 +1,4 @@
-
 package main.controllers;
-
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -8,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
 import main.constants.IDPrefix;
-import main.constants.WishlistPriority;
+import main.constants.wishlist.WishlistPriority;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
 import main.dao.WishlistDAO;
@@ -16,91 +14,103 @@ import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Wishlist;
 import main.utils.IDGenerator;
+import main.utils.InfosTable;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
+import main.utils.Validator;
+import static main.utils.Validator.getDate;
 
 
 public class WishlistManager extends ListManager<Wishlist> {
 
     public WishlistManager() {
-        super(Wishlist.className());
+        super(Wishlist.className(), Wishlist.getAttributes());
         list = WishlistDAO.getAllWishlists();
     }
 
-    public boolean addWishlist(String customerID) {
-        Account foundAccount = (Account) getACM().searchById(customerID);
-        if (getACM().checkNull(foundAccount)) {
-            return false;
-        }
-
-        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
-        if (getMVM().checkNull(foundMovie)) {
-            return false;
-        }
-
-        for (Wishlist item : list) {
-            if (item.getCustomerId().equals(foundAccount.getId()) && item.getMovieId().equals(foundMovie.getId())) {
-                errorLog("This movie already added");
-                return false;
-            }
-        }
-        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, false);
-        if (priority == WishlistPriority.NONE) return false;
-        list.add(new Wishlist(
-                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.WISHLIST_PREFIX),
-                foundMovie.getId(),
-                foundAccount.getId(),
-                LocalDate.now(),
-                priority
-        ));
+    public boolean add(Wishlist wishlist) {
+        if (checkNull(wishlist) || checkNull(list)) return false;
+        
+        list.add(wishlist);
         return WishlistDAO.addWishlistToDB(list.getLast());
     }
 
-    public boolean updateWishlist() {
-        if (checkNull(list)) {
+    public boolean update(Wishlist wishlist) {
+        if (checkNull(wishlist) || checkNull(list)) return false;
+
+        Wishlist newWishlist = getInputs(new boolean[] {true, true, true, true}, wishlist);
+        if (newWishlist != null)
+            wishlist = newWishlist;
+        else 
             return false;
-        }
-
-        Wishlist foundWishlist = (Wishlist) getById("Enter wishlist' id");
-        if (checkNull(foundWishlist)) {
-            return false;
-        }
-
-        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
-        if (getMVM().checkNull(foundMovie)) {
-            return false;
-        }
-
-
-        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose wishlist type", WishlistPriority.class, true);
-        
-        if(!foundMovie.getId().equals(foundWishlist.getMovieId())) {
-            foundWishlist.setMovieId(foundMovie.getId());
-        }
-
-        if (priority != WishlistPriority.NONE) {
-            foundWishlist.setPriority(priority);
-        }
-
-        if (!foundMovie.getId().equals(foundWishlist.getMovieId()) || priority != WishlistPriority.NONE) {
-            foundWishlist.setAddedDate(LocalDate.now());
-        }
-
-        return WishlistDAO.updateWishlistInDB(foundWishlist);
+        return WishlistDAO.updateWishlistInDB(newWishlist);
     }
 
-    public boolean deleteWishlist() {
-        if (checkNull(list)) {
+    public boolean delete(Wishlist wishlist) {
+        if (checkNull(wishlist) || checkNull(list)) return false;     
+
+        if (!list.remove(wishlist)) {
+            errorLog("WishList not found");
             return false;
         }
-
-        Wishlist foundWishlist = (Wishlist) getById("Enter wishlist's id");
-        if (checkNull(foundWishlist)) {
-            return false;
+        return WishlistDAO.deleteWishlistFromDB(wishlist.getId());
+    }
+    
+    @Override
+    public Wishlist getInputs(boolean[] options, Wishlist oldData) {
+        if (options == null) {
+            options = new boolean[] {true, true, true, true};
         }
-
-        list.remove(foundWishlist);
-        return WishlistDAO.deleteWishlistFromDB(foundWishlist.getId());
+        
+        if (options.length < 4) {
+            errorLog("Not enough option length");
+            return null;
+        }
+        
+        Movie movie = null;
+        Account customer = null;
+        WishlistPriority priority = WishlistPriority.NONE;
+        LocalDate addedDate = null;
+        
+        if (oldData != null) {
+            movie = (Movie) getMVM().searchById(oldData.getMovieId());
+            if (getMVM().checkNull(movie)) return null;
+            
+            customer = (Account) getACM().searchById(oldData.getCustomerId());
+            if (getACM().checkNull(customer)) return null;
+            
+            priority = oldData.getPriority();
+            addedDate = oldData.getAddedDate();
+        }
+        
+        if (options[0]) {
+            movie = (Movie) getMVM().getById("Enter movie's id");
+            if (getMVM().checkNull(movie)) return null;
+        }
+        if (options[1]) {
+            customer = (Account) getACM().getById("Enter customer's id");
+            if (getACM().checkNull(customer)) return null;
+        }
+        if (options[2]) {
+            priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, priority);
+            if (priority == WishlistPriority.NONE) return null;
+        }
+        if (options[3]) {
+            addedDate = oldData == null ? LocalDate.now() : getDate("Enter date", addedDate);
+        }
+        
+        String id = (oldData == null) ? IDGenerator.generateID(list.isEmpty() ? null : list.getLast().getId(), IDPrefix.WISHLIST_PREFIX)
+                :
+            oldData.getId();
+        
+        return new Wishlist(
+                id,
+                movie.getId(),
+                customer.getId(),
+                addedDate,
+                priority
+        );
     }
 
     @Override
@@ -123,63 +133,53 @@ public class WishlistManager extends ListManager<Wishlist> {
             return null;
         }
 
+        String[] options = Wishlist.getAttributes(); 
         List<Wishlist> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "wishlistId":
-                result.sort(Comparator.comparing(Wishlist::getId));
-                break;
-            case "customerId":
-                result.sort(Comparator.comparing(Wishlist::getCustomerId));
-                break;
-            case "movieId":
-                result.sort(Comparator.comparing(Wishlist::getMovieId));
-                break;
-            case "addedDate":
-                result.sort(Comparator.comparing(Wishlist::getAddedDate));
-                break;
-            case "priority":
-                result.sort(Comparator.comparing(Wishlist::getPriority));
-                break;
-            default:
-                result.sort(Comparator.comparing(Wishlist::getId));
-                break;
+
+        if (property.equals(options[0])) {
+            result.sort(Comparator.comparing(Wishlist::getId));
+        } else if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Wishlist::getCustomerId));
+        } else if (property.equals(options[2])) {
+            result.sort(Comparator.comparing(Wishlist::getMovieId));
+        } else if (property.equals(options[3])) {
+            result.sort(Comparator.comparing(Wishlist::getAddedDate));
+        } else if (property.equals(options[4])) {
+            result.sort(Comparator.comparing(Wishlist::getPriority));
+        } else {
+            result.sort(Comparator.comparing(Wishlist::getId));
         }
         return result;
     }
 
     @Override
-    public void display(List<Wishlist> tempList) {
+    public void show(List<Wishlist> tempList) {
         if (checkNull(list)) {
             return;
         }
 
-        int customerL = "Customer".length();
-        int movieL = "Movie Title".length();
-        for (Wishlist item : tempList) {
-            Account foundAccount = (Account) getACM().searchById(item.getCustomerId());
-            Movie foundMovie = (Movie) getMVM().getById(item.getMovieId());
-            
-            customerL = Math.max(customerL, foundAccount.getUsername().length());
-            movieL = Math.max(movieL, foundMovie.getTitle().length());
-        }
+        InfosTable.getTitle(Wishlist.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getId(), 
+                        item.getMovieId(),
+                        item.getCustomerId(),
+                        formatDate(item.getAddedDate(), Validator.DATE),
+                        item.getPriority()
+                )
+        );
         
-        int widthLength = 8 + movieL + customerL + 10 + 8 + 16;
-        
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + movieL + "s | %-" + customerL + "s | %-10s | %-8s |\n",
-                "ID", "Movie Titlte", "Customer", "Added Date", "Priority");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Wishlist item : tempList) {
-            System.out.printf("\n| %-8s | %-" + movieL + "s | %-" + customerL + "s | %-10s | %-8s |",
-                    item.getId(),
-                    item.getMovieId(),
-                    item.getCustomerId(),
-                    item.getAddedDate(),
-                    item.getPriority().name());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getId(), 
+                        item.getMovieId(),
+                        item.getCustomerId(),
+                        formatDate(item.getAddedDate(), Validator.DATE),
+                        item.getPriority()
+                )
+        );
+        InfosTable.showFooter();
     }
 
 }

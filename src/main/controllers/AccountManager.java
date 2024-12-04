@@ -1,21 +1,23 @@
-
 package main.controllers;
-
 
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import main.constants.AccRole;
-import main.constants.AccStatus;
+import main.constants.account.AccRole;
+import main.constants.account.AccStatus;
 import main.dao.AccountDAO;
 import static main.controllers.Managers.getPFM;
 import main.dto.Account;
+import main.dto.Profile;
+import main.services.AuthenServices;
 import main.utils.IDGenerator;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
-import static main.utils.PassEncryptor.encryptPassword;
+import main.utils.InfosTable;
+import static main.utils.Input.getInteger;
+import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
 import static main.utils.Validator.getEmail;
@@ -26,166 +28,97 @@ import static main.utils.Validator.getUsername;
 public class AccountManager extends ListManager<Account> {
 
     public AccountManager() {
-        super(Account.className());
+        super(Account.className(), Account.getAttributes());
         list = AccountDAO.getAllAccounts();
-        setAdmin();
     }
 
-    private void setAdmin() {
-        if (!list.isEmpty()) {
-            for (Account item : list) {
-                if (item.getRole() == AccRole.ADMIN) {
-                    return;
-                }
-            }
+    public boolean add(Account account) {
+        if (checkNull(account) || checkNull(list)) return false;
+        
+        list.add(account);
+        if (AccountDAO.addAccountToDB(list.getLast())) 
+            return AuthenServices.registorProfile(account.getId());
+        else
+        return false;
+    }
+    
+    public boolean update(Account account) {
+        if (checkNull(account) || checkNull(list)) return false;
+        
+        Account newAccount = getInputs(new boolean[] {true, true, true, true, true}, account);
+        if (newAccount != null)
+            account = newAccount;
+        else 
+            return false;
+        return AccountDAO.updateAccountInDB(newAccount);
+    }
+
+    public boolean delete(Account account) {
+        if (checkNull(account) || checkNull(list)) return false;
+      
+        if (!list.remove(account)) {
+            errorLog("Account not found");
+            return false;
         }
-        list.add(new Account(
-                IDGenerator.DEFAULT_ADMIN_ID,
-                "admin",
-                "1",
-                "admin@gmail.com",
-                AccRole.ADMIN,
-                AccStatus.OFFLINE,
-                null,
-                null,
-                null
-        ));
-        AccountDAO.addAccountToDB(list.getLast()); 
+        return AccountDAO.deleteAccountFromDB(account.getId());
     }
 
-    public boolean registorAccount() {
-        
-        String username = getUsername("Enter username", false, list);
-        if (username.isEmpty()) return false;
-        
-        String password = getPassword("Enter password", false);
-        if (password.isEmpty()) return false;
-        
-        String email = getEmail("Enter email", false);
-        if (email.isEmpty()) return false;
-        
-        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), AccRole.CUSTOMER);
-        if (yesOrNo("Fill in all infomation?")) {
-            if (getPFM().addProfile(id)) {
-                errorLog("Cannot registor account info");
-                return false;
-            }
+    @Override
+    public Account getInputs(boolean[] options, Account oldData) {
+        if (options.length < 5) {
+            errorLog("Not enough option length");
+            return null;
         }
-
-        list.add(new Account(
-                id,
-                username,
-                encryptPassword(password),
-                email,
-                AccRole.CUSTOMER,
-                AccStatus.OFFLINE,
-                LocalDate.now(),
-                null,
-                LocalDate.now()
-        ));
-        return AccountDAO.addAccountToDB(list.getLast());
-    }
-
-    public boolean addAccount(AccRole registorRole) {
-
-        String username = getUsername("Enter username", false, list);
-        if (username.isEmpty()) return false;
         
-        String password = getPassword("Enter password", false);
-        if (password.isEmpty()) return false;
+        int creability = 100;
+        String username = null, password = null, email = null;
+        AccRole role = AccRole.NONE;
         
-        String email = getEmail("Enter your email", false);
-        if (email.isEmpty()) return false;
+        if (oldData != null) {
+            username = oldData.getUsername();
+            password = oldData.getPassword();
+            email = oldData.getEmail();
+            role = oldData.getRole();
+            creability = oldData.getCreability();
+        } 
         
-        AccRole role = (registorRole == AccRole.ADMIN) ? (AccRole)getEnumValue("Choose a role", AccRole.class, false) : registorRole;
-        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), role);
-
-        list.add(new Account(
+        if (options[0]) {
+            username = getUsername("Enter username", username, list);
+            if (username == null) return null;
+        }
+        if (options[1]) {
+            password = getPassword("Enter password", password);
+            if (password == null) return null;
+        }
+        if (options[2]) {
+            email = getEmail("Enter your email", email);
+            if (email == null) return null;
+        }
+        if (options[3]) {
+            role = (AccRole)getEnumValue("Choose a role", AccRole.class, role);
+            if (role == AccRole.NONE) return null;
+        }
+        if (options[4] && role != AccRole.ADMIN) {
+            creability = getInteger("Enter creadibility", 0, 1000, creability);
+            if (creability == Integer.MIN_VALUE) return null;
+        }
+        
+        String id = (oldData == null) ? IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), role)
+            :
+        oldData.getId();
+        
+        return new Account(
                 id,
                 username,
                 password,
                 email,
                 role,
                 AccStatus.OFFLINE,
-                LocalDate.now(),
-                null,
-                LocalDate.now()
-        ));
-        if (AccountDAO.addAccountToDB(list.getLast())) {
-            if (list.getLast().getRole() == AccRole.ADMIN) {
-                return true;
-            }
-
-            if (!getPFM().addProfile(id)) {
-                errorLog("Cannot registor info");
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public boolean updateAccount(String accountID) {
-        if (checkNull(list)) {
-            return false;
-        }
-
-        Account foundAccount;
-        if (accountID.isEmpty()) {
-            foundAccount = (Account) getById("Enter user's id");
-        } else {
-            foundAccount = (Account) searchById(accountID);
-        }
-        if (checkNull(foundAccount)) {
-            return false;
-        }
-
-        String newAccountname = getUsername("Enter new username", true, list);
-        String newPassword = getPassword("Enter new password", true);
-
-        AccRole newRole = AccRole.NONE;
-        if (foundAccount.getRole() == AccRole.ADMIN) {
-            newRole = (AccRole) getEnumValue("Choose a role", AccRole.class, true);
-        }
-        String newEmail = Validator.getEmail("Enter your email", true);
-
-        if (!newAccountname.isEmpty()) {
-            foundAccount.setUsername(newAccountname);
-        }
-        if (!newPassword.isEmpty()) {
-            foundAccount.setPassword(encryptPassword(newPassword));
-        }
-        if (newRole != AccRole.NONE) {
-            foundAccount.setRole(newRole);
-        }
-        if (!newEmail.isEmpty()) {
-            foundAccount.setEmail(newEmail);
-        }
-
-        return AccountDAO.updateAccountInDB(foundAccount);
-    }
-
-    public void updatePassword(String accountID, String newPassword) {
-        Account foundAccount = (Account) searchById(accountID);
-        if (checkNull(foundAccount)) return;
-        
-        foundAccount.setPassword(newPassword);
-        AccountDAO.updatePasswordInDB(accountID, newPassword);
-    }
-
-    public boolean deleteAccount() {
-        if (checkNull(list)) return false;
-      
-        Account foundAccount = (Account) getById("Enter user's id");
-        if (checkNull(foundAccount)) return false;
-       
-
-        list.remove(foundAccount);
-        return AccountDAO.deleteAccountFromDB(foundAccount.getId());
-    }
-
-    public void showMyProfile(String accountID) {
-        display(searchById(accountID), "My Profile");
+                oldData == null ? LocalDate.now() : oldData.getCreateAt(),
+                oldData == null ? null : LocalDate.now(),
+                oldData == null ? null : oldData.getOnlineAt(),
+                creability
+        );
     }
     
     @Override
@@ -208,54 +141,73 @@ public class AccountManager extends ListManager<Account> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Account.getAttributes();
         List<Account> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "username": result.sort(Comparator.comparing(Account::getUsername)); break;
-            case "password": result.sort(Comparator.comparing(Account::getPassword)); break;
-            case "email": result.sort(Comparator.comparing(Account::getEmail)); break;
-            case "role": result.sort(Comparator.comparing(Account::getRole)); break;
-            case "status": result.sort(Comparator.comparing(Account::getStatus)); break;
-            case "createAt": result.sort(Comparator.comparing(Account::getCreateAt)); break;
-            case "updateAt": result.sort(Comparator.comparing(Account::getUpdateAt)); break;
-            case "onlineAt": result.sort(Comparator.comparing(Account::getOnlineAt)); break;
-            default: 
-                result.sort(Comparator.comparing(Account::getId));
-                break;
+
+        if (property.equals(options[1])) { 
+            result.sort(Comparator.comparing(Account::getUsername));
+        } else if (property.equals(options[2])) {
+            result.sort(Comparator.comparing(Account::getPassword));
+        } else if (property.equals(options[3])) {
+            result.sort(Comparator.comparing(Account::getEmail));
+        } else if (property.equals(options[4])) {
+            result.sort(Comparator.comparing(Account::getRole));
+        } else if (property.equals(options[5])) {
+            result.sort(Comparator.comparing(Account::getStatus));
+        } else if (property.equals(options[6])) {
+            result.sort(Comparator.comparing(Account::getCreateAt));
+        } else if (property.equals(options[7])) {
+            result.sort(Comparator.comparing(Account::getUpdateAt));
+        } else if (property.equals(options[8])) {
+            result.sort(Comparator.comparing(Account::getOnlineAt));
+        } else if (property.equals(options[9])) {
+            result.sort(Comparator.comparing(Account::getCreability));
+        } else {
+            result.sort(Comparator.comparing(Account::getId));
         }
+
         return result;
     }
 
     @Override
-    public void display(List<Account> tempList) {
+    public void show(List<Account> tempList) {
         if (checkNull(tempList)) {
             return;
         }
+        
+        InfosTable.getTitle(Account.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getId(), 
+                        item.getUsername(),
+                        item.getPassword(),
+                        item.getEmail(),
+                        item.getRole(),
+                        item.getStatus(),
+                        formatDate(item.getCreateAt(), Validator.DATE),
+                        formatDate(item.getUpdateAt(), Validator.DATE),
+                        formatDate(item.getOnlineAt(), Validator.DATE),
+                        item.getCreability()
+                )
+        );
+        
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getId(), 
+                        item.getUsername(),
+                        item.getPassword(),
+                        item.getEmail(),
+                        item.getRole(),
+                        item.getStatus(),
+                        formatDate(item.getCreateAt(), Validator.DATE),
+                        formatDate(item.getUpdateAt(), Validator.DATE),
+                        formatDate(item.getOnlineAt(), Validator.DATE),
+                        item.getCreability()
+                )
+        );
+        InfosTable.showFooter();
 
-        int usernameL = "Username".length();
-        int emailL = "Email".length();
-        for (Account item : list) {
-            usernameL = Math.max(usernameL, item.getUsername().length());
-            emailL = Math.max(emailL, item.getEmail().length());
-        }
-        
-        int widthLength = 8 + usernameL + 8 + emailL + 8 + 16;
-        
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + usernameL + "s | %-8s | %-" + emailL+ "s | %-8s |\n",
-                "ID", "Username", "Role", "Email" , "Status");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Account item : tempList) {
-            System.out.printf("\n| %-8s | %-" + usernameL+ "s | %-8s | %-" + emailL + "s | %-8s |",
-                    item.getId(),
-                    item.getUsername(),
-                    item.getRole(),
-                    item.getEmail(),
-                    item.getStatus());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
     }
     
 }

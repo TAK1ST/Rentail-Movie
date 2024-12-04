@@ -2,15 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
  */
-package main.constants;
+package main.constants.account;
 
 /**
  *
  * @author trann
  */
-public enum RentalStatus {
+public enum AccStatus {
     NONE,
-    PENDING,
-    APPROVED,
-    DENIED
+    ONLINE,
+    OFFLINE,
+    BANNED,
 }

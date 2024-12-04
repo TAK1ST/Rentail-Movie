@@ -1,23 +1,28 @@
-
 package main.controllers;
-
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
-import main.constants.DiscountType;
+import main.constants.discount.ApplyForWhat;
+import main.constants.discount.ApplyForWho;
+import main.constants.discount.DiscountType;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
+import static main.controllers.Managers.getPFM;
 import main.dao.DiscountDAO;
 import static main.dao.MiddleTableDAO.addDataToMidTable;
 import main.dto.Discount;
 import main.utils.IDGenerator;
+import main.utils.InfosTable;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
+import static main.utils.Input.returnNames;
 import static main.utils.Input.selectByNumbers;
 import static main.utils.Input.yesOrNo;
+import static main.utils.LogMessage.errorLog;
+import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
@@ -26,39 +31,118 @@ import static main.utils.Validator.getDate;
 public class DiscountManager extends ListManager<Discount> {
     
     public DiscountManager() {
-        super(Discount.className());
+        super(Discount.className(), Discount.getAttributes());
         list = DiscountDAO.getAllDiscounts();
     }
 
-    public boolean addDiscount() {
+    public boolean add(Discount discount) {
+        if (checkNull(discount) || checkNull(list)) return false;
         
-        LocalDate startDate = getDate("Enter start date", false);
-        if (startDate == null) return false;
+        list.add(discount);
+        if (DiscountDAO.addDiscountToDB(discount)) {
+            return (
+                discount.getCustomerIds() != null ? addDataToMidTable("Discount_Discount", discount.getId(), "discount_code", discount.getCustomerIds(),"customer_id") : true
+                        &&
+                discount.getMovieIds() != null ? addDataToMidTable("Discount_Movie", discount.getId(), "discount_code", discount.getMovieIds(), "movie_id") : false
+            );
+        }
+        return false;
+    }
+
+    public boolean update(Discount discount) {
+        if (checkNull(discount) || checkNull(list)) return false;
+
+        Discount newDiscount = getInputs(new boolean[] {true, true, true, true, true, true, true, true}, discount);
+        if (newDiscount != null)
+            discount = newDiscount;
+        else 
+            return false;
         
-        LocalDate endDate = getDate("Enter end date", false);
-        if (endDate == null) return false;
-        
-        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, false);
-        if (type == DiscountType.NONE) return false;
-        
-        int quantity = getInteger("Enter available quantity", 1, 20, false);
-        if (quantity == Integer.MIN_VALUE) return false;
-        
-        double value = getDouble("Enter value", 1, 20, false);
-        if (value == Double.MIN_VALUE) return false;
-        
-        String movies = selectByNumbers("Enter movie's id (Comma-separated)", getMVM(), true);
-        if (movies.isEmpty()) return false;
-        
-        String customers = null;
-        if (yesOrNo("Assign to customers right now")) {
-            customers = selectByNumbers("Enter customer's id (Comma-separated)", getACM(), true);
-            if (customers.isEmpty()) return false;
+        return DiscountDAO.updateDiscountInDB(newDiscount);
+    }
+
+    public boolean delete(Discount discount) { 
+        if (checkNull(discount) || checkNull(list)) return false;     
+
+        if (!list.remove(discount)) {
+            errorLog("Discount not found");
+            return false;
+        }
+        return DiscountDAO.deleteDiscountFromDB(discount.getId());
+    }
+    
+    @Override
+    public Discount getInputs(boolean[] options, Discount oldData) {
+        if (options.length < 10) {
+            errorLog("Not enough option length");
+            return null;
         }
         
-        String id = IDGenerator.generateDiscountCode();
+        int quantity = 0;
+        double value = 0f;
+        String movies = null, customers = null;
+        LocalDate startDate = null, endDate = null; 
+        DiscountType type = DiscountType.NONE;
+        ApplyForWho applyForWho = ApplyForWho.NONE;
+        ApplyForWhat applyForWhat = ApplyForWhat.NONE;
+        boolean active = false;
         
-        list.add(new Discount(
+        if (oldData != null) {
+            movies = oldData.getMovieIds();
+            customers = oldData.getCustomerIds();
+            startDate = oldData.getStartDate();
+            endDate = oldData.getEndDate();
+            type = oldData.getType();
+            active = oldData.isActive();
+            applyForWho = oldData.getApplyForWho();
+            applyForWhat = oldData.getApplyForWhat();
+        }
+        
+        if (options[0]) {
+            startDate = getDate("Enter start date", oldData.getStartDate());
+            if (startDate == null) return null;
+        }
+        if (options[1]) {
+            endDate = getDate("Enter end date", oldData.getEndDate());
+            if (endDate == null) return null;
+        }
+        if (options[2]) {
+            type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, oldData.getType());
+            if (type == DiscountType.NONE) return null;
+        }
+        if (options[3]) {
+            applyForWho = (ApplyForWho) getEnumValue("Apply for who", ApplyForWho.class, oldData.getApplyForWho());
+            if (type == DiscountType.NONE) return null;
+        }
+        if (options[4]) {
+            applyForWhat = (ApplyForWhat) getEnumValue("Apply for what", ApplyForWhat.class, oldData.getApplyForWhat());
+            if (type == DiscountType.NONE) return null;
+        }
+        if (options[5]) {
+            quantity = getInteger("Enter available quantity", 1, 1000, oldData.getQuantity());
+            if (quantity == Integer.MIN_VALUE) return null;
+        }
+        if (options[6]) {
+            value = getDouble("Enter value", 1, 20, oldData.getValue());
+            if (value == Double.MIN_VALUE) return null;
+        }
+        if (options[7] && applyForWhat == ApplyForWhat.SPECIFIC_MOVIES && yesOrNo("Assign to movie's right now")) {
+            movies = selectByNumbers("Enter movie's id (Comma-separated)", getMVM(), oldData.getMovieIds());
+            if (movies.isEmpty()) return null;
+        }
+        if (options[8] && applyForWho == ApplyForWho.SPECIFIC_USERS && yesOrNo("Assign to customers right now")) {
+            customers = selectByNumbers("Enter customer's id (Comma-separated)", getACM(), oldData.getCustomerIds());
+            if (customers.isEmpty()) return null;
+        }
+        if (options[9]) {
+            active = oldData == null ? yesOrNo("Set active") : oldData.isActive();
+        }
+        
+        String id = (oldData == null) ? IDGenerator.generateDiscountCode()
+                :
+            oldData.getId();
+        
+        return new Discount(
                 id, 
                 customers,
                 movies,
@@ -66,47 +150,11 @@ public class DiscountManager extends ListManager<Discount> {
                 endDate,
                 type,
                 quantity,
-                true,
-                value
-        ));
-        if (DiscountDAO.addDiscountToDB(list.getLast())) 
-            return (
-                customers != null ? addDataToMidTable("Discount_Account", id, "discount_code", customers,"customer_id") : true
-                        &&
-                addDataToMidTable("Discount_Movie", id, "discount_code", movies, "movie_id")
-            );
-        return false;
-    }
-
-    public boolean updateDiscount() {
-        if (checkNull(list)) return false;
-
-        Discount foundDiscount = (Discount)getById("Enter discount code");
-        if (checkNull(foundDiscount)) return false;
-        
-        LocalDate startDate = getDate("Enter start date", true);  
-        LocalDate endDate = getDate("Enter end date", true);
-        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, true);
-        int quantity = getInteger("Enter available quantity", 1, 20, true);
-        boolean active = yesOrNo("Set active");
-        
-        if (startDate != null) foundDiscount.setStartDate(startDate);
-        if (endDate != null) foundDiscount.setEndDate(endDate);
-        if (type != DiscountType.NONE) foundDiscount.setType(type);
-        if (quantity > 0) foundDiscount.setQuantity(quantity);
-        if (active != foundDiscount.isActive()) foundDiscount.setActive(active);
-        
-        return DiscountDAO.updateDiscountInDB(foundDiscount);
-    }
-
-    public boolean deleteDiscount() { 
-        if (checkNull(list)) return false;       
-
-        Discount foundDiscount = (Discount)getById("Enter discount code");
-        if (checkNull(foundDiscount)) return false;
-
-        list.remove(foundDiscount);
-        return DiscountDAO.deleteDiscountFromDB(foundDiscount.getId());
+                active,
+                value,
+                applyForWho,
+                applyForWhat
+        );
     }
    
     @Override
@@ -131,64 +179,67 @@ public class DiscountManager extends ListManager<Discount> {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Discount.getAttributes();
         List<Discount> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "discountCode":
-                result.sort(Comparator.comparing(Discount::getCode));
-                break;
-            case "customerId":
-                result.sort(Comparator.comparing(Discount::getCustomerIds));
-                break;
-            case "discountType":
-                result.sort(Comparator.comparing(Discount::getType));
-                break;
-            case "discountValue":
-                result.sort(Comparator.comparing(Discount::getValue));
-                break;
-            case "startDate":
-                result.sort(Comparator.comparing(Discount::getStartDate));
-                break;
-            case "endDate":
-                result.sort(Comparator.comparing(Discount::getEndDate));
-                break;
-            case "quantity":
-                result.sort(Comparator.comparing(Discount::getQuantity));
-                break;
-            case "isActive":
-                result.sort(Comparator.comparing(Discount::isActive));
-                break;
-            default:
-                result.sort(Comparator.comparing(Discount::getCode)); 
-                break;
+        
+        if (property.equals(options[0])) {
+            result.sort(Comparator.comparing(Discount::getCode));
+        } else if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Discount::getCustomerIds));
+        } else if (property.equals(options[2])) {
+            result.sort(Comparator.comparing(Discount::getType));
+        } else if (property.equals(options[3])) {
+            result.sort(Comparator.comparing(Discount::getValue));
+        } else if (property.equals(options[4])) {
+            result.sort(Comparator.comparing(Discount::getStartDate));
+        } else if (property.equals(options[5])) {
+            result.sort(Comparator.comparing(Discount::getEndDate));
+        } else if (property.equals(options[6])) {
+            result.sort(Comparator.comparing(Discount::getQuantity));
+        } else if (property.equals(options[7])) {
+            result.sort(Comparator.comparing(Discount::isActive));
+        } else {
+            result.sort(Comparator.comparing(Discount::getCode)); // Default case
         }
         return result;
     }
 
     @Override
-    public void display(List<Discount> tempList) {
+    public void show(List<Discount> tempList) {
         if (checkNull(tempList)) {
             return;
         } 
         
-        int widthLength = 8 + 10 + 10 + 16 + 8 + 6 + 5 + 22;
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-10s | %-10s | %-16s | %-8s | %-6s | %-5s |\n",
-                "Code", "Start date", "End date", "Type" , "Quantity", "Status" , "Value");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Discount item : tempList) {
-            System.out.printf("\n| %-8s | %-10s | %-10s | %-16s | %8d | %-6s | %5s |",
-                    item.getCode(),
-                    item.getStartDate().format(Validator.DATE),
-                    item.getEndDate().format(Validator.DATE),
-                    item.getType().name(),
+        InfosTable.getTitle(Discount.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                    item.getCode(), 
+                    String.join(", ", returnNames(item.getCustomerIds(), getPFM())),
+                    String.join(", ", returnNames(item.getMovieIds(), getMVM())),
+                    item.getType(),
+                    item.getValue(),
+                    formatDate(item.getStartDate(), Validator.DATE), 
+                    formatDate(item.getEndDate(), Validator.DATE),
                     item.getQuantity(),
-                    item.isActive() ? "Active" : "...",
-                    item.getValue() == 0f ? "0" : String.format("%02.2f", item.getValue()));
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
-    }
-   
+                    item.isActive()
+                )
+        );
+        
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                    item.getCode(), 
+                    String.join(", ", returnNames(item.getCustomerIds(), getPFM())),
+                    String.join(", ", returnNames(item.getMovieIds(), getMVM())),
+                    item.getType(),
+                    item.getValue(),
+                    formatDate(item.getStartDate(), Validator.DATE), 
+                    formatDate(item.getEndDate(), Validator.DATE),
+                    item.getQuantity(),
+                    item.isActive()
+                )
+        );
+        InfosTable.showFooter();
+        
+    }   
 }

@@ -1,210 +1,155 @@
-
 package main.controllers;
-
 
 import main.base.ListManager;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.IDPrefix;
-import main.constants.RentalStatus;
+import main.constants.rental.RentalStatus;
 import main.dao.RentalDAO;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getACM;
-import static main.controllers.Managers.getPFM;
+import static main.controllers.Managers.getPMM;
 import main.dto.Account;
 import main.dto.Movie;
-import main.dto.Profile;
+import main.dto.Payment;
 import main.dto.Rental;
 import main.services.MovieServices;
 import main.services.RentalServices;
 import main.utils.IDGenerator;
+import main.utils.InfosTable;
 import static main.utils.Input.getInteger;
-import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.Utility.formatDate;
+import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
-import static main.utils.Validator.getDate;
-
 
 public class RentalManager extends ListManager<Rental> {
 
     public RentalManager() {
-        super(Rental.className());
+        super(Rental.className(), Rental.getAttributes());
         list = RentalDAO.getAllRentals();
     }
-
-    public boolean addRental(String customerID) {
-        Account foundAccount = (Account) getACM().searchById(customerID);
-        if (getACM().checkNull(foundAccount)) {
-            return false;
-        }
-
-        Movie foundMovie = (Movie) getMVM().getById("Enter movie' id to rent");
-        if (getMVM().checkNull(foundMovie)) {
-            return false;
-        }
-
-        if (foundMovie.getAvailableCopies() <= 0) {
-            errorLog("No available copies for this movie!");
-            return false;
-        }
-
-        Account foundStaff = (Account) getACM().searchById(assignStaff());
-        if (foundStaff == null) {
-            errorLog("No staff is assigned to approve your rental");
-            return false;
-        }
-
-        int numberOfRentDate = getInteger("How many days to rent", 1, 365, false);
-        if (numberOfRentDate == Integer.MIN_VALUE) return false;
+    
+    public boolean add(Rental rental) {
+        if (checkNull(rental) || checkNull(list)) return false;
         
-        LocalDate rentalDate = LocalDate.now();
-        LocalDate dueDate = rentalDate.plusDays(numberOfRentDate);
-        double total = foundMovie.getRentalPrice() * numberOfRentDate;
-
-        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.RENTAL_PREFIX);
-
-        list.add(new Rental(
-                id,
-                customerID,
-                foundMovie.getId(),
-                foundStaff.getId(),
-                rentalDate,
-                dueDate,
-                null,
-                0.0,
-                total,
-                RentalStatus.PENDING
-        ));
-        if (RentalDAO.addRentalToDB(list.getLast())) {
-            return MovieServices.adjustAvailableCopy(list.getLast().getMovieId(), -1);
+        list.add(rental);
+        if (RentalDAO.addRentalToDB(rental)) {
+            return MovieServices.adjustAvailableCopy(rental.getId(), -1);
         }
-
         return false;
     }
 
-    public String assignStaff() {
-        return "S0000001";
+    public boolean update(Rental rental) {
+        if (checkNull(rental) || checkNull(list)) return false;
+
+        Rental newRental = getInputs(new boolean[] {true, true, true, true, true}, rental);
+        if (newRental != null)
+            rental = newRental;
+        else 
+            return false;
+        return RentalDAO.updateRentalInDB(newRental);
     }
 
-    public Rental getRentalByAccountMovie(String userID) {
-        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
-        if (getMVM().checkNull(foundMovie)) {
+    public boolean delete(Rental rental) {
+        if (checkNull(rental) || checkNull(list)) return false;     
+
+        if (!list.remove(rental)) {
+            errorLog("Rental not found");
+            return false;
+        }
+        return RentalDAO.deleteRentalFromDB(rental.getId());
+    }
+    
+    @Override
+    public Rental getInputs(boolean[] options, Rental oldData) {
+        if (options.length < 4) {
+            errorLog("Not enough option length");
             return null;
         }
-
-        List<Rental> temp = searchBy(userID);
-        for (Rental item : temp) {
-            if (item.getMovieId().equals(foundMovie.getId())) {
-                return item;
+        
+        Account customer = null;
+        Movie movie = null;
+        LocalDate rentalDate = null, dueDate = null, returnDate = null;
+        int howManyDays = 0;
+        double lateFee = 0f;
+        RentalStatus status = RentalStatus.NONE;
+        
+        if (oldData != null) {
+            customer = (Account) getACM().searchById(oldData.getCustomerID());
+            if (getACM().checkNull(customer)) return null;
+            
+            movie = (Movie) getMVM().searchById(oldData.getMovieID());
+            if (getMVM().checkNull(movie)) return null;
+            
+            rentalDate = oldData.getRentalDate();
+            status = oldData.getStatus();
+            dueDate = oldData.getDueDate();
+            returnDate = oldData.getReturnDate();
+        }
+        
+        String id = (oldData == null) ? IDGenerator.generateID(list.isEmpty() ? null : list.getLast().getId(), IDPrefix.RENTAL_PREFIX)
+                :
+            oldData.getId();
+        
+        if (options[0] && customer == null) {
+            customer = (Account) getACM().getById("Enter customer's id");
+            if (getACM().checkNull(customer)) return null;
+        }
+        if (options[1] && movie == null) {
+            movie = (Movie) getMVM().getById("Enter movie' id to rent");
+            if (getMVM().checkNull(movie)) return null;
+            if (movie.getAvailableCopies() <= 0) {
+                errorLog("No available copies for this movie!");
+                return null;
             }
         }
-
-        return null;
-    }
-
-    public boolean returnMovie(String userID) {
-        if (checkNull(list)) {
-            return false;
+        if (options[2]) {
+            howManyDays = getInteger("How many days to rent", 1, 365, Integer.MIN_VALUE);
+            if (howManyDays == Integer.MIN_VALUE) return null;
         }
-
-        Rental foundRental = getRentalByAccountMovie(userID);
-        if (checkNull(foundRental)) {
-            return false;
+        if (options[3]) {
+            if (oldData == null) 
+                rentalDate = getPMM().add(new Payment(customer.getId(), movie.getRentalPrice() * howManyDays)) ? LocalDate.now() : null;
+            else 
+                rentalDate = oldData.getRentalDate();
+            if (rentalDate == null) return null;
         }
-
-        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
-        if (getMVM().checkNull(foundMovie)) {
-            return false;
+        if (options[4]) {
+            status = (RentalStatus)getEnumValue("Choose a status", RentalStatus.class, status);
+            if (status == RentalStatus.NONE) return null;
         }
-
-        double lateFee = RentalServices.calculateOverdueFine(foundRental.getReturnDate(), foundMovie.getRentalPrice());
-
-        if (lateFee > 0) {
-            foundRental.setLateFee(foundRental.getLateFee() + lateFee);
-            foundRental.setTotalAmount(foundRental.getTotalAmount() + foundRental.getLateFee());
-        }
-
-        if (RentalDAO.updateRentalInDB(foundRental)) {
-            return MovieServices.adjustAvailableCopy(list.getLast().getMovieId(), +1);
-        }
-
-        return false;
-    }
-
-    public boolean updateRental() {
-
-        if (checkNull(list)) return false;
         
-        Rental foundRental = (Rental)getById("Enter rental's id");
-        if (checkNull(foundRental)) return false;
-
-
-        Movie foundMovie = null;
-        String input = getString("Enter rental' id to rent", true);
-        if (!input.isEmpty()) {
-            foundMovie = (Movie) getMVM().searchById(input);
-        }
-        if (getMVM().checkNull(foundMovie)) {
-            foundMovie = (Movie) getMVM().searchById(foundRental.getMovieId());
-        }
-        if (getMVM().checkNull(foundMovie)) {
-            return false;
-        }
-
-        LocalDate rentalDate = getDate("Change rental date", true);
-        LocalDate returnDate = getDate("Change return date", true);
-
-        if (rentalDate != null) {
-            foundRental.setRentalDate(rentalDate);
-        }
-
-        if (returnDate != null) {
-            foundRental.setReturnDate(returnDate);
-        }
-
-        if (rentalDate != null && returnDate != null) {
-            foundRental.setTotalAmount(ChronoUnit.DAYS.between(rentalDate, returnDate) * foundMovie.getRentalPrice());
-        }
-
-        return RentalDAO.updateRentalInDB(foundRental);
-    }
-
-    public boolean extendReturnDate(String userID) {
-        Rental foundRental = getRentalByAccountMovie(userID);
-        if (checkNull(foundRental)) {
-            return false;
-        }
-
-        Movie foundMovie = getMVM().searchById(foundRental.getMovieId());
-        if (getMVM().checkNull(foundMovie)) {
-            return false;
-        }
-
-        int extraDate = getInteger("How many days to rent", 1, 365, false);
-        double lateFee = RentalServices.calculateOverdueFine(foundRental.getReturnDate(), foundMovie.getRentalPrice());
-
-        if (lateFee > 0) {
-            foundRental.setLateFee(lateFee);
-        }
-        foundRental.setReturnDate(foundRental.getReturnDate().plusDays(extraDate));
-        return true;
-    }
-
-    public boolean deleteRental() {
-        if (checkNull(list)) {
-            return false;
-        }
-
-        Rental foundRental = (Rental) getById("Enter rental's id");
-        if (checkNull(foundRental)) {
-            return false;
-        }
-
-        list.remove(foundRental);
-        return RentalDAO.deleteRentalFromDB(foundRental.getId());
+        String staffID = null;
+        if (oldData == null) {
+            dueDate = returnDate == null ? null : rentalDate.plusDays(howManyDays);
+            lateFee = 0f;
+            staffID = RentalServices.findStaffForRentalApproval();
+        } else {
+            lateFee = RentalServices.calcLateFee(LocalDate.now(), oldData);
+            staffID = oldData.getStaffID() == null ?
+                    RentalServices.findStaffForRentalApproval()
+                    :
+                    oldData.getStaffID();
+        } 
+        if (dueDate == null || returnDate == null) return null;
+        
+        double total = movie.getRentalPrice() * howManyDays;
+        
+        return new Rental(
+                id,
+                customer.getId(),
+                movie.getId(),
+                staffID,
+                rentalDate,
+                dueDate,
+                returnDate,
+                lateFee,
+                total,
+                status == RentalStatus.NONE ? RentalStatus.PENDING : status
+        );
     }
 
     @Override
@@ -226,95 +171,78 @@ public class RentalManager extends ListManager<Rental> {
         }
         return result;
     }
-    
+
     @Override
     public List<Rental> sortList(List<Rental> tempList, String property) {
         if (checkNull(tempList)) {
             return null;
         }
-
+        String[] options = Rental.getAttributes();
         List<Rental> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "rentalId":
-                result.sort(Comparator.comparing(Rental::getId));
-                break;
-            case "movieId":
-                result.sort(Comparator.comparing(Rental::getMovieId));
-                break;
-            case "staffId":
-                result.sort(Comparator.comparing(Rental::getStaffID));
-                break;
-            case "customerId":
-                result.sort(Comparator.comparing(Rental::getCustomerID));
-                break;
-            case "dueDate":
-                result.sort(Comparator.comparing(Rental::getDueDate));
-                break;
-            case "rentalDate":
-                result.sort(Comparator.comparing(Rental::getRentalDate));
-                break;
-            case "returnDate":
-                result.sort(Comparator.comparing(Rental::getReturnDate));
-                break;
-            case "status":
-                result.sort(Comparator.comparing(Rental::getStatus));
-                break;
-            case "totalAmount":
-                result.sort(Comparator.comparing(Rental::getTotalAmount));
-                break;
-            case "lateFee":
-                result.sort(Comparator.comparing(Rental::getLateFee));
-                break;
-            default:
-                result.sort(Comparator.comparing(Rental::getId));
-                break;
+
+        if (property.equals(options[0])) {
+            result.sort(Comparator.comparing(Rental::getId));
+        } else if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Rental::getMovieID));
+        } else if (property.equals(options[2])) {
+            result.sort(Comparator.comparing(Rental::getStaffID));
+        } else if (property.equals(options[3])) {
+            result.sort(Comparator.comparing(Rental::getCustomerID));
+        } else if (property.equals(options[4])) {
+            result.sort(Comparator.comparing(Rental::getDueDate));
+        } else if (property.equals(options[5])) {
+            result.sort(Comparator.comparing(Rental::getRentalDate));
+        } else if (property.equals(options[6])) {
+            result.sort(Comparator.comparing(Rental::getReturnDate));
+        } else if (property.equals(options[7])) {
+            result.sort(Comparator.comparing(Rental::getStatus));
+        } else if (property.equals(options[8])) {
+            result.sort(Comparator.comparing(Rental::getTotalAmount));
+        } else if (property.equals(options[9])) {
+            result.sort(Comparator.comparing(Rental::getLateFee));
+        } else {
+            result.sort(Comparator.comparing(Rental::getId)); // Default case
         }
         return result;
     }
-    
+
     @Override
-    public void display(List<Rental> tempList) {
+    public void show(List<Rental> tempList) {
         if (checkNull(tempList)) {
             return;
-        } 
-        
-        int staffL = "Staff".length();
-        int customerL = "Customer".length();
-        int movieL = "Movie Title".length();
-        
-        for (Rental item : list) {
-            Profile foundStaff = (Profile) getPFM().searchById(item.getStaffID());
-            Profile foundCustomer = (Profile) getPFM().searchById(item.getCustomerID());
-            Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
-            
-            staffL = foundStaff != null ? Math.max(staffL, foundStaff.getFullName().length()) : staffL;
-            customerL = Math.max(customerL, foundCustomer.getFullName().length());
-            movieL = Math.max(movieL, foundMovie.getTitle().length());
         }
+        InfosTable.getTitle(Rental.getAttributes());
+        tempList.forEach(item ->
+                InfosTable.calcLayout(
+                        item.getId(),
+                        item.getMovieID(),
+                        item.getCustomerID(),
+                        item.getStaffID(),
+                        formatDate(item.getDueDate(), Validator.DATE),
+                        formatDate(item.getRentalDate(), Validator.DATE),
+                        formatDate(item.getReturnDate(), Validator.DATE),
+                        item.getStatus(),
+                        item.getTotalAmount(),
+                        item.getLateFee()
+                )
+        );
         
-        int widthLength = 8 + customerL + movieL + staffL + 11 + 10 + 11 + 8 + 6 + 8 + 31;
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-8s | %-" + customerL + "s | %-" + movieL + "s | %-" + staffL + "s | %-11s | %-10s | %-11s | %-8s | %-6s | %-8s |\n",
-                "ID", "Customer", "Movie" , "Staff" , "Rental date" , "Due date", "Return date", "Late Fee", "Total", "Status");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Rental item : tempList) {
-            Account foundStaff = (Account) getACM().searchById(item.getStaffID());
-            Account foundCustomer = (Account) getACM().searchById(item.getCustomerID());
-            Movie foundMovie = (Movie) getMVM().searchById(item.getMovieID());
-            System.out.printf("\n| %-8s | %-" + customerL + "s | %-" + movieL + "s | %-" + staffL + "s | %-11s | %-10s | %-11s | %8s | %6s | %-8s |",
-                    item.getId(),
-                    foundCustomer.getUsername(),
-                    foundMovie.getTitle(),
-                    foundStaff != null ? foundStaff.getUsername() : "...",
-                    item.getRentalDate(),
-                    item.getDueDate(),
-                    item.getReturnDate() != null ? item.getDueDate() : "...", 
-                    item.getLateFee() == 0f ? "0" : String.format("%05.2f", item.getLateFee()),
-                    item.getTotalAmount() == 0f ? "0" : String.format("%03.2f", item.getTotalAmount()),
-                    item.getStatus());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getId(),
+                        item.getMovieID(),
+                        item.getCustomerID(),
+                        item.getStaffID(),
+                        formatDate(item.getDueDate(), Validator.DATE),
+                        formatDate(item.getRentalDate(), Validator.DATE),
+                        formatDate(item.getReturnDate(), Validator.DATE),
+                        item.getStatus(),
+                        item.getTotalAmount(),
+                        item.getLateFee()
+                )
+        );
+        InfosTable.showFooter();
     }
+
 }

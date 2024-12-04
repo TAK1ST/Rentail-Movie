@@ -1,4 +1,5 @@
-package main;
+
+package main.views;
 
 import java.io.IOException;
 import java.sql.SQLException;

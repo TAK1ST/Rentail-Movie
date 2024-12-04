@@ -7,7 +7,7 @@ package main.utils;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import main.constants.AccRole;
+import main.constants.account.AccRole;
 import main.constants.IDPrefix;
 import static main.utils.LogMessage.errorLog;
 
@@ -16,7 +16,7 @@ public class IDGenerator {
     
     public static final int ID_LENGTH = 8;
     public static final int CODE_LENGTH = 8;
-    public static final String DEFAULT_ADMIN_ID = String.format("%s%0"+ ID_LENGTH + "d", IDPrefix.ADMIN_PREFIX, 0);
+    public static final String DEFAULT_ADMIN_ID = String.format("%s%0"+ (ID_LENGTH - IDPrefix.ACTOR_PREFIX.length()) + "d", IDPrefix.ADMIN_PREFIX, 0);
     
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final SecureRandom RANDOM = new SecureRandom();

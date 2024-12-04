@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dto.Actor;
 import main.config.Database;
-import main.constants.ActorRank;
+import main.constants.actor.ActorRank;
 
 public class ActorDAO {
 

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dto.Casting;
 import main.config.Database;
-import main.constants.ActorRole;  // Assuming Role is an Enum defined similarly to ActorRank
+import main.constants.actor.ActorRole;  // Assuming Role is an Enum defined similarly to ActorRank
 
 public class CastingDAO {
 

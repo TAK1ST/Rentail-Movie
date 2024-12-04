@@ -2,6 +2,7 @@ package main.dto;
 
 import main.base.Model;
 import java.time.LocalDate;
+import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
 
@@ -67,29 +68,56 @@ public class Movie extends Model {
 
     @Override
     public String toString() {
-        return String.format("Movie: %s, %s, %s, %.5f, %s, %s, %s, %s, %.5f, %d, %s, %s.",
-                super.getId(),
-                title,
-                description,
-                avgRating,
-                genreNames != null ? genreNames : "No genres",
-                actorIDs != null ? actorIDs : "No actors",
-                languageCodes != null ? languageCodes : "No languages",
-                releaseYear.format(Validator.DATE),
-                rentalPrice,
-                availableCopies,
-                createDate.format(Validator.DATE),
-                updateDate.format(Validator.DATE)
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %.1f,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %.2f,\n"
+                + "%s: %d,\n"
+                + "%s: %s,\n"
+                + "%s: %s.",
+                className(),
+                attr[count++], super.getId(),
+                attr[count++], title,
+                attr[count++], description,
+                attr[count++], avgRating,
+                attr[count++], genreNames.isEmpty() || genreNames.isBlank() ? "..." : genreNames,
+                attr[count++], actorIDs.isEmpty() || actorIDs.isBlank() ? "..." : actorIDs,
+                attr[count++], languageCodes.isEmpty() || languageCodes.isBlank() ? "..." : languageCodes,
+                attr[count++], formatDate(releaseYear, Validator.YEAR),
+                attr[count++], rentalPrice,
+                attr[count++], availableCopies,
+                attr[count++], formatDate(createDate, Validator.DATE),
+                attr[count++], formatDate(updateDate, Validator.DATE)
         );
     }
-
+    
     public static String className() {
         return "Movie";
     }
-    
-    @Override    
-    public String[] getSearchOptions() {
-        return new String[] {"movie_id", "title", "description", "avg_rating", "release_year", "rental_price", "available_copies", "created_at", "updated_at"};
+     
+    public static String[] getAttributes() {
+        return new String[] {
+            "Id", 
+            "Title", 
+            "Description", 
+            "Average Rating",
+            "Genres",
+            "Actors",
+            "Languages",
+            "Release year", 
+            "Rental price", 
+            "Available copies", 
+            "Created at", 
+            "Updated at"};
     }
 
     public String getTitle() {

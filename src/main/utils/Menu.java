@@ -45,7 +45,7 @@ public class Menu {
                 System.out.printf(format, (index + INIT_NUM), options[index].optionText);
             }
             for (int index = 0; index < MENU_WIDTH; index++) System.out.print("-");
-            System.out.println("\n");
+            System.out.println();
             
             if (actionsFinally != null)
                 for (MenuAction action : actionsFinally) 
@@ -107,13 +107,13 @@ public class Menu {
     }
     
     public static int getChoice(String message, int max) {
-        return getInteger("\n[MENU] " + message, INIT_NUM, max, false);
+        return getInteger("\n[MENU] " + message, INIT_NUM, max, Integer.MIN_VALUE);
     }
     
     public static int getChoice(String message, List<Integer> list) {
         Integer input;
         do {
-            input = getInteger(message, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
+            input = getInteger(message, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE);
             
             if (!list.contains(input)) 
                 errorLog("Wrong list's number");
