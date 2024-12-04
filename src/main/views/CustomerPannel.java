@@ -8,7 +8,10 @@ import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRVM;
 import static main.controllers.Managers.getRTM;
 import static main.controllers.Managers.getACM;
+import static main.controllers.Managers.getDCM;
+import static main.controllers.Managers.getWLM;
 import main.dto.Account;
+import main.services.CustomerServices;
 import main.services.RentalServices;
 import main.utils.Menu;
 import main.utils.Menu.MenuOption;
@@ -28,27 +31,41 @@ public class CustomerPannel {
             null,
             new MenuOption[]{
                 new MenuOption("Show my profile", 
-                        () -> getACM().showMyProfile(account.getId()), ENTER_TO_CONTINUE),
+                        () -> CustomerServices.showMyProfile(account), ENTER_TO_CONTINUE),
                 new MenuOption("Update profile", 
-                        () -> getACM().updateAccount(), ASK_FOR_AGAIN),
-                new MenuOption("Display movie list", 
+                        () -> getACM().update(account), ASK_FOR_AGAIN),
+                new MenuOption("Display movies", 
                         () -> getMVM().displaySortDetail(), ENTER_TO_CONTINUE),
                 new MenuOption("Search movie", 
                         () -> getMVM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Rent movie", 
-                        () -> getRTM().addRental(account.getId()), ASK_FOR_AGAIN),
+                        () -> RentalServices.rentMovie(account.getId()), ASK_FOR_AGAIN),
                 new MenuOption("Renturn movie", 
-                        () -> getRTM().addRental(account.getId()), ASK_FOR_AGAIN),
+                        () -> RentalServices.returnMovie(account.getId()), ASK_FOR_AGAIN),
                 new MenuOption("Extend return date", 
-                        () -> getRTM().extendReturnDate(account.getId()), ASK_FOR_AGAIN),
+                        () -> RentalServices.extendReturnDate(), ASK_FOR_AGAIN),
                 new MenuOption("See the movie's reviews", 
                         () -> getRVM().displayAMovieReviews(), ENTER_TO_CONTINUE),
                 new MenuOption("Make reviews", 
                         () -> getRVM().addReview(account.getId()), ASK_FOR_AGAIN),
-                new MenuOption("Display my reviews history", 
+                new MenuOption("My reviews history", 
                         () -> getRVM().myReviews(account.getId()), ENTER_TO_CONTINUE), 
-                new MenuOption("Rental history", 
+                new MenuOption("My rental history", 
                         () -> RentalServices.myHistoryRental(account.getId()), ENTER_TO_CONTINUE),
+                new MenuOption("Add movie to wishlist", 
+                        () -> getWLM().addWishlist(account.getId()), ASK_FOR_AGAIN),
+                new MenuOption("My wishlist", 
+                        () -> getWLM().displaySortDetail()),
+                new MenuOption("View discounts", 
+                        () -> getDCM().displaySortDetail()),
+                new MenuOption("Take discount", 
+                        () -> getDCM().addDiscount(), ASK_FOR_AGAIN),
+                new MenuOption("My wishlist", 
+                        () -> getWLM().displaySortDetail()),
+                new MenuOption("Registor credit", 
+                        () -> {}, ASK_FOR_AGAIN),
+                new MenuOption("Delete account", 
+                        () -> {}, ASK_FOR_AGAIN),
                 new MenuOption("Log Out", EXIT_MENU),
             },
             null

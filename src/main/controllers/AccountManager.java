@@ -1,6 +1,4 @@
-
 package main.controllers;
-
 
 import main.base.ListManager;
 import java.time.LocalDate;
@@ -12,11 +10,13 @@ import main.constants.AccStatus;
 import main.dao.AccountDAO;
 import static main.controllers.Managers.getPFM;
 import main.dto.Account;
+import main.dto.Profile;
+import main.services.AuthenServices;
 import main.utils.IDGenerator;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
-import static main.utils.PassEncryptor.encryptPassword;
 import main.utils.InfosTable;
+import static main.utils.Input.getInteger;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -32,134 +32,93 @@ public class AccountManager extends ListManager<Account> {
         list = AccountDAO.getAllAccounts();
     }
 
-    public boolean registorAccount() {
+    public boolean add(Account account) {
+        if (checkNull(account) || checkNull(list)) return false;
         
-        String username = getUsername("Enter username", false, list);
-        if (username.isEmpty()) return false;
+        list.add(account);
+        if (AccountDAO.addAccountToDB(list.getLast())) 
+            return AuthenServices.registorProfile(account.getId());
+        else
+        return false;
+    }
+    
+    public boolean update(Account account) {
+        if (checkNull(account) || checkNull(list)) return false;
         
-        String password = getPassword("Enter password", false);
-        if (password.isEmpty()) return false;
-        
-        String email = getEmail("Enter email", false);
-        if (email.isEmpty()) return false;
-        
-        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), AccRole.CUSTOMER);
-        if (yesOrNo("Fill in all infomation?")) {
-            if (getPFM().addProfile(id)) {
-                errorLog("Cannot registor account info");
-                return false;
-            }
-        }
-
-        list.add(new Account(
-                id,
-                username,
-                encryptPassword(password),
-                email,
-                AccRole.CUSTOMER,
-                AccStatus.OFFLINE,
-                LocalDate.now(),
-                null,
-                LocalDate.now(),
-                100
-        ));
-        return AccountDAO.addAccountToDB(list.getLast());
+        Account newAccount = getInputs(new boolean[] {true, true, true, true, true}, account);
+        if (newAccount != null)
+            account = newAccount;
+        else 
+            return false;
+        return AccountDAO.updateAccountInDB(newAccount);
     }
 
-    public boolean addAccount() {
+    public boolean delete(Account account) {
+        if (checkNull(account) || checkNull(list)) return false;
+      
+        if (!list.remove(account)) {
+            errorLog("Account not found");
+            return false;
+        }
+        return AccountDAO.deleteAccountFromDB(account.getId());
+    }
 
-        String username = getUsername("Enter username", false, list);
-        if (username.isEmpty()) return false;
+    @Override
+    public Account getInputs(boolean[] options, Account oldData) {
+        if (options.length < 5) {
+            errorLog("Not enough option length");
+            return null;
+        }
         
-        String password = getPassword("Enter password", false);
-        if (password.isEmpty()) return false;
+        int creability = 100;
+        String username = null, password = null, email = null;
+        AccRole role = AccRole.NONE;
         
-        String email = getEmail("Enter your email", false);
-        if (email.isEmpty()) return false;
+        if (oldData != null) {
+            username = oldData.getUsername();
+            password = oldData.getPassword();
+            email = oldData.getEmail();
+            role = oldData.getRole();
+            creability = oldData.getCreability();
+        } 
         
-        AccRole role = (AccRole)getEnumValue("Choose a role", AccRole.class, false);
-        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), role);
-
-        list.add(new Account(
+        if (options[0]) {
+            username = getUsername("Enter username", username, list);
+            if (username == null) return null;
+        }
+        if (options[1]) {
+            password = getPassword("Enter password", password);
+            if (password == null) return null;
+        }
+        if (options[2]) {
+            email = getEmail("Enter your email", email);
+            if (email == null) return null;
+        }
+        if (options[3]) {
+            role = (AccRole)getEnumValue("Choose a role", AccRole.class, role);
+            if (role == AccRole.NONE) return null;
+        }
+        if (options[4] && role != AccRole.ADMIN) {
+            creability = getInteger("Enter creadibility", 0, 1000, creability);
+            if (creability == Integer.MIN_VALUE) return null;
+        }
+        
+        String id = (oldData == null) ? IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), role)
+            :
+        oldData.getId();
+        
+        return new Account(
                 id,
                 username,
                 password,
                 email,
                 role,
                 AccStatus.OFFLINE,
-                LocalDate.now(),
-                null,
-                LocalDate.now(),
-                role != AccRole.ADMIN ? 100 : 0
-        ));
-        if (AccountDAO.addAccountToDB(list.getLast())) {
-            if (list.getLast().getRole() == AccRole.ADMIN) {
-                return true;
-            }
-            if (!getPFM().addProfile(id)) {
-                errorLog("Cannot registor info");
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public boolean updateAccount() {
-        if (checkNull(list)) {
-            return false;
-        }
-        Account foundAccount = (Account) getById("Enter user's id");
-        if (checkNull(foundAccount)) {
-            return false;
-        }
-
-        String newAccountname = getUsername("Enter new username", true, list);
-        String newPassword = getPassword("Enter new password", true);
-
-        AccRole newRole = AccRole.NONE;
-        if (foundAccount.getRole() == AccRole.ADMIN) {
-            newRole = (AccRole) getEnumValue("Choose a role", AccRole.class, true);
-        }
-        String newEmail = Validator.getEmail("Enter your email", true);
-
-        if (!newAccountname.isEmpty()) {
-            foundAccount.setUsername(newAccountname);
-        }
-        if (!newPassword.isEmpty()) {
-            foundAccount.setPassword(encryptPassword(newPassword));
-        }
-        if (newRole != AccRole.NONE) {
-            foundAccount.setRole(newRole);
-        }
-        if (!newEmail.isEmpty()) {
-            foundAccount.setEmail(newEmail);
-        }
-
-        return AccountDAO.updateAccountInDB(foundAccount);
-    }
-
-    public void updatePassword(String accountID, String newPassword) {
-        Account foundAccount = (Account) searchById(accountID);
-        if (checkNull(foundAccount)) return;
-        
-        foundAccount.setPassword(newPassword);
-        AccountDAO.updatePasswordInDB(accountID, newPassword);
-    }
-
-    public boolean deleteAccount() {
-        if (checkNull(list)) return false;
-      
-        Account foundAccount = (Account) getById("Enter user's id");
-        if (checkNull(foundAccount)) return false;
-       
-
-        list.remove(foundAccount);
-        return AccountDAO.deleteAccountFromDB(foundAccount.getId());
-    }
-
-    public void showMyProfile(String accountID) {
-        show(searchById(accountID), "My Profile");
+                oldData == null ? LocalDate.now() : oldData.getCreateAt(),
+                oldData == null ? null : LocalDate.now(),
+                oldData == null ? null : oldData.getOnlineAt(),
+                creability
+        );
     }
     
     @Override

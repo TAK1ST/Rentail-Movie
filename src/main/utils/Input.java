@@ -42,34 +42,36 @@ public class Input {
         scanner.nextLine();
     }
     
-    public static String getString(String message, boolean enterToPass) {
-            String result = "";
+    public static String getString(String message, String oldData) {
+            String result = null;
             do {
-                if (enterToPass) infoLog("Press Enter to skip");
+                if (oldData != null && !oldData.isEmpty()) 
+                    infoLog("Press Enter to skip");
                 
                 System.out.print(message + ": ");
                 result = scanner.nextLine();
-                if(result.isEmpty() && enterToPass) 
-                    return "";
+                if(result.isEmpty() && oldData != null && !oldData.isEmpty()) 
+                    return oldData;
                 
                 if(result.isEmpty()) {
                     errorLog("Please input");
-                    if(askToExit()) return "";
+                    if(askToExit()) return null;
                 }
             } while (result.isEmpty());
 
             return result;
         }
 
-    public static int getInteger(String message, int min, int max, boolean enterToPass) {
+    public static int getInteger(String message, int min, int max, int oldData) {
         int number;
         while (true) {
-            if (enterToPass) infoLog("Press Enter to skip");
+            if (oldData != Integer.MIN_VALUE) 
+                infoLog("Press Enter to skip");
             
             System.out.printf("%s (%d -> %d): ", message, min, max);
             String input = scanner.nextLine();
-            if (input.isEmpty() && enterToPass) {
-                return Integer.MIN_VALUE;
+            if (input.isEmpty() && oldData != Integer.MIN_VALUE) {
+                return oldData;
             }
             if(input.isEmpty()) {
                 errorLog("Please input");
@@ -89,15 +91,16 @@ public class Input {
         }
     }
 
-    public static double getDouble(String message, double min, double max, boolean enterToPass) {
+    public static double getDouble(String message, double min, double max, double oldData) {
         double number;
         while (true) {
-            if (enterToPass) infoLog("Press Enter to skip");
+            if (oldData != Double.MIN_VALUE) 
+                infoLog("Press Enter to skip");
             
             System.out.printf("%s (%.2f -> %.2f): ", message, min, max);
             String input = scanner.nextLine();
-            if (input.isEmpty() && enterToPass) {
-                return Double.MIN_VALUE;
+            if (input.isEmpty() && oldData != Double.MIN_VALUE) {
+                return oldData;
             }
             if(input.isEmpty()) {
                 errorLog("Please input");
@@ -132,20 +135,20 @@ public class Input {
         }
         System.out.println("\n");
         if (!enterToPass) {
-            int option = getInteger("Enter an option", 0, infoLists.length - 1, enterToPass);
+            int option = getInteger("Enter an option", 0, infoLists.length - 1, Integer.MIN_VALUE);
             if (option == Integer.MIN_VALUE)
-                return "";
+                return null;
             return infoLists[option];
         } else 
-            return "";
+            return null;
     }
     
-    public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager, boolean enterToPass) {
+    public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager, String oldData) {
         manager.display(false);
-        String temps = "";
+        String temps = null;
 
-        String input = getString(message, enterToPass);
-        if (input == null) return null;
+        String input = getString(message, null);
+        if (input == null) return oldData;
         
         String[] inputs = input.split(",");
 

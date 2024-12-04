@@ -1,6 +1,5 @@
 package main.controllers;
 
-
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,8 +10,8 @@ import main.dao.ProfileDAO;
 import main.dto.Account;
 import main.dto.Profile;
 import main.utils.InfosTable;
-import static main.utils.Input.getDouble;
 import static main.utils.Input.getString;
+import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
@@ -27,68 +26,79 @@ public class ProfileManager extends ListManager<Profile> {
         list = ProfileDAO.getAllProfiles();
     }
 
-    public boolean addProfile(String accountID) { 
+    public boolean add(Profile profile) { 
+        if (checkNull(profile) || checkNull(list)) return false;
         
-        Account foundAccount = (Account) getACM().searchById(accountID);
-        if (getACM().checkNull(foundAccount)) return false;
+        list.add(profile);
+        return ProfileDAO.addProfileToDB(profile);
+    }
+
+    public boolean update(Profile profile) {
+        if (checkNull(profile) || checkNull(list)) return false;
+
+        Profile newProfile = getInputs(new boolean[] {true, true, true, true}, profile);
+        if (newProfile != null)
+            profile = newProfile;
+        else 
+            return false;
+        return ProfileDAO.updateProfileInDB(newProfile);
+    }
+
+    public boolean delete(Profile profile) { 
+        if (checkNull(profile) || checkNull(list)) return false;     
+
+        if (!list.remove(profile)) {
+            errorLog("Profile not found");
+            return false;
+        }
+        return ProfileDAO.deleteProfileFromDB(profile.getId());
+    }
+    
+    @Override
+    public Profile getInputs(boolean[] options, Profile oldData) {
+        if (options.length < 4) {
+            errorLog("Not enough option length");
+            return null;
+        }
         
-        String name = getName("Enter full name", false);
-        if (name.isEmpty()) return false;
+        Account foundAccount = (Account) getACM().searchById(oldData.getId());
+        if (getACM().checkNull(foundAccount)) return null;
         
-        String phoneNumber = getPhoneNumber("Enter your phone number", false);
-        if (phoneNumber.isEmpty()) return false;
+        String name = null, phoneNumber = null, address = null;
+        LocalDate birthday = null;
         
-        String address = getString("Enter your address", false);
-        if (address.isEmpty()) return false;
+        if (oldData != null) {
+            name = oldData.getFullName();
+            phoneNumber = oldData.getPhoneNumber();
+            address = oldData.getAddress();
+            birthday = oldData.getBirthday();
+        }
         
-        LocalDate birthday = getDate("Enter your birthday", false);
-        if (birthday == null) return false;
+        if (options[0]) {
+            name = getName("Enter full name", name);
+            if (name == null) return null;
+        }
+        if (options[1]) {
+            phoneNumber = getPhoneNumber("Enter your phone number", phoneNumber);
+            if (phoneNumber == null) return null;
+        }
+        if (options[2]) {
+            address = getString("Enter your address", address);
+            if (address == null) return null;
+        }
+        if (options[3]) {
+            birthday = getDate("Enter your birthday", birthday);
+            if (birthday == null) return null;
+        }
         
-        list.add(new Profile(
-                accountID, 
+        return new Profile(
+                oldData.getId(), 
                 name, 
                 phoneNumber, 
                 address,
                 0,
                 birthday
-        ));
-        return ProfileDAO.addProfileToDB(list.getLast());
-    }
-
-    public boolean updateProfile(String userID) {
-        if (checkNull(list)) return false;
-
-        Profile foundProfile;
-        if (userID.isEmpty()) {
-            foundProfile = (Profile)getById("Enter user's id");
-        } else {
-            foundProfile = (Profile)searchById(userID);
-        }        
-        if (checkNull(foundProfile)) return false;
-
-        String newFullName = getName("Enter full name", true);
-        String newAddress = getString("Enter address", true); 
-        String newPhoneNumber = getPhoneNumber("Enter phone number", true);
-        double newCredit = getDouble("Enter credit", 0, Double.MAX_VALUE, true);
-        LocalDate newBirthday = getDate("Enter birthday", true);
-
-        if (!newFullName.isEmpty()) foundProfile.setFullName(newFullName);
-        if (!newAddress.isEmpty()) foundProfile.setAddress(newAddress);
-        if (!newPhoneNumber.isEmpty()) foundProfile.setPhoneNumber(newPhoneNumber);
-        if (newCredit > 0) foundProfile.setCredit(newCredit);
-        if (newBirthday != null) foundProfile.setBirthday(newBirthday);
-         
-        return ProfileDAO.updateProfileInDB(foundProfile);
-    }
-
-    public boolean deleteProfile() { 
-        if (checkNull(list)) return false;
-
-        Profile foundProfile = (Profile)getById("Enter user's id");
-        if (checkNull(foundProfile)) return false;
-
-        list.remove(foundProfile);
-        return ProfileDAO.deleteProfileFromDB(foundProfile.getId());
+        );
     }
     
     @Override

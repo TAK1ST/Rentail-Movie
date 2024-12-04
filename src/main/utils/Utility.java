@@ -31,20 +31,18 @@ public class Utility {
         System.out.println("\n");
     }
     
-    public static <E extends Enum<E>> E getEnumValue(String message, Class<E> enumClass, boolean enterToPass) {
-        if (!enumClass.isEnum()) {
-            errorLog("The provided class is not an enum.");
-            return null;
-        }
-
-        E[] enumConstants = enumClass.getEnumConstants();
+    public static <E extends Enum<E>> E getEnumValue(String message, Class<E> enumClass, E oldData) {
         enumListing(message, enumClass);
+        E[] enumConstants = enumClass.getEnumConstants();
         
-        int choice = getInteger("Enter choice", 1, enumConstants.length, enterToPass);
-        if (choice > 0) 
-            return enumConstants[choice];
-
-        return enumConstants[0];
+        int choice = getInteger("Enter choice", 1, enumConstants.length, Integer.MIN_VALUE);
+        if (choice == Integer.MIN_VALUE && oldData != null) 
+            return oldData;
+        
+        if (choice == Integer.MIN_VALUE)
+            return enumConstants[0];
+        
+        return enumConstants[choice];
     }
     
     public static long extractNumber(String str) {

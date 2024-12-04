@@ -7,14 +7,12 @@ package main.services;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import main.dao.RentalDAO;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRTM;
+import main.dao.RentalDAO;
 import main.dto.Movie;
 import main.dto.Rental;
-import main.utils.IDGenerator;
 import static main.utils.Input.getInteger;
-import static main.utils.Validator.getDate;
 
 /**
  *
@@ -22,59 +20,73 @@ import static main.utils.Validator.getDate;
  */
 public class RentalServices {
     
-    public static void myHistoryRental(String userID) {
-        List<Rental> rentalList = getRTM().searchBy(userID);
+    public static boolean rentMovie(String customerID) {
+        Rental rental = getRTM().getInputs(new boolean[] {false, true, true, false}, new Rental(customerID));
+        return getRTM().add(rental);
+    }
+    
+    public static void myHistoryRental(String customerID) {
+        List<Rental> rentalList = getRTM().searchBy(customerID);
         getRTM().display(rentalList);
     }
     
-    public static double calculateOverdueFine(LocalDate returnDate, double movieRentalPrice) {
-        long overdueDays = ChronoUnit.DAYS.between(returnDate, LocalDate.now()); 
-        return (overdueDays > 0) ? 
-                overdueDays * 2 * movieRentalPrice 
-                : 
-                0f; 
+    public static String assignStaff(Rental rental){
+        return "";
     }
     
-        // admin test logic
-    
-    public static boolean returnMovie() {
-        if (getRTM().checkNull(getRTM().getList())) return false; 
+    public static boolean returnMovie(String customerID) {
+        Rental rental = getRTM().getById("Enter rental's id to return");
+        if (getRTM().checkNull(rental)) return false;
         
-        Rental foundRental = getRTM().getRentalByAccountMovie(IDGenerator.DEFAULT_ADMIN_ID);
-        if (getRTM().checkNull(foundRental)) return false;
+        rental.setReturnDate(LocalDate.now());
+        rental.setLateFee(calcLateFee(LocalDate.now(), rental));
         
-        Movie foundMovie = getMVM().searchById(foundRental.getMovieID());
-        if (getMVM().checkNull(foundMovie)) return false;
-        
-        double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
-
-        if (overdueFine > 0) {
-            foundRental.setLateFee(foundRental.getLateFee()+ overdueFine);  
-            foundRental.setTotalAmount(foundRental.getTotalAmount() + foundRental.getLateFee()); 
-        }
-
-        boolean isSuccess = RentalDAO.updateRentalInDB(foundRental);
-        if (isSuccess) {
-            MovieServices.adjustAvailableCopy(getRTM().getList().getLast().getMovieID(), 1);
-        }  
-        return true;
+        return RentalDAO.updateRentalInDB(rental);
     }
     
     public static boolean extendReturnDate() {
-        Rental foundRental = getRTM().getRentalByAccountMovie(IDGenerator.DEFAULT_ADMIN_ID);
-        if (getRTM().checkNull(foundRental)) return false;
+        Rental rental = getRTM().getById("Enter rental's id to extend");
+        rental.setLateFee(calcLateFee(LocalDate.now(), rental));
         
-        Movie foundMovie = getMVM().searchById(foundRental.getMovieID());
-        if (getMVM().checkNull(foundMovie)) return false;
+        int howManyDays = getInteger("How many days to extends", 1, 365, Integer.MIN_VALUE);
+        if (howManyDays == Integer.MIN_VALUE) return false;
         
-        int extraDate = getInteger("How many days to rent", 1, 365, false);
-        double overdueFine = calculateOverdueFine(getDate("Enter return date to test", false), foundMovie.getRentalPrice());
-
-        if (overdueFine > 0) {
-            foundRental.setLateFee(overdueFine);  
+        Movie movie = (Movie) getMVM().searchById(rental.getMovieID());
+        if (getMVM().checkNull(movie)) return false;
+        
+        rental.setTotalAmount(0);
+        rental.setTotalAmount(movie.getRentalPrice() * howManyDays * 1.5);
+        rental.setDueDate(rental.getDueDate().plusDays(howManyDays));
+        
+        return RentalDAO.updateRentalInDB(rental);
+    }
+    
+    public static double calcLateFee(LocalDate rightNow, Rental rental) {
+        long days = ChronoUnit.DAYS.between(rental.getDueDate(), rightNow);
+        
+        Movie movie = (Movie) getMVM().searchById(rental.getMovieID());
+        if (getMVM().checkNull(movie)) return 0f;
+        
+        final double price = movie.getRentalPrice();
+        
+        double total = 0f;
+        if (days <= 0) {
+            return 0f;
+        } 
+        else if (days > 0 && days < 3) { 
+            total+= (price * 3) * 1.1;
+        } 
+        else if (days >= 3 && days < 7) {
+            total+= (price * 4) * 1.3;
         }
-        foundRental.setReturnDate(foundRental.getReturnDate().plusDays(extraDate));
-        return true;
+        else if (days >= 7 && days < 14) {
+            total+= (price * 7) * 1.5;
+        } 
+        else {
+            total+= (price * (days - 14)) * 2;
+        }
+        
+        return total;
     }
     
 }

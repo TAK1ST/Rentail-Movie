@@ -21,6 +21,7 @@ import static main.utils.Input.getInteger;
 import static main.utils.Input.returnNames;
 import static main.utils.Input.selectByNumbers;
 import static main.utils.Input.yesOrNo;
+import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -34,35 +35,102 @@ public class DiscountManager extends ListManager<Discount> {
         list = DiscountDAO.getAllDiscounts();
     }
 
-    public boolean addDiscount() {
+    public boolean add(Discount discount) {
+        if (checkNull(discount) || checkNull(list)) return false;
         
-        LocalDate startDate = getDate("Enter start date", false);
-        if (startDate == null) return false;
+        list.add(discount);
+        if (DiscountDAO.addDiscountToDB(discount)) {
+            return (
+                discount.getCustomerIds() != null ? addDataToMidTable("Discount_Discount", discount.getId(), "discount_code", discount.getCustomerIds(),"customer_id") : true
+                        &&
+                discount.getMovieIds() != null ? addDataToMidTable("Discount_Movie", discount.getId(), "discount_code", discount.getMovieIds(), "movie_id") : false
+            );
+        }
+        return false;
+    }
+
+    public boolean update(Discount discount) {
+        if (checkNull(discount) || checkNull(list)) return false;
+
+        Discount newDiscount = getInputs(new boolean[] {true, true, true, true, true, true, true, true}, discount);
+        if (newDiscount != null)
+            discount = newDiscount;
+        else 
+            return false;
         
-        LocalDate endDate = getDate("Enter end date", false);
-        if (endDate == null) return false;
-        
-        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, false);
-        if (type == DiscountType.NONE) return false;
-        
-        int quantity = getInteger("Enter available quantity", 1, 20, false);
-        if (quantity == Integer.MIN_VALUE) return false;
-        
-        double value = getDouble("Enter value", 1, 20, false);
-        if (value == Double.MIN_VALUE) return false;
-        
-        String movies = selectByNumbers("Enter movie's id (Comma-separated)", getMVM(), true);
-        if (movies.isEmpty()) return false;
-        
-        String customers = null;
-        if (yesOrNo("Assign to customers right now")) {
-            customers = selectByNumbers("Enter customer's id (Comma-separated)", getACM(), true);
-            if (customers.isEmpty()) return false;
+        return DiscountDAO.updateDiscountInDB(newDiscount);
+    }
+
+    public boolean delete(Discount discount) { 
+        if (checkNull(discount) || checkNull(list)) return false;     
+
+        if (!list.remove(discount)) {
+            errorLog("Discount not found");
+            return false;
+        }
+        return DiscountDAO.deleteDiscountFromDB(discount.getId());
+    }
+    
+    @Override
+    public Discount getInputs(boolean[] options, Discount oldData) {
+        if (options.length < 8) {
+            errorLog("Not enough option length");
+            return null;
         }
         
-        String id = IDGenerator.generateDiscountCode();
+        int quantity = 0;
+        double value = 0f;
+        String movies = null, customers = null;
+        LocalDate startDate = null, endDate = null; 
+        DiscountType type = DiscountType.NONE;
+        boolean active = false;
         
-        list.add(new Discount(
+        if (oldData != null) {
+            movies = oldData.getMovieIds();
+            customers = oldData.getCustomerIds();
+            startDate = oldData.getStartDate();
+            endDate = oldData.getEndDate();
+            type = oldData.getType();
+            active = oldData.isActive();
+        }
+        
+        if (options[0]) {
+            movies = selectByNumbers("Enter movie's id (Comma-separated)", getMVM(), oldData.getMovieIds());
+            if (movies.isEmpty()) return null;
+        }
+        if (options[1]) {
+            startDate = getDate("Enter start date", oldData.getStartDate());
+            if (startDate == null) return null;
+        }
+        if (options[2]) {
+            endDate = getDate("Enter end date", oldData.getEndDate());
+            if (endDate == null) return null;
+        }
+        if (options[3]) {
+            type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, oldData.getType());
+            if (type == DiscountType.NONE) return null;
+        }
+        if (options[4]) {
+            quantity = getInteger("Enter available quantity", 1, 1000, oldData.getQuantity());
+            if (quantity == Integer.MIN_VALUE) return null;
+        }
+        if (options[5]) {
+            value = getDouble("Enter value", 1, 20, oldData.getValue());
+            if (value == Double.MIN_VALUE) return null;
+        }
+        if (options[6] && yesOrNo("Assign to customers right now")) {
+            customers = selectByNumbers("Enter customer's id (Comma-separated)", getACM(), oldData.getCustomerIds());
+            if (customers.isEmpty()) return null;
+        }
+        if (options[7]) {
+            active = oldData == null ? yesOrNo("Set active") : oldData.isActive();
+        }
+        
+        String id = (oldData == null) ? IDGenerator.generateDiscountCode()
+                :
+            oldData.getId();
+        
+        return new Discount(
                 id, 
                 customers,
                 movies,
@@ -70,47 +138,9 @@ public class DiscountManager extends ListManager<Discount> {
                 endDate,
                 type,
                 quantity,
-                true,
+                active,
                 value
-        ));
-        if (DiscountDAO.addDiscountToDB(list.getLast())) 
-            return (
-                customers != null ? addDataToMidTable("Discount_Account", id, "discount_code", customers,"customer_id") : true
-                        &&
-                addDataToMidTable("Discount_Movie", id, "discount_code", movies, "movie_id")
-            );
-        return false;
-    }
-
-    public boolean updateDiscount() {
-        if (checkNull(list)) return false;
-
-        Discount foundDiscount = (Discount)getById("Enter discount code");
-        if (checkNull(foundDiscount)) return false;
-        
-        LocalDate startDate = getDate("Enter start date", true);  
-        LocalDate endDate = getDate("Enter end date", true);
-        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, true);
-        int quantity = getInteger("Enter available quantity", 1, 20, true);
-        boolean active = yesOrNo("Set active");
-        
-        if (startDate != null) foundDiscount.setStartDate(startDate);
-        if (endDate != null) foundDiscount.setEndDate(endDate);
-        if (type != DiscountType.NONE) foundDiscount.setType(type);
-        if (quantity > 0) foundDiscount.setQuantity(quantity);
-        if (active != foundDiscount.isActive()) foundDiscount.setActive(active);
-        
-        return DiscountDAO.updateDiscountInDB(foundDiscount);
-    }
-
-    public boolean deleteDiscount() { 
-        if (checkNull(list)) return false;       
-
-        Discount foundDiscount = (Discount)getById("Enter discount code");
-        if (checkNull(foundDiscount)) return false;
-
-        list.remove(foundDiscount);
-        return DiscountDAO.deleteDiscountFromDB(foundDiscount.getId());
+        );
     }
    
     @Override

@@ -1,6 +1,4 @@
-
 package main.controllers;
-
 
 import main.base.ListManager;
 import java.util.ArrayList;
@@ -10,6 +8,7 @@ import main.dao.GenreDAO;
 import main.dto.Genre;
 import main.utils.InfosTable;
 import static main.utils.Input.getString;
+import static main.utils.LogMessage.errorLog;
 import static main.utils.Validator.getName;
 
 
@@ -20,43 +19,63 @@ public class GenreManager extends ListManager<Genre> {
         list = GenreDAO.getAllGenres();
     }
 
-    public boolean addGenre() {
-        String name = getName("Enter genre name", false);
-        if (name.isEmpty()) return false;
+    public boolean add(Genre genre) {
+        if (checkNull(genre) || checkNull(list)) return false;
         
-        String description = getString("Enter description", false);
-        if (!description.isEmpty()) return false;
+        list.add(genre);
+        return GenreDAO.addGenreToDB(genre);
+    }
+
+    public boolean update(Genre genre) {
+        if (checkNull(genre) || checkNull(list)) return false;
+
+        Genre newGenre = getInputs(new boolean[] {true, true}, genre);
+        if (newGenre != null)
+           genre = newGenre;
+        else 
+            return false;  
         
-        list.add(new Genre(
+        return GenreDAO.updateGenreInDB(newGenre);
+    }
+
+    public boolean delete(Genre genre) { 
+        if (checkNull(genre) || checkNull(list)) return false;
+
+        if (!list.remove(genre)) {
+            errorLog("Genre not found");
+            return false;
+        }
+        return GenreDAO.deleteGenreFromDB(genre.getId());
+    }
+    
+    @Override
+    public Genre getInputs(boolean[] options, Genre oldData) {
+        
+        if (options.length < 2) {
+            errorLog("Not enough option length");
+            return null;
+        }
+        
+        String name = null, description = null;
+        
+        if (oldData != null) {
+            name = oldData.getGenreName();
+            description = oldData.getDescription();
+        }
+        
+        if (options[0]) {
+            name = getName("Enter genre name", name);
+            if (name == null) return null;
+        }
+        if (options[1]) {
+            description = getString("Enter description", description);
+            if (description == null) return null;
+        }
+        
+        return new Genre(
                 name, 
                 description
-        ));
-        return GenreDAO.addGenreToDB(list.getLast());
-    }
-
-    public boolean updateGenre() {
-        if (checkNull(list)) return false;
-
-        Genre foundGenre = (Genre)getById("Enter genre");
-        if (checkNull(foundGenre)) return false;
-        
-        String name = getName("Enter genre name", true);
-        String description = getString("Enter description", true);
-        
-        if (name.isEmpty()) foundGenre.setGenreName(name);
-        if (!description.isEmpty()) foundGenre.setDescription(description);  
-        
-        return GenreDAO.updateGenreInDB(foundGenre);
-    }
-
-    public boolean deleteGenre() { 
-        if (checkNull(list)) return false;       
-
-        Genre foundGenre = (Genre)getById("Enter genre");
-        if (checkNull(foundGenre)) return false;
-
-        list.remove(foundGenre);
-        return GenreDAO.deleteGenreFromDB(foundGenre.getId());
+        );
     }
    
     @Override
@@ -112,4 +131,5 @@ public class GenreManager extends ListManager<Genre> {
         );
         InfosTable.showFooter();
     }
+    
 }
