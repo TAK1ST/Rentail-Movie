@@ -69,7 +69,7 @@ public abstract class ListManager<T extends Model> {
         if (item != null) {
             return false;
         }
-        infoLog(String.format("\nNo %s's data.\n", className));
+        infoLog(String.format("No %s's data", className));
         return true;
     }
 
@@ -77,7 +77,7 @@ public abstract class ListManager<T extends Model> {
         if (!tempList.isEmpty()) {
             return false;
         }
-        infoLog(String.format("\nNo %s's data.\n", className));
+        infoLog(String.format("No %s's data", className));
         return true;
     }
 

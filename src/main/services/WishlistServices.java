@@ -45,7 +45,7 @@ public class WishlistServices {
         }
 
         if (wishlist.getPriority() == null) {
-            wishlist.setPriority(WishlistPriority.NONE);
+            wishlist.setPriority(null);
         }
 
         return WishlistDAO.addWishlistToDB(wishlist);

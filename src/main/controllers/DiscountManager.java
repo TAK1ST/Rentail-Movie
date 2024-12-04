@@ -73,6 +73,9 @@ public class DiscountManager extends ListManager<Discount> {
     
     @Override
     public Discount getInputs(boolean[] options, Discount oldData) {
+        if (options == null) {
+            options = new boolean[] {true, true, true, true, true, true, true, true, true, true};
+        }
         if (options.length < 10) {
             errorLog("Not enough option length");
             return null;
@@ -82,9 +85,9 @@ public class DiscountManager extends ListManager<Discount> {
         double value = 0f;
         String movies = null, customers = null;
         LocalDate startDate = null, endDate = null; 
-        DiscountType type = DiscountType.NONE;
-        ApplyForWho applyForWho = ApplyForWho.NONE;
-        ApplyForWhat applyForWhat = ApplyForWhat.NONE;
+        DiscountType type = null;
+        ApplyForWho applyForWho = null;
+        ApplyForWhat applyForWhat = null;
         boolean active = false;
         
         if (oldData != null) {
@@ -110,15 +113,15 @@ public class DiscountManager extends ListManager<Discount> {
         }
         if (options[2]) {
             type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, type);
-            if (type == DiscountType.NONE) return null;
+            if (type == null) return null;
         }
         if (options[3]) {
             applyForWho = (ApplyForWho) getEnumValue("Apply for who", ApplyForWho.class, applyForWho);
-            if (type == DiscountType.NONE) return null;
+            if (type == null) return null;
         }
         if (options[4]) {
             applyForWhat = (ApplyForWhat) getEnumValue("Apply for what", ApplyForWhat.class, applyForWhat);
-            if (type == DiscountType.NONE) return null;
+            if (type == null) return null;
         }
         if (options[5]) {
             quantity = getInteger("Enter available quantity", 1, 1000, quantity);

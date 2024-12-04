@@ -51,7 +51,7 @@ public class MovieManager extends ListManager<Movie> {
     public boolean update(Movie movie) {
         if (checkNull(movie) || checkNull(list)) return false;
 
-        Movie newMoive = getInputs(new boolean[] {true, true, true, true, true, true, true, true}, movie);
+        Movie newMoive = getInputs(null, movie);
         if (newMoive != null)
             movie = newMoive;
         else 

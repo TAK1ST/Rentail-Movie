@@ -29,7 +29,7 @@ public class LanguageManager extends ListManager<Language> {
     public boolean update(Language language) {
         if (checkNull(language) || checkNull(list)) return false;
         
-        Language newLanguage = getInputs(new boolean[] {true, true}, language);
+        Language newLanguage = getInputs(null, language);
         if (newLanguage != null)
            language = newLanguage;
         else 

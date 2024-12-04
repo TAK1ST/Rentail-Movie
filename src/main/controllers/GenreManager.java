@@ -29,7 +29,7 @@ public class GenreManager extends ListManager<Genre> {
     public boolean update(Genre genre) {
         if (checkNull(genre) || checkNull(list)) return false;
 
-        Genre newGenre = getInputs(new boolean[] {true, true}, genre);
+        Genre newGenre = getInputs(null, genre);
         if (newGenre != null)
            genre = newGenre;
         else 

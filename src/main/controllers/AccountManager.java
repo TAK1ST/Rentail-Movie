@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import main.constants.IDPrefix;
 import main.constants.account.AccRole;
 import main.constants.account.AccStatus;
 import main.dao.AccountDAO;
@@ -62,6 +63,9 @@ public class AccountManager extends ListManager<Account> {
 
     @Override
     public Account getInputs(boolean[] options, Account oldData) {
+        if (options == null) {
+            options = new boolean[] {true, true, true, true, true};
+        }
         if (options.length < 5) {
             errorLog("Not enough option length");
             return null;
@@ -69,7 +73,7 @@ public class AccountManager extends ListManager<Account> {
         
         int creability = 100;
         String username = null, password = null, email = null;
-        AccRole role = AccRole.NONE;
+        AccRole role = null;
         
         if (oldData != null) {
             username = oldData.getUsername();
@@ -93,14 +97,14 @@ public class AccountManager extends ListManager<Account> {
         }
         if (options[3]) {
             role = (AccRole)getEnumValue("Choose a role", AccRole.class, role);
-            if (role == AccRole.NONE) return null;
+            if (role == null) return null;
         }
         if (options[4] && role != AccRole.ADMIN) {
             creability = getInteger("Enter creadibility", 0, 1000, creability);
             if (creability == Integer.MIN_VALUE) return null;
         }
         
-        String id = (oldData == null) ? IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), role)
+        String id = (oldData == null) ? IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.ACCOUNT_PREFIX)
             :
         oldData.getId();
         

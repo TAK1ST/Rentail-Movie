@@ -45,7 +45,7 @@ public class RentalManager extends ListManager<Rental> {
     public boolean update(Rental rental) {
         if (checkNull(rental) || checkNull(list)) return false;
 
-        Rental newRental = getInputs(new boolean[] {true, true, true, true, true}, rental);
+        Rental newRental = getInputs(null, rental);
         if (newRental != null)
             rental = newRental;
         else 
@@ -78,7 +78,7 @@ public class RentalManager extends ListManager<Rental> {
         LocalDate rentalDate = null, dueDate = null, returnDate = null;
         int howManyDays = 0;
         double lateFee = 0f;
-        RentalStatus status = RentalStatus.NONE;
+        RentalStatus status = null;
         
         if (oldData != null) {
             customer = (Account) getACM().searchById(oldData.getCustomerID());
@@ -123,7 +123,7 @@ public class RentalManager extends ListManager<Rental> {
         }
         if (options[4]) {
             status = (RentalStatus)getEnumValue("Choose a status", RentalStatus.class, status);
-            if (status == RentalStatus.NONE) return null;
+            if (status == null) return null;
         }
         
         String staffID = null;
@@ -152,7 +152,7 @@ public class RentalManager extends ListManager<Rental> {
                 returnDate,
                 lateFee,
                 total,
-                status == RentalStatus.NONE ? RentalStatus.PENDING : status
+                status == null ? RentalStatus.PENDING : status
         );
     }
 

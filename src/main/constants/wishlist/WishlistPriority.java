@@ -9,7 +9,6 @@ package main.constants.wishlist;
  * @author trann
  */
 public enum WishlistPriority {
-    NONE,
     LOW,
     MEDIUM,
     HIGH

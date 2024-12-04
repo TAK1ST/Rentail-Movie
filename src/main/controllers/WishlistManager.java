@@ -39,7 +39,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     public boolean update(Wishlist wishlist) {
         if (checkNull(wishlist) || checkNull(list)) return false;
 
-        Wishlist newWishlist = getInputs(new boolean[] {true, true, true, true}, wishlist);
+        Wishlist newWishlist = getInputs(null, wishlist);
         if (newWishlist != null)
             wishlist = newWishlist;
         else 
@@ -70,7 +70,7 @@ public class WishlistManager extends ListManager<Wishlist> {
         
         Movie movie = null;
         Account customer = null;
-        WishlistPriority priority = WishlistPriority.NONE;
+        WishlistPriority priority = null;
         LocalDate addedDate = null;
         
         if (oldData != null) {
@@ -94,7 +94,7 @@ public class WishlistManager extends ListManager<Wishlist> {
         }
         if (options[2]) {
             priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, priority);
-            if (priority == WishlistPriority.NONE) return null;
+            if (priority == null) return null;
         }
         if (options[3]) {
             addedDate = oldData == null ? LocalDate.now() : getDate("Enter date", addedDate);

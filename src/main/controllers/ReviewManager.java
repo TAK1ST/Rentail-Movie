@@ -39,7 +39,7 @@ public final class ReviewManager extends ListManager<Review> {
     public boolean update(Review review) {
         if (checkNull(review) || checkNull(list)) return false;
 
-        Review newReview = getInputs(new boolean[] {true, true, true, true, true}, review);
+        Review newReview = getInputs(null, review);
         if (newReview != null)
             review = newReview;
         else 

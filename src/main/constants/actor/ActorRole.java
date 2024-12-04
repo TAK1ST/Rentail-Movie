@@ -9,7 +9,6 @@ package main.constants.actor;
  * @author trann
  */
 public enum ActorRole {
-    NONE,
     MAIN,
     VILLIAN,
     SUPPORT,

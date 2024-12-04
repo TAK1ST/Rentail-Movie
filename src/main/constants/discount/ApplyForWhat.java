@@ -9,7 +9,6 @@ package main.constants.discount;
  * @author trann
  */
 public enum ApplyForWhat {
-    NONE,
     SPECIFIC_MOVIES, 
     GENRE, 
     CART_TOTAL, 

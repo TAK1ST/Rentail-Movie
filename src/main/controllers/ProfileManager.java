@@ -36,7 +36,7 @@ public class ProfileManager extends ListManager<Profile> {
     public boolean update(Profile profile) {
         if (checkNull(profile) || checkNull(list)) return false;
 
-        Profile newProfile = getInputs(new boolean[] {true, true, true, true}, profile);
+        Profile newProfile = getInputs(null, profile);
         if (newProfile != null)
             profile = newProfile;
         else 

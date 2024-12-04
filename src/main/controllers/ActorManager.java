@@ -53,13 +53,16 @@ public class ActorManager extends ListManager<Actor> {
     
     @Override
     public Actor getInputs(boolean[] options, Actor oldData) {
+        if (options == null) {
+            options = new boolean[] {true, true, true};
+        }
         if (options.length < 3) {
             errorLog("Not enough option length");
             return null;
         }
         
         String actorNames = null, description = null;
-        ActorRank rank = ActorRank.NONE;
+        ActorRank rank = null;
         
         if (oldData != null) {
             actorNames = oldData.getActorName();
@@ -77,7 +80,7 @@ public class ActorManager extends ListManager<Actor> {
         }
         if (options[2]) {
             rank = (ActorRank)getEnumValue("Choose actor rank", ActorRank.class, rank);
-            if (rank == ActorRank.NONE) return null;
+            if (rank == null) return null;
         }
         
         String id = (oldData == null) ? IDGenerator.generateID(list.isEmpty() ? null : list.getLast().getId(), IDPrefix.ACTOR_PREFIX)

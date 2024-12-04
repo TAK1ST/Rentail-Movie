@@ -36,7 +36,7 @@ public class PaymentManager extends ListManager<Payment> {
     public boolean update(Payment payment) {
         if (checkNull(payment) || checkNull(list)) return false;
 
-        Payment newPayment = getInputs(new boolean[] {true, true}, payment);
+        Payment newPayment = getInputs(null, payment);
         if (newPayment != null)
             payment = newPayment;
         else 
@@ -65,8 +65,8 @@ public class PaymentManager extends ListManager<Payment> {
         }
         double amount = 0f;
         LocalDateTime transactionTime = null;
-        PaymentStatus status = PaymentStatus.NONE;
-        PaymentMethod method = PaymentMethod.NONE;
+        PaymentStatus status = null;
+        PaymentMethod method = null;
         Account customer = null;
         
         if (oldData != null) {
@@ -87,11 +87,11 @@ public class PaymentManager extends ListManager<Payment> {
         }
         if (options[2]) {
             method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, method);
-            if (method == PaymentMethod.NONE) return null;
+            if (method == null) return null;
         }
         if (options[3]) {
             status = (PaymentStatus) getEnumValue("Choose payment status", PaymentStatus.class, status);
-            if (status == PaymentStatus.NONE) return null;
+            if (status == null) return null;
         }
         
         if (oldData == null) {
