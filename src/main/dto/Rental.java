@@ -2,7 +2,7 @@ package main.dto;
 
 import main.base.Model;
 import java.time.LocalDate;
-import main.constants.RentalStatus;
+import main.constants.rental.RentalStatus;
 import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 

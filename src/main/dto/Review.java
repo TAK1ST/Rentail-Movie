@@ -15,6 +15,10 @@ public class Review extends Model {
     public Review() {
     }
     
+    public Review(String customerID) {
+        this.customerID = customerID;
+    }
+    
     public Review(String movieID, String customerID) {
         this.customerID = customerID;
         this.movieID = movieID;

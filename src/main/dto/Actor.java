@@ -1,7 +1,7 @@
 package main.dto;
 
 import main.base.Model;
-import main.constants.ActorRank;
+import main.constants.actor.ActorRank;
 
 public class Actor extends Model {
 

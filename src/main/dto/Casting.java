@@ -6,7 +6,7 @@ package main.dto;
 
 import main.exceptions.MethodNotFound;
 import main.base.Model;
-import main.constants.ActorRole;
+import main.constants.actor.ActorRole;
 import static main.utils.LogMessage.errorLog;
 
 /**

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dto.Rental;
 import main.config.Database;
-import main.constants.RentalStatus;
+import main.constants.rental.RentalStatus;
 
 public class RentalDAO {
 

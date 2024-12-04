@@ -2,8 +2,8 @@ package main.dto;
 
 import java.time.LocalDate;
 import main.base.Model;
-import main.constants.AccRole;
-import main.constants.AccStatus;
+import main.constants.account.AccRole;
+import main.constants.account.AccStatus;
 import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 

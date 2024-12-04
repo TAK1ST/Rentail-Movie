@@ -1,6 +1,6 @@
 package main.services;
 
-import main.constants.AccRole;
+import main.constants.account.AccRole;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getPFM;
 import main.dao.AccountDAO;

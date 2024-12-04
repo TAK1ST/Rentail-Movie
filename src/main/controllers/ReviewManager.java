@@ -59,6 +59,9 @@ public final class ReviewManager extends ListManager<Review> {
 
     @Override
     public Review getInputs(boolean[] options, Review oldData) {
+        if (options == null) {
+            options = new boolean[] {true, true, true, true, true};
+        }
         if (options.length < 5) {
             errorLog("Not enough option length");
             return null;

@@ -7,7 +7,7 @@ package main.utils;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import main.constants.AccRole;
+import main.constants.account.AccRole;
 import main.constants.IDPrefix;
 import static main.utils.LogMessage.errorLog;
 

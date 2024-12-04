@@ -2,7 +2,7 @@ package main.dao;
 
 import main.dto.Wishlist;
 import main.config.Database;
-import main.constants.WishlistPriority;
+import main.constants.wishlist.WishlistPriority;
 
 import java.sql.Connection;
 import java.sql.Date;

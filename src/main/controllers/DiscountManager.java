@@ -1,13 +1,13 @@
-
 package main.controllers;
-
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
-import main.constants.DiscountType;
+import main.constants.discount.ApplyForWhat;
+import main.constants.discount.ApplyForWho;
+import main.constants.discount.DiscountType;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getPFM;
@@ -73,7 +73,7 @@ public class DiscountManager extends ListManager<Discount> {
     
     @Override
     public Discount getInputs(boolean[] options, Discount oldData) {
-        if (options.length < 8) {
+        if (options.length < 10) {
             errorLog("Not enough option length");
             return null;
         }
@@ -83,6 +83,8 @@ public class DiscountManager extends ListManager<Discount> {
         String movies = null, customers = null;
         LocalDate startDate = null, endDate = null; 
         DiscountType type = DiscountType.NONE;
+        ApplyForWho applyForWho = ApplyForWho.NONE;
+        ApplyForWhat applyForWhat = ApplyForWhat.NONE;
         boolean active = false;
         
         if (oldData != null) {
@@ -92,37 +94,47 @@ public class DiscountManager extends ListManager<Discount> {
             endDate = oldData.getEndDate();
             type = oldData.getType();
             active = oldData.isActive();
+            applyForWho = oldData.getApplyForWho();
+            applyForWhat = oldData.getApplyForWhat();
         }
         
         if (options[0]) {
-            movies = selectByNumbers("Enter movie's id (Comma-separated)", getMVM(), oldData.getMovieIds());
-            if (movies.isEmpty()) return null;
-        }
-        if (options[1]) {
             startDate = getDate("Enter start date", oldData.getStartDate());
             if (startDate == null) return null;
         }
-        if (options[2]) {
+        if (options[1]) {
             endDate = getDate("Enter end date", oldData.getEndDate());
             if (endDate == null) return null;
         }
-        if (options[3]) {
+        if (options[2]) {
             type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, oldData.getType());
             if (type == DiscountType.NONE) return null;
         }
+        if (options[3]) {
+            applyForWho = (ApplyForWho) getEnumValue("Apply for who", ApplyForWho.class, oldData.getApplyForWho());
+            if (type == DiscountType.NONE) return null;
+        }
         if (options[4]) {
+            applyForWhat = (ApplyForWhat) getEnumValue("Apply for what", ApplyForWhat.class, oldData.getApplyForWhat());
+            if (type == DiscountType.NONE) return null;
+        }
+        if (options[5]) {
             quantity = getInteger("Enter available quantity", 1, 1000, oldData.getQuantity());
             if (quantity == Integer.MIN_VALUE) return null;
         }
-        if (options[5]) {
+        if (options[6]) {
             value = getDouble("Enter value", 1, 20, oldData.getValue());
             if (value == Double.MIN_VALUE) return null;
         }
-        if (options[6] && yesOrNo("Assign to customers right now")) {
+        if (options[7] && applyForWhat == ApplyForWhat.SPECIFIC_MOVIES && yesOrNo("Assign to movie's right now")) {
+            movies = selectByNumbers("Enter movie's id (Comma-separated)", getMVM(), oldData.getMovieIds());
+            if (movies.isEmpty()) return null;
+        }
+        if (options[8] && applyForWho == ApplyForWho.SPECIFIC_USERS && yesOrNo("Assign to customers right now")) {
             customers = selectByNumbers("Enter customer's id (Comma-separated)", getACM(), oldData.getCustomerIds());
             if (customers.isEmpty()) return null;
         }
-        if (options[7]) {
+        if (options[9]) {
             active = oldData == null ? yesOrNo("Set active") : oldData.isActive();
         }
         
@@ -139,7 +151,9 @@ public class DiscountManager extends ListManager<Discount> {
                 type,
                 quantity,
                 active,
-                value
+                value,
+                applyForWho,
+                applyForWhat
         );
     }
    
