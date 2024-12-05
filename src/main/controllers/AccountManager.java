@@ -21,7 +21,7 @@ public class AccountManager extends ListManager<Account> {
 
     public AccountManager() {
         super(Account.className(), Account.getAttributes());
-        Collections.copy(list, AccountDAO.getAllAccounts()); 
+        copy(AccountDAO.getAllAccounts()); 
     }
     
     public boolean updateAccount(Account account) {

@@ -57,7 +57,7 @@ public class CustomerPannel {
                 new MenuOption("My rental history", 
                         () -> RentalServices.myHistoryRental(account.getId()), ENTER_TO_CONTINUE),
                 new MenuOption("Add movie to wishlist", 
-                        () -> getWLM().add(getWLM().getInputs(null, new Wishlist(account.getId()))), ASK_FOR_AGAIN),
+                        () -> getWLM().addWishlist(), ASK_FOR_AGAIN),
                 new MenuOption("My wishlist", 
                         () -> WishlistServices.myWishlist(account.getId())),
                 new MenuOption("View discounts", 

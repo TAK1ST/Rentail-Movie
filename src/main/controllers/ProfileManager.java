@@ -24,7 +24,7 @@ public class ProfileManager extends ListManager<Profile> {
       
     public ProfileManager() {
         super(Profile.className(), Profile.getAttributes());
-        Collections.copy(list, ProfileDAO.getAllProfiles()); 
+        copy(ProfileDAO.getAllProfiles()); 
     }
     
     public boolean addProfile(String accountID) {

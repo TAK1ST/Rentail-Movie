@@ -24,7 +24,7 @@ public class PaymentManager extends ListManager<Payment> {
 
     public PaymentManager() {
         super(Payment.className(), Payment.getAttributes());
-        Collections.copy(list, PaymentDAO.getAllPayments()); 
+        copy(PaymentDAO.getAllPayments()); 
     }
     
     public boolean addPayment(String customerID) {

@@ -20,7 +20,7 @@ public class ActorManager extends ListManager<Actor> {
     
     public ActorManager() {
         super(Actor.className(), Actor.getAttributes());
-        Collections.copy(list, ActorDAO.getAllActors()); 
+        copy(ActorDAO.getAllActors()); 
     }
     
     public boolean addActor() {

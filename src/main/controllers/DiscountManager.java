@@ -31,7 +31,7 @@ public class DiscountManager extends ListManager<Discount> {
     
     public DiscountManager() {
         super(Discount.className(), Discount.getAttributes());
-        Collections.copy(list, DiscountDAO.getAllDiscounts());
+        copy(DiscountDAO.getAllDiscounts());
     }
     
     public boolean addDiscount() {

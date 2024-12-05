@@ -27,7 +27,7 @@ public final class ReviewManager extends ListManager<Review> {
     
     public ReviewManager() {
         super(Review.className(), Review.getAttributes());
-        Collections.copy(list, ReviewDAO.getAllReviews()); 
+        copy(ReviewDAO.getAllReviews()); 
     }
     
     public boolean addReview(String customerID) throws SQLException {
