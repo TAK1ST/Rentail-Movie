@@ -3,7 +3,6 @@ package main.controllers;
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.IDPrefix;
@@ -32,6 +31,7 @@ public class MovieManager extends ListManager<Movie> {
     }
     
     public boolean addMovie() {
+        
         if (getGRM().isNull("Need genre data")
                 || getATM().isNull("Need actor data")
                 || getLGM().isNull("Need language data"))

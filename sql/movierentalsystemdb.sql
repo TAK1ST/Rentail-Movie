@@ -85,6 +85,8 @@ CREATE TABLE IF NOT EXISTS Movie_Language (
 CREATE TABLE IF NOT EXISTS Discount_Account (
     customer_id CHAR(8) NOT NULL,
     discount_code CHAR(8) NOT NULL,
+    is_chosen BOOLEAN DEFAULT FALSE,
+	used_on DATETIME,
     PRIMARY KEY (customer_id, discount_code),
     FOREIGN KEY (customer_id) REFERENCES Accounts(account_id) ON DELETE CASCADE,
     FOREIGN KEY (discount_code) REFERENCES Discounts(discount_code) ON DELETE CASCADE

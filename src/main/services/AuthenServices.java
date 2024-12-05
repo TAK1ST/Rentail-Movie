@@ -99,10 +99,10 @@ public class AuthenServices {
         String email = getEmail("Enter email", null);
         if (email.isEmpty()) return false;
         
-        if (role == null)
+        if (role == AccRole.ADMIN) {
             role = (AccRole) getEnumValue("Choose a role", AccRole.class, role);
-        if (role == null) return false;
-
+            if (role == null) return false;
+        } 
         String id = getACM().createID(IDPrefix.ACCOUNT_PREFIX);
         Account account = new Account(
                 id,
