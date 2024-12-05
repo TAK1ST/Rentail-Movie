@@ -2,7 +2,6 @@ package main.controllers;
 
 import main.base.ListManager;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.dao.GenreDAO;
@@ -17,7 +16,7 @@ public class GenreManager extends ListManager<Genre> {
     
     public GenreManager() {
         super(Genre.className(), Genre.getAttributes());
-        Collections.copy(list, GenreDAO.getAllGenres()); 
+        copy(GenreDAO.getAllGenres()); 
     }
     
     public boolean addGenre() {

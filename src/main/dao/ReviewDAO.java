@@ -69,12 +69,12 @@ public class ReviewDAO {
         return false;
     }
 
-    public static boolean deleteReviewFromDB(String reviewID) {
-        String sql = "DELETE FROM Reviews WHERE review_id = ?";
+    public static boolean deleteReviewFromDB(String movieID) {
+        String sql = "DELETE FROM Reviews WHERE movie_id = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setString(1, reviewID);
+            ps.setString(1, movieID);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

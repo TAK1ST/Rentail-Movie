@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import main.dto.Discount;
@@ -121,6 +122,41 @@ public class DiscountDAO {
             e.printStackTrace(); // Replace with proper logging
         }
         return list;
+    }
+    
+    public boolean chooseAndApplyDiscount(String customerId, String discountCode) throws SQLException {
+        String sql = "UPDATE Discount_Account SET used_on = CURRENT_TIMESTAMP WHERE customer_id = ? AND discount_code = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, customerId);
+            ps.setString(2, discountCode);
+
+            return ps.executeUpdate() > 0;
+        }   catch (SQLException e) {
+            e.printStackTrace(); // Replace with proper logging
+        }
+        return false;
+    }
+    
+    public boolean isDiscountUsed(String customerId, String discountCode) throws SQLException {
+        String query = "SELECT used_on FROM Discount_Account WHERE customer_id = ? AND discount_code = ?";
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setString(1, customerId);
+            stmt.setString(2, discountCode);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Timestamp usedOn = rs.getTimestamp("used_on");
+                return usedOn != null; 
+            }
+        }
+        return false;
     }
 
 }

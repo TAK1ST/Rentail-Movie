@@ -2,7 +2,6 @@ package main.controllers;
 
 import main.base.ListManager;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.actor.ActorRank;
@@ -20,7 +19,7 @@ public class ActorManager extends ListManager<Actor> {
     
     public ActorManager() {
         super(Actor.className(), Actor.getAttributes());
-        Collections.copy(list, ActorDAO.getAllActors()); 
+        copy(ActorDAO.getAllActors()); 
     }
     
     public boolean addActor() {

@@ -1,7 +1,6 @@
 package main.controllers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
@@ -17,7 +16,7 @@ public class LanguageManager extends ListManager<Language> {
     
     public LanguageManager() {
         super(Language.className(), Language.getAttributes());
-        Collections.copy(list, LanguageDAO.getAllLanguages()); 
+        copy(LanguageDAO.getAllLanguages()); 
     }
     
     public boolean addLanguage() {

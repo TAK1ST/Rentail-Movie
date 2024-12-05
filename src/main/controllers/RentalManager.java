@@ -3,7 +3,6 @@ package main.controllers;
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.IDPrefix;
@@ -30,7 +29,7 @@ public class RentalManager extends ListManager<Rental> {
 
     public RentalManager() {
         super(Rental.className(), Rental.getAttributes());
-        Collections.copy(list, RentalDAO.getAllRentals()); 
+        copy(RentalDAO.getAllRentals()); 
     }
     
     public boolean addRental(String customerID) {

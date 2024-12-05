@@ -2,7 +2,6 @@ package main.controllers;
 
 import main.base.ListManager;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.account.AccRole;
@@ -21,7 +20,7 @@ public class AccountManager extends ListManager<Account> {
 
     public AccountManager() {
         super(Account.className(), Account.getAttributes());
-        Collections.copy(list, AccountDAO.getAllAccounts()); 
+        copy(AccountDAO.getAllAccounts()); 
     }
     
     public boolean updateAccount(Account account) {

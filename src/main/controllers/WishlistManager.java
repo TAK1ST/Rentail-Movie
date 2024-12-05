@@ -2,7 +2,6 @@ package main.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
@@ -26,7 +25,7 @@ public class WishlistManager extends ListManager<Wishlist> {
 
     public WishlistManager() {
         super(Wishlist.className(), Wishlist.getAttributes());
-        Collections.copy(list, WishlistDAO.getAllWishlists()); 
+        copy(WishlistDAO.getAllWishlists()); 
     }
     
     public boolean addWishlist(String customerID) {
@@ -42,7 +41,7 @@ public class WishlistManager extends ListManager<Wishlist> {
         
         List<Wishlist> items = searchBy(list, customer.getId(), movie.getId());
         if (items != null && !items.isEmpty()) 
-            return errorLog("Already added this movie");
+            return errorLog("Already added this movie", false);
         
         WishlistPriority priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, null);
         if (priority == null) return false;

@@ -3,7 +3,6 @@ package main.controllers;
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import static main.controllers.Managers.getACM;
@@ -24,7 +23,7 @@ public class ProfileManager extends ListManager<Profile> {
       
     public ProfileManager() {
         super(Profile.className(), Profile.getAttributes());
-        Collections.copy(list, ProfileDAO.getAllProfiles()); 
+        copy(ProfileDAO.getAllProfiles()); 
     }
     
     public boolean addProfile(String accountID) {

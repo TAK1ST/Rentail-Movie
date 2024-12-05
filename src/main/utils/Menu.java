@@ -9,6 +9,7 @@ import main.utils.Menu.MenuOption.After;
 import static main.utils.Menu.MenuOption.After.ASK_FOR_AGAIN;
 import static main.utils.Menu.MenuOption.After.ENTER_TO_CONTINUE;
 import static main.utils.Menu.MenuOption.After.EXIT_MENU;
+import static main.utils.Menu.MenuOption.After.TERMINATE;
 
 
 public class Menu {
@@ -43,6 +44,10 @@ public class Menu {
                 MenuOption option = options[choice - INIT_NUM];
                 if (option.action != null) {
                     option.action.performAction();
+                }
+                if (option.bAction != null && option.after == TERMINATE) {
+                    if (option.bAction.performAction())
+                        return;
                 }
                 if (option.bAction != null) {
                     showSuccess(option.bAction.performAction());
@@ -167,7 +172,8 @@ public class Menu {
         public enum After {
             EXIT_MENU,
             ASK_FOR_AGAIN,
-            ENTER_TO_CONTINUE
+            ENTER_TO_CONTINUE,
+            TERMINATE
         }
         
         String optionText;

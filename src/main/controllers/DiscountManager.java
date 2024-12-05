@@ -2,7 +2,6 @@ package main.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
@@ -31,7 +30,7 @@ public class DiscountManager extends ListManager<Discount> {
     
     public DiscountManager() {
         super(Discount.className(), Discount.getAttributes());
-        Collections.copy(list, DiscountDAO.getAllDiscounts());
+        copy(DiscountDAO.getAllDiscounts());
     }
     
     public boolean addDiscount() {

@@ -2,7 +2,6 @@ package main.controllers;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
@@ -24,7 +23,7 @@ public class PaymentManager extends ListManager<Payment> {
 
     public PaymentManager() {
         super(Payment.className(), Payment.getAttributes());
-        Collections.copy(list, PaymentDAO.getAllPayments()); 
+        copy(PaymentDAO.getAllPayments()); 
     }
     
     public boolean addPayment(String customerID) {
