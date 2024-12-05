@@ -26,7 +26,7 @@ public class WishlistServices {
         getWLM().display(wishlist, Wishlist.getAttributes(), true);
     }
     
-    public boolean addWishlist(Wishlist wishlist) {
+    public boolean addToMyWishList(String cusomerID) {
         validateWishlistData(wishlist);
 
         List<Wishlist> customerWishlists = getWishlistsByCustomerId(wishlist.getCustomerId());

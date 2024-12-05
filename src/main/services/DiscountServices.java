@@ -7,12 +7,10 @@ package main.services;
 import java.util.List;
 import main.constants.discount.DiscountType;
 import static main.controllers.Managers.getDCM;
-import static main.controllers.Managers.getMVM;
 import main.dto.Discount;
 import main.utils.InfosTable;
 import static main.utils.Input.getString;
 import static main.utils.Input.pressEnterToContinue;
-import static main.utils.Input.returnNames;
 import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 

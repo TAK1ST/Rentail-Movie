@@ -3,16 +3,31 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/services/RentalServices.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/dto/Account.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/test/test/services/WishlistServicesTest.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/dao/AccountDAO.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/test/test/services/RentalServicesTest.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/test/test/services/MovieServicesTest.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/Main.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/services/AuthenServices.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/test/test/TestDatabaseSetup.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/views/App.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/services/AuthenServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/test/test/temp</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/test/test/InsertData.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/DiscountManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dto/Genre.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dto/Language.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/PaymentManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/test/Temp.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dto/Discount.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/base/ListManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/AccountManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/MovieManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/RentalManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/ReviewManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/LanguageManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/WishlistManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/ProfileManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/GenreManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/constants/discount/ApplyForWhat.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/test/Test.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Input.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/test/test/TestDatabaseSetup.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/views/AdminPannel.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/IDGenerator.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/ActorManager.java</file>
         </group>
     </open-files>
 </project-private>

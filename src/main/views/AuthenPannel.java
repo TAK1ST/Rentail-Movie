@@ -1,8 +1,7 @@
 package main.views;
 
 import main.dto.Account;
-import static main.services.AuthenServices.login;
-import static main.services.AuthenServices.registor;
+import main.services.AuthenServices;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.infoLog;
 
@@ -12,9 +11,9 @@ public class AuthenPannel {
         Account account;
         do {
             if(yesOrNo("\nHave account?"))  
-                account = login();
+                account = AuthenServices.loginPannel();
             else 
-                account = registor();
+                account =   AuthenServices.registorPannel();
 
             if (account == null) 
                 infoLog("Please try again");      

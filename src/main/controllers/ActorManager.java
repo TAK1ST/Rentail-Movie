@@ -2,13 +2,13 @@ package main.controllers;
 
 import main.base.ListManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.actor.ActorRank;
 import main.constants.IDPrefix;
 import main.dao.ActorDAO;
 import main.dto.Actor;
-import main.utils.IDGenerator;
 import main.utils.InfosTable;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
@@ -20,95 +20,88 @@ public class ActorManager extends ListManager<Actor> {
     
     public ActorManager() {
         super(Actor.className(), Actor.getAttributes());
-        list = ActorDAO.getAllActors();
+        Collections.copy(list, ActorDAO.getAllActors()); 
     }
     
-    public boolean add(Actor actor) {
-        if (checkNull(actor) || checkNull(list)) return false;
+    public boolean addActor() {
+        String name = getName("Enter actor's name", null);
+        if (name == null) return false;
         
-        list.add(actor);
-        return ActorDAO.addActorToDB(list.getLast());
-    }
+        for (Actor item : list) 
+            if (item.getActorName().equals(name)) {
+                errorLog("This name already exist");
+                return false;
+            }
+        
+        ActorRank rank = (ActorRank) getEnumValue("Enter actor's rank", ActorRank.class, null);
+        if (rank == null) return false;
 
-    public boolean update(Actor actor) {
-        if (checkNull(actor) || checkNull(list)) return false;
-
-        Actor newActor = getInputs(new boolean[] {true, true, true}, actor);
-        if (newActor != null)
-            actor = newActor;
-        else 
-            return false;
-        return ActorDAO.updateActorInDB(newActor);
-    }
-
-    public boolean delete(Actor actor) { 
-        if (checkNull(actor) || checkNull(list)) return false;     
-
-        if (!list.remove(actor)) {
-            errorLog("Actor not found");
-            return false;
-        }
-        return ActorDAO.deleteActorFromDB(actor.getId());
-    }
-    
-    @Override
-    public Actor getInputs(boolean[] options, Actor oldData) {
-        if (options == null) {
-            options = new boolean[] {true, true, true};
-        }
-        if (options.length < 3) {
-            errorLog("Not enough option length");
-            return null;
-        }
+        String description = getString("Enter actor's description", null);
+        if (description == null) return false;
         
-        String actorNames = null, description = null;
-        ActorRank rank = null;
-        
-        if (oldData != null) {
-            actorNames = oldData.getActorName();
-            description = oldData.getDescription();
-            rank = oldData.getRank();
-        }
-        
-        if (options[0]) {
-            actorNames = getName("Enter genre name", actorNames);
-            if (actorNames == null) return null;
-        }
-        if (options[1]) {
-            description = getString("Enter description", description);
-            if (description == null) return null;
-        }
-        if (options[2]) {
-            rank = (ActorRank)getEnumValue("Choose actor rank", ActorRank.class, rank);
-            if (rank == null) return null;
-        }
-        
-        String id = (oldData == null) ? IDGenerator.generateID(list.isEmpty() ? null : list.getLast().getId(), IDPrefix.ACTOR_PREFIX)
-                :
-            oldData.getId();
-        
-        return new Actor(
-                id, 
-                actorNames, 
+        Actor actor = new Actor(
+                createID(IDPrefix.ACTOR_PREFIX), 
+                name, 
                 rank,
                 description
         );
+        return add(actor);
+    }
+    
+    public boolean updateActor(Actor actor) {
+        if (checkNull(list)) return false;
+        
+        if (actor == null)
+        actor = (Actor) getById("Enter actor name");
+        if (checkNull(actor)) return false;
+        
+        Actor temp = new Actor();
+        temp.setActorName(getName("Enter actor's name", actor.getActorName()));
+        temp.setRank((ActorRank) getEnumValue("Enter actor's rank", ActorRank.class, actor.getRank()));
+        temp.setDescription(getString("Enter actor's description", actor.getDescription()));
+        
+        return update(actor, temp);
+    }
+    
+    public boolean deleteActor(Actor actor) {
+        if (checkNull(list)) return false;
+        if (actor == null) 
+            actor = (Actor) getById("Enter actor's id");
+        if (checkNull(actor)) return false;
+        return delete(actor);
+    }
+    
+    public boolean add(Actor actor) {
+        if (actor == null) return false;
+        return ActorDAO.addActorToDB(actor) && list.add(actor);
+    }
+
+    public boolean update(Actor oldActor, Actor newActor) {
+        if (newActor == null || checkNull(list)) return false;
+        if (ActorDAO.updateActorInDB(newActor))
+            oldActor = newActor;
+        return true;
+    }
+    
+    public boolean delete(Actor actor) {
+        if (actor == null) return false;     
+        return ActorDAO.deleteActorFromDB(actor.getId()) && list.remove(actor);
     }
     
     @Override
-    public List<Actor> sortList(List<Actor> tempList, String property) {
-        if (checkNull(list)) return null;
+    public List<Actor> sortList(List<Actor> tempList, String propety) {
+        if (checkNull(tempList)) return null;
         
-        if (property == null) return tempList;
+        if (propety == null) return tempList;
         
         String[] options = Actor.getAttributes();
         List<Actor> result = new ArrayList<>(tempList);
 
-        if (property.equalsIgnoreCase(options[0])) {
+        if (propety.equalsIgnoreCase(options[0])) {
             result.sort(Comparator.comparing(Actor::getActorName));
-        } else if (property.equalsIgnoreCase(options[1])) {
+        } else if (propety.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Actor::getRank));
-        } else if (property.equalsIgnoreCase(options[2])) {
+        } else if (propety.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Actor::getDescription));
         } else {
             result.sort(Comparator.comparing(Actor::getId));
@@ -117,9 +110,11 @@ public class ActorManager extends ListManager<Actor> {
     }
     
     @Override
-    public List<Actor> searchBy(String propety) {
+    public List<Actor> searchBy(List<Actor> tempList, String propety) {
+        if (checkNull(tempList)) return null;
+        
         List<Actor> result = new ArrayList<>();
-        for (Actor item : list) {
+        for (Actor item : tempList) {
             if (item == null) 
                 continue;
             if ((item.getId() != null && item.getId().equals(propety))
@@ -132,9 +127,7 @@ public class ActorManager extends ListManager<Actor> {
     
     @Override
     public void show(List<Actor> tempList) {
-        if (checkNull(tempList)) { 
-            return;
-        } 
+        if (checkNull(tempList)) return;
         
         InfosTable.getTitle(Actor.getAttributes());
         tempList.forEach(item -> 

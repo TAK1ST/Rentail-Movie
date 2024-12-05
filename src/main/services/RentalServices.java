@@ -22,6 +22,7 @@ import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Rental;
 import static main.utils.Input.getInteger;
+import static main.utils.Input.getString;
 
 /**
  *
@@ -29,27 +30,26 @@ import static main.utils.Input.getInteger;
  */
 public class RentalServices {
     
-    public static boolean rentMovie(String customerID) {
-        Rental rental = getRTM().getInputs(new boolean[] {false, true, true, false}, new Rental(customerID));
-        return getRTM().add(rental);
-    }
-    
     public static void myHistoryRental(String customerID) {
         List<Rental> myRentals = getRTM().searchBy(customerID);
         getRTM().display(myRentals);
     }
     
     public static boolean returnMovie(String customerID) {
-        Rental rental = getRTM().getById("Enter rental's id to return");
+        String movieID = getString("Enter movie' id", null);
+        if (movieID == null) return false;
+        
+        List<Rental> rental = getRTM().searchBy(customerID, movieID);
         if (getRTM().checkNull(rental)) return false;
         
-        rental.setReturnDate(LocalDate.now());
-        rental.setLateFee(calcLateFee(LocalDate.now(), rental));
+        Rental temp = new Rental(rental);
+        temp.setReturnDate(LocalDate.now());
+        temp.setLateFee(calcLateFee(LocalDate.now(), temp));
         
-        return RentalDAO.updateRentalInDB(rental);
+        return getRTM().update(rental, temp);
     }
     
-    public static boolean extendReturnDate() {
+    public static boolean extendReturnDate(String customerID) {
         Rental rental = getRTM().getById("Enter rental's id to extend");
         rental.setLateFee(calcLateFee(LocalDate.now(), rental));
         

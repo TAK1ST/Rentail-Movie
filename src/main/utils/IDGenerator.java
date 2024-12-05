@@ -27,7 +27,7 @@ public class IDGenerator {
     }
     
     public static String generateID(String lastestID, String prefix) {
-        int lastNumberID = lastestID.isEmpty() ? 0 : Integer.parseInt(lastestID.substring(prefix.length()));  
+        int lastNumberID = lastestID == null ? 0 : Integer.parseInt(lastestID.substring(prefix.length()));  
         int idNumberLength = (ID_LENGTH - prefix.length());
         return String.format("%s%0" + idNumberLength + "d", prefix, ++lastNumberID);
     }   

@@ -2,143 +2,11 @@
 //        list = AccountDAO.getAllAccounts();
 //    }
 //
-//    public boolean registorAccount() {
+//    
 //
-//        String username = getUsername("Enter username", false, list);
-//        if (username.isEmpty()) {
-//            return false;
-//        }
+//    
 //
-//        String password = getPassword("Enter password", false);
-//        if (password.isEmpty()) {
-//            return false;
-//        }
-//
-//        String email = getEmail("Enter email", false);
-//        if (email.isEmpty()) {
-//            return false;
-//        }
-//
-//        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), AccRole.CUSTOMER);
-//        if (yesOrNo("Fill in all infomation?")) {
-//            if (getPFM().addProfile(id)) {
-//                errorLog("Cannot registor account info");
-//                return false;
-//            }
-//        }
-//        list.add(new Account(
-//                id,
-//                username,
-//                encryptPassword(password),
-//                email,
-//                AccRole.CUSTOMER,
-//                AccStatus.OFFLINE,
-//                LocalDate.now(),
-//                null,
-//                LocalDate.now(),
-//                100
-//        ));
-//        return AccountDAO.addAccountToDB(list.getLast());
-//    }
-//
-//    public boolean addAccount() {
-//        String username = getUsername("Enter username", false, list);
-//        if (username.isEmpty()) {
-//            return false;
-//        }
-//
-//        String password = getPassword("Enter password", false);
-//        if (password.isEmpty()) {
-//            return false;
-//        }
-//
-//        String email = getEmail("Enter your email", false);
-//        if (email.isEmpty()) {
-//            return false;
-//        }
-//
-//        AccRole role = (AccRole) getEnumValue("Choose a role", AccRole.class, false);
-//        String id = IDGenerator.generateAccID(list.isEmpty() ? "" : list.getLast().getId(), role);
-//        list.add(new Account(
-//                id,
-//                username,
-//                password,
-//                email,
-//                role,
-//                AccStatus.OFFLINE,
-//                LocalDate.now(),
-//                null,
-//                LocalDate.now(),
-//                role != AccRole.ADMIN ? 100 : 0
-//        ));
-//        if (AccountDAO.addAccountToDB(list.getLast())) {
-//            if (list.getLast().getRole() == AccRole.ADMIN) {
-//                return true;
-//            }
-//            if (!getPFM().addProfile(id)) {
-//                errorLog("Cannot registor info");
-//                return false;
-//            }
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    public boolean updateAccount() {
-//        if (checkNull(list)) {
-//            return false;
-//        }
-//        Account foundAccount = (Account) getById("Enter user's id");
-//        if (checkNull(foundAccount)) {
-//            return false;
-//        }
-//
-//        String newAccountname = getUsername("Enter new username", true, list);
-//        String newPassword = getPassword("Enter new password", true);
-//        AccRole newRole = AccRole.NONE;
-//        if (foundAccount.getRole() == AccRole.ADMIN) {
-//            newRole = (AccRole) getEnumValue("Choose a role", AccRole.class, true);
-//        }
-//        String newEmail = Validator.getEmail("Enter your email", true);
-//        if (!newAccountname.isEmpty()) {
-//            foundAccount.setUsername(newAccountname);
-//        }
-//        if (!newPassword.isEmpty()) {
-//            foundAccount.setPassword(encryptPassword(newPassword));
-//        }
-//        if (newRole != AccRole.NONE) {
-//            foundAccount.setRole(newRole);
-//        }
-//        if (!newEmail.isEmpty()) {
-//            foundAccount.setEmail(newEmail);
-//        }
-//        return AccountDAO.updateAccountInDB(foundAccount);
-//    }
-//
-//    public void updatePassword(String accountID, String newPassword) {
-//        Account foundAccount = (Account) searchById(accountID);
-//        if (checkNull(foundAccount)) {
-//            return;
-//        }
-//
-//        foundAccount.setPassword(newPassword);
-//        AccountDAO.updatePasswordInDB(accountID, newPassword);
-//    }
-//
-//    public boolean deleteAccount() {
-//        if (checkNull(list)) {
-//            return false;
-//        }
-//
-//        Account foundAccount = (Account) getById("Enter user's id");
-//        if (checkNull(foundAccount)) {
-//            return false;
-//        }
-//
-//        list.remove(foundAccount);
-//        return AccountDAO.deleteAccountFromDB(foundAccount.getId());
-//    }
-//
+
 //    public void showMyProfile(String accountID) {
 //        show(searchById(accountID), "My Profile");
 //    }
@@ -171,56 +39,7 @@
 //        list = ActorDAO.getAllActors();
 //    }
 //
-//    public boolean addActor() {
-//        
-//        String name = getName("Enter actor's name", false);
-//        if (name.isEmpty()) return false;
-//        
-//        ActorRank rank = (ActorRank) getEnumValue("Enter actor's rank", ActorRank.class, false);
-//        if (rank == ActorRank.NONE) return false;
-//
-//        String description = getString("Enter actor's description", false);
-//        if (description.isEmpty()) return false;
-//        
-//        list.add(new Actor(
-//                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.ACTOR_PREFIX), 
-//                name, 
-//                rank,
-//                description
-//        ));
-//        return ActorDAO.addActorToDB(list.getLast());
-//    }
-//
-//    public boolean updateActor() {
-//        if (checkNull(list)) return false;
-//
-//        Actor foundActor = (Actor)getById("Enter actor's id");
-//        if (checkNull(foundActor)) return false;
-//        
-//        String name = getName("Enter actor's name", true);     
-//        ActorRank rank = (ActorRank) getEnumValue("Enter actor's status", ActorRank.class, true);
-//        String description = getString("Enter actor's description", false);
-//        
-//        if (!name.isEmpty()) 
-//            foundActor.setActorName(name);
-//        if (rank != ActorRank.NONE)
-//            foundActor.setRank(rank);
-//        if (description.isEmpty()) 
-//            foundActor.setDescription(description);
-//        
-//        return ActorDAO.updateActorInDB(foundActor);
-//    }
-//
-//    public boolean deleteActor() { 
-//        if (checkNull(list)) return false;       
-//
-//        Actor foundActor = (Actor)getById("Enter actor's id");
-//        if (checkNull(foundActor)) return false;
-//        list.remove(foundActor);
-//        return ActorDAO.deleteActorFromDB(foundActor.getId());
-//    }
-//
-//    @Override
+
 
 
 Discount:
@@ -236,28 +55,7 @@ import main.utils.Validator;
 
     public boolean addDiscount() {
 
-        LocalDate startDate = getDate("Enter start date", false);
-        if (startDate == null) return false;
         
-        LocalDate endDate = getDate("Enter end date", false);
-        if (endDate == null) return false;
-        
-        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, false);
-        if (type == DiscountType.NONE) return false;
-        
-        int quantity = getInteger("Enter available quantity", 1, 20, false);
-        if (quantity == Integer.MIN_VALUE) return false;
-
-        double value = getDouble("Enter value", 1, 20, false);
-        if (value == Double.MIN_VALUE) return false;
-
-        String movies = selectByNumbers("Enter movie's id (Comma-separated)", getMVM(), true);
-        if (movies.isEmpty()) return false;
-
-        String customers = null;
-        if (yesOrNo("Assign to customers right now")) {
-            customers = selectByNumbers("Enter customer's id (Comma-separated)", getACM(), true);
-            if (customers.isEmpty()) return false;
 
 
 Genre:
