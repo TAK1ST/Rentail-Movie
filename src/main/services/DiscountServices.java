@@ -4,7 +4,6 @@
  */
 package main.services;
 
-import java.sql.SQLException;
 import java.util.List;
 import static main.constants.discount.DiscountType.BUY_X_GET_Y_FREE;
 import static main.constants.discount.DiscountType.FIXED_AMOUNT;
@@ -13,10 +12,14 @@ import static main.controllers.Managers.getDCM;
 import static main.controllers.Managers.getMVM;
 import main.dao.DiscountDAO;
 import main.dto.Discount;
+import main.dto.Movie;
 import main.utils.InfosTable;
 import static main.utils.Input.getString;
 import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.returnName;
+import static main.utils.Input.yesOrNo;
+import static main.utils.LogMessage.errorLog;
+import static main.utils.LogMessage.infoLog;
 import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
@@ -106,7 +109,7 @@ public class DiscountServices {
         pressEnterToContinue();
     }
     
-    public static void showMyAvailableDiscount() throws SQLException {
+    public static void showMyAvailableDiscount() {
         showDiscountForCustomer(DiscountDAO.getAvailableDiscounts(accountID));
     }
     
@@ -141,4 +144,21 @@ public class DiscountServices {
         return myDiscount != null && !myDiscount.isEmpty();
     }
     
+    public static double applyDiscountForRental(String customerID, Movie movie) {
+        if(DiscountDAO.isDiscountAvailable(movie.getId(), customerID)) 
+            infoLog("You have discount for this movie");
+        else 
+            return movie.getRentalPrice();
+                    
+        Discount discount = (Discount) getDCM().searchById(DiscountDAO.getMovieDiscountForUser(movie.getId(), customerID));
+        if (discount == null) {
+            errorLog("Can not retrive the discount");
+            return movie.getRentalPrice();
+        }
+        
+        if (yesOrNo("Do you want to apply discount")) {
+            return calcAfterDiscount(discount, movie.getRentalPrice());
+        }
+        return movie.getRentalPrice();
+    }
 }

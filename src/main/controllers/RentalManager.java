@@ -11,15 +11,18 @@ import main.dao.RentalDAO;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getPMM;
+import main.dao.DiscountDAO;
 import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Rental;
+import main.services.DiscountServices;
 import main.services.RentalServices;
 import main.utils.InfosTable;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.LogMessage.infoLog;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -53,7 +56,9 @@ public class RentalManager extends ListManager<Rental> {
         int howManyDays = getInteger("How many days to rent", 1, 365, Integer.MIN_VALUE);
         if (howManyDays == Integer.MIN_VALUE) return false;
         
-        double total = movie.getRentalPrice() * howManyDays;
+        
+        
+        double total = DiscountServices.applyDiscountForRental(customerID, movie) * howManyDays;
         LocalDate dueDate =  rentalDate.plusDays(howManyDays);
         
         String staffID = RentalServices.findStaffForRentalApproval();

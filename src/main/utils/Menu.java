@@ -5,11 +5,12 @@ import static main.utils.Input.getInteger;
 import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
-import main.utils.Menu.MenuOption.After;
-import static main.utils.Menu.MenuOption.After.ASK_FOR_AGAIN;
-import static main.utils.Menu.MenuOption.After.ENTER_TO_CONTINUE;
-import static main.utils.Menu.MenuOption.After.EXIT_MENU;
-import static main.utils.Menu.MenuOption.After.TERMINATE;
+import main.utils.Menu.Option.After;
+import static main.utils.Menu.Option.After.ASK_FOR_AGAIN;
+import static main.utils.Menu.Option.After.ASK_TO_CONFIRM;
+import static main.utils.Menu.Option.After.ENTER_TO_CONTINUE;
+import static main.utils.Menu.Option.After.EXIT_MENU;
+import static main.utils.Menu.Option.After.TERMINATE;
 
 
 public class Menu {
@@ -21,45 +22,48 @@ public class Menu {
     public static void showManagerMenu(
             String title, 
             int colFormat,
-            MenuAction[] initActions,
-            MenuOption[] options, 
-            MenuAction[] afterActions,
-            MenuAction[] menuTerminateActions
+            Action[] inits,
+            Option[] options, 
+            Action[] afters,
+            Action[] terminates
     ) 
     {
         if (options == null) {
             errorLog("Please add option to menu");
-            perform(menuTerminateActions);
+            perform(terminates);
             return;
         }
         do {
             Menu.showTitle(title);
-            perform(initActions);
+            perform(inits);
             show(options, colFormat);
-            perform(afterActions);
+            perform(afters);
         
             int choice = Menu.getChoice("Enter choice", options.length + INIT_NUM - 1);
             if (choice == Integer.MIN_VALUE) continue;
             do {
-                MenuOption option = options[choice - INIT_NUM];
+                Option option = options[choice - INIT_NUM];
                 if (option.action != null) {
+                    if (option.after == ASK_TO_CONFIRM)
+                        yesOrNo("Are you sure");
+                    
                     option.action.performAction();
                 }
-                if (option.bAction != null && option.after == TERMINATE) {
-                    if (option.bAction.performAction())
-                        return;
-                }
                 if (option.bAction != null) {
-                    showSuccess(option.bAction.performAction());
+                    if (option.after == TERMINATE) {
+                        if (option.bAction.performAction())
+                            return;
+                    }
+                    else showSuccess(option.bAction.performAction());
                 }
                 if (option.after == EXIT_MENU) {
-                    perform(menuTerminateActions);
+                    perform(terminates);
                     return;
-                }
-                if (option.after == ENTER_TO_CONTINUE) {
+                } 
+                else if (option.after == ENTER_TO_CONTINUE) {
                     pressEnterToContinue();
                 }
-                if (option.after == ASK_FOR_AGAIN && yesOrNo("Again")) {
+                else if (option.after == ASK_FOR_AGAIN && yesOrNo("Again")) {
                 } 
                 else break;
                 
@@ -67,14 +71,14 @@ public class Menu {
         } while (true);
     }
     
-    private static void perform(MenuAction[] actions) {
+    private static void perform(Action[] actions) {
         if (actions == null)
             return;
-        for (MenuAction item : actions) 
+        for (Action item : actions) 
             item.performAction();
     }
     
-    private static void show(MenuOption[] options, int colFormat) {
+    private static void show(Option[] options, int colFormat) {
         if (colFormat < 1) colFormat = DEFAULT_ROW_FORMAT;
         int optionWidth = MAX_MENU_WIDTH / colFormat - 6;
         for (int index = 1; index <= options.length; index++) {
@@ -91,7 +95,7 @@ public class Menu {
                 else
                     format = " [%02d] %-" + optionWidth + "s ";
        
-            System.out.printf(format, (index + INIT_NUM - 1), options[index - 1].optionText);
+            System.out.printf(format, (index + INIT_NUM - 1), options[index - 1].optionTitle);
         }
         for (int index = 0; index < MAX_MENU_WIDTH; index++) System.out.print("-");
         System.out.println();
@@ -158,57 +162,58 @@ public class Menu {
     }
     
     @FunctionalInterface
-    public interface MenuAction {
+    public interface Action {
         public void performAction();
     }
     
     @FunctionalInterface
-    public interface BoolAction {
+    public interface BooleanAction {
         public boolean performAction();
     }
 
-    public static class MenuOption {
+    public static class Option {
         
         public enum After {
             EXIT_MENU,
             ASK_FOR_AGAIN,
+            ASK_TO_CONFIRM,
             ENTER_TO_CONTINUE,
             TERMINATE
         }
         
-        String optionText;
-        MenuAction action;
-        BoolAction bAction;
+        String optionTitle;
+        Action action;
+        BooleanAction bAction;
         After after;
         
-        public MenuOption(String optionText) {
-            this.optionText = optionText;
+        public Option(String optionTitle) {
+            this.optionTitle = optionTitle;
         }
         
-        public MenuOption(String optionText, MenuAction action) {
-            this.optionText = optionText;
+        public Option(String optionTitle, Action action) {
+            this.optionTitle = optionTitle;
             this.action = action;
         }
         
-        public MenuOption(String optionText, BoolAction action) {
-            this.optionText = optionText;
-            this.bAction = action;
+        public Option(String optionTitle, BooleanAction bAction) {
+            this.optionTitle = optionTitle;
+            this.bAction = bAction;
         }
         
-        public MenuOption(String optionText, After after) {
-            this.optionText = optionText;
+        public Option(String optionTitle, After after) {
+            this.optionTitle = optionTitle;
             this.after = after;
         }
 
-        public MenuOption(String optionText, MenuAction action, After after) {
-            this.optionText = optionText;
+        public Option(String optionTitle, Action action, After after) {
+            this.optionTitle = optionTitle;
             this.action = action;
             this.after = after;
         }
         
-        public MenuOption(String optionText, BoolAction action, After after) {
-            this.optionText = optionText;
-            this.bAction = action;
+        public Option(String optionTitle, BooleanAction bAction, After after) {
+            this.optionTitle = optionTitle;
+            this.bAction = bAction;
             this.after = after;
         }
         
@@ -221,20 +226,20 @@ public class Menu {
 //        Menu.showManagerMenu(
 //            "TITLE", 
 //            2, // as col format
-//            new MenuAction[] {
+//            new Action[] {
 //                () -> {},
 //            },
 //            new Option[]{
-//                new MenuOption( null,  () -> null, optional: you can put any MenuOption.After enum),
+//                new Option( null,  () -> null, optional: you can put any Option.After enum),
 //                ...
-//                new MenuOption( null,  () -> null, ASK_FOR_AGAIN),
-//                new MenuOption( null,  () -> null, ENTER_TO_PASS),
-//                new MenuOption("Exit", EXIT_MENU),
+//                new Option( null,  () -> null, ASK_FOR_AGAIN),
+//                new Option( null,  () -> null, ENTER_TO_PASS),
+//                new Option("Exit", EXIT_MENU),
 //            },
-//            new MenuAction[] {
+//            new Action[] {
 //                () -> {},
 //            },
-//            new MenuAction[] {
+//            new Action[] {
 //                () -> {},
 //            },
 //        );

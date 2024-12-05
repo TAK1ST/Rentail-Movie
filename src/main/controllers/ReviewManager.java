@@ -29,7 +29,7 @@ public final class ReviewManager extends ListManager<Review> {
         copy(ReviewDAO.getAllReviews()); 
     }
     
-    public boolean addReview(String customerID) throws SQLException {
+    public boolean addReview(String customerID) {
         if (customerID == null) 
             customerID = getString("Enter customer's id", null);
         if (customerID == null) return false;

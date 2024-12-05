@@ -13,18 +13,18 @@ import main.dto.Account;
 import main.services.ProfileServices;
 import main.services.ReviewServices;
 import main.utils.Menu;
-import main.utils.Menu.MenuAction;
-import main.utils.Menu.MenuOption;
-import static main.utils.Menu.MenuOption.After.ASK_FOR_AGAIN;
-import static main.utils.Menu.MenuOption.After.ENTER_TO_CONTINUE;
-import static main.utils.Menu.MenuOption.After.EXIT_MENU;
+import main.utils.Menu.Action;
+import main.utils.Menu.Option;
+import static main.utils.Menu.Option.After.ASK_FOR_AGAIN;
+import static main.utils.Menu.Option.After.ENTER_TO_CONTINUE;
+import static main.utils.Menu.Option.After.EXIT_MENU;
 
 
 public class StaffPannel {
     
     public static void show(Account account) {
         Menu.showManagerMenu("Movie Rental (Staff)", 3,
-            new MenuAction[] {
+            new Action[] {
                 () ->  {  
                     try {
                         Managers.initATM(); 
@@ -41,30 +41,30 @@ public class StaffPannel {
                     }
                 },
             },
-            new MenuOption[]{
-                new MenuOption("Show my profile", 
+            new Option[]{
+                new Option("Show my profile", 
                         () -> ProfileServices.showMyProfile(account), ENTER_TO_CONTINUE),
-                new MenuOption("Update profile", 
+                new Option("Update profile", 
                         () -> ProfileServices.updateMyProfile(), ASK_FOR_AGAIN),
-                new MenuOption("Display movies", 
+                new Option("Display movies", 
                         () -> getMVM().display(), ENTER_TO_CONTINUE),
-                new MenuOption("Display discount", 
+                new Option("Display discount", 
                         () -> getDCM().display(), ENTER_TO_CONTINUE),
-                new MenuOption("Search movie", 
+                new Option("Search movie", 
                         () -> getMVM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Adding movie",
+                new Option("Adding movie",
                         () -> getMVM().addMovie(), ASK_FOR_AGAIN),
-                new MenuOption("Adding genre",
+                new Option("Adding genre",
                         () -> getGRM().addGenre(), ASK_FOR_AGAIN),
-                new MenuOption("Adding actor",
+                new Option("Adding actor",
                         () -> getATM().addActor(), ASK_FOR_AGAIN),
-                new MenuOption("Adding language",
+                new Option("Adding language",
                         () -> getLGM().addLanguage(), ASK_FOR_AGAIN),
-                new MenuOption("Adding discount",
+                new Option("Adding discount",
                         () -> getDCM().addDiscount(), ASK_FOR_AGAIN),
-                new MenuOption("See the movie's reviews", 
+                new Option("See the movie's reviews", 
                         () -> ReviewServices.displayAMovieReviews(), ENTER_TO_CONTINUE),
-                new MenuOption("Log Out", EXIT_MENU),
+                new Option("Log Out", EXIT_MENU),
             },
             null, null
         );

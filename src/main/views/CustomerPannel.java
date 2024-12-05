@@ -3,6 +3,7 @@ package main.views;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import main.controllers.Managers;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRVM;
 import static main.controllers.Managers.getACM;
@@ -14,71 +15,72 @@ import main.services.DiscountServices;
 import main.services.RentalServices;
 import main.services.ReviewServices;
 import main.services.WishlistServices;
-import static main.utils.Input.yesOrNo;
 import main.utils.Menu;
-import main.utils.Menu.MenuAction;
-import main.utils.Menu.MenuOption;
-import static main.utils.Menu.MenuOption.After.ASK_FOR_AGAIN;
-import static main.utils.Menu.MenuOption.After.ENTER_TO_CONTINUE;
-import static main.utils.Menu.MenuOption.After.EXIT_MENU;
+import main.utils.Menu.Action;
+import main.utils.Menu.Option;
+import static main.utils.Menu.Option.After.ASK_FOR_AGAIN;
+import static main.utils.Menu.Option.After.ASK_TO_CONFIRM;
+import static main.utils.Menu.Option.After.ENTER_TO_CONTINUE;
+import static main.utils.Menu.Option.After.EXIT_MENU;
 
 
 public class CustomerPannel {
     
     public static void show(Account account) {
         Menu.showManagerMenu("Movie Rental (Customer)", 3,
-            new MenuAction[] {
+            new Action[] {
                 () ->  {
                     try {
                         DiscountServices.initDataFor(account.getId());
                         WishlistServices.initDataFor(account.getId());
                         ProfileServices.initDataFor(account.getId());
                         ReviewServices.initDataFor(account.getId());
+                        
+                        Managers.initMVM();
+                        Managers.initRTM();
+                        Managers.initWLM();
+                        Managers.initRVM();
                     } catch (SQLException ex) { 
                         Logger.getLogger(CustomerPannel.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             },
-            new MenuOption[]{
-                new MenuOption("Show my profile", 
+            new Option[]{
+                new Option("Show my profile", 
                         () -> ProfileServices.showMyProfile(account), ENTER_TO_CONTINUE),
-                new MenuOption("Update profile", 
+                new Option("Update profile", 
                         () -> ProfileServices.updateMyProfile(), ASK_FOR_AGAIN),
-                new MenuOption("Display movies", 
+                new Option("Display movies", 
                         () -> getMVM().displaySortDetail(), ENTER_TO_CONTINUE),
-                new MenuOption("Search movie", 
+                new Option("Search movie", 
                         () -> getMVM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Rent movie", 
+                new Option("Rent movie", 
                         () -> getRTM().addRental(account.getId()), ASK_FOR_AGAIN),
-                new MenuOption("Renturn movie", 
+                new Option("Renturn movie", 
                         () -> RentalServices.returnMovie(), ASK_FOR_AGAIN),
-                new MenuOption("Extend return date", 
+                new Option("Extend return date", 
                         () -> RentalServices.extendReturnDate(), ASK_FOR_AGAIN),
-                new MenuOption("See the movie's reviews", 
+                new Option("See the movie's reviews", 
                         () -> ReviewServices.displayAMovieReviews(), ENTER_TO_CONTINUE),
-                new MenuOption("Make reviews", 
-                        () -> { try {getRVM().addReview(account.getId());} 
-                                catch (SQLException ex) {Logger.getLogger(CustomerPannel.class.getName()).log(Level.SEVERE, null, ex);}}
-                                , ASK_FOR_AGAIN),
-                new MenuOption("My reviews history", 
+                new Option("Make reviews", 
+                        () -> getRVM().addReview(account.getId()), ASK_FOR_AGAIN),
+                new Option("My reviews history", 
                         () -> ReviewServices.displayMyReviews(), ENTER_TO_CONTINUE), 
-                new MenuOption("My rental history", 
+                new Option("My rental history", 
                         () -> RentalServices.myHistoryRental(), ENTER_TO_CONTINUE),
-                new MenuOption("Add movie to wishlist", 
+                new Option("Add movie to wishlist", 
                         () -> getWLM().addWishlist(account.getId()), ASK_FOR_AGAIN),
-                new MenuOption("My wishlist", 
+                new Option("My wishlist", 
                         () -> WishlistServices.displayMyWishList()),
-                new MenuOption("View discounts", 
-                        () -> { try {DiscountServices.showMyAvailableDiscount();} 
-                                catch (SQLException ex) { Logger.getLogger(CustomerPannel.class.getName()).log(Level.SEVERE, null, ex);}
-                        }),
-                new MenuOption("Take discount", 
+                new Option("View discounts", 
+                        () -> DiscountServices.showMyAvailableDiscount(), ENTER_TO_CONTINUE),
+                new Option("Take discount", 
                         () -> DiscountServices.getDiscount(), ASK_FOR_AGAIN),
-                new MenuOption("Registor credit", 
+                new Option("Registor credit", 
                         () -> ProfileServices.registorCredit(account), ASK_FOR_AGAIN),
-                new MenuOption("Delete account", 
-                        () -> yesOrNo("Are you sure") && getACM().deleteAccount(account), EXIT_MENU),
-                new MenuOption("Log Out", EXIT_MENU),
+                new Option("Delete account", 
+                        () -> getACM().deleteAccount(account), ASK_TO_CONFIRM),
+                new Option("Log Out", EXIT_MENU),
             },
             null, null
         );
