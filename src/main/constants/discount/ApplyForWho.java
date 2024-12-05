@@ -9,7 +9,6 @@ package main.constants.discount;
  * @author trann
  */
 public enum ApplyForWho {
-    NONE,
     ALL_USERS, 
     SPECIFIC_USERS, 
     GUESTS, 

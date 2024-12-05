@@ -9,7 +9,6 @@ package main.constants.payment;
  * @author trann
  */
 public enum PaymentStatus {
-    NONE,
     PENDING, 
     COMPLETED, 
     FAILED

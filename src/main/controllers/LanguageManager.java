@@ -16,91 +16,96 @@ public class LanguageManager extends ListManager<Language> {
     
     public LanguageManager() {
         super(Language.className(), Language.getAttributes());
-        list = LanguageDAO.getAllLanguages();
+        copy(LanguageDAO.getAllLanguages()); 
+    }
+    
+    public boolean addLanguage() {
+        String code = getString("Enter language code", null);
+        if (code == null) return false;
+        
+        for (Language item : list) 
+            if (item.getCode().equals(code)) {
+                errorLog("This language already exist");
+                return false;
+            }
+
+        String name = getName("Enter language name", null);
+        if (name == null) return false;
+        
+        Language language = new Language(
+                code,
+                name
+        );
+        return add(language);
+    }
+    
+    public boolean updateLanguage(Language language) {
+        if (checkNull(list)) return false;
+        
+        if (language == null)
+        language = (Language) getById("Enter language code");
+        if (checkNull(language)) return false;
+        
+        Language temp = new Language();
+        temp.setName(getString("Enter language name", language.getName()));
+        
+        return update(language, temp);
+    }
+    
+    public boolean deleteLanguage(Language language) {
+        if (checkNull(list)) return false;
+        if (language == null) 
+            language = (Language) getById("Enter language code");
+        if (checkNull(language)) return false;
+        return delete(language);
     }
 
     public boolean add(Language language) {
-        if (checkNull(language) || checkNull(list)) return false;
-        
-        list.add(language);
-        return LanguageDAO.addLanguageToDB(list.getLast());
+        if (language == null) return false;
+        return LanguageDAO.addLanguageToDB(language) && list.add(language);
     }
 
-    public boolean update(Language language) {
-        if (checkNull(language) || checkNull(list)) return false;
-        
-        Language newLanguage = getInputs(new boolean[] {true, true}, language);
-        if (newLanguage != null)
-           language = newLanguage;
-        else 
-            return false;  
-        
-        return LanguageDAO.updateLanguageInDB(newLanguage);
-    }
-
-    public boolean delete(Language language) { 
-        if (checkNull(language) || checkNull(list)) return false;
-
-        if (!list.remove(language)) {
-            errorLog("Language not found");
-            return false;
-        }
-        list.remove(language);   
-        return LanguageDAO.deleteLanguageFromDB(language.getId());
+    public boolean update(Language oldLanguage, Language newLanguage) {
+        if (newLanguage == null || checkNull(list)) return false;
+        if (LanguageDAO.updateLanguageInDB(newLanguage))
+            oldLanguage = newLanguage;
+        return true;
     }
     
-    @Override
-    public Language getInputs(boolean[] options, Language oldData) {
-        
-        if (options.length < 2) {
-            errorLog("Not enough option length");
-            return null;
-        }
-        
-        String code = null, name = null;
-        if (oldData != null) {
-            code = oldData.getCode();
-            name = oldData.getName();
-        }
-        
-        if (options[0]) {
-            code = getString("Enter language code", code);
-            if (code == null) return null;
-        }
-        if (options[1]) {
-            name = getName("Enter language name", name);
-            if (name == null) return null;
-        }
-        
-        return new Language (
-                code, 
-                name
-        );
+    public boolean delete(Language language) {
+        if (language == null) return false;     
+        return LanguageDAO.deleteLanguageFromDB(language.getId()) && list.remove(language);
     }
    
     @Override
-    public List<Language> searchBy(String propety) {
+    public List<Language> searchBy(List<Language> tempList, String propety) {
+        if (checkNull(tempList)) return null;
+        
         List<Language> result = new ArrayList<>();
-        for (Language item : list) 
-            if (item.getCode().equals(propety) 
-                || item.getName().contains(propety.trim().toLowerCase())) 
+        for (Language item : tempList) {
+            if (item == null) 
+                continue;
+            if ((item.getCode() != null && item.getCode().equals(propety))
+                || (item.getName() != null && item.getName().contains(propety.trim().toLowerCase())))
             {
                 result.add(item);
             }   
+        }
         return result;
     }
     
     @Override
-    public List<Language> sortList(List<Language> tempList, String property) {
-        if (checkNull(tempList)) {
-            return null;
-        }
+    public List<Language> sortList(List<Language> tempList, String propety) {
+        if (checkNull(tempList)) return null;
+        
+        if (propety == null) return tempList;
+        
         String[] options = Language.getAttributes();
         List<Language> result = new ArrayList<>(tempList);
 
-        if (property.equals(options[1])) {
+        if (propety.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Language::getCode));
-        } else if (property.equals(options[2])) {
+        } else if (propety.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Language::getName));
         } else {
             result.sort(Comparator.comparing(Language::getCode));
@@ -110,24 +115,28 @@ public class LanguageManager extends ListManager<Language> {
  
     @Override
     public void show(List<Language> tempList) {
-        if (checkNull(tempList)) {
-            return;
-        } 
+        if (checkNull(tempList)) return;
         
         InfosTable.getTitle(Language.getAttributes());
         tempList.forEach(item -> 
-                InfosTable.calcLayout(
-                        item.getCode(),
-                        item.getName()
-                )
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
+                            item.getCode(),
+                            item.getName()
+                    );
+            }
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
-                InfosTable.displayByLine(
-                        item.getCode(),
-                        item.getName()
-                )
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
+                            item.getCode(),
+                            item.getName()
+                    );
+            }
         );
         InfosTable.showFooter();
     }

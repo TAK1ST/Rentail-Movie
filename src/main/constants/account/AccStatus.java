@@ -9,7 +9,6 @@ package main.constants.account;
  * @author trann
  */
 public enum AccStatus {
-    NONE,
     ONLINE,
     OFFLINE,
     BANNED,

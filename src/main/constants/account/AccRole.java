@@ -9,9 +9,8 @@ package main.constants.account;
  * @author trann
  */
 public enum AccRole {
-    NONE,
-    ADMIN,
-    STAFF,
     CUSTOMER,
+    STAFF,
+    ADMIN,
     PREMIUM
 }

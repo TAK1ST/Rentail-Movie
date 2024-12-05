@@ -23,7 +23,7 @@ public class Utility {
         
         E[] enumConstants = enumClass.getEnumConstants();
         System.out.printf("%s:\n", message);
-        for(int index = 1; index < enumConstants.length; index++) {
+        for(int index = 0; index < enumConstants.length; index++) {
             if (index % 3 == 0)
                 System.out.println();
             System.out.printf("[%02d] %-25s", index, enumConstants[index]);
@@ -35,7 +35,7 @@ public class Utility {
         enumListing(message, enumClass);
         E[] enumConstants = enumClass.getEnumConstants();
         
-        int choice = getInteger("Enter choice", 1, enumConstants.length, Integer.MIN_VALUE);
+        int choice = getInteger("Enter choice", 0, enumConstants.length - 1, Integer.MIN_VALUE);
         if (choice == Integer.MIN_VALUE && oldData != null) 
             return oldData;
         

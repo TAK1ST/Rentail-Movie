@@ -11,6 +11,11 @@
     <description>Builds, tests, and runs the project Rental-Movie.</description>
     <import file="nbproject/build-impl.xml"/>
 
+    <!-- Suppress warnings using -Xlint:-options -->
+    <target name="-pre-compile">
+        <property name="javac.compilerargs" value="-Xlint:-options"/>
+    </target>
+
     <!--
 
     There exist several targets which are by default empty and which can be 

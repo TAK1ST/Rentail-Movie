@@ -13,9 +13,7 @@ public class Payment extends Model {
     private LocalDateTime transactionTime;
     private PaymentStatus status;
     
-    public Payment(String customerID, double amount) {
-        this.customerID = customerID;
-        this.amount = amount;
+    public Payment() {
     }
 
     public Payment(String id, String customerID, double amount, PaymentMethod method, LocalDateTime transactionTime, PaymentStatus status) {

@@ -9,7 +9,6 @@ package main.constants.actor;
  * @author trann
  */
 public enum ActorRank {
-    NONE,
     A,
     B,
     C,

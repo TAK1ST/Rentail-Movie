@@ -1,0 +1,705 @@
+//    public AccountManager() {
+//        list = AccountDAO.getAllAccounts();
+//    }
+//
+//    
+//
+//    
+//
+
+//    public void showMyProfile(String accountID) {
+//        show(searchById(accountID), "My Profile");
+//    }
+//
+//    public static void main(String[] args) {
+//        getTopHighestRatedMovies();
+//        getTopMostActiveGenres();
+//        getTopMostWishlistedMovies();
+//        getTopPremiumCustomersBySpending();
+//        getTopRevenueGeneratingMovies();
+//    }
+//}
+
+
+//Actor
+
+//package main.controllers;
+//
+//import main.base.ListManager;
+//import java.util.ArrayList;
+//import java.util.Comparator;
+//@@ -13,6 +11,7 @@
+//import main.utils.IDGenerator;
+//import main.utils.InfosTable;
+//import static main.utils.Input.getString;
+//import static main.utils.Utility.getEnumValue;
+//import static main.utils.Validator.getName;
+//
+//@@ -24,54 +23,73 @@ public ActorManager() {
+//        list = ActorDAO.getAllActors();
+//    }
+//
+
+
+
+Discount:
+import static main.utils.Input.returnNames;
+import static main.utils.Input.selectByNumbers;
+import static main.utils.Input.yesOrNo;
+import static main.utils.Utility.formatDate;
+import static main.utils.Utility.getEnumValue;
+import main.utils.Validator;
+@@ -34,83 +35,112 @@ public DiscountManager() {
+        list = DiscountDAO.getAllDiscounts();
+    }
+
+    public boolean addDiscount() {
+
+        
+
+
+Genre:
+package main.controllers;
+
+import main.base.ListManager;
+import java.util.ArrayList;
+import java.util.Comparator;
+@@ -10,6 +8,7 @@
+import main.dto.Genre;
+import main.utils.InfosTable;
+import static main.utils.Input.getString;
+import static main.utils.Validator.getName;
+
+
+@@ -20,43 +19,63 @@ public GenreManager() {
+        list = GenreDAO.getAllGenres();
+    }
+
+    public boolean addGenre() {
+        String name = getName("Enter genre name", false);
+        if (name.isEmpty()) return false;
+
+        String description = getString("Enter description", false);
+        if (!description.isEmpty()) return false;
+        
+        list.add(new Genre(
+                name, 
+                description
+        ));
+        return GenreDAO.addGenreToDB(list.getLast());
+    }
+
+    public boolean updateGenre() {
+        if (checkNull(list)) return false;
+
+        Genre foundGenre = (Genre)getById("Enter genre");
+        if (checkNull(foundGenre)) return false;
+        
+        String name = getName("Enter genre name", true);
+        String description = getString("Enter description", true);
+        
+        if (name.isEmpty()) foundGenre.setGenreName(name);
+        if (!description.isEmpty()) foundGenre.setDescription(description);  
+
+        return GenreDAO.updateGenreInDB(foundGenre);
+    }
+
+    public boolean deleteGenre() { 
+        if (checkNull(list)) return false;       
+
+        Genre foundGenre = (Genre)getById("Enter genre");
+        if (checkNull(foundGenre)) return false;
+        list.remove(foundGenre);
+        return GenreDAO.deleteGenreFromDB(foundGenre.getId());
+    }
+
+    @Override
+@@ -112,4 +131,5 @@ public void show(List<Genre> tempList) {
+        );
+        InfosTable.showFooter();
+    }
+}
+
+
+Language:
+package main.controllers;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+@@ -10,6 +8,7 @@
+import main.dto.Language;
+import main.utils.InfosTable;
+import static main.utils.Input.getString;
+import static main.utils.Validator.getName;
+
+
+@@ -20,43 +19,63 @@ public LanguageManager() {
+        list = LanguageDAO.getAllLanguages();
+    }
+
+    public boolean addLanguage() {
+        String code = getString("Enter language code", false);
+        if (code.isEmpty()) return false;
+        
+        String name = getName("Enter language name", false);
+        if (name.isEmpty()) return false;
+
+        list.add(new Language(
+                code, 
+                name
+        ));
+        return LanguageDAO.addLanguageToDB(list.getLast());
+    }
+
+    public boolean updateLanguage() {
+        if (checkNull(list)) return false;
+        Language foundLanguage = (Language)getById("Enter language code");
+        if (checkNull(foundLanguage)) return false;
+
+        String code = getString("Enter language code", true);
+        String name = getName("Enter language name", true);
+
+        if (!code.isEmpty()) foundLanguage.setCode(code);  
+        if (!name.isEmpty()) foundLanguage.setName(name);  
+        
+        return LanguageDAO.updateLanguageInDB(foundLanguage);
+    }
+
+    public boolean deleteLanguage() { 
+        if (checkNull(list)) return false;       
+        Language foundLanguage = (Language)getById("Enter language codde");
+        if (checkNull(foundLanguage)) return false;
+
+        list.remove(foundLanguage);   
+        return LanguageDAO.deleteLanguageFromDB(foundLanguage.getId());
+    }
+
+    @Override
+@@ -79,7 +98,6 @@ public List<Language> sortList(List<Language> tempList, String property) {
+        String[] options = Language.getAttributes();
+        List<Language> result = new ArrayList<>(tempList);
+
+        int index = 0;
+        if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Language::getCode));
+        } else if (property.equals(options[2])) {
+
+
+
+Movie:
+package main.controllers;
+
+import main.base.ListManager;
+import java.time.LocalDate;
+import java.util.ArrayList;
+@@ -21,6 +19,7 @@
+import static main.utils.Input.getString;
+import static main.utils.Input.returnNames;
+import static main.utils.Input.selectByNumbers;
+import static main.utils.Utility.formatDate;
+import main.utils.Validator;
+import static main.utils.Validator.getDate;
+@@ -33,40 +32,109 @@ public MovieManager() {
+        list = MovieDAO.getAllMovies();
+    }
+
+    public boolean addMovie() {
+
+        if (getGRM().isNull("Need genre data")
+                || getATM().isNull("Need actor data")
+                || getLGM().isNull("Need language data"))
+            return false;
+        
+        String title = getString("Enter title", false);
+        if (title.isEmpty()) return false;
+        
+        String description = getString("Enter description", false);
+        if (description.isEmpty()) return false;
+        
+        String genres = selectByNumbers("Enter genres (Comma-separated)", getGRM(), true);
+        if (genres.isEmpty()) return false;
+        
+        String actors = selectByNumbers("Enter actors (Comma-separated)", getATM(), true);
+        if (actors.isEmpty()) return false;
+        
+        String languages = selectByNumbers("Enter languages (Comma-separated)", getLGM(), true);
+        if (languages.isEmpty()) return false;
+
+        LocalDate releaseDate = getDate("Enter release date", false);
+        if (releaseDate == null) return false;
+
+        double price = getDouble("Enter rental price", 0, Double.MAX_VALUE, false);
+        if (price == Double.MIN_VALUE) return false;
+
+
+Payment:
+package main.controllers;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+@@ -12,6 +10,7 @@
+import main.dto.Rental;
+import main.dto.Payment;
+import main.utils.InfosTable;
+import static main.utils.Utility.getEnumValue;
+
+
+@@ -22,50 +21,63 @@ public PaymentManager() {
+        list = PaymentDAO.getAllPayments();
+    }
+
+    public boolean addPayment(String rentalID) {
+        Rental foundRental = (Rental) getRTM().searchById(rentalID);
+        if (getRTM().checkNull(foundRental)) return false;
+
+        PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false);
+        if (method == PaymentMethod.NONE) return false;
+        
+        list.add(new Payment(
+                rentalID, 
+                method
+        ));
+        return PaymentDAO.addPaymentToDB(list.getLast());
+    }
+
+    public boolean updatePayment() {
+        if (checkNull(list)) {
+            return false;
+        }
+
+        Payment foundPayment = (Payment) getById("Enter payment code");
+        if (checkNull(foundPayment)) {
+            return false;
+        }
+        PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false);
+        if (method != PaymentMethod.NONE) {
+            foundPayment.setMethod(method);
+        }
+        return PaymentDAO.updatePaymentInDB(foundPayment);
+    }
+
+    public boolean deletePayment() {
+        if (checkNull(list)) {
+            return false;
+        }
+
+        Payment foundPayment = (Payment) getById("Enter payment code");
+        if (checkNull(foundPayment)) {
+            return false;
+        }
+        list.remove(foundPayment);
+        return PaymentDAO.deletePaymentFromDB(foundPayment.getId());
+    }
+
+    @Override
+
+
+
+Profile:
+package main.controllers;
+
+import main.base.ListManager;
+import java.time.LocalDate;
+import java.util.ArrayList;
+@@ -11,8 +10,8 @@
+import main.dto.Account;
+import main.dto.Profile;
+import main.utils.InfosTable;
+import static main.utils.Input.getDouble;
+import static main.utils.Input.getString;
+import static main.utils.Utility.formatDate;
+import main.utils.Validator;
+import static main.utils.Validator.getDate;
+@@ -27,68 +26,79 @@ public ProfileManager() {
+        list = ProfileDAO.getAllProfiles();
+    }
+
+    public boolean addProfile(String accountID) { 
+
+        Account foundAccount = (Account) getACM().searchById(accountID);
+        if (getACM().checkNull(foundAccount)) return false;
+
+
+
+Rental:
+package main.controllers;
+
+import main.base.ListManager;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+@@ -13,19 +10,20 @@
+import main.dao.RentalDAO;
+import static main.controllers.Managers.getMVM;
+import static main.controllers.Managers.getACM;
+import main.dto.Account;
+import main.dto.Movie;
+import main.dto.Rental;
+import main.services.MovieServices;
+import main.services.RentalServices;
+import main.utils.IDGenerator;
+import main.utils.InfosTable;
+import static main.utils.Input.getInteger;
+import static main.utils.Input.getString;
+import static main.utils.LogMessage.errorLog;
+import static main.utils.Utility.formatDate;
+import main.utils.Validator;
+import static main.utils.Validator.getDate;
+
+
+public class RentalManager extends ListManager<Rental> {
+@@ -34,179 +32,117 @@ public RentalManager() {
+        super(Rental.className(), Rental.getAttributes());
+        list = RentalDAO.getAllRentals();
+    }
+    public boolean addRental(String customerID) {
+        Account foundAccount = (Account) getACM().searchById(customerID);
+        if (getACM().checkNull(foundAccount)) {
+            return false;
+        }
+        Movie foundMovie = (Movie) getMVM().getById("Enter movie' id to rent");
+        if (getMVM().checkNull(foundMovie)) {
+            return false;
+        }
+        if (foundMovie.getAvailableCopies() <= 0) {
+            errorLog("No available copies for this movie!");
+            return false;
+        }
+        Account foundStaff = (Account) getACM().searchById(assignStaff());
+        if (foundStaff == null) {
+            errorLog("No staff is assigned to approve your rental");
+            return false;
+        }
+        int numberOfRentDate = getInteger("How many days to rent", 1, 365, false);
+        if (numberOfRentDate == Integer.MIN_VALUE) return false;
+
+        LocalDate rentalDate = LocalDate.now();
+        LocalDate dueDate = rentalDate.plusDays(numberOfRentDate);
+        double total = foundMovie.getRentalPrice() * numberOfRentDate;
+        String id = IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.RENTAL_PREFIX);
+        list.add(new Rental(
+                id,
+                customerID,
+                foundMovie.getId(),
+                foundStaff.getId(),
+                rentalDate,
+                dueDate,
+                null,
+                0.0,
+                total,
+                RentalStatus.PENDING
+        ));
+        if (RentalDAO.addRentalToDB(list.getLast())) {
+            return MovieServices.adjustAvailableCopy(list.getLast().getMovieID(), -1);
+        }
+        return false;
+    }
+
+    public String assignStaff() {
+        return "S0000001";
+    }
+    public Rental getRentalByAccountMovie(String userID) {
+        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
+        if (getMVM().checkNull(foundMovie)) {
+            return null;
+        }
+
+        List<Rental> temp = searchBy(userID);
+        for (Rental item : temp) {
+            if (item.getMovieID().equals(foundMovie.getId())) {
+                return item;
+            }
+        }
+        return null;
+    }
+    public boolean returnMovie(String userID) {
+        if (checkNull(list)) {
+            return false;
+        }
+
+        Rental foundRental = getRentalByAccountMovie(userID);
+        if (checkNull(foundRental)) {
+            return false;
+        }
+
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieID());
+        if (getMVM().checkNull(foundMovie)) {
+            return false;
+        }
+        double lateFee = RentalServices.calculateOverdueFine(foundRental.getReturnDate(), foundMovie.getRentalPrice());
+        if (lateFee > 0) {
+            foundRental.setLateFee(foundRental.getLateFee() + lateFee);
+            foundRental.setTotalAmount(foundRental.getTotalAmount() + foundRental.getLateFee());
+        }
+        if (RentalDAO.updateRentalInDB(foundRental)) {
+            return MovieServices.adjustAvailableCopy(list.getLast().getMovieID(), +1);
+        }
+        return false;
+    }
+    public boolean updateRental() {
+        if (checkNull(list)) {
+            return false;
+        }
+
+        Rental foundRental = (Rental)getById("Enter rental's id");
+        if (checkNull(foundRental)) {
+            return false;
+        }
+        Movie foundMovie = null;
+        String input = getString("Enter rental' id to rent", true);
+        if (!input.isEmpty()) {
+            foundMovie = (Movie) getMVM().searchById(input);
+        }
+        if (getMVM().checkNull(foundMovie)) {
+            foundMovie = (Movie) getMVM().searchById(foundRental.getMovieID());
+        }
+        if (getMVM().checkNull(foundMovie)) {
+            return false;
+        }
+        LocalDate rentalDate = getDate("Change rental date", true);
+        LocalDate returnDate = getDate("Change return date", true);
+        if (rentalDate != null) {
+            foundRental.setRentalDate(rentalDate);
+        }
+        if (returnDate != null) {
+            foundRental.setReturnDate(returnDate);
+        }
+        if (rentalDate != null && returnDate != null) {
+            foundRental.setTotalAmount(ChronoUnit.DAYS.between(rentalDate, returnDate) * foundMovie.getRentalPrice());
+        }
+        return RentalDAO.updateRentalInDB(foundRental);
+    }
+    public boolean extendReturnDate(String userID) {
+        Rental foundRental = getRentalByAccountMovie(userID);
+        if (checkNull(foundRental)) {
+            return false;
+        }
+        Movie foundMovie = getMVM().searchById(foundRental.getMovieID());
+        if (getMVM().checkNull(foundMovie)) {
+            return false;
+
+
+
+
+
+Review:
+package main.controllers;
+
+import main.base.ListManager;
+import java.time.LocalDate;
+import java.util.ArrayList;
+@@ -21,6 +19,7 @@
+import static main.utils.LogMessage.errorLog;
+import static main.utils.Utility.formatDate;
+import main.utils.Validator;
+
+
+public final class ReviewManager extends ListManager<Review> {
+@@ -30,124 +29,96 @@ public ReviewManager() {
+        list = ReviewDAO.getAllReviews();
+    }
+
+    public boolean addReview(String customerID) {
+        Account foundAccount = (Account) getACM().searchById(customerID);
+        if (getACM().checkNull(foundAccount)) {
+            return false;
+        }
+
+        List<Review> foundReview = searchBy(customerID);
+        for (Review item : foundReview) {
+            if (item.getCustomerID().equals(customerID)) {
+                errorLog("Already review this movie");
+                return false;
+            }
+        }
+        Movie foundMovie = (Movie) getMVM().getById("Enter movie'id");
+        if (getMVM().checkNull(foundMovie)) {
+            return false;
+        }
+        
+        int rating = getInteger("Enter rating", 1, 5, false);
+        if (rating == Integer.MIN_VALUE) {
+            return false;
+        }
+        list.add(new Review(
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.REVIEW_PREFIX),
+                customerID,
+                foundMovie.getId(),
+                rating,
+                getString("Enter comment", true),
+                LocalDate.now()
+        ));
+        return ReviewDAO.addReviewToDB(list.getLast());
+    }
+
+    public boolean updateReview(String customerID) {
+        if (checkNull(list)) {
+            return false;
+        }
+        
+        Account foundAccount = (Account) getACM().searchById(customerID);
+        if (getACM().checkNull(foundAccount)) {
+            return false;
+        }
+        
+        String movieID = getString("Enter movie's id", false);
+        if (movieID.isEmpty()) {
+            return false;
+        }
+
+        Review foundReview = searchReviewByAccAndMovie(customerID, movieID);
+        if (checkNull(foundReview)) {
+            return false;
+        }
+        int rating = getInteger("Enter rating", 1, 5, true);
+        String reviewText = getString("Enter comment", true);
+        if (rating > 0) {
+            foundReview.setRating(rating);
+        }
+        if (!reviewText.isEmpty()) {
+            foundReview.setReviewText(reviewText);
+        }
+        return ReviewDAO.updateReviewInDB(foundReview);
+    }
+
+    private Review searchReviewByAccAndMovie(String customerID, String movieID) {
+        for (Review item : list) {
+            if (item.getCustomerID().equals(customerID) && item.getMovieID().equals(movieID)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public boolean deleteReview(String customerID) {
+        if (checkNull(list)) {
+            return false;
+        }
+
+        Account foundAccount = (Account) getACM().searchById(customerID);
+        if (getACM().checkNull(foundAccount)) {
+            return false;
+        }
+
+        String movieID = getString("Enter movie's id", false);
+        if (movieID.isEmpty()) {
+            return false;
+        }
+        Review foundReview = searchReviewByAccAndMovie(customerID, movieID);
+        if (checkNull(foundReview)) {
+            return false;
+        }
+        list.remove(foundReview);
+        return ReviewDAO.deleteReviewFromDB(foundReview.getId());
+    }
+    
+    public void displayAMovieReviews() {
+
+        String movieID = getString("Enter movie's id", false);
+        if (movieID.isEmpty()) {
+            return;
+        }
+
+        List<Review> movieReview = searchBy(movieID);
+        if (checkNull(movieReview)) {
+            return;
+        }
+        show(movieReview);
+    }
+    public void myReviews(String customID) {
+        List<Review> myReviews = searchBy(customID);
+        display(myReviews, Review.getAttributes(), true);
+    }
+
+    @Override
+
+
+
+Wishlist:
+package main.controllers;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+@@ -21,6 +19,7 @@
+import static main.utils.Utility.formatDate;
+import static main.utils.Utility.getEnumValue;
+import main.utils.Validator;
+
+
+public class WishlistManager extends ListManager<Wishlist> {
+@@ -30,80 +29,84 @@ public WishlistManager() {
+        list = WishlistDAO.getAllWishlists();
+    }
+
+    public boolean addWishlist(String customerID) {
+        Account foundAccount = (Account) getACM().searchById(customerID);
+        if (getACM().checkNull(foundAccount)) {
+            return false;
+        }
+        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
+        if (getMVM().checkNull(foundMovie)) {
+            return false;
+        }
+        for (Wishlist item : list) {
+            if (item.getCustomerId().equals(foundAccount.getId()) && item.getMovieId().equals(foundMovie.getId())) {
+                errorLog("This movie already added");
+                return false;
+            }
+        }
+        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, false);
+        if (priority == WishlistPriority.NONE) return false;
+        list.add(new Wishlist(
+                IDGenerator.generateID(list.isEmpty() ? "" : list.getLast().getId(), IDPrefix.WISHLIST_PREFIX),
+                foundMovie.getId(),
+                foundAccount.getId(),
+                LocalDate.now(),
+                priority
+        ));
+        return WishlistDAO.addWishlistToDB(list.getLast());
+    }
+
+    public boolean updateWishlist() {
+        if (checkNull(list)) {
+            return false;
+        }
+
+        Wishlist foundWishlist = (Wishlist) getById("Enter wishlist' id");
+        if (checkNull(foundWishlist)) {
+            return false;
+        }
+
+        Movie foundMovie = (Movie) getMVM().getById("Enter movie's id");
+        if (getMVM().checkNull(foundMovie)) {
+            return false;
+        }
+        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose wishlist type", WishlistPriority.class, true);
+
+        if(!foundMovie.getId().equals(foundWishlist.getMovieId())) {
+            foundWishlist.setMovieId(foundMovie.getId());
+        }
+        if (priority != WishlistPriority.NONE) {
+            foundWishlist.setPriority(priority);
+        }
+        if (!foundMovie.getId().equals(foundWishlist.getMovieId()) || priority != WishlistPriority.NONE) {
+            foundWishlist.setAddedDate(LocalDate.now());
+        }
+        return WishlistDAO.updateWishlistInDB(foundWishlist);
+    }
+    public boolean deleteWishlist() {
+        if (checkNull(list)) {
+            return false;
+        }
+        Wishlist foundWishlist = (Wishlist) getById("Enter wishlist's id");
+        if (checkNull(foundWishlist)) {
+            return false;
+        }
+        list.remove(foundWishlist);
+        return WishlistDAO.deleteWishlistFromDB(foundWishlist.getId());
+    }
+
+    @Override

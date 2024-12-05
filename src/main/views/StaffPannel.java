@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.views;
 
 import static main.controllers.Managers.getACM;
@@ -14,25 +10,22 @@ import main.dto.Account;
 import main.services.CustomerServices;
 import main.services.ReviewServices;
 import main.utils.Menu;
-import static main.utils.Menu.MenuOption.Finally.ASK_FOR_AGAIN;
-import static main.utils.Menu.MenuOption.Finally.ENTER_TO_CONTINUE;
-import static main.utils.Menu.MenuOption.Finally.EXIT_MENU;
+import static main.utils.Menu.MenuOption.After.ASK_FOR_AGAIN;
+import static main.utils.Menu.MenuOption.After.ENTER_TO_CONTINUE;
+import static main.utils.Menu.MenuOption.After.EXIT_MENU;
 
-/**
- *
- * @author trann
- */
+
 public class StaffPannel {
     
     public static void show(Account account) {
         Menu.showManagerMenu(
-            "Movie Rental (Staff)",
+            "Movie Rental (Staff)", 3,
             null,
             new Menu.MenuOption[]{
                 new Menu.MenuOption("Show my profile", 
                         () -> CustomerServices.showMyProfile(account), ENTER_TO_CONTINUE),
                 new Menu.MenuOption("Update profile", 
-                        () -> getACM().update(account), ASK_FOR_AGAIN),
+                        () -> CustomerServices.updateMyProfile(account.getId()), ASK_FOR_AGAIN),
                 new Menu.MenuOption("Display movies", 
                         () -> getMVM().display(), ENTER_TO_CONTINUE),
                 new Menu.MenuOption("Display discount", 
@@ -40,20 +33,20 @@ public class StaffPannel {
                 new Menu.MenuOption("Search movie", 
                         () -> getMVM().search(), ASK_FOR_AGAIN),
                 new Menu.MenuOption("Adding movie",
-                        () -> getMVM().add(getMVM().getInputs(null, null)), ASK_FOR_AGAIN),
+                        () -> getMVM().addMovie(), ASK_FOR_AGAIN),
                 new Menu.MenuOption("Adding genre",
-                        () -> getGRM().add(getGRM().getInputs(null, null)), ASK_FOR_AGAIN),
+                        () -> getGRM().addGenre(), ASK_FOR_AGAIN),
                 new Menu.MenuOption("Adding actor",
-                        () -> getATM().add(getATM().getInputs(null, null)), ASK_FOR_AGAIN),
+                        () -> getATM().addActor(), ASK_FOR_AGAIN),
                 new Menu.MenuOption("Adding language",
-                        () -> getLGM().add(getLGM().getInputs(null, null)), ASK_FOR_AGAIN),
+                        () -> getLGM().addLanguage(), ASK_FOR_AGAIN),
                  new Menu.MenuOption("Adding discount",
-                        () -> getDCM().add(getDCM().getInputs(null, null)), ASK_FOR_AGAIN),
+                        () -> getDCM().addDiscount(), ASK_FOR_AGAIN),
                 new Menu.MenuOption("See the movie's reviews", 
                         () -> ReviewServices.displayAMovieReviews(), ENTER_TO_CONTINUE),
                 new Menu.MenuOption("Log Out", EXIT_MENU),
             },
-            null
+            null, null
         );
     }
     

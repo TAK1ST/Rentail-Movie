@@ -9,7 +9,6 @@ package main.constants.payment;
  * @author trann
  */
 public enum PaymentMethod {
-    NONE,
     CARD,
     ONLINE,
     BANKING

@@ -9,7 +9,6 @@ package main.constants.rental;
  * @author trann
  */
 public enum RentalStatus {
-    NONE,
     PENDING,
     APPROVED,
     DENIED
