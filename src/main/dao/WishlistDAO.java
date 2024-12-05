@@ -93,4 +93,24 @@ public class WishlistDAO {
         }
         return list;
     }
+    
+    public static List<String> getUserWishlist(String customerId) throws SQLException {
+        String query = "SELECT movie_id, priority FROM Wishlists WHERE customer_id = ?";
+
+        List<String> wishlist = new ArrayList<>();
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String movieId = rs.getString("movie_id");
+                String priority = rs.getString("priority");
+                wishlist.add("Movie ID: " + movieId + ", Priority: " + priority);
+            }
+        }
+        return wishlist;
+    }
 }

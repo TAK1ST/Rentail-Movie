@@ -4,12 +4,14 @@
  */
 package main.services;
 
+import java.sql.SQLException;
 import java.util.List;
 import static main.constants.discount.DiscountType.BUY_X_GET_Y_FREE;
 import static main.constants.discount.DiscountType.FIXED_AMOUNT;
 import static main.constants.discount.DiscountType.PERCENT;
 import static main.controllers.Managers.getDCM;
 import static main.controllers.Managers.getMVM;
+import main.dao.DiscountDAO;
 import main.dto.Discount;
 import main.utils.InfosTable;
 import static main.utils.Input.getString;
@@ -25,23 +27,22 @@ import main.utils.Validator;
 public class DiscountServices {
     
     private static List<Discount> myDiscount = null;
-    private static String customerID = null;
+    private static String accountID = null;
     
-    public DiscountServices(String forCustomer) {
-        customerID = forCustomer;
-        myDiscount = getDCM().searchBy(forCustomer);
+    public static void initDataFor(String id) {
+        accountID = id;
+        myDiscount = getDCM().searchBy(id);
     }
     
     private static String combineTypeAndValue(Discount discount) {
         if (discount == null) return null;
-        int[] ratio = null;
         switch(discount.getType()) {
             case PERCENT: 
                 return String.format("%2.0f%%%", discount.getValue());
             case FIXED_AMOUNT: 
                 return String.format("%.2f", discount.getValue());
             case BUY_X_GET_Y_FREE: 
-                ratio = analyzeRatio(discount.getValue());
+                int[] ratio = analyzeRatio(discount.getValue());
                 return String.format("Buy %.0f get %.0f free", ratio[0], ratio[1]);
             default:
                 return "N/A";
@@ -105,14 +106,17 @@ public class DiscountServices {
         pressEnterToContinue();
     }
     
-    public static boolean getDiscount(String customerID) {
-        List<Discount> discountsForCustomer = getDCM().searchBy(customerID);
-        if (getDCM().checkNull(discountsForCustomer)) return false;
+    public static void showMyAvailableDiscount() throws SQLException {
+        showDiscountForCustomer(DiscountDAO.getAvailableDiscounts(accountID));
+    }
+    
+    public static boolean getDiscount() {
+        if (getDCM().checkNull(myDiscount)) return false;
         
         String code = getString("Enter discount code", null);
         if (code == null) return false;
         
-        Discount discount = getDCM().searchBy(discountsForCustomer, code).getFirst();
+        Discount discount = getDCM().searchBy(myDiscount, code).getFirst();
         if (getDCM().checkNull(discount)) return false;
         
         return getDCM().add(discount);
@@ -133,7 +137,7 @@ public class DiscountServices {
         }
     }
     
-    public static boolean hasDiscount(String customerID) {
+    public static boolean hasDiscount() {
         return myDiscount != null && !myDiscount.isEmpty();
     }
     

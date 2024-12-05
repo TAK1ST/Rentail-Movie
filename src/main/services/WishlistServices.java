@@ -29,16 +29,16 @@ import main.utils.Validator;
 public class WishlistServices {
     
     private static List<Wishlist> myWishlist = null; 
-    private static String customerID = null;
+    private static String accountID = null;
             
     private static String[] showAtrributes = {"Movie", "Priority", "Added date"};
     
-    public WishlistServices(String forCustomer) {
-        customerID = forCustomer;
-        myWishlist = getWLM().searchBy(forCustomer);
+    public static void initDataFor(String id) {
+        accountID = id;
+        myWishlist = getWLM().searchBy(id);
     }
     
-    public boolean addToMyWishList() {
+    public static boolean addToMyWishList() {
         
         Movie movie = (Movie) getMVM().getById("Enter movie's id");
         if (getMVM().checkNull(movie)) return false;
@@ -49,13 +49,13 @@ public class WishlistServices {
         return getWLM().add(new Wishlist(
                 getWLM().createID(IDPrefix.WISHLIST_PREFIX),
                 movie.getId(),
-                customerID,
+                accountID,
                 LocalDate.now(),
                 priority
         ));
     }
 
-    public boolean updateWishlistItem() {
+    public static boolean updateWishlistItem() {
         Wishlist item = (Wishlist) getWLM().getBy(myWishlist, "Enter movie's id");
         if (item == null) 
             return errorLog("No data about the movie in your wishlist", false);
@@ -66,7 +66,7 @@ public class WishlistServices {
         return getWLM().updateWishlist(item);
     }
 
-    public boolean deleteMyWishlistItem() {
+    public static boolean deleteMyWishlistItem() {
         Wishlist item = (Wishlist) getWLM().getBy(myWishlist, "Enter movie's id");
         if (item == null) 
             return errorLog("No data about the movie in your wishlist", false);
@@ -74,7 +74,7 @@ public class WishlistServices {
         return getWLM().updateWishlist(item);
     }
 
-    public boolean clearAllMyWishList() {
+    public static boolean clearAllMyWishList() {
         for (Wishlist item : myWishlist) {
             if (!WishlistDAO.deleteWishlistFromDB(item.getMovieId()))
                 return errorLog("Error during clearing your wishlist", false);
@@ -83,7 +83,7 @@ public class WishlistServices {
         return successLog("Your wishlist have been cleared", true);
     }
 
-    public void displayMyWishList() {
+    public static void displayMyWishList() {
         InfosTable.getTitle(showAtrributes);
         myWishlist.forEach(item -> 
             {
@@ -109,5 +109,6 @@ public class WishlistServices {
         );
         InfosTable.showFooter();
     }
+    
 }
 

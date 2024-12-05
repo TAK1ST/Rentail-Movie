@@ -8,6 +8,7 @@ import static main.utils.LogMessage.infoLog;
 
 public class AuthenPannel {
     public static Account getAccounts() {
+        AuthenServices.init();
         Account account;
         do {
             if(yesOrNo("\nHave account?"))  

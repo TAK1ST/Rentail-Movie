@@ -111,4 +111,29 @@ public class PaymentDAO {
         }
         return list;
     }
+    
+    public static List<String> getUserPayments(String customerId) throws SQLException {
+        String query = "SELECT payment_id, amount, payment_method, transaction_time, status FROM Payments WHERE customer_id = ?";
+
+        List<String> payments = new ArrayList<>();
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String paymentId = rs.getString("payment_id");
+                double amount = rs.getDouble("amount");
+                String paymentMethod = rs.getString("payment_method");
+                Timestamp transactionTime = rs.getTimestamp("transaction_time");
+                String status = rs.getString("status");
+
+                payments.add("Payment ID: " + paymentId + ", Amount: " + amount + ", Payment Method: " + paymentMethod + ", Transaction Time: " + transactionTime + ", Status: " + status);
+            }
+        }
+        return payments;
+    }
+    
 }

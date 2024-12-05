@@ -124,7 +124,7 @@ public class DiscountDAO {
         return list;
     }
     
-    public boolean chooseAndApplyDiscount(String customerId, String discountCode) throws SQLException {
+    public static boolean chooseAndApplyDiscount(String customerId, String discountCode) throws SQLException {
         String sql = "UPDATE Discount_Account SET used_on = CURRENT_TIMESTAMP WHERE customer_id = ? AND discount_code = ?";
 
         try (Connection conn = Database.getConnection();
@@ -140,7 +140,7 @@ public class DiscountDAO {
         return false;
     }
     
-    public boolean isDiscountUsed(String customerId, String discountCode) throws SQLException {
+    public static boolean isDiscountUsed(String customerId, String discountCode) throws SQLException {
         String query = "SELECT used_on FROM Discount_Account WHERE customer_id = ? AND discount_code = ?";
 
         try (Connection connection = Database.getConnection();
@@ -157,6 +157,43 @@ public class DiscountDAO {
             }
         }
         return false;
+    }
+    
+    public static List<Discount> getAvailableDiscounts(String customerId) throws SQLException {
+        String query = "SELECT da.discount_code " +
+                       "FROM Discount_Account da " +
+                       "JOIN Discounts d ON da.discount_code = d.discount_code " +
+                       "WHERE da.customer_id = ? " +
+                       "AND da.used_on IS NULL " +
+                       "AND d.is_active = TRUE " +
+                       "AND d.end_date >= CURRENT_DATE";
+
+        List<Discount> availableDiscounts = new ArrayList<>();
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Discount discount = new Discount(
+                        rs.getString("discount_code"),
+                        getSubIdsByMainId("Discount_Account", rs.getString("discount_code"), "discount_code", "customer_id"),
+                        getSubIdsByMainId("Discount_Movie", rs.getString("discount_code"), "discount_code", "movie_id"),
+                        rs.getDate("start_date").toLocalDate(),
+                        rs.getDate("end_date").toLocalDate(),
+                        DiscountType.valueOf(rs.getString("discount_type")),
+                        rs.getInt("quantity"),
+                        rs.getBoolean("is_active"),
+                        rs.getDouble("discount_value"),
+                        ApplyForWho.valueOf(rs.getString("apply_for_who")),
+                        ApplyForWhat.valueOf(rs.getString("apply_for_what"))
+                );
+                availableDiscounts.add(discount);
+            }
+        }
+        return availableDiscounts;
     }
 
 }
