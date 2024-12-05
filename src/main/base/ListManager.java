@@ -3,6 +3,8 @@ package main.base;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import main.utils.IDGenerator;
 import static main.utils.Input.getString;
 import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.selectInfo;
@@ -12,34 +14,39 @@ import main.utils.Menu;
 
 public abstract class ListManager<T extends Model> {
 
-    public List<T> list = new ArrayList<>();
+    protected final List<T> list = new ArrayList<>();
     
-    private boolean isNotSaved = false;
     private final String[] attributes;
     private final String className;
 
     public ListManager(String className, String[] attributes) {
         this.className = className;
         this.attributes = attributes;
-        this.isNotSaved = false;
     }
     
-    public abstract T getInputs(boolean[] options, T oldData);
     public abstract List<T> sortList(List<T> tempList, String propety);
-    public abstract List<T> searchBy(String property);
+    public abstract List<T> searchBy(List<T> tempList, String propety);
     
+    public String createID(String idPrefix) {
+        List<T> temp = sortList(list, attributes[0]);
+        String lastID = null;
+        if (temp != null && temp.getLast().getId() != null)
+            lastID = temp.getLast().getId();
+        return IDGenerator.generateID(lastID, idPrefix);
+    }
+
     public boolean isNull() {
-        return list.isEmpty();
+        return list == null || list.isEmpty();
     }
     
     public boolean isNull(String message) {
-        if (list.isEmpty()) {
+        if (list == null || list.isEmpty()) {
             infoLog(message);
             return false;
         }
         return true;
     }
-
+    
     public T getById(String message) {
         return searchById(getString(message, null));
     }
@@ -56,9 +63,19 @@ public abstract class ListManager<T extends Model> {
     public void search() {
         show(getBy(String.format("Enter any %s's propety", className.toLowerCase())));
     }
+    
+    public List<T> searchBy(List<T> tempList, String propety1, String propety2) {
+        List<T> temp1 = searchBy(tempList, propety1);
+        List<T> temp2 = searchBy(tempList, propety2);
+        
+        List<T> common = temp1.stream()
+                                    .filter(temp2::contains)
+                                    .collect(Collectors.toList());
+        return common;
+    }
 
     public List<T> getBy(String message) {
-        return searchBy(getString(message, null));
+        return searchBy(list, getString(message, null));
     }
 
     public void sortById() {
@@ -79,14 +96,6 @@ public abstract class ListManager<T extends Model> {
         }
         infoLog(String.format("No %s's data", className));
         return true;
-    }
-
-    public void setSave(boolean saving) {
-        isNotSaved = true;
-    }
-
-    public boolean getSavingCondition() {
-        return isNotSaved;
     }
 
     public List<T> getList() {
@@ -191,7 +200,5 @@ public abstract class ListManager<T extends Model> {
     public void display() {
         display(list, null, false);
     }
-    
-    
     
 }

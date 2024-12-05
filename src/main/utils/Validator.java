@@ -294,7 +294,7 @@ public class Validator {
         }
     }
     
-    public static LocalDateTime getDateTime(String message, LocalDateTime oldData) {
+    public static LocalDateTime getDateTime(LocalDateTime oldData) {
         LocalDate date = getDate("Enter date", oldData.toLocalDate());
         LocalTime time = getTime(oldData.toLocalTime());
  

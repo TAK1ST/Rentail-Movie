@@ -1,11 +1,13 @@
 package main.views;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRVM;
-import static main.controllers.Managers.getACM;
+import static main.controllers.Managers.getRTM;
 import static main.controllers.Managers.getWLM;
 import main.dto.Account;
-import main.dto.Review;
 import main.dto.Wishlist;
 import main.services.CustomerServices;
 import main.services.DiscountServices;
@@ -29,21 +31,24 @@ public class CustomerPannel {
                 new MenuOption("Show my profile", 
                         () -> CustomerServices.showMyProfile(account), ENTER_TO_CONTINUE),
                 new MenuOption("Update profile", 
-                        () -> getACM().update(account), ASK_FOR_AGAIN),
+                        () -> CustomerServices.updateMyProfile(account.getId()), ASK_FOR_AGAIN),
                 new MenuOption("Display movies", 
                         () -> getMVM().displaySortDetail(), ENTER_TO_CONTINUE),
                 new MenuOption("Search movie", 
                         () -> getMVM().search(), ASK_FOR_AGAIN),
                 new MenuOption("Rent movie", 
-                        () -> RentalServices.rentMovie(account.getId()), ASK_FOR_AGAIN),
+                        () -> getRTM().addRental(account.getId()), ASK_FOR_AGAIN),
                 new MenuOption("Renturn movie", 
                         () -> RentalServices.returnMovie(account.getId()), ASK_FOR_AGAIN),
                 new MenuOption("Extend return date", 
-                        () -> RentalServices.extendReturnDate(), ASK_FOR_AGAIN),
+                        () -> RentalServices.extendReturnDate(account.getId()), ASK_FOR_AGAIN),
                 new MenuOption("See the movie's reviews", 
                         () -> ReviewServices.displayAMovieReviews(), ENTER_TO_CONTINUE),
                 new MenuOption("Make reviews", 
-                        () -> getRVM().add(getRVM().getInputs(null, new Review(account.getId()))), ASK_FOR_AGAIN),
+                        () -> {
+                    try {getRVM().addReview(account.getId());} 
+                    catch (SQLException ex) {Logger.getLogger(CustomerPannel.class.getName()).log(Level.SEVERE, null, ex);}}
+                        , ASK_FOR_AGAIN),
                 new MenuOption("My reviews history", 
                         () -> ReviewServices.myReviews(account.getId()), ENTER_TO_CONTINUE), 
                 new MenuOption("My rental history", 
