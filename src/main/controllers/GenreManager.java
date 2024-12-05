@@ -1,123 +1,145 @@
-
 package main.controllers;
 
 import main.base.ListManager;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.dao.GenreDAO;
 import main.dto.Genre;
+import main.utils.InfosTable;
 import static main.utils.Input.getString;
+import static main.utils.LogMessage.errorLog;
 import static main.utils.Validator.getName;
 
-/**
- *
- * @author trann
- */
+
 public class GenreManager extends ListManager<Genre> {
     
-    private static final String[] searchOptions = {"genre_name", "description"};
-    
-    public GenreManager() throws IOException {
-        super(Genre.className());
-        list = GenreDAO.getAllGenres();
+    public GenreManager() {
+        super(Genre.className(), Genre.getAttributes());
+        Collections.copy(list, GenreDAO.getAllGenres()); 
     }
-
+    
     public boolean addGenre() {
-        String name = getName("Enter genre name", false);
-        if (name.isEmpty()) return false;
+        String name = getName("Enter genre name", null);
+        if (name == null) return false;
         
-        String description = getString("Enter description", false);
-        if (!description.isEmpty()) return false;
+        for (Genre item : list) 
+            if (item.getGenreName().equals(name)) {
+                errorLog("This genre already exist");
+                return false;
+            }
+
+        String description = getString("Enter genre's description", null);
+        if (description == null) return false;
         
-        list.add(new Genre(
+        Genre genre = new Genre(
                 name, 
                 description
-        ));
-        return GenreDAO.addGenreToDB(list.getLast());
+        );
+        return add(genre);
+    }
+    
+    public boolean updateGenre(Genre genre) {
+        if (checkNull(list)) return false;
+        
+        if (genre == null)
+        genre = (Genre) getById("Enter genre name");
+        if (checkNull(genre)) return false;
+        
+        Genre temp = new Genre();
+        temp.setDescription(getString("Enter genre's description", genre.getDescription()));
+        
+        return update(genre, temp);
+    }
+    
+    public boolean deleteGenre(Genre genre) {
+        if (checkNull(list)) return false;
+        if (genre == null) 
+            genre = (Genre) getById("Enter genre");
+        if (checkNull(genre)) return false;
+        return delete(genre);
     }
 
-    public boolean updateGenre() {
-        if (checkEmpty(list)) return false;
-
-        Genre foundGenre = (Genre)getById("Enter genre");
-        if (checkNull(foundGenre)) return false;
-        
-        String name = getName("Enter genre name", true);
-        String description = getString("Enter description", true);
-        
-        if (name.isEmpty()) foundGenre.setGenreName(name);
-        if (!description.isEmpty()) foundGenre.setDescription(description);  
-        
-        return GenreDAO.updateGenreInDB(foundGenre);
+    public boolean add(Genre genre) {
+        if (genre == null) return false;
+        return GenreDAO.addGenreToDB(genre) && list.add(genre);
     }
 
-    public boolean deleteGenre() { 
-        if (checkEmpty(list)) return false;       
-
-        Genre foundGenre = (Genre)getById("Enter genre");
-        if (checkNull(foundGenre)) return false;
-
-        list.remove(foundGenre);
-        return GenreDAO.deleteGenreFromDB(foundGenre.getId());
+    public boolean update(Genre oldGenre, Genre newGenre) {
+        if (newGenre == null || checkNull(list)) return false;
+        if (GenreDAO.updateGenreInDB(newGenre))
+            oldGenre = newGenre;
+        return true;
+    }
+    
+    public boolean delete(Genre genre) {
+        if (genre == null) return false;     
+        return GenreDAO.deleteGenreFromDB(genre.getId()) && list.remove(genre);
     }
    
     @Override
-    public List<Genre> searchBy(String propety) {
+    public List<Genre> searchBy(List<Genre> tempList, String propety) {
+        if (checkNull(tempList)) return null;
+        
         List<Genre> result = new ArrayList<>();
-        for (Genre item : list) 
-            if (item.getId().equals(propety) 
-                || item.getGenreName().contains(propety.trim().toLowerCase())) 
+        for (Genre item : tempList) {
+            if (item == null)
+                continue;
+            if ((item.getId() != null && item.getId().equals(propety)) 
+                || (item.getGenreName() != null && item.getGenreName().contains(propety.trim().toLowerCase())))
             {
                 result.add(item);
             }   
+        }
         return result;
     }
     
     @Override
-    public List<Genre> sortList(List<Genre> tempList, String property) {
-        if (checkEmpty(tempList)) {
-            return null;
-        }
-
+    public List<Genre> sortList(List<Genre> tempList, String propety) {
+        if (checkNull(tempList)) return null;
+        
+        if (propety == null) return tempList;
+        
+        String[] options = Genre.getAttributes();
         List<Genre> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "genreName":
-                result.sort(Comparator.comparing(Genre::getGenreName));
-                break;
-            case "description":
-                result.sort(Comparator.comparing(Genre::getDescription));
-                break;
-            default:
-                result.sort(Comparator.comparing(Genre::getGenreName)); 
-                break;
+
+        if (propety.equalsIgnoreCase(options[0])) {
+            result.sort(Comparator.comparing(Genre::getGenreName));
+        } else if (propety.equalsIgnoreCase(options[1])) {
+            result.sort(Comparator.comparing(Genre::getDescription));
+        } else {
+            result.sort(Comparator.comparing(Genre::getGenreName));
         }
         return result;
     }
 
     @Override
-    public void display(List<Genre> tempList) {
-        if (checkEmpty(tempList)) return; 
-        int genreNameLength = 0;
-        int descriptionLength = 0;
-        for (Genre item : list) {
-            genreNameLength = Math.max(genreNameLength, item.getGenreName().length());
-            descriptionLength = Math.max(descriptionLength, item.getDescription().length());
-        }
+    public void show(List<Genre> tempList) {
+        if (checkNull(tempList)) return;
         
-        int widthLength =  genreNameLength +  descriptionLength + 7;
-         for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.printf("\n| %-" + genreNameLength + "s | %-" + descriptionLength + "s | \n",
-                "Name", "Description");
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        for (Genre item : tempList) {
-        System.out.printf("\n| %-" + genreNameLength + "s | %-" + descriptionLength + "s | \n",
-                    item.getGenreName(),
-                    item.getDescription());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) System.out.print("-");
-        System.out.println();
+        InfosTable.getTitle(Genre.getAttributes());
+        tempList.forEach(item -> 
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
+                            item.getGenreName(), 
+                            item.getDescription()
+                    );
+            }
+        );
+        
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
+                            item.getGenreName(), 
+                            item.getDescription()
+                    );
+            }
+        );
+        InfosTable.showFooter();
     }
+    
 }

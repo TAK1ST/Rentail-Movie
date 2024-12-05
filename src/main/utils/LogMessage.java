@@ -10,16 +10,22 @@ package main.utils;
  */
 public class LogMessage {
     
-    public static void errorLog(String message) {
+    public static boolean errorLog(String message) {
         System.out.printf("[ERROR] %s.\n", message);
+        return false;
+    }
+    
+    public static boolean successLog(String message) {
+        System.out.printf("[SUCCESS] %s.\n", message);
+        return true;
     }
     
     public static void infoLog(String message) {
         System.out.printf("[INFO] %s.\n", message);
     }
     
-    public static void successLog(String message) {
-        System.out.printf("[SUCCESS] %s.\n", message);
+    public static void debugLog() {
+        System.out.println("[FLAG]");
     }
     
 }

@@ -1,9 +1,7 @@
 package main.dto;
 
-import main.exceptions.MethodNotFound;
 import java.time.LocalDate;
 import main.base.Model;
-import static main.utils.LogMessage.errorLog;
 import main.utils.Validator;
 
 public class Profile extends Model {
@@ -13,6 +11,13 @@ public class Profile extends Model {
     private String address;
     private double credit;
     private LocalDate birthday;
+    
+    public Profile() {
+    }
+    
+    public Profile(String accountID) {
+        super(accountID);
+    }
 
     public Profile(String accountID, String fullName, String phoneNumber, String address, double credit, LocalDate birthday) {
         super(accountID);
@@ -35,37 +40,51 @@ public class Profile extends Model {
 
     @Override
     public String toString() {
-        return String.format("User: %s, %s, %s, %s, %s, %s.",
-                super.getId(),
-                fullName,
-                phoneNumber,
-                address,
-                credit,
-                birthday.format(Validator.DATE));
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %.2f,\n"
+                + "%s: %s.",
+                className(),
+                attr[count++], this.getAccountId(),
+                attr[count++], fullName,
+                attr[count++], phoneNumber,
+                attr[count++], address,
+                attr[count++], credit,
+                attr[count++], birthday
+        );
     }
 
     public static String className() {
-        return "User";
-    }
-
-    @Override
-    public String getId() {
-        try {
-            throw new MethodNotFound("Profile only has accountId instead of id");
-        } catch (MethodNotFound e) {
-            errorLog("Exception caught: " + e.getMessage());
-            return null;
-        }
+        return "Profile";
     }
     
-    @Override
-    public void setId(String id) {
-        try {
-            throw new MethodNotFound("Profile only has accountId instead of id");
-        } catch (MethodNotFound e) {
-            errorLog("Exception caught: " + e.getMessage());
-        }
+    public static String[] getAttributes() {
+        return new String[] {"Id", "Full name", "Phone number", "Address", "Credit", "Birthday"};
     }
+
+//    @Override
+//    public String getId() {
+//        try {
+//            throw new MethodNotFound("Profile only has accountId instead of id");
+//        } catch (MethodNotFound e) {
+//            errorLog("Exception caught: " + e.getMessage());
+//            return null;
+//        }
+//    }
+//    
+//    @Override
+//    public void setId(String id) {
+//        try {
+//            throw new MethodNotFound("Profile only has accountId instead of id");
+//        } catch (MethodNotFound e) {
+//            errorLog("Exception caught: " + e.getMessage());
+//        }
+//    }
     
     public String getAccountId() {
         return super.getId();

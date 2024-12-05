@@ -1,13 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.views;
 
-import java.io.IOException;
-import static javax.swing.UIManager.getString;
-import main.constants.Constants;
-import main.constants.AccRole;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import main.constants.account.AccRole;
 import static main.controllers.Managers.getATM;
 import static main.controllers.Managers.getGRM;
 import static main.controllers.Managers.getMVM;
@@ -19,21 +15,18 @@ import static main.controllers.Managers.getLGM;
 import static main.controllers.Managers.getPFM;
 import static main.controllers.Managers.getPMM;
 import static main.controllers.Managers.getWLM;
+import main.services.AuthenServices;
 import main.utils.Menu;
 import main.utils.Menu.MenuOption;
-import static main.utils.Menu.MenuOption.Finally.ASK_FOR_AGAIN;
-import static main.utils.Menu.MenuOption.Finally.ENTER_TO_CONTINUE;
-import static main.utils.Menu.MenuOption.Finally.EXIT_MENU;
+import static main.utils.Menu.MenuOption.After.ASK_FOR_AGAIN;
+import static main.utils.Menu.MenuOption.After.EXIT_MENU;
 
-/**
- *
- * @author trann
- */
+
 public class AdminPannel {
     
-    public static void show() throws IOException {
+    public static void show() {
         Menu.showManagerMenu(
-            "Movie Rental (Admin)",
+            "Movie Rental (Admin)", 2,
             null,
             new MenuOption[]{
                 new MenuOption("Account managment", () -> accountMenu()),
@@ -49,178 +42,186 @@ public class AdminPannel {
                 new MenuOption("Wishlist managment",  () -> wishlistMenu()),
                 new MenuOption("Log Out", EXIT_MENU),
             },
-            null
+            null, null
         );
     }
     
-    private static void accountMenu() throws IOException {
-        Menu.showManagerMenu("Account Managment",
+    private static void accountMenu() {
+        Menu.showManagerMenu(
+            "Account Managment", 1,
             null,
             new MenuOption[]{
-                new MenuOption("Add Account", () -> getACM().addAccount(AccRole.ADMIN), ASK_FOR_AGAIN),
-                new MenuOption("Delete Account", () -> getACM().deleteAccount(), ASK_FOR_AGAIN),
-                new MenuOption("Update Account", () -> getACM().updateAccount(""), ASK_FOR_AGAIN),
+                new MenuOption("Add Account", () -> AuthenServices.registorAccount(AccRole.ADMIN), ASK_FOR_AGAIN),
+                new MenuOption("Delete Account", () -> getACM().deleteAccount(null), ASK_FOR_AGAIN),
+                new MenuOption("Update Account", () -> getACM().updateAccount(null), ASK_FOR_AGAIN),
                 new MenuOption("Search Account", () -> getACM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Display Accounts", () -> getACM().displayList(), ENTER_TO_CONTINUE),
+                new MenuOption("Display Accounts", () -> getACM().displaySortDetail()),
                 new MenuOption("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
-    private static void actorMenu() throws IOException {  
+    private static void actorMenu() {  
         Menu.showManagerMenu(
-            "Actor Management",
+            "Actor Management", 1,
             null,
             new MenuOption[]{
                 new MenuOption("Add actor", () -> getATM().addActor(), ASK_FOR_AGAIN),
-                new MenuOption("Delete actor", () -> getATM().deleteActor(), ASK_FOR_AGAIN),
-                new MenuOption("Update actor", () -> getATM().updateActor(), ASK_FOR_AGAIN),
+                new MenuOption("Delete actor", () -> getATM().deleteActor(null), ASK_FOR_AGAIN),
+                new MenuOption("Update actor", () -> getATM().updateActor(null), ASK_FOR_AGAIN),
                 new MenuOption("Search actor", () -> getATM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Show all actor", () -> getATM().displayList(), ENTER_TO_CONTINUE),
+                new MenuOption("Show all actor", () -> getATM().displaySortDetail()),
                 new MenuOption("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
-    private static void discountMenu() throws IOException {
-        Menu.showManagerMenu("Discount Managment",
+    private static void discountMenu() {
+        Menu.showManagerMenu(
+            "Discount Managment", 1,
             null,
             new MenuOption[]{
                 new MenuOption("Add Discount", () -> getDCM().addDiscount(), ASK_FOR_AGAIN),
-                new MenuOption("Delete Discount", () -> getDCM().deleteDiscount(), ASK_FOR_AGAIN),
-                new MenuOption("Update Discount", () -> getDCM().updateDiscount(), ASK_FOR_AGAIN),
+                new MenuOption("Delete Discount", () -> getDCM().deleteDiscount(null), ASK_FOR_AGAIN),
+                new MenuOption("Update Discount", () -> getDCM().updateDiscount(null), ASK_FOR_AGAIN),
                 new MenuOption("Search Discount", () -> getDCM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Display Discount", () -> getDCM().displayList(), ENTER_TO_CONTINUE),
+                new MenuOption("Display Discount", () -> getDCM().displaySortDetail()),
                 new MenuOption("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
-    private static void genreMenu() throws IOException {  
+    private static void genreMenu() {  
         Menu.showManagerMenu(
-            "Genre Management",
+            "Genre Management", 1,
             null,
             new MenuOption[]{
                 new MenuOption("Add genre",    () -> getGRM().addGenre(), ASK_FOR_AGAIN),
-                new MenuOption("Delete genre", () -> getGRM().deleteGenre(), ASK_FOR_AGAIN),
-                new MenuOption("Update genre", () -> getGRM().updateGenre(), ASK_FOR_AGAIN),
+                new MenuOption("Delete genre", () -> getGRM().deleteGenre(null), ASK_FOR_AGAIN),
+                new MenuOption("Update genre", () -> getGRM().updateGenre(null), ASK_FOR_AGAIN),
                 new MenuOption("Search genre", () -> getGRM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Show all genre", () -> getGRM().displayList(), ENTER_TO_CONTINUE),
+                new MenuOption("Show all genre", () -> getGRM().displaySortDetail()),
                 new MenuOption("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
-    private static void languageMenu() throws IOException {
-        Menu.showManagerMenu("Language Managment",
+    private static void languageMenu() {
+        Menu.showManagerMenu(
+            "Language Managment", 1,
             null,
             new MenuOption[]{
                 new MenuOption("Add Language", () -> getLGM().addLanguage(), ASK_FOR_AGAIN),
-                new MenuOption("Delete Language", () -> getLGM().deleteLanguage(), ASK_FOR_AGAIN),
-                new MenuOption("Update Language", () -> getLGM().updateLanguage(), ASK_FOR_AGAIN),
+                new MenuOption("Delete Language", () -> getLGM().deleteLanguage(null), ASK_FOR_AGAIN),
+                new MenuOption("Update Language", () -> getLGM().updateLanguage(null), ASK_FOR_AGAIN),
                 new MenuOption("Search Language", () -> getLGM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Display Languages", () -> getLGM().displayList(), ENTER_TO_CONTINUE),
+                new MenuOption("Display Languages", () -> getLGM().displaySortDetail()),
                 new MenuOption("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
-    private static void movieMenu() throws IOException {
+    private static void movieMenu() {
         Menu.showManagerMenu(
-            "Movie Management",
+            "Movie Management", 1,
             null,
             new MenuOption[]{
                 new MenuOption("Add movie", () -> getMVM().addMovie(), ASK_FOR_AGAIN),
-                new MenuOption("Delete movie", () -> getMVM().deleteMovie(), ASK_FOR_AGAIN),
-                new MenuOption("Update movie", () -> getMVM().updateMovie(), ASK_FOR_AGAIN),
+                new MenuOption("Delete movie", () -> getMVM().deleteMovie(null), ASK_FOR_AGAIN),
+                new MenuOption("Update movie", () -> getMVM().updateMovie(null), ASK_FOR_AGAIN),
                 new MenuOption("Search movie", () -> getMVM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Show all movie", () -> getMVM().displayList(), ENTER_TO_CONTINUE),
+                new MenuOption("Show all movie", () -> getMVM().displaySortDetail()),
                 new MenuOption("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
-    private static void paymentMenu() throws IOException {
-        Menu.showManagerMenu("Payment Managment",
+    private static void paymentMenu() {
+        Menu.showManagerMenu(
+            "Payment Managment", 1,
             null,
             new MenuOption[]{
-                new MenuOption("Add Payment", () -> getPMM().addPayment(getString("Enter rental's id")), ASK_FOR_AGAIN),
-                new MenuOption("Delete Payment", () -> getPMM().deletePayment(), ASK_FOR_AGAIN),
-                new MenuOption("Update Payment", () -> getPMM().updatePayment(), ASK_FOR_AGAIN),
+                new MenuOption("Add Payment", () -> getPMM().addPayment(null), ASK_FOR_AGAIN),
+                new MenuOption("Delete Payment", () -> getPMM().deletePayment(null), ASK_FOR_AGAIN),
+                new MenuOption("Update Payment", () -> getPMM().updatePayment(null), ASK_FOR_AGAIN),
                 new MenuOption("Search Payment", () -> getPMM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Display Payments", () -> getPMM().displayList(), ENTER_TO_CONTINUE),
+                new MenuOption("Display Payments", () -> getPMM().displaySortDetail()),
                 new MenuOption("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
-    private static void profileMenu() throws IOException {
-        Menu.showManagerMenu("Profile Managment",
+    private static void profileMenu() {
+        Menu.showManagerMenu(
+            "Profile Managment", 1,
             null,
             new MenuOption[]{
-                new MenuOption("Add Profile", () -> getPFM().addProfile(getString("Enter account's id")), ASK_FOR_AGAIN),
-                new MenuOption("Delete Profile", () -> getPFM().deleteProfile(), ASK_FOR_AGAIN),
-                new MenuOption("Update Profile", () -> getPFM().updateProfile(getString("Enter account's id")), ASK_FOR_AGAIN),
+                new MenuOption("Add Profile", () -> getPFM().addProfile(null), ASK_FOR_AGAIN),
+                new MenuOption("Delete Profile", () -> getPFM().deleteProfile(null), ASK_FOR_AGAIN),
+                new MenuOption("Update Profile", () -> getPFM().updateProfile(null), ASK_FOR_AGAIN),
                 new MenuOption("Search Profile", () -> getPFM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Display Profiles", () -> getPFM().displayList(), ENTER_TO_CONTINUE),
+                new MenuOption("Display Profiles", () -> getPFM().displaySortDetail()),
                 new MenuOption("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
-    private static void rentalMenu() throws IOException {
+    private static void rentalMenu() {
         Menu.showManagerMenu(
-                "Rental Management",
-                null,
-                new MenuOption[]{
-                    new MenuOption("Add rental", () -> getRTM().addRental(Constants.DEFAULT_ADMIN_ID), ASK_FOR_AGAIN),
-                    new MenuOption("Delete rental", () -> getRTM().deleteRental(), ASK_FOR_AGAIN),
-                    new MenuOption("Update rental", () -> getRTM().updateRental(), ASK_FOR_AGAIN),
-                    new MenuOption("Search rental", () -> getRTM().search(), ASK_FOR_AGAIN),
-                    new MenuOption("Show all rental", () -> getRTM().displayList(), ENTER_TO_CONTINUE),
-                    new MenuOption("Back", EXIT_MENU)
-                },
-                null
-        );
-    }
-    
-    private static void reviewMenu() throws IOException {
-        Menu.showManagerMenu(
-            "Review Management",
+            "Rental Management", 1,
             null,
             new MenuOption[]{
-                new MenuOption("Add review", () -> getRVM().addReview(Constants.DEFAULT_ADMIN_ID), ASK_FOR_AGAIN),
-                new MenuOption("Delete review", () -> getRVM().deleteReview(), ASK_FOR_AGAIN),
-                new MenuOption("Update review", () -> getRVM().updateReview(), ASK_FOR_AGAIN),
-                new MenuOption("Search review", () -> getRVM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Show all review", () -> getRVM().displayList(), ENTER_TO_CONTINUE),
+                new MenuOption("Add rental", () -> getRTM().addRental(null), ASK_FOR_AGAIN),
+                new MenuOption("Delete rental", () -> getRTM().deleteRental(null), ASK_FOR_AGAIN),
+                new MenuOption("Update rental", () -> getRTM().updateRental(null), ASK_FOR_AGAIN),
+                new MenuOption("Search rental", () -> getRTM().search(), ASK_FOR_AGAIN),
+                new MenuOption("Show all rental", () -> getRTM().displaySortDetail()),
                 new MenuOption("Back", EXIT_MENU)
             },
-            null
+            null, null
+        );
+    }
+    
+    private static void reviewMenu() {
+        Menu.showManagerMenu(
+            "Review Management", 1,
+            null,
+            new MenuOption[]{
+                new MenuOption("Add review", () -> {
+                    try { getRVM().addReview(null);} 
+                    catch (SQLException ex) {Logger.getLogger(AdminPannel.class.getName()).log(Level.SEVERE, null, ex);}}, ASK_FOR_AGAIN),
+                new MenuOption("Delete review", () -> getRVM().deleteReview(null), ASK_FOR_AGAIN),
+                new MenuOption("Update review", () -> getRVM().updateReview(null), ASK_FOR_AGAIN),
+                new MenuOption("Search review", () -> getRVM().search(), ASK_FOR_AGAIN),
+                new MenuOption("Show all review", () -> getRVM().displaySortDetail()),
+                new MenuOption("Back", EXIT_MENU)
+            },
+            null, null
         );
   
     }
  
-    private static void wishlistMenu() throws IOException {
-        Menu.showManagerMenu("Wishlist Managment",
+    private static void wishlistMenu() {
+        Menu.showManagerMenu(
+            "Wishlist Managment", 1,
             null,
             new MenuOption[]{
-                new MenuOption("Add Wishlist", () -> getWLM().addWishlist(getString("Enter customer' ID")), ASK_FOR_AGAIN),
-                new MenuOption("Delete Wishlist", () -> getWLM().deleteWishlist(), ASK_FOR_AGAIN),
-                new MenuOption("Update Wishlist", () -> getWLM().updateWishlist(), ASK_FOR_AGAIN),
+                new MenuOption("Add Wishlist", () -> getWLM().addWishlist(null), ASK_FOR_AGAIN),
+                new MenuOption("Delete Wishlist", () -> getWLM().deleteWishlist(null), ASK_FOR_AGAIN),
+                new MenuOption("Update Wishlist", () -> getWLM().updateWishlist(null), ASK_FOR_AGAIN),
                 new MenuOption("Search Wishlist", () -> getWLM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Display Wishlists", () -> getWLM().displayList(), ENTER_TO_CONTINUE),
+                new MenuOption("Display Wishlists", () -> getWLM().displaySortDetail()),
                 new MenuOption("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     

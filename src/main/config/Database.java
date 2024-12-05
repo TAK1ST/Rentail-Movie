@@ -32,9 +32,7 @@ public class Database {
         Connection connection = null;
         try {
             connection = getConnection();
-            if (connection != null) {
-                System.out.println("Connect Databases sucessfully!");
-            }
+            
         } catch (SQLException e) {
             errorLog("Connect Fail!");
         }

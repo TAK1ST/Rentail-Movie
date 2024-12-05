@@ -2,7 +2,8 @@ package main.dto;
 
 import main.base.Model;
 import java.time.LocalDate;
-import main.constants.RentalStatus;
+import main.constants.rental.RentalStatus;
+import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
 public class Rental extends Model {
@@ -16,6 +17,18 @@ public class Rental extends Model {
     private double lateFee;
     private double totalAmount;
     private RentalStatus status;
+    
+    public Rental() {
+    }
+    
+    public Rental(String customerID) {
+        this.customerID = customerID;
+    }
+    
+    public Rental(String customerID, String movieID) {
+        this.customerID = customerID;
+        this.movieID = movieID;
+    }
 
     public Rental(
             String id, 
@@ -44,6 +57,7 @@ public class Rental extends Model {
 
     public Rental(Rental other) {
         super(other.getId());
+        this.customerID = other.customerID;
         this.movieID = other.movieID;
         this.staffID = other.staffID;
         this.rentalDate = other.rentalDate;
@@ -53,25 +67,53 @@ public class Rental extends Model {
         this.totalAmount = other.totalAmount;
         this.status = other.status;
     }
-
-    //Methods    
+  
     @Override
     public String toString() {
-        return String.format("Rental: %s, %s, %s, %s, %s, %s, %s, %.2f, %.2f, %s.",
-                super.getId(),
-                customerID,
-                movieID,
-                staffID,
-                rentalDate.format(Validator.DATE),
-                returnDate.format(Validator.DATE),
-                dueDate.format(Validator.DATE),
-                lateFee,
-                totalAmount,
-                status);
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %.2f,\n"
+                + "%s: %.2f,\n"
+                + "%s: %s.",
+                className(),
+                attr[count++], super.getId(),
+                attr[count++], customerID,
+                attr[count++], movieID,
+                attr[count++], staffID,
+                attr[count++], formatDate(rentalDate, Validator.DATE),
+                attr[count++], formatDate(returnDate, Validator.DATE),
+                attr[count++], formatDate(dueDate, Validator.DATE),
+                attr[count++], lateFee,
+                attr[count++], totalAmount,
+                attr[count++], status.name()
+        );
     }
-
+    
     public static String className() {
         return "Rental";
+    }
+    
+    public static String[] getAttributes() {
+        return new String[] {
+            "Id", 
+            "Custome Id", 
+            "Movie Id", 
+            "Staff Id", 
+            "Rental date", 
+            "Return date", 
+            "Due date",
+            "Late fee",
+            "Total amount", 
+            "Status"};
     }
 
     public String getCustomerID() {
@@ -79,38 +121,6 @@ public class Rental extends Model {
     }
 
     public void setCustomerID(String customerID) {
-        this.customerID = customerID;
-    }
-
-    public String getMovieId() {
-        return movieID;
-    }
-
-    public void setMovieId(String movieID) {
-        this.movieID = movieID;
-    }
-
-    public LocalDate getRentalDate() {
-        return rentalDate;
-    }
-
-    public void setRentalDate(LocalDate rentalDate) {
-        this.rentalDate = rentalDate;
-    }
-
-    public LocalDate getReturnDate() {
-        return returnDate;
-    }
-
-    public void setReturnDate(LocalDate returnDate) {
-        this.returnDate = returnDate;
-    }
-
-    public String getUserID() {
-        return customerID;
-    }
-
-    public void setUserID(String customerID) {
         this.customerID = customerID;
     }
 
@@ -130,12 +140,20 @@ public class Rental extends Model {
         this.staffID = staffID;
     }
 
-    public double getLateFee() {
-        return lateFee;
+    public LocalDate getRentalDate() {
+        return rentalDate;
     }
 
-    public void setLateFee(double lateFee) {
-        this.lateFee = lateFee;
+    public void setRentalDate(LocalDate rentalDate) {
+        this.rentalDate = rentalDate;
+    }
+
+    public LocalDate getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(LocalDate returnDate) {
+        this.returnDate = returnDate;
     }
 
     public LocalDate getDueDate() {
@@ -144,6 +162,14 @@ public class Rental extends Model {
 
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public double getLateFee() {
+        return lateFee;
+    }
+
+    public void setLateFee(double lateFee) {
+        this.lateFee = lateFee;
     }
 
     public double getTotalAmount() {
@@ -161,4 +187,5 @@ public class Rental extends Model {
     public void setStatus(RentalStatus status) {
         this.status = status;
     }
+
 }

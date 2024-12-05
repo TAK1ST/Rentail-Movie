@@ -2,7 +2,8 @@ package main.dto;
 
 import main.base.Model;
 import java.time.LocalDate;
-import main.constants.WishlistPriority;
+import main.constants.wishlist.WishlistPriority;
+import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
 public class Wishlist extends Model {
@@ -11,6 +12,18 @@ public class Wishlist extends Model {
     private String customerID;
     private LocalDate addedDate;
     private WishlistPriority priority;
+    
+    public Wishlist() {
+    }
+    
+    public Wishlist(String customerID) {
+        this.customerID = customerID;
+    }
+    
+    public Wishlist(String movieID, String customerID) {
+        this.movieID = movieID;
+        this.customerID = customerID;
+    }
 
     public Wishlist(String id, String movieID, String customerID, LocalDate addedDate, WishlistPriority priority) {
         super(id);
@@ -30,17 +43,30 @@ public class Wishlist extends Model {
 
     @Override
     public String toString() {
-        return String.format("Wishlist: %s, %s, %s, %s, %s.",
-                super.getId(),
-                movieID,
-                customerID,
-                addedDate.format(Validator.DATE),
-                priority
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s.",
+                className(),
+                attr[count++], super.getId(),
+                attr[count++], movieID,
+                attr[count++], customerID,
+                attr[count++], formatDate(addedDate, Validator.DATE),
+                attr[count++], priority
         );
     }
-
+    
     public static String className() {
         return "Wishlist";
+    }
+     
+    public static String[] getAttributes() {
+        return new String[] {"Id", "Movie Id", "Customer Id", "Added date", "Priority"};
     }
 
     public String getMovieId() {

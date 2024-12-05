@@ -1,88 +1,110 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.controllers;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
 import main.constants.IDPrefix;
-import main.constants.PaymentMethod;
-import static main.controllers.Managers.getRTM;
+import main.constants.payment.PaymentMethod;
+import main.constants.payment.PaymentStatus;
+import static main.controllers.Managers.getACM;
 import main.dao.PaymentDAO;
-import main.dto.Rental;
+import main.dto.Account;
 import main.dto.Payment;
+import main.utils.InfosTable;
+import static main.utils.Input.getDouble;
 import static main.utils.Input.getString;
 import static main.utils.Utility.getEnumValue;
+import static main.utils.Validator.getDateTime;
 
-/**
- *
- * @author trann
- */
+
 public class PaymentManager extends ListManager<Payment> {
+
+    public PaymentManager() {
+        super(Payment.className(), Payment.getAttributes());
+        Collections.copy(list, PaymentDAO.getAllPayments()); 
+    }
     
-    private static final String[] searchOptions = {"rental_id", "payment_method", "payment_date"};
-
-    public PaymentManager() throws IOException {
-        super(Payment.className());
-        list = PaymentDAO.getAllPayments();
-    }
-
-    public boolean addPayment(String rentalID) {
-        Rental foundRental = (Rental) getRTM().searchById(rentalID);
-        if (getRTM().checkNull(foundRental)) return false;
+    public boolean addPayment(String customerID) {
+        if (customerID == null) 
+            customerID = getString("Enter customer's id", null);
+        if (customerID == null) return false;
         
-        PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false);
-        if (method == PaymentMethod.NONE) return false;
+        Account customer = (Account) getACM().searchById(customerID);
+        if (getACM().checkNull(customer)) return false;
         
-        list.add(new Payment(
-                rentalID, 
-                method
-        ));
-        return PaymentDAO.addPaymentToDB(list.getLast());
+        double amount = getDouble("Enter amount", 0, Double.MAX_VALUE, Double.MIN_VALUE);
+        if (amount == Integer.MIN_VALUE) return false;
+        
+        PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, null);
+        if (method == null) return false;
+        
+        Payment payment = new Payment(
+                createID(IDPrefix.PAYMENT_PREFIX), 
+                customer.getId(),
+                amount,
+                method,
+                LocalDateTime.now(),
+                PaymentStatus.COMPLETED
+        );
+        return add(payment);
+    }
+    
+    public boolean updatePayment(Payment payment) {
+        if (checkNull(list)) return false;
+        
+        if (payment == null)
+            payment = (Payment) getById("Enter payment's id");
+        if (checkNull(payment)) return false;
+        
+        Payment temp = new Payment();
+        temp.setAmount(getDouble("Enter amount", 0, Double.MAX_VALUE, payment.getAmount()));
+        temp.setMethod((PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, payment.getMethod()));
+        temp.setStatus((PaymentStatus) getEnumValue("Choose payment status", PaymentStatus.class, payment.getStatus()));
+        temp.setTransactionTime(getDateTime(payment.getTransactionTime()));
+        
+        return update(payment, temp);
+    }
+    
+    public boolean deletePayment(Payment payment) {
+        if (checkNull(list)) return false;
+        if (payment == null) 
+            payment = (Payment) getById("Enter payment's id");
+        if (checkNull(payment)) return false;
+        return delete(payment);
     }
 
-    public boolean updatePayment() {
-        if (checkEmpty(list)) {
-            return false;
-        }
-
-        Payment foundPayment = (Payment) getById("Enter payment code");
-        if (checkNull(foundPayment)) {
-            return false;
-        }
-
-        PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, false);
-        if (method != PaymentMethod.NONE) {
-            foundPayment.setMethod(method);
-        }
-
-        return PaymentDAO.updatePaymentInDB(foundPayment);
+    public boolean add(Payment payment) {
+        if (payment == null) return false;
+        return PaymentDAO.addPaymentToDB(payment) && list.add(payment);
     }
 
-    public boolean deletePayment() {
-        if (checkEmpty(list)) {
-            return false;
-        }
-
-        Payment foundPayment = (Payment) getById("Enter payment code");
-        if (checkNull(foundPayment)) {
-            return false;
-        }
-
-        list.remove(foundPayment);
-        return PaymentDAO.deletePaymentFromDB(foundPayment.getId());
+    public boolean update(Payment oldPayment, Payment newPayment) {
+        if (newPayment == null || checkNull(list)) return false;
+        if (PaymentDAO.updatePaymentInDB(newPayment))
+            oldPayment = newPayment;
+        return true;
+    }
+    
+    public boolean delete(Payment payment) {
+        if (payment == null) return false;     
+        return PaymentDAO.deletePaymentFromDB(payment.getId()) && list.remove(payment);
     }
 
     @Override
-    public List<Payment> searchBy(String propety) {
+    public List<Payment> searchBy(List<Payment> tempList, String propety) {
+        if (checkNull(tempList)) return null;
+        
         List<Payment> result = new ArrayList<>();
-        for (Payment item : list) {
-            if (item.getId().equals(propety)
-                    || item.getMethod().name().equals(propety)) {
+        for (Payment item : tempList) {
+            if (item == null)
+                continue;
+            if ((item.getId() != null && item.getId().equals(propety))
+                    || (item.getMethod() != null && item.getMethod().name().equals(propety))
+                ) 
+            {
                 result.add(item);
             }
         }
@@ -90,52 +112,61 @@ public class PaymentManager extends ListManager<Payment> {
     }
 
     @Override
-    public List<Payment> sortList(List<Payment> tempList, String property) {
-        if (checkEmpty(tempList)) {
-            return null;
+    public List<Payment> sortList(List<Payment> tempList, String propety) {
+        if (checkNull(tempList)) return null;
+        
+        if (propety == null) return tempList;
+        
+        String[] options = Payment.getAttributes();
+        List<Payment> result = new ArrayList<>(tempList);
+
+        if (propety.equalsIgnoreCase(options[0])) {
+            result.sort(Comparator.comparing(Payment::getId));
+        } else if (propety.equalsIgnoreCase(options[1])) {
+            result.sort(Comparator.comparing(Payment::getCustomerID));
+        } else if (propety.equalsIgnoreCase(options[2])) {
+            result.sort(Comparator.comparing(Payment::getAmount));
+        } else if (propety.equalsIgnoreCase(options[3])) {
+            result.sort(Comparator.comparing(Payment::getMethod));
+        } else if (propety.equalsIgnoreCase(options[4])) {
+            result.sort(Comparator.comparing(Payment::getTransactionTime));
+        } else if (propety.equalsIgnoreCase(options[5])) {
+            result.sort(Comparator.comparing(Payment::getStatus));
+        } else {
+            result.sort(Comparator.comparing(Payment::getId)); 
         }
 
-        List<Payment> result = new ArrayList<>(tempList);
-        switch (property) {
-            case "rentalId":
-                result.sort(Comparator.comparing(Payment::getRentalId));
-                break;
-            case "paymentMethod":
-                result.sort(Comparator.comparing(Payment::getMethod));
-                break;
-            default:
-                result.sort(Comparator.comparing(Payment::getRentalId));
-                break;
-        }
         return result;
     }
 
     @Override
-    public void display(List<Payment> tempList) {
-        if (checkEmpty(tempList)) {
-            return;
-        }
+    public void show(List<Payment> tempList) {
+        if (checkNull(tempList)) return;
 
-        int widthLength = 8 + 7 + 8 + 10;
-        for (int index = 0; index < widthLength; index++) {
-            System.out.print("-");
-        }
-        System.out.printf("\n| %-8s | %-7s | %-8s | \n",
-                "ID", "Method", "Rental");
-        for (int index = 0; index < widthLength; index++) {
-            System.out.print("-");
-        }
-        for (Payment item : tempList) {
-
-            System.out.printf("\n| %-8s | %-7s | %-8s | \n",
-                    item.getId(),
-                    item.getMethod(),
-                    item.getRentalId());
-        }
-        System.out.println();
-        for (int index = 0; index < widthLength; index++) {
-            System.out.print("-");
-        }
-        System.out.println();
+        InfosTable.getTitle(Payment.getAttributes());
+        tempList.forEach(item -> 
+                InfosTable.calcLayout(
+                        item.getId(),
+                        item.getCustomerID(),
+                        item.getAmount(),
+                        item.getMethod(),
+                        item.getTransactionTime(),
+                        item.getStatus()
+                )
+        );
+        
+        InfosTable.showTitle();
+        tempList.forEach(item -> 
+                InfosTable.displayByLine(
+                        item.getId(),
+                        item.getCustomerID(),
+                        item.getAmount(),
+                        item.getMethod(),
+                        item.getTransactionTime(),
+                        item.getStatus()
+                )
+        );
+        InfosTable.showFooter();
     }
+    
 }

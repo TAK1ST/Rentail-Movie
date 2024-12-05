@@ -6,7 +6,7 @@ package main.dto;
 
 import main.exceptions.MethodNotFound;
 import main.base.Model;
-import main.constants.ActorRole;
+import main.constants.actor.ActorRole;
 import static main.utils.LogMessage.errorLog;
 
 /**
@@ -15,9 +15,13 @@ import static main.utils.LogMessage.errorLog;
  */
 public class Casting extends Model {
     
+    //movieId is the super Id
     private String actorID;
     private ActorRole role;
 
+    public Casting() {
+    }
+    
     public Casting(String movieID, String actorID, ActorRole role) {
         super(movieID);
         this.actorID = actorID;
@@ -32,13 +36,28 @@ public class Casting extends Model {
     
     @Override
     public String toString() {
-        return String.format("Casting: %s, %s, %s.", this.getMovieID(), actorID, role);
+        String[] attr = getAttributes();
+        int count = 0;
+        return String.format(
+                "\n[%s]:\n"
+                + "%s: %s,\n"
+                + "%s: %s,\n"
+                + "%s: %s.",
+                className(),
+                attr[count++], this.getMovieID(),
+                attr[count++], actorID,
+                attr[count++], role
+        );
     }
-
+    
     public static String className() {
         return "Casting";
     }
-    
+
+    public static String[] getAttributes() {
+        return new String[] {"Movie Id", "Actor Id", "Role"};
+    }
+
     @Override
     public String getId() {
         try {

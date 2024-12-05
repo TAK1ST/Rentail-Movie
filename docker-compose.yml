@@ -1,25 +1,39 @@
 services:
   db:
     build: .
+    image: tak1stprogrammer/rental-movie:v9
     container_name: movie_rental_db
     restart: always
     ports:
       - "3306:3306"
+    command: --ssl=0
     environment:
-      MYSQL_ROOT_PASSWORD: 1
-      MYSQL_DATABASE: movierentalsystemdb
-      MYSQL_PASSWORD: 1
+      MYSQL_SSL: "0"
+      MYSQL_ROOT_PASSWORD: "1"
+      MYSQL_DATABASE: "movierentalsystemdb"
+      MYSQL_PASSWORD: "1"
+      SYNC_INTERVAL: "2"
+      MYSQL_USER: "Team"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d
       - ./backup:/sync/backup
+      - ./sync:/sync
     networks:
       - movie-rental-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   movie-rental-network:
     driver: bridge
+    name: movie-rental-network
 
 volumes:
   mysql_data:
     driver: local
+    name: movie_rental_mysql_data
+

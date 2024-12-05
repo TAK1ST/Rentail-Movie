@@ -11,13 +11,22 @@ package main.services;
 
 import main.dao.WishlistDAO;
 import main.dto.Wishlist;
-import main.constants.WishlistPriority;
+import main.constants.wishlist.WishlistPriority;
 import java.time.LocalDate;
 import java.util.List;
+import static main.controllers.Managers.getWLM;
 
 public class WishlistServices {
     private static final int MAX_WISHLIST_ITEMS = 50;
-    public boolean addWishlist(Wishlist wishlist) {
+    
+    public static void myWishlist(String customerID) {
+        List<Wishlist> wishlist = getWLM().searchBy(customerID);
+        if (getWLM().checkNull(wishlist)) return;
+        
+        getWLM().display(wishlist, Wishlist.getAttributes(), true);
+    }
+    
+    public boolean addToMyWishList(String cusomerID) {
         validateWishlistData(wishlist);
 
         List<Wishlist> customerWishlists = getWishlistsByCustomerId(wishlist.getCustomerId());
@@ -36,7 +45,7 @@ public class WishlistServices {
         }
 
         if (wishlist.getPriority() == null) {
-            wishlist.setPriority(WishlistPriority.NONE);
+            wishlist.setPriority(null);
         }
 
         return WishlistDAO.addWishlistToDB(wishlist);

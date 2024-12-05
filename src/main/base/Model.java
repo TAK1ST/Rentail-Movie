@@ -2,7 +2,9 @@ package main.base;
 
 public abstract class Model {
     private String id;
-
+    
+    public Model() {}
+    
     public Model(String id) {
         this.id = id;
     }
