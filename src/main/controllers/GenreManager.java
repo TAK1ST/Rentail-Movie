@@ -17,7 +17,7 @@ public class GenreManager extends ListManager<Genre> {
     
     public GenreManager() {
         super(Genre.className(), Genre.getAttributes());
-        Collections.copy(list, GenreDAO.getAllGenres()); 
+        copy(GenreDAO.getAllGenres()); 
     }
     
     public boolean addGenre() {

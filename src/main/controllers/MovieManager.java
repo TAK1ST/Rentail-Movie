@@ -28,7 +28,7 @@ public class MovieManager extends ListManager<Movie> {
 
     public MovieManager() {
         super(Movie.className(), Movie.getAttributes());
-        Collections.copy(list, MovieDAO.getAllMovies()); 
+        copy(MovieDAO.getAllMovies()); 
     }
     
     public boolean addMovie() {

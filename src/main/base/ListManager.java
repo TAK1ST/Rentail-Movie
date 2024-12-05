@@ -9,12 +9,21 @@ import static main.utils.Input.getString;
 import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.selectInfo;
 import static main.utils.Input.yesOrNo;
+import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.infoLog;
 import main.utils.Menu;
 
 public abstract class ListManager<T extends Model> {
 
     protected final List<T> list = new ArrayList<>();
+    
+    protected boolean copy(List<T> tempList) {
+        if (tempList == null)
+            return errorLog("Can not copy");
+        for (T item : tempList) 
+            list.add(item);
+        return true;
+    }
     
     private final String[] attributes;
     private final String className;
@@ -64,6 +73,10 @@ public abstract class ListManager<T extends Model> {
         show(getBy(String.format("Enter any %s's propety", className.toLowerCase())));
     }
     
+    public List<T> searchBy(String propety) {
+        return searchBy(list, propety);
+    }
+    
     public List<T> searchBy(List<T> tempList, String propety1, String propety2) {
         List<T> temp1 = searchBy(tempList, propety1);
         List<T> temp2 = searchBy(tempList, propety2);
@@ -72,6 +85,10 @@ public abstract class ListManager<T extends Model> {
                                     .filter(temp2::contains)
                                     .collect(Collectors.toList());
         return common;
+    }
+    
+    public List<T> searchBy(String propety1, String propety2) {
+        return searchBy(list, propety1, propety2);
     }
 
     public List<T> getBy(String message) {

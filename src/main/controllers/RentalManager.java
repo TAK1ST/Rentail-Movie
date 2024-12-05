@@ -30,7 +30,7 @@ public class RentalManager extends ListManager<Rental> {
 
     public RentalManager() {
         super(Rental.className(), Rental.getAttributes());
-        Collections.copy(list, RentalDAO.getAllRentals()); 
+        copy(RentalDAO.getAllRentals()); 
     }
     
     public boolean addRental(String customerID) {

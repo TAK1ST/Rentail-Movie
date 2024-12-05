@@ -26,7 +26,7 @@ public class WishlistManager extends ListManager<Wishlist> {
 
     public WishlistManager() {
         super(Wishlist.className(), Wishlist.getAttributes());
-        Collections.copy(list, WishlistDAO.getAllWishlists()); 
+        copy(WishlistDAO.getAllWishlists()); 
     }
     
     public boolean addWishlist(String customerID) {
