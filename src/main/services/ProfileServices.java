@@ -11,6 +11,7 @@ import main.config.Database;
 import main.constants.account.AccStatus;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getPFM;
+import main.dao.ProfileDAO;
 import main.dto.Account;
 import main.dto.Profile;
 import static main.utils.Input.getDouble;
@@ -26,7 +27,7 @@ public class ProfileServices {
     private static Profile myProfile;
     
     public static void initDataFor(String id) {
-        myProfile = (Profile) getPFM().searchById(id);
+        myProfile = ProfileDAO.getProfile(id);
     }
     
     public static void showMyProfile(Account account) {

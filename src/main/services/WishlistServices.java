@@ -34,7 +34,7 @@ public class WishlistServices {
     
     public static void initDataFor(String id) {
         accountID = id;
-        myWishlist = getWLM().searchBy(id);
+        myWishlist = WishlistDAO.getUserWishlist(id);
     }
     
     public static boolean addToMyWishList() {
