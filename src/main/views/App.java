@@ -10,6 +10,7 @@ public class App {
 
     public static void run() throws IOException, SQLException {
         do {
+            GuestPannel.show();
             redirect(AuthenPannel.getAccounts());
         } while (!yesOrNo("Exit"));
     }

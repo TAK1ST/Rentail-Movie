@@ -107,7 +107,6 @@ public class AuthenServices {
         
         String password = getPassword("Enter password", null);
         if (password == null) return false;
-
         String email = getEmail("Enter email", null);
         if (email == null) return false;
         
@@ -144,5 +143,29 @@ public class AuthenServices {
             }
         }
         return true;
+    }
+    
+    public static boolean updatePasswordInDB(String accountID, String newPassword) {
+        String sql = "UPDATE Accounts SET password = ? WHERE account_id = ?";
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setString(2, accountID);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public static boolean updateUsernameInDB(String accountID, String username) {
+        String sql = "UPDATE Accounts SET username = ? WHERE account_id = ?";
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, accountID);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
