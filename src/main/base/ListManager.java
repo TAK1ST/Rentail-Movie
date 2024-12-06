@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import main.utils.IDGenerator;
 import static main.utils.IDGenerator.ID_LENGTH;
 import static main.utils.Input.getString;
-import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.selectInfo;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
@@ -113,7 +112,7 @@ public abstract class ListManager<T extends Model> {
     }
 
     public boolean checkNull(List<T> tempList) {
-        if (tempList != null || !tempList.isEmpty()) 
+        if (tempList != null && !tempList.isEmpty()) 
             return false;
         return infoLog(String.format("No %s's data", className.toLowerCase()), true);
     }
@@ -235,8 +234,9 @@ public abstract class ListManager<T extends Model> {
         do {
             show(sortList(temp, propety, descending));
             
-            Menu.showOptions(new String[] {"Sort", "Show details", "Return"}, 0);
-            int choice = Menu.getChoice("Enter choice", 2, 3);
+            String[] sortOptions = new String[] {"Sort", "Show details", "Return"};
+            Menu.showOptions(sortOptions, 0);
+            int choice = Menu.getChoice("Enter choice", sortOptions.length, 3);
             if (choice == Integer.MIN_VALUE) return;
             
             switch(choice) {
@@ -253,6 +253,8 @@ public abstract class ListManager<T extends Model> {
                 case 2:
                     show(getById(String.format("Enter %s's id", className.toLowerCase())), "");
                     break;
+                case 3:    
+                    return;
                 default:
                     errorLog("Wrong choice");
                     break;
