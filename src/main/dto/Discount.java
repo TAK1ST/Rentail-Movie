@@ -2,7 +2,9 @@ package main.dto;
 
 import java.time.LocalDate;
 import main.base.Model;
-import main.constants.DiscountType;
+import main.constants.discount.ApplyForWhat;
+import main.constants.discount.ApplyForWho;
+import main.constants.discount.DiscountType;
 import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
@@ -16,6 +18,8 @@ public class Discount extends Model {
     private int quantity;
     private boolean isActive;
     private double value;
+    private ApplyForWho applyForWho;
+    private ApplyForWhat applyForWhat;
     
     public Discount() {
     }
@@ -29,7 +33,9 @@ public class Discount extends Model {
             DiscountType type, 
             int quantity, 
             boolean isActive, 
-            double value) 
+            double value,
+            ApplyForWho applyForWho,
+            ApplyForWhat applyForWhat) 
     {
         super(code);
         this.customerIds = customerIds;
@@ -40,6 +46,8 @@ public class Discount extends Model {
         this.quantity = quantity;
         this.isActive = isActive;
         this.value = value;
+        this.applyForWho = applyForWho;
+        this.applyForWhat = applyForWhat;
     }
 
     public Discount(Discount other) {
@@ -52,6 +60,8 @@ public class Discount extends Model {
         this.quantity = other.quantity;
         this.isActive = other.isActive;
         this.value = other.value;
+        this.applyForWho = other.applyForWho;
+        this.applyForWhat = other.applyForWhat;
     }
 
     @Override
@@ -68,7 +78,9 @@ public class Discount extends Model {
                 + "%s: %s,\n"
                 + "%s: %s,\n"
                 + "%s: %d,\n"
-                + "%s: %b.",
+                + "%s: %b,\n"
+                + "%s: %s,\n"
+                + "%s: %s.",
                 className(),
                 attr[count++], super.getId(),
                 attr[count++], customerIds,
@@ -78,7 +90,9 @@ public class Discount extends Model {
                 attr[count++], formatDate(startDate, Validator.DATE),
                 attr[count++], formatDate(endDate, Validator.DATE),
                 attr[count++], quantity,
-                attr[count++], isActive
+                attr[count++], isActive,
+                attr[count++], applyForWho.name(),
+                attr[count++], applyForWhat.name()
         );
     }
      
@@ -87,7 +101,18 @@ public class Discount extends Model {
     }
     
     public static String[] getAttributes() {
-        return new String[] {"Code", "Customer Id", "Movie Id", "Type", "Value", "Start date", "End date", "Quantity", "Status"};
+        return new String[] {
+            "Code", 
+            "Customer Id", 
+            "Movie Id", 
+            "Type", 
+            "Value", 
+            "Start date", 
+            "End date", 
+            "Quantity", 
+            "Status", 
+            "Apply for who",
+            "Apply for what"};
     }
 
     public String getCode() {
@@ -154,8 +179,6 @@ public class Discount extends Model {
         this.isActive = isActive;
     }
 
-    
-
     public boolean isActive() {
         return isActive;
     }
@@ -171,4 +194,21 @@ public class Discount extends Model {
     public void setValue(double value) {
         this.value = value;
     }
+
+    public ApplyForWho getApplyForWho() {
+        return applyForWho;
+    }
+
+    public void setApplyForWho(ApplyForWho applyForWho) {
+        this.applyForWho = applyForWho;
+    }
+
+    public ApplyForWhat getApplyForWhat() {
+        return applyForWhat;
+    }
+
+    public void setApplyForWhat(ApplyForWhat applyForWhat) {
+        this.applyForWhat = applyForWhat;
+    }
+    
 }

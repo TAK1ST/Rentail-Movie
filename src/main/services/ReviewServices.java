@@ -4,6 +4,19 @@
  */
 package main.services;
 
+import java.util.List;
+import static main.controllers.Managers.getACM;
+import static main.controllers.Managers.getMVM;
+import static main.controllers.Managers.getRVM;
+import main.dto.Movie;
+import main.dto.Review;
+import main.utils.InfosTable;
+import static main.utils.Input.getString;
+import static main.utils.Input.pressEnterToContinue;
+import static main.utils.Input.returnNames;
+import static main.utils.Utility.formatDate;
+import main.utils.Validator;
+
 
 /**
  *
@@ -11,21 +24,64 @@ package main.services;
  */
 public class ReviewServices {
         
-    public void displayAMovieReviews() {
-//        String movieID = getString("Enter movie's id", null);
-//        if (movieID.isEmpty()) {
-//            return;
-//        }
-//        List<Review> movieReview = searchBy(movieID);
-//        if (checkNull(movieReview)) {
-//            return;
-//        }
-//        show(movieReview);
+    public static void displayAMovieReviews() {
+        Movie movie = getMVM().getById("Enter movie's id");
+        if (getMVM().checkNull(movie)) return;
+        
+        List<Review> movieReviews = getRVM().searchBy(movie.getId());
+        if (getRVM().checkNull(movieReviews)) return;
+        
+        getMVM().show(movie, "");
+        getRVM().display(movieReviews);
+        
+        InfosTable.getTitle("Username", "Rating", "Comment", "Date");
+        movieReviews.forEach(item -> 
+            InfosTable.calcLayout(
+                String.join(", ", returnNames(item.getCustomerID(), getACM())),
+                item.getRating(),
+                item.getReviewText(),
+                formatDate(item.getReviewDate(), Validator.DATE)
+            )
+        );
+        
+        InfosTable.showTitle();
+        movieReviews.forEach(item -> 
+            InfosTable.displayByLine(
+                String.join(", ", returnNames(item.getCustomerID(), getACM())),
+                item.getRating(),
+                item.getReviewText(),
+                formatDate(item.getReviewDate(), Validator.DATE)
+            )
+        );
+        InfosTable.showFooter();
+        
     }
 
-    public void myReviews(String customID) {
-//        List<Review> myReviews = searchBy(customID);
-//        display(myReviews, Review.getAttributes(), true);
+    public static void myReviews(String customID) {
+        List<Review> myReviews = getRVM().searchBy(customID);
+        if (getRVM().checkNull(myReviews)) return;
+        
+        InfosTable.getTitle("Movie", "Rating", "Comment", "Date");
+        myReviews.forEach(item -> 
+            InfosTable.calcLayout(
+                String.join(", ", returnNames(item.getMovieID(), getMVM())),
+                item.getRating(),
+                item.getReviewText(),
+                formatDate(item.getReviewDate(), Validator.DATE)
+            )
+        );
+        
+        InfosTable.showTitle();
+        myReviews.forEach(item -> 
+            InfosTable.displayByLine(
+                String.join(", ", returnNames(item.getMovieID(), getMVM())),
+                item.getRating(),
+                item.getReviewText(),
+                formatDate(item.getReviewDate(), Validator.DATE)
+            )
+        );
+        InfosTable.showFooter();
+        pressEnterToContinue();
     }
 
 }

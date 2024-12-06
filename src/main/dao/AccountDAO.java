@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dto.Account;
 import main.config.Database;
-import main.constants.AccRole;
-import main.constants.AccStatus;
+import main.constants.account.AccRole;
+import main.constants.account.AccStatus;
 import main.utils.IDGenerator;
 
 public class AccountDAO {

@@ -2,15 +2,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
  */
-package main.constants;
+package main.constants.account;
 
 /**
  *
  * @author trann
  */
-public enum DiscountType {
+public enum AccRole {
     NONE,
-    PERCENT,
-    FIXED_AMOUNT,
-    BUY_X_GET_Y_FREE
+    ADMIN,
+    STAFF,
+    CUSTOMER,
+    PREMIUM
 }

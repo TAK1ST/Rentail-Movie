@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
 import main.constants.IDPrefix;
-import main.constants.WishlistPriority;
+import main.constants.wishlist.WishlistPriority;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
 import main.dao.WishlistDAO;
@@ -59,6 +59,10 @@ public class WishlistManager extends ListManager<Wishlist> {
     
     @Override
     public Wishlist getInputs(boolean[] options, Wishlist oldData) {
+        if (options == null) {
+            options = new boolean[] {true, true, true, true};
+        }
+        
         if (options.length < 4) {
             errorLog("Not enough option length");
             return null;

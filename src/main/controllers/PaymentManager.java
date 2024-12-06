@@ -1,14 +1,21 @@
 package main.controllers;
 
+import static java.lang.Integer.getInteger;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
-import main.constants.PaymentMethod;
+import main.constants.IDPrefix;
+import main.constants.payment.PaymentMethod;
+import main.constants.payment.PaymentStatus;
+import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getRTM;
 import main.dao.PaymentDAO;
+import main.dto.Account;
 import main.dto.Rental;
 import main.dto.Payment;
+import main.utils.IDGenerator;
 import main.utils.InfosTable;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.getEnumValue;
@@ -51,32 +58,67 @@ public class PaymentManager extends ListManager<Payment> {
     
     @Override
     public Payment getInputs(boolean[] options, Payment oldData) {
-        if (options.length < 2) {
+        if (options == null) {
+            options = new boolean[] { true, true, true, true };
+        }
+        
+        if (options.length < 4) {
             errorLog("Not enough option length");
             return null;
         }
-        Rental rental = null;
+        double amount = 0f;
+        LocalDateTime transactionTime = null;
+        PaymentStatus status = PaymentStatus.NONE;
         PaymentMethod method = PaymentMethod.NONE;
+        Account customer = null;
         
         if (oldData != null) {
-            rental = (Rental) getRTM().searchById(oldData.getId());
-            if (getRTM().checkNull(rental)) return null;
+            customer = (Account) getACM().searchById(oldData.getId());
+            if (getACM().checkNull(customer)) return null;
             
             method = oldData.getMethod();
+            amount = oldData.getAmount();
         }
         
-        if (options[0] && rental == null) {
-            rental = (Rental) getRTM().getById("Enter rental's id");
-            if (getRTM().checkNull(rental)) return null;
+        if (options[0] && customer == null) {
+            customer = (Account) getACM().getById("Enter cutomer's id");
+            if (getACM().checkNull(customer)) return null;
         }
-        if (options[1]) {
+        if (options[1] && customer == null) {
+            amount = getInteger("Enter amount");
+            if (amount == Integer.MIN_VALUE) return null;
+        }
+        if (options[2]) {
             method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, method);
             if (method == PaymentMethod.NONE) return null;
         }
+        if (options[3]) {
+            status = (PaymentStatus) getEnumValue("Choose payment status", PaymentStatus.class, status);
+            if (status == PaymentStatus.NONE) return null;
+        }
         
+        if (oldData == null) {
+            status = PaymentStatus.COMPLETED;
+            transactionTime = LocalDateTime.now();
+        }
+        else {             
+            status = oldData.getStatus() == null ?  PaymentStatus.COMPLETED : oldData.getStatus();
+            transactionTime = oldData.getTransactionTime() == null ? LocalDateTime.now() : oldData.getTransactionTime();
+        }
+        
+        String id = (oldData == null || oldData.getId() == null) 
+                ? 
+            IDGenerator.generateID(list.isEmpty() ? null : list.getLast().getId(), IDPrefix.RENTAL_PREFIX)
+                :
+            oldData.getId();
+
         return new Payment(
-                rental.getId(), 
-                method
+                id, 
+                customer.getId(),
+                amount,
+                method,
+                transactionTime,
+                status
         );
     }
 
@@ -101,11 +143,19 @@ public class PaymentManager extends ListManager<Payment> {
         List<Payment> result = new ArrayList<>(tempList);
 
         if (property.equals(options[0])) {
-            result.sort(Comparator.comparing(Payment::getRentalId));
+            result.sort(Comparator.comparing(Payment::getId));
         } else if (property.equals(options[1])) {
+            result.sort(Comparator.comparing(Payment::getCustomerID));
+        } else if (property.equals(options[2])) {
+            result.sort(Comparator.comparing(Payment::getAmount));
+        } else if (property.equals(options[3])) {
             result.sort(Comparator.comparing(Payment::getMethod));
+        } else if (property.equals(options[4])) {
+            result.sort(Comparator.comparing(Payment::getTransactionTime));
+        } else if (property.equals(options[5])) {
+            result.sort(Comparator.comparing(Payment::getStatus));
         } else {
-            result.sort(Comparator.comparing(Payment::getRentalId)); 
+            result.sort(Comparator.comparing(Payment::getId)); 
         }
 
         return result;
@@ -120,18 +170,27 @@ public class PaymentManager extends ListManager<Payment> {
         InfosTable.getTitle(Payment.getAttributes());
         tempList.forEach(item -> 
                 InfosTable.calcLayout(
-                        item.getRentalId(),
-                        item.getMethod()
+                        item.getId(),
+                        item.getCustomerID(),
+                        item.getAmount(),
+                        item.getMethod(),
+                        item.getTransactionTime(),
+                        item.getStatus()
                 )
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
                 InfosTable.displayByLine(
-                        item.getRentalId(),
-                        item.getMethod()
+                        item.getId(),
+                        item.getCustomerID(),
+                        item.getAmount(),
+                        item.getMethod(),
+                        item.getTransactionTime(),
+                        item.getStatus()
                 )
         );
         InfosTable.showFooter();
     }
+    
 }

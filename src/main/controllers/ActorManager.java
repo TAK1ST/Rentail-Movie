@@ -4,7 +4,7 @@ import main.base.ListManager;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import main.constants.ActorRank;
+import main.constants.actor.ActorRank;
 import main.constants.IDPrefix;
 import main.dao.ActorDAO;
 import main.dto.Actor;

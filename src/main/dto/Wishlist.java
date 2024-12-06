@@ -2,7 +2,7 @@ package main.dto;
 
 import main.base.Model;
 import java.time.LocalDate;
-import main.constants.WishlistPriority;
+import main.constants.wishlist.WishlistPriority;
 import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
@@ -14,6 +14,10 @@ public class Wishlist extends Model {
     private WishlistPriority priority;
     
     public Wishlist() {
+    }
+    
+    public Wishlist(String customerID) {
+        this.customerID = customerID;
     }
     
     public Wishlist(String movieID, String customerID) {

@@ -1,6 +1,8 @@
+DROP DATABASE movierentalsystemdb;
+
 CREATE DATABASE IF NOT EXISTS movierentalsystemdb;
 USE movierentalsystemdb;
--- drop database movierentalsystemdb;
+
 CREATE TABLE IF NOT EXISTS Accounts (
     account_id CHAR(8) PRIMARY KEY,
     username NVARCHAR(50) UNIQUE NOT NULL,
@@ -43,7 +45,9 @@ CREATE TABLE IF NOT EXISTS Discounts (
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     quantity INT DEFAULT 1,
-    is_active BOOLEAN DEFAULT TRUE
+    is_active BOOLEAN DEFAULT TRUE,
+    apply_for_what ENUM('SPECIFIC_MOVIES', 'GENRE', 'CART_TOTAL', 'GLOBAL') NOT NULL DEFAULT 'GLOBAL',
+    apply_for_who ENUM('ALL_USERS', 'SPECIFIC_USERS', 'GUESTS', 'PREMIUM') NOT NULL DEFAULT 'ALL_USERS'
 );
 
 CREATE TABLE IF NOT EXISTS Actors (
@@ -111,13 +115,17 @@ CREATE TABLE IF NOT EXISTS Rentals (
 );
 
 CREATE TABLE IF NOT EXISTS Payments (
-    rental_id CHAR(8),
-    payment_method ENUM('CARD', 'ONLINE', 'BANKING') NOT NULL DEFAULT 'CARD',
-    FOREIGN KEY (rental_id) REFERENCES Rentals (rental_id) ON DELETE CASCADE
+    payment_id CHAR(8) PRIMARY KEY,
+    customer_id CHAR(8) NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    payment_method ENUM('ONLINE', 'CARD', 'BANKING') NOT NULL,
+    transaction_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('PENDING', 'COMPLETED', 'FAILED') DEFAULT 'PENDING',
+    FOREIGN KEY (customer_id) REFERENCES Accounts(account_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Profiles (
-    account_id CHAR(8),
+    account_id CHAR(8) NOT NULL,
     full_name NVARCHAR(60),
     birthday DATE NOT NULL,
     address NVARCHAR(255),
