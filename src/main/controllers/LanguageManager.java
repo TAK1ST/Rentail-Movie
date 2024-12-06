@@ -84,7 +84,7 @@ public class LanguageManager extends ListManager<Language> {
    
     @Override
     public List<Language> searchBy(List<Language> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Language> result = new ArrayList<>();
         for (Language item : tempList) {
@@ -101,7 +101,7 @@ public class LanguageManager extends ListManager<Language> {
     
     @Override
     public List<Language> sortList(List<Language> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         

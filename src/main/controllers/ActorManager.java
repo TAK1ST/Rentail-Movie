@@ -94,7 +94,7 @@ public class ActorManager extends ListManager<Actor> {
     
     @Override
     public List<Actor> sortList(List<Actor> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         
@@ -118,7 +118,7 @@ public class ActorManager extends ListManager<Actor> {
     
     @Override
     public List<Actor> searchBy(List<Actor> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Actor> result = new ArrayList<>();
         for (Actor item : tempList) {
