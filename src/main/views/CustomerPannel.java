@@ -10,6 +10,7 @@ import static main.controllers.Managers.getWLM;
 import main.dto.Account;
 import main.services.ProfileServices;
 import main.services.DiscountServices;
+import main.services.MovieServices;
 import main.services.RentalServices;
 import main.services.ReviewServices;
 import main.services.WishlistServices;
@@ -41,7 +42,7 @@ public class CustomerPannel {
                 new Option("Update profile", 
                         () -> ProfileServices.updateMyProfile(), ASK_FOR_AGAIN),
                 new Option("Display movies", 
-                        () -> getMVM().displaySortDetail(), ENTER_TO_CONTINUE),
+                        () -> MovieServices.showCustomerMovie(), ENTER_TO_CONTINUE),
                 new Option("Search movie", 
                         () -> getMVM().search(), ASK_FOR_AGAIN),
                 new Option("Rent movie", 

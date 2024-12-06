@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import static main.config.Database.getConnection;
+import static main.controllers.Managers.getMVM;
+import main.utils.InfosTable;
 
 /**
  *
@@ -53,5 +55,37 @@ public class MovieServices {
         }
         return false;  
     }
-    
+    public static void showCustomerMovie() {
+        if (getMVM().checkNull(getMVM().getList())) return;
+            
+        InfosTable.getTitle(new String[] {"Title", "Description", "Average Rating", "Rental price", "Available copies"});
+        getMVM().getList().forEach(item -> 
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
+                        item.getTitle(),
+                        item.getDescription(),
+                        item.getAvgRating(),
+                        item.getRentalPrice(),
+                        item.getAvailableCopies()
+                );
+            }
+        );
+        
+        InfosTable.showTitle();
+        getMVM().getList().forEach(item -> 
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
+                        item.getTitle(),
+                        item.getDescription(),
+                        item.getAvgRating(),
+                        item.getRentalPrice(),
+                        item.getAvailableCopies()
+                );
+            }
+        );
+        InfosTable.showFooter();
+    }
+   
 }

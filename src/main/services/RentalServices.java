@@ -21,6 +21,7 @@ import main.dao.RentalDAO;
 import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Rental;
+import main.utils.InfosTable;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 
@@ -204,5 +205,36 @@ public class RentalServices {
 //
 //        return RentalDAO.updateRentalInDB(rental); 
 //    }
-    
+    public static void showCustomerRentalHistory() {
+        if (getRTM().checkNull(getRTM().getList())) return;
+            
+        InfosTable.getTitle(new String[] {"Title", "Description", "Average Rating", "Rental price", "Available copies"});
+        getMVM().getList().forEach(item -> 
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
+                        item.getTitle(),
+                        item.getDescription(),
+                        item.getAvgRating(),
+                        item.getRentalPrice(),
+                        item.getAvailableCopies()
+                );
+            }
+        );
+        
+        InfosTable.showTitle();
+        getMVM().getList().forEach(item -> 
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
+                        item.getTitle(),
+                        item.getDescription(),
+                        item.getAvgRating(),
+                        item.getRentalPrice(),
+                        item.getAvailableCopies()
+                );
+            }
+        );
+        InfosTable.showFooter();
+    }
 }

@@ -210,11 +210,11 @@ public class MovieManager extends ListManager<Movie> {
                     InfosTable.calcLayout(
                         item.getId(),
                         item.getTitle(),
+                        item.getDescription(),
+                        item.getAvgRating(),
                         returnNames(item.getGenreNames(), getGRM()),
                         String.join(", ", returnNames(item.getActorIDs(), getATM())),
                         String.join(", ", returnNames(item.getLanguageCodes(), getLGM())),
-                        item.getDescription(),
-                        item.getAvgRating(),
                         formatDate(item.getReleaseYear(), Validator.YEAR),
                         item.getRentalPrice(),
                         item.getAvailableCopies(),
@@ -231,7 +231,6 @@ public class MovieManager extends ListManager<Movie> {
                     InfosTable.displayByLine(
                         item.getId(),
                         item.getTitle(),
-                        item.getDescription(),
                         item.getDescription(),
                         item.getAvgRating(),
                         returnNames(item.getGenreNames(), getGRM()),

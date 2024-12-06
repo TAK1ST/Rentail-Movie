@@ -1,6 +1,6 @@
 
 USE movierentalsystemdb;
-SELECT username FROM Accounts WHERE username = 'jane_doe';
+
 INSERT INTO Accounts (account_id, username, password, role, email, status, online_at, created_at, updated_at, creability) VALUES
 ('AC000001', 'john_doe', 'password123', 'CUSTOMER', 'john@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
 ('AC000002', 'jane_doe', 'password123', 'STAFF', 'jane@example.com', 'ONLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
