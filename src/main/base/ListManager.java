@@ -46,7 +46,7 @@ public abstract class ListManager<T extends Model> {
         
         String lastID = null;
         if (gapIDs.isEmpty()) {
-            List<T> temp = sortList(list, attributes[0], false);
+            List<T> temp = sortList(list, null, false);
             if (temp != null && !temp.isEmpty() && temp.getLast() != null && temp.getLast().getId() != null)
                 lastID = temp.getLast().getId();
             
@@ -235,7 +235,7 @@ public abstract class ListManager<T extends Model> {
             show(sortList(temp, propety, descending));
             
             String[] sortOptions = new String[] {"Sort", "Show details", "Return"};
-            Menu.showOptions(sortOptions, 0);
+            Menu.showOptions(sortOptions, 2);
             int choice = Menu.getChoice("Enter choice", sortOptions.length, 3);
             if (choice == Integer.MIN_VALUE) return;
             

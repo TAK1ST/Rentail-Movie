@@ -40,7 +40,7 @@ public class Input {
                 if (oldData != null && !oldData.isEmpty()) {
                     System.out.println();
                     infoLog("Press enter to pass");
-                    System.out.printf("If enter, default value is: %s", oldData);
+                    System.out.printf("If enter, default value is: %s\n", oldData);
                 }
                 
                 System.out.print(message + ": ");
@@ -67,7 +67,7 @@ public class Input {
             if (oldData != Integer.MIN_VALUE)  {
                 System.out.println();
                 infoLog("Press enter to pass");
-                System.out.printf("If enter, default value is: %d", oldData);
+                System.out.printf("If enter, default value is: %d\n", oldData);
             }
             
             if (min == Integer.MIN_VALUE || max == Integer.MAX_VALUE)
@@ -107,7 +107,7 @@ public class Input {
             if (oldData != Double.MIN_VALUE) {
                 System.out.println();
                 infoLog("Press enter to pass");
-                System.out.printf("If enter, default value is: %.2f", oldData);
+                System.out.printf("If enter, default value is: %.2f\n", oldData);
             }
             
             if (min == Double.MIN_VALUE || max == Double.MAX_VALUE)
