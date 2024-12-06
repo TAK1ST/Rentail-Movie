@@ -120,8 +120,8 @@ public class RentalDAO {
         return list;
     }
     
-    public static List<Rental> getUserRentals(String customerId) throws SQLException {
-        String query = "SELECT movie_id, rental_date, due_date, return_date, status FROM Rentals WHERE customer_id = ?";
+    public static List<Rental> getUserRentals(String customerId) {
+        String query = "SELECT movie_id, staff_id, rental_date, due_date, return_date, late_fee, total_amount, status FROM Rentals WHERE customer_id = ?";
 
         List<Rental> list = new ArrayList<>();
 
@@ -145,6 +145,8 @@ public class RentalDAO {
                 );
                 list.add(rental);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return list;
     }

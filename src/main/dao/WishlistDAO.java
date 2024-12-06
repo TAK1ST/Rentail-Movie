@@ -93,8 +93,8 @@ public class WishlistDAO {
         return list;
     }
     
-    public static List<Wishlist> getUserWishlist(String customerId) throws SQLException {
-        String query = "SELECT movie_id, priority FROM Wishlists WHERE customer_id = ?";
+    public static List<Wishlist> getUserWishlist(String customerId) {
+        String query = "SELECT movie_id, added_date, priority FROM Wishlists WHERE customer_id = ?";
 
         List<Wishlist> list = new ArrayList<>();
 
@@ -113,6 +113,8 @@ public class WishlistDAO {
                 );
                 list.add(wishlist);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return list;
     }

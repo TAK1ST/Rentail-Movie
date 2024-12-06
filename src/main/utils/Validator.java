@@ -279,7 +279,7 @@ public class Validator {
             System.out.println();
             infoLog("Date must be in format dd/MM/yyyy");
             input = getString(message, oldData == null ? null : oldData.toString());
-            if (input == oldData.toString()) 
+            if (input == null || (oldData != null && input == oldData.toString())) 
                 return oldData;
             
             if (input.isEmpty()) {

@@ -35,7 +35,7 @@ public class RentalServices {
     
     public static void initDataFor(String id) {
         accountID = id;
-        myRentals = getRTM().searchBy(accountID);
+        myRentals = RentalDAO.getUserRentals(id);
     }
     
     public static void myHistoryRental() {
