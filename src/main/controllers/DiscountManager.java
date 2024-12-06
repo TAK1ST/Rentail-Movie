@@ -36,19 +36,19 @@ public class DiscountManager extends ListManager<Discount> {
     
     public boolean addDiscount() {
         
-        LocalDate startDate = getDate("Enter start date", null);
+        LocalDate startDate = getDate("Enter start date");
         if (startDate == null) return false;
         
-        LocalDate endDate = getDate("Enter end date", null);
+        LocalDate endDate = getDate("Enter end date");
         if (endDate == null) return false;
         
-        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, null);
+        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class);
         if (type == null) return false;
         
-        int quantity = getInteger("Enter available quantity", 1, 1000, Integer.MIN_VALUE);
+        int quantity = getInteger("Enter available quantity", 1, 1000);
         if (quantity == Integer.MIN_VALUE) return false;
 
-        double value = getDouble("Enter value", 1f, 100f, Double.MIN_VALUE);
+        double value = getDouble("Enter value", 1f, 100f);
         if (value == Double.MIN_VALUE) return false;
 
         ApplyForWhat applyForWhat = (ApplyForWhat) getEnumValue("Apply for what", ApplyForWhat.class, ApplyForWhat.GLOBAL);

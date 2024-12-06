@@ -26,6 +26,42 @@ public class Validator {
     
     private static final Scanner scanner = new Scanner(System.in);
     
+    public static String getUsername(String message, List<Account> list) {
+        return getUsername(message, null, list);
+    }
+            
+    public static String getPassword(String message) {
+        return getPassword(message, null);
+    }
+            
+    public static String getName(String message)     {
+        return getName(message, null);
+    }    
+            
+    public static String getFullName(String message)  {
+        return getFullName(message, null);
+    }       
+            
+    public static String getPhoneNumber(String message) {        
+        return getPhoneNumber(message, null);
+    }
+            
+    public static String getEmail(String message) {
+        return getEmail(message, null);
+    }        
+            
+    public static LocalDate getDate(String message) {
+        return getDate(message, null);
+    }
+            
+    public static LocalTime getTime() {
+        return getTime(null);
+    }        
+            
+    public static LocalDateTime getDateTime() {
+        return getDateTime(null);
+    }
+    
     public static String getUsername(String message, String oldData, List<Account> list) {
         String input = null;
         boolean isUnique = false;

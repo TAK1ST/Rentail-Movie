@@ -39,7 +39,8 @@ public class Input {
             do {
                 if (oldData != null && !oldData.isEmpty()) {
                     System.out.println();
-                    infoLog(String.format("Press Enter to skip, default value will be: %s", oldData));
+                    infoLog("Press enter to pass");
+                    System.out.printf("If enter, default value is: %s", oldData);
                 }
                 
                 System.out.print(message + ": ");
@@ -65,7 +66,8 @@ public class Input {
         while (true) {
             if (oldData != Integer.MIN_VALUE)  {
                 System.out.println();
-                infoLog(String.format("Press Enter to skip, default value will be: %d", oldData));
+                infoLog("Press enter to pass");
+                System.out.printf("If enter, default value is: %d", oldData);
             }
             
             if (min == Integer.MIN_VALUE || max == Integer.MAX_VALUE)
@@ -104,7 +106,8 @@ public class Input {
         while (true) {
             if (oldData != Double.MIN_VALUE) {
                 System.out.println();
-                infoLog(String.format("Press Enter to skip, default value will be: %.2f", oldData));
+                infoLog("Press enter to pass");
+                System.out.printf("If enter, default value is: %.2f", oldData);
             }
             
             if (min == Double.MIN_VALUE || max == Double.MAX_VALUE)
@@ -144,16 +147,16 @@ public class Input {
     }
 
     public static String selectInfo(String message, String[] infoLists, String oldData) {
-        if (oldData != null && !oldData.isEmpty())  {
-            System.out.println();
-            infoLog("Press Enter to skip");
-        }
         System.out.println("\n" + message + ": ");
         for (int index = 1; index <= infoLists.length; index++) {
                 if (index % 4 == 1) System.out.println();
                 System.out.printf("[%02d] %-25s ", index, infoLists[index - 1]);
         }
-        System.out.println("\n");
+        if (oldData != null && !oldData.isEmpty())  {
+            System.out.println();
+            infoLog("Press enter to pass");
+            System.out.printf("If enter, default value is: %s\n", oldData);
+        }
         int option = getInteger("Enter an option", 1, infoLists.length, Integer.MIN_VALUE);
         if (option == Integer.MIN_VALUE)
             return oldData;

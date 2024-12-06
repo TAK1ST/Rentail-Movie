@@ -21,7 +21,7 @@ public class LanguageManager extends ListManager<Language> {
     }
     
     public boolean addLanguage() {
-        String code = getString("Enter language code", null);
+        String code = getString("Enter language code");
         if (code == null) return false;
         
         for (Language item : list) 
@@ -30,7 +30,7 @@ public class LanguageManager extends ListManager<Language> {
                 return false;
             }
 
-        String name = getName("Enter language name", null);
+        String name = getName("Enter language name");
         if (name == null) return false;
         
         Language language = new Language(

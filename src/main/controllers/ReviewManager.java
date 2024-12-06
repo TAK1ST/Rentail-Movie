@@ -30,7 +30,7 @@ public final class ReviewManager extends ListManager<Review> {
     
     public boolean addReview(String customerID) {
         if (customerID == null) 
-            customerID = getString("Enter customer's id", null);
+            customerID = getString("Enter customer's id");
         if (customerID == null) return false;
         
         Account customer = (Account) getACM().searchById(customerID);
@@ -43,10 +43,10 @@ public final class ReviewManager extends ListManager<Review> {
         if (reviews != null && !reviews.isEmpty()) 
             return errorLog("Already reviewed this movie", false);
         
-        int rating = getInteger("Enter rating", 1, 5, Integer.MIN_VALUE);
+        int rating = getInteger("Enter rating", 1, 5);
         if (rating == Integer.MIN_VALUE) return false;
         
-        String comment = getString("Enter comment", null);
+        String comment = getString("Enter comment");
         
         double avgRating = MovieServices.calculateAverageRating(movie.getId());
         if (avgRating > 0) movie.setAvgRating(avgRating);

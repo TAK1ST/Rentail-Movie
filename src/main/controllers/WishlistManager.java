@@ -30,7 +30,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     
     public boolean addWishlist(String customerID) {
         if (customerID == null) 
-            customerID = getString("Enter customer's id", null);
+            customerID = getString("Enter customer's id");
         if (customerID == null) return false;
         
         Account customer = (Account) getACM().searchById(customerID);
@@ -43,7 +43,7 @@ public class WishlistManager extends ListManager<Wishlist> {
         if (items != null && !items.isEmpty()) 
             return errorLog("Already added this movie", false);
         
-        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, null);
+        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class);
         if (priority == null) return false;
         
         return add(new Wishlist(

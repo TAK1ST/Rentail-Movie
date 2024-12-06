@@ -24,7 +24,7 @@ public class ActorManager extends ListManager<Actor> {
     }
     
     public boolean addActor() {
-        String name = getName("Enter actor's name", null);
+        String name = getName("Enter actor's name");
         if (name == null) return false;
         
         for (Actor item : list) 
@@ -33,10 +33,10 @@ public class ActorManager extends ListManager<Actor> {
                 return false;
             }
         
-        ActorRank rank = (ActorRank) getEnumValue("Enter actor's rank", ActorRank.class, null);
+        ActorRank rank = (ActorRank) getEnumValue("Enter actor's rank", ActorRank.class);
         if (rank == null) return false;
 
-        String description = getString("Enter actor's description", null);
+        String description = getString("Enter actor's description");
         if (description == null) return false;
         
         Actor actor = new Actor(

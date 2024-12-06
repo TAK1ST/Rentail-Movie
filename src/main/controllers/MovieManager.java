@@ -41,25 +41,25 @@ public class MovieManager extends ListManager<Movie> {
         String title = getString("Enter title", null);
         if (title == null) return false;
         
-        String description = getString("Enter description", null);
+        String description = getString("Enter description");
         if (description == null) return false;
         
-        String genres = selectByNumbers("Enter genres (Comma-separated)", getGRM(), null);
+        String genres = selectByNumbers("Enter genres (Comma-separated)", getGRM());
         if (genres == null) return false;
         
-        String actors = selectByNumbers("Enter actors (Comma-separated)", getATM(), null);
+        String actors = selectByNumbers("Enter actors (Comma-separated)", getATM());
         if (actors == null) return false;
         
-        String languages = selectByNumbers("Enter languages (Comma-separated)", getLGM(), null);
+        String languages = selectByNumbers("Enter languages (Comma-separated)", getLGM());
         if (languages == null) return false;
 
-        LocalDate releaseDate = getDate("Enter release date", null);
+        LocalDate releaseDate = getDate("Enter release date");
         if (releaseDate == null) return false;
 
-        double price = getDouble("Enter rental price", 0, Double.MAX_VALUE, Double.MIN_VALUE);
+        double price = getDouble("Enter rental price", 0, Double.MAX_VALUE);
         if (price == Double.MIN_VALUE) return false;
         
-        int availableCopies = getInteger("Enter available copies", 0, Integer.MAX_VALUE, Integer.MIN_VALUE);
+        int availableCopies = getInteger("Enter available copies", 0, Integer.MAX_VALUE);
         if (availableCopies == Integer.MIN_VALUE) return false;
         
         Movie movie =  new Movie(
@@ -210,7 +210,7 @@ public class MovieManager extends ListManager<Movie> {
                     InfosTable.calcLayout(
                         item.getId(),
                         item.getTitle(),
-                        String.join(", ", returnNames(item.getGenreNames(), getGRM())),
+                        returnNames(item.getGenreNames(), getGRM()),
                         String.join(", ", returnNames(item.getActorIDs(), getATM())),
                         String.join(", ", returnNames(item.getLanguageCodes(), getLGM())),
                         item.getDescription(),
@@ -231,7 +231,7 @@ public class MovieManager extends ListManager<Movie> {
                     InfosTable.displayByLine(
                         item.getId(),
                         item.getTitle(),
-                        String.join(", ", returnNames(item.getGenreNames(), getGRM())),
+                        returnNames(item.getGenreNames(), getGRM()),
                         String.join(", ", returnNames(item.getActorIDs(), getATM())),
                         String.join(", ", returnNames(item.getLanguageCodes(), getLGM())),
                         item.getDescription(),

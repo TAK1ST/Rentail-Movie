@@ -43,6 +43,10 @@ public class Utility {
         return enumConstants[choice - 1];
     }
     
+    public static <E extends Enum<E>> E getEnumValue(String message, Class<E> enumClass) {
+        return getEnumValue(message, enumClass, null);
+    }
+    
     public static long extractNumber(String str) {
         String number = str.replaceAll("\\D+", "");
         return Long.parseLong(number);

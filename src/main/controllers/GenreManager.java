@@ -21,7 +21,7 @@ public class GenreManager extends ListManager<Genre> {
     }
     
     public boolean addGenre() {
-        String name = getName("Enter genre name", null);
+        String name = getName("Enter genre name");
         if (name == null) return false;
         
         for (Genre item : list) 
@@ -30,7 +30,7 @@ public class GenreManager extends ListManager<Genre> {
                 return false;
             }
 
-        String description = getString("Enter genre's description", null);
+        String description = getString("Enter genre's description");
         if (description == null) return false;
         
         Genre genre = new Genre(

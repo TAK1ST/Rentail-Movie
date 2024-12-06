@@ -35,7 +35,7 @@ public class RentalManager extends ListManager<Rental> {
     
     public boolean addRental(String customerID) {
         if (customerID == null) 
-            customerID = getString("Enter customer's id", null);
+            customerID = getString("Enter customer's id");
         if (customerID == null) return false;
         
         Account customer = (Account) getACM().searchById(customerID);
@@ -51,7 +51,7 @@ public class RentalManager extends ListManager<Rental> {
         LocalDate rentalDate = getPMM().addPayment(customer.getId()) ? LocalDate.now() : null;
         if (rentalDate == null) return false;
         
-        int howManyDays = getInteger("How many days to rent", 1, 365, Integer.MIN_VALUE);
+        int howManyDays = getInteger("How many days to rent", 1, 365);
         if (howManyDays == Integer.MIN_VALUE) return false;
         
         

@@ -8,67 +8,70 @@ public class InfosTable {
     
     private static final int MAX_DISPLAY = 170;
     
-    private static class Formater {
+    private static class Column {
         String title;
-        String str;
-        int number;
+        String format;
+        int length;
         
-        Formater(String title, String str, int number) {
+        Column(String title, String format, int length) {
             this.title = title;
-            this.str = str;
-            this.number = number;
+            this.format = format;
+            this.length = length;
         }
         
         String format() {
-            if (str == null)
+            if (format == null)
                 return "";
             
-            if (str.contains("#"))
-                return str.replaceAll("#", String.valueOf(number));
+            if (format.contains("#"))
+                return format.replaceAll("#", String.valueOf(length));
             else
-                return str;
+                return format;
         }
     }
     
     private static int width = 0;
     private static int colMaxLength;
-    private static final List<Formater> formaters = new ArrayList<>();
+    private static final List<Column> columns = new ArrayList<>();
 
     public static void getTitle(String... args) {
         resetData();
         for (String item : args) {
-            formaters.add(new Formater(item, null, item.length()));
+            columns.add(new Column(item, null, item.length()));
         }
-        colMaxLength = MAX_DISPLAY / formaters.size();
+        colMaxLength = MAX_DISPLAY / columns.size();
     }
     
     public static void calcLayout(Object... args) {
         for (int index = 0; index < args.length; index++) {
-            int currentL = formaters.get(index).number;
+            int currentL = columns.get(index).length;
             if (args[index] != null) 
             {
                 int length = args[index].toString().length();
                 if (length > colMaxLength) 
                     length = colMaxLength;
-                formaters.get(index).number = Math.max(currentL, length);
-                if (formaters.get(index).str == null) 
-                    formaters.get(index).str = getFormat(args[index]);
+                columns.get(index).length = Math.max(currentL, length);
+                if (columns.get(index).format == null) 
+                    columns.get(index).format = getFormat(args[index]);
             } 
             else 
             {
-                formaters.get(index).number = Math.max(currentL, 4);
-                if (formaters.get(index).str == null) 
-                    formaters.get(index).str = getFormat(args[index]);
+                columns.get(index).length = Math.max(currentL, 4);
+                if (columns.get(index).format == null) 
+                    columns.get(index).format = getFormat(args[index]);
             }
         }
     }
     
     public static void displayByLine(Object... args) {
         for (int index = 0; index < args.length; index++) {
-            if (args[index] instanceof String)
-                System.out.printf(formaters.get(index).format(), truncate(args[index]));
+            if (args[index] instanceof String[]) {
+                System.out.printf(columns.get(index).format(), String.join(", ", args[index].toString()));
+            }
+            else if (args[index] instanceof String)
+                System.out.printf(columns.get(index).format(), truncate(args[index]));
             else 
-                System.out.printf(formaters.get(index).format(), args[index]);
+                System.out.printf(columns.get(index).format(), args[index]);
         }
         System.out.print("|\n");
     }
@@ -78,8 +81,8 @@ public class InfosTable {
         System.out.println();
         for (int index = 0; index < width; index++) System.out.print("-");
         System.out.println();
-        for (int index = 0; index < formaters.size(); index++)
-            System.out.printf("| %-" + formaters.get(index).number + "s ", formaters.get(index).title);
+        for (int index = 0; index < columns.size(); index++)
+            System.out.printf("| %-" + columns.get(index).length + "s ", columns.get(index).title);
         System.out.print("|\n");
         for (int index = 0; index < width; index++) System.out.print("-");
         System.out.println();
@@ -91,8 +94,10 @@ public class InfosTable {
         resetData();
     }
     
+    ///////////////////////////////////////////////////////////////////////////
+    
     private static void setWidth() {
-        formaters.forEach(item -> width+= item.number + 3);
+        columns.forEach(item -> width+= item.length + 3);
         width++;
     }
     
@@ -102,6 +107,8 @@ public class InfosTable {
         } else if (arg instanceof Integer) {
             return "| %#d ";
         } else if (arg instanceof String) {
+            return "| %-#s ";
+        } else if (arg instanceof String[]) {
             return "| %-#s ";
         } else if (arg instanceof Double) {
             return "| %#.2f ";
@@ -116,7 +123,7 @@ public class InfosTable {
     
     private static void resetData() {
         width = 0;
-        formaters.clear();
+        columns.clear();
     }
     
     private static String truncate(Object input) {
