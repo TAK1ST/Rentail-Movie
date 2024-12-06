@@ -36,19 +36,19 @@ public class DiscountManager extends ListManager<Discount> {
     
     public boolean addDiscount() {
         
-        LocalDate startDate = getDate("Enter start date", null);
+        LocalDate startDate = getDate("Enter start date");
         if (startDate == null) return false;
         
-        LocalDate endDate = getDate("Enter end date", null);
+        LocalDate endDate = getDate("Enter end date");
         if (endDate == null) return false;
         
-        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, null);
+        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class);
         if (type == null) return false;
         
-        int quantity = getInteger("Enter available quantity", 1, 1000, Integer.MIN_VALUE);
+        int quantity = getInteger("Enter available quantity", 1, 1000);
         if (quantity == Integer.MIN_VALUE) return false;
 
-        double value = getDouble("Enter value", 1f, 100f, Double.MIN_VALUE);
+        double value = getDouble("Enter value", 1f, 100f);
         if (value == Double.MIN_VALUE) return false;
 
         ApplyForWhat applyForWhat = (ApplyForWhat) getEnumValue("Apply for what", ApplyForWhat.class, ApplyForWhat.GLOBAL);
@@ -94,16 +94,16 @@ public class DiscountManager extends ListManager<Discount> {
             discount = (Discount) getById("Enter discount code");
         if (checkNull(discount)) return false;
         
-        Discount temp = new Discount();
-        temp.setStartDate(getDate("Enter start date", discount.getStartDate()));
-        temp.setEndDate(getDate("Enter end date", discount.getEndDate()));
-        temp.setType((DiscountType) getEnumValue("Choose discount type", DiscountType.class, discount.getType()));
-        temp.setQuantity(getInteger("Enter available quantity", 1, 1000, discount.getQuantity()));
-        temp.setValue(getDouble("Enter value", 1f, 100f, discount.getValue()));
-        temp.setApplyForWhat((ApplyForWhat) getEnumValue("Apply for what", ApplyForWhat.class, discount.getApplyForWhat()));
-        temp.setMovieIds(getAppliedMovie(discount.getApplyForWhat(), discount.getMovieIds()));
-        temp.setApplyForWho((ApplyForWho) getEnumValue("Apply for who", ApplyForWho.class, discount.getApplyForWho()));
-        temp.setCustomerIds(getAppliedCustomer(discount.getApplyForWho(), discount.getCustomerIds()));
+        Discount temp = new Discount(discount);
+        temp.setStartDate(getDate("Enter start date", temp.getStartDate()));
+        temp.setEndDate(getDate("Enter end date", temp.getEndDate()));
+        temp.setType((DiscountType) getEnumValue("Choose discount type", DiscountType.class, temp.getType()));
+        temp.setQuantity(getInteger("Enter available quantity", 1, 1000, temp.getQuantity()));
+        temp.setValue(getDouble("Enter value", 1f, 100f, temp.getValue()));
+        temp.setApplyForWhat((ApplyForWhat) getEnumValue("Apply for what", ApplyForWhat.class, temp.getApplyForWhat()));
+        temp.setMovieIds(getAppliedMovie(temp.getApplyForWhat(), temp.getMovieIds()));
+        temp.setApplyForWho((ApplyForWho) getEnumValue("Apply for who", ApplyForWho.class, temp.getApplyForWho()));
+        temp.setCustomerIds(getAppliedCustomer(temp.getApplyForWho(), temp.getCustomerIds()));
         
         return update(discount, temp);
     }
@@ -129,8 +129,17 @@ public class DiscountManager extends ListManager<Discount> {
 
     public boolean update(Discount oldDiscount, Discount newDiscount) {
         if (newDiscount == null || checkNull(list)) return false;
-        if (DiscountDAO.updateDiscountInDB(newDiscount))
-            oldDiscount = newDiscount;
+        if (!DiscountDAO.updateDiscountInDB(newDiscount)) return false;
+        
+        oldDiscount.setStartDate(newDiscount.getStartDate());
+        oldDiscount.setEndDate(newDiscount.getEndDate());
+        oldDiscount.setType(newDiscount.getType());
+        oldDiscount.setQuantity(newDiscount.getQuantity());
+        oldDiscount.setActive(newDiscount.isActive());
+        oldDiscount.setValue(newDiscount.getValue());
+        oldDiscount.setApplyForWho(newDiscount.getApplyForWho());
+        oldDiscount.setApplyForWhat(newDiscount.getApplyForWhat());
+        
         return true;
     }
     

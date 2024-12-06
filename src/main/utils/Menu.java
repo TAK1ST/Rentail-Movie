@@ -134,7 +134,11 @@ public class Menu {
     }
     
     public static int getChoice(String message, int max) {
-        return getInteger("\n[MENU] " + message, INIT_NUM, max, Integer.MIN_VALUE);
+        return getChoice(message, max, Integer.MIN_VALUE);
+    }
+    
+    public static int getChoice(String message, int max, int oldData) {
+        return getInteger("\n[MENU] " + message, 1, max, oldData);
     }
     
     public static int getChoice(String message, List<Integer> list) {

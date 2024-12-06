@@ -29,22 +29,22 @@ public class ProfileManager extends ListManager<Profile> {
     
     public boolean addProfile(String accountID) {
         if (accountID == null) 
-            accountID = getString("Enter account's id", null);
+            accountID = getString("Enter account's id");
         if (accountID == null) return false;
         
         Account account = (Account) getACM().searchById(accountID);
         if (getACM().checkNull(account)) return false;
         
-        String name = getName("Enter name", null);
+        String name = getName("Enter name");
         if (name == null) return false;
         
-        String phoneNumber = getString("Enter phone number", null);
+        String phoneNumber = getString("Enter phone number");
         if (phoneNumber == null) return false;
         
-        String address = getString("Enter address", null);
+        String address = getString("Enter address");
         if (address == null) return false;
         
-        LocalDate birthday = getDate("Enter birthday", null);
+        LocalDate birthday = getDate("Enter birthday");
         if (birthday == null) return false;
         
         Profile profile = new Profile(
@@ -65,12 +65,12 @@ public class ProfileManager extends ListManager<Profile> {
             profile = (Profile) getById("Enter profile's id");
         if (checkNull(profile)) return false;
         
-        Profile temp = new Profile();
-        temp.setFullName(getName("Enter full name", profile.getFullName()));
-        temp.setPhoneNumber(getPhoneNumber("Enter phone number", profile.getPhoneNumber()));
-        temp.setAddress(getString("Enter address", profile.getAddress()));
-        temp.setBirthday(getDate("Enter birthday", profile.getBirthday()));
-        temp.setCredit(getDouble("Enter credit", 0f, Double.MAX_VALUE, profile.getCredit()));
+        Profile temp = new Profile(profile);
+        temp.setFullName(getName("Enter full name", temp.getFullName()));
+        temp.setPhoneNumber(getPhoneNumber("Enter phone number", temp.getPhoneNumber()));
+        temp.setAddress(getString("Enter address", temp.getAddress()));
+        temp.setBirthday(getDate("Enter birthday", temp.getBirthday()));
+        temp.setCredit(getDouble("Enter credit", 0f, Double.MAX_VALUE, temp.getCredit()));
         
         return update(profile, temp);
     }
@@ -90,8 +90,14 @@ public class ProfileManager extends ListManager<Profile> {
 
     public boolean update(Profile oldProfile, Profile newProfile) {
         if (newProfile == null || checkNull(list)) return false;
-        if (ProfileDAO.updateProfileInDB(newProfile))
-            oldProfile = newProfile;
+        if (!ProfileDAO.updateProfileInDB(newProfile)) return false;
+        
+        oldProfile.setFullName(newProfile.getFullName());
+        oldProfile.setPhoneNumber(newProfile.getPhoneNumber());
+        oldProfile.setAddress(newProfile.getAddress());
+        oldProfile.setCredit(newProfile.getCredit());
+        oldProfile.setBirthday(newProfile.getBirthday());
+        
         return true;
     }
     

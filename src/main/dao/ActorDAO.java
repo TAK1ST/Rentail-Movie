@@ -17,7 +17,7 @@ public class ActorDAO {
                 + "actor_id, "
                 + "actor_name, "
                 + "actor_description, "
-                + "actor_rank"
+                + "actor_rank "
                 + ") VALUES (?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
@@ -25,7 +25,7 @@ public class ActorDAO {
             ps.setString(++count, actor.getId());
             ps.setString(++count, actor.getActorName());
             ps.setString(++count, actor.getDescription());
-            ps.setString(++count, actor.getRank().name()); 
+            ps.setString(++count, actor.getRank() != null ? actor.getRank().name() : null); 
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -45,7 +45,7 @@ public class ActorDAO {
             int count = 0;
             ps.setString(++count, actor.getActorName());
             ps.setString(++count, actor.getDescription());
-            ps.setString(++count, actor.getRank().name()); 
+            ps.setString(++count, actor.getRank() != null ? actor.getRank().name() : null); 
             ps.setString(++count, actor.getId());
 
             return ps.executeUpdate() > 0;
@@ -67,19 +67,18 @@ public class ActorDAO {
         return false;
     }
     
-
     public static List<Actor> getAllActors() {
         String sql = "SELECT * FROM Actors";
         List<Actor> list = new ArrayList<>();
         try (Connection connection = Database.getConnection(); 
                 PreparedStatement ps = connection.prepareStatement(sql); 
-                ResultSet resultSet = ps.executeQuery()) {
-            while (resultSet.next()) {
+                ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
                 Actor actor = new Actor(
-                        resultSet.getString("actor_id"),
-                        resultSet.getString("actor_name"),
-                        ActorRank.valueOf(resultSet.getString("actor_rank")),
-                        resultSet.getString("actor_description")
+                        rs.getString("actor_id"),
+                        rs.getString("actor_name"),
+                        rs.getString("actor_rank") != null ? ActorRank.valueOf(rs.getString("actor_rank")) : null,
+                        rs.getString("actor_description")
                 );
                 list.add(actor);
             }

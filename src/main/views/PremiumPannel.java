@@ -27,14 +27,15 @@ public class PremiumPannel {
         Menu.showManagerMenu("Movie Rental (Premium)", 3,
             new Action[] {
                 () ->  { 
-                    DiscountServices.initDataFor(account.getId()); 
-                    WishlistServices.initDataFor(account.getId());
-                    ProfileServices.initDataFor(account.getId());
-                    ReviewServices.initDataFor(account.getId());
                     Managers.initMVM();
                     Managers.initRTM();
                     Managers.initWLM();
                     Managers.initRVM();
+                    Managers.initDCM();
+                    DiscountServices.initDataFor(account.getId()); 
+                    WishlistServices.initDataFor(account.getId());
+                    ProfileServices.initDataFor(account.getId());
+                    ReviewServices.initDataFor(account.getId());
                     ProfileServices.updateAccountStatus(account, AccStatus.ONLINE);
                 }
             },

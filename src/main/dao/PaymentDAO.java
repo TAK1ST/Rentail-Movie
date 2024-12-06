@@ -21,8 +21,8 @@ public class PaymentDAO {
                 + "amount, "
                 + "payment_method, "
                 + "transaction_time, "
-                + "status) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
+                + "status "
+                + ") VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement(sql)) {
             
@@ -30,13 +30,9 @@ public class PaymentDAO {
             ps.setString(++count, payment.getId());
             ps.setString(++count, payment.getCustomerID());
             ps.setDouble(++count, payment.getAmount());
-            ps.setString(++count, payment.getMethod().name());
-            if (payment.getTransactionTime() != null) {
-                ps.setTimestamp(++count, Timestamp.valueOf(payment.getTransactionTime()));
-            } else {
-                ps.setNull(++count, java.sql.Types.TIMESTAMP);
-            }
-            ps.setString(++count, payment.getStatus().name());
+            ps.setString(++count, payment.getMethod() != null ? payment.getMethod().name() : null);
+            ps.setTimestamp(++count, payment.getTransactionTime() != null ? Timestamp.valueOf(payment.getTransactionTime()) : null);
+            ps.setString(++count, payment.getStatus() != null ? payment.getStatus().name() : null);
             
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -60,13 +56,9 @@ public class PaymentDAO {
             ps.setString(++count, payment.getId());
             ps.setString(++count, payment.getCustomerID());
             ps.setDouble(++count, payment.getAmount());
-            ps.setString(++count, payment.getMethod().name());
-            if (payment.getTransactionTime() != null) {
-                ps.setTimestamp(++count, Timestamp.valueOf(payment.getTransactionTime()));
-            } else {
-                ps.setNull(++count, java.sql.Types.TIMESTAMP);
-            }
-            ps.setString(++count, payment.getStatus().name());
+            ps.setString(++count, payment.getMethod() != null ? payment.getMethod().name() : null);
+            ps.setTimestamp(++count, payment.getTransactionTime() != null ? Timestamp.valueOf(payment.getTransactionTime()) : null);
+            ps.setString(++count, payment.getStatus() != null ? payment.getStatus().name() : null);
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -93,16 +85,16 @@ public class PaymentDAO {
         List<Payment> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet resultSet = ps.executeQuery()) {
+             ResultSet rs = ps.executeQuery()) {
 
-            while (resultSet.next()) {
+            while (rs.next()) {
                 Payment payment = new Payment(
-                    resultSet.getString("payment_id"),
-                    resultSet.getString("customer_id"),
-                    resultSet.getDouble("amount"),
-                    PaymentMethod.valueOf(resultSet.getString("payment_method")),
-                    resultSet.getTimestamp("transaction_time") != null ? resultSet.getTimestamp("transaction_time").toLocalDateTime() : null,
-                    PaymentStatus.valueOf(resultSet.getString("status"))     
+                    rs.getString("payment_id"),
+                    rs.getString("customer_id"),
+                    rs.getDouble("amount"),
+                    rs.getString("payment_method") != null ? PaymentMethod.valueOf(rs.getString("payment_method")) : null,
+                    rs.getTimestamp("transaction_time") != null ? rs.getTimestamp("transaction_time").toLocalDateTime() : null,
+                    rs.getString("status") != null ? PaymentStatus.valueOf(rs.getString("status")) : null
                 );
                 list.add(payment);
             }
@@ -112,10 +104,10 @@ public class PaymentDAO {
         return list;
     }
     
-    public static List<String> getUserPayments(String customerId) throws SQLException {
-        String query = "SELECT payment_id, amount, payment_method, transaction_time, status FROM Payments WHERE customer_id = ?";
+    public static List<Payment> getUserPayments(String customerId) throws SQLException {
+        String query = "SELECT * FROM Payments WHERE customer_id = ?";
 
-        List<String> payments = new ArrayList<>();
+        List<Payment> list = new ArrayList<>();
 
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -124,16 +116,18 @@ public class PaymentDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String paymentId = rs.getString("payment_id");
-                double amount = rs.getDouble("amount");
-                String paymentMethod = rs.getString("payment_method");
-                Timestamp transactionTime = rs.getTimestamp("transaction_time");
-                String status = rs.getString("status");
-
-                payments.add("Payment ID: " + paymentId + ", Amount: " + amount + ", Payment Method: " + paymentMethod + ", Transaction Time: " + transactionTime + ", Status: " + status);
+                Payment payment = new Payment(
+                    rs.getString("payment_id"),
+                    customerId,
+                    rs.getDouble("amount"),
+                    rs.getString("payment_method") != null ? PaymentMethod.valueOf(rs.getString("payment_method")) : null,
+                    rs.getTimestamp("transaction_time") != null ? rs.getTimestamp("transaction_time").toLocalDateTime() : null,
+                    rs.getString("status") != null ? PaymentStatus.valueOf(rs.getString("status")) : null
+                );
+                list.add(payment);
             }
         }
-        return payments;
+        return list;
     }
     
 }

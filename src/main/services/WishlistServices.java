@@ -14,7 +14,6 @@ import main.dto.Wishlist;
 import main.constants.wishlist.WishlistPriority;
 import java.time.LocalDate;
 import java.util.List;
-import main.constants.IDPrefix;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getWLM;
 import main.dto.Movie;
@@ -31,7 +30,7 @@ public class WishlistServices {
     private static List<Wishlist> myWishlist = null; 
     private static String accountID = null;
             
-    private static String[] showAtrributes = {"Movie", "Priority", "Added date"};
+    private static final String[] showAtrributes = {"Movie", "Priority", "Added date"};
     
     public static void initDataFor(String id) {
         accountID = id;
@@ -47,9 +46,8 @@ public class WishlistServices {
         if (priority == null) return false;
         
         return getWLM().add(new Wishlist(
-                getWLM().createID(IDPrefix.WISHLIST_PREFIX),
-                movie.getId(),
                 accountID,
+                movie.getId(),
                 LocalDate.now(),
                 priority
         ));
@@ -76,7 +74,7 @@ public class WishlistServices {
 
     public static boolean clearAllMyWishList() {
         for (Wishlist item : myWishlist) {
-            if (!WishlistDAO.deleteWishlistFromDB(item.getMovieId()))
+            if (!WishlistDAO.deleteWishlistFromDB(item.getCustomerId(), item.getMovieId()))
                 return errorLog("Error during clearing your wishlist", false);
         }
         myWishlist.clear();

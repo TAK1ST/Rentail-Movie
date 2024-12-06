@@ -21,7 +21,7 @@ public class GenreManager extends ListManager<Genre> {
     }
     
     public boolean addGenre() {
-        String name = getName("Enter genre name", null);
+        String name = getName("Enter genre name");
         if (name == null) return false;
         
         for (Genre item : list) 
@@ -30,7 +30,7 @@ public class GenreManager extends ListManager<Genre> {
                 return false;
             }
 
-        String description = getString("Enter genre's description", null);
+        String description = getString("Enter genre's description");
         if (description == null) return false;
         
         Genre genre = new Genre(
@@ -47,8 +47,8 @@ public class GenreManager extends ListManager<Genre> {
             genre = (Genre) getById("Enter genre name");
         if (checkNull(genre)) return false;
         
-        Genre temp = new Genre();
-        temp.setDescription(getString("Enter genre's description", genre.getDescription()));
+        Genre temp = new Genre(genre);
+        temp.setDescription(getString("Enter genre's description", temp.getDescription()));
         
         return update(genre, temp);
     }
@@ -68,8 +68,10 @@ public class GenreManager extends ListManager<Genre> {
 
     public boolean update(Genre oldGenre, Genre newGenre) {
         if (newGenre == null || checkNull(list)) return false;
-        if (GenreDAO.updateGenreInDB(newGenre))
-            oldGenre = newGenre;
+        if (!GenreDAO.updateGenreInDB(newGenre)) return false;
+        
+        oldGenre.setDescription(newGenre.getGenreName());
+        
         return true;
     }
     

@@ -48,7 +48,7 @@ public abstract class ListManager<T extends Model> {
         String lastID = null;
         if (gapIDs.isEmpty()) {
             List<T> temp = sortList(list, attributes[0], false);
-            if (temp != null && temp.getLast().getId() != null)
+            if (temp != null && !temp.isEmpty() && temp.getLast() != null && temp.getLast().getId() != null)
                 lastID = temp.getLast().getId();
             
             return IDGenerator.generateID(lastID, prefix);
@@ -109,14 +109,12 @@ public abstract class ListManager<T extends Model> {
     public boolean checkNull(T item) {
         if (item != null) 
             return false;
-        
         return infoLog(String.format("No %s's data", className.toLowerCase()), true);
     }
 
     public boolean checkNull(List<T> tempList) {
         if (tempList != null || !tempList.isEmpty()) 
             return false;
-        
         return infoLog(String.format("No %s's data", className.toLowerCase()), true);
     }
     
@@ -236,20 +234,29 @@ public abstract class ListManager<T extends Model> {
         List<T> temp = new ArrayList<>(tempList);
         do {
             show(sortList(temp, propety, descending));
-            if (options == null)
-                return;
-            if (yesOrNo("\nSort list")) {
-                propety = selectInfo("Sort by", options);
-                if (propety == null) return;
-                
-                descending = yesOrNo("In decending order");
-            } 
-            else if (yesOrNo(String.format("\nDisplay %s details", className.toLowerCase()))) {
-                show(getById(String.format("Enter %s's id", className.toLowerCase())), "");
-                pressEnterToContinue();
+            
+            Menu.showOptions(new String[] {"Sort", "Show details", "Return"}, 0);
+            int choice = Menu.getChoice("Enter choice", 2, 3);
+            if (choice == Integer.MIN_VALUE) return;
+            
+            switch(choice) {
+                case 1: 
+                    if (options == null || (options.length <= 1 && options[0].isEmpty())) {
+                        infoLog("No options for sort");
+                        break;
+                    }
+                    propety = selectInfo("Sort by", options);
+                    if (propety == null) break;
+
+                    descending = yesOrNo("In decending order");
+                    break;
+                case 2:
+                    show(getById(String.format("Enter %s's id", className.toLowerCase())), "");
+                    break;
+                default:
+                    errorLog("Wrong choice");
+                    break;
             }
-            else 
-                return;
         } while(true);
     }
     

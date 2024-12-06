@@ -43,7 +43,7 @@ public class RentalServices {
     }
     
     public static boolean returnMovie() {
-        String movieID = getString("Enter movie' id", null);
+        String movieID = getString("Enter movie' id");
         if (movieID == null) return false;
         
         Rental rental = getRTM().searchBy(accountID, movieID).getFirst();

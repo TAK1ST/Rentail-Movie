@@ -24,7 +24,7 @@ public class ActorManager extends ListManager<Actor> {
     }
     
     public boolean addActor() {
-        String name = getName("Enter actor's name", null);
+        String name = getName("Enter actor's name");
         if (name == null) return false;
         
         for (Actor item : list) 
@@ -33,10 +33,10 @@ public class ActorManager extends ListManager<Actor> {
                 return false;
             }
         
-        ActorRank rank = (ActorRank) getEnumValue("Enter actor's rank", ActorRank.class, null);
+        ActorRank rank = (ActorRank) getEnumValue("Enter actor's rank", ActorRank.class);
         if (rank == null) return false;
 
-        String description = getString("Enter actor's description", null);
+        String description = getString("Enter actor's description");
         if (description == null) return false;
         
         Actor actor = new Actor(
@@ -52,13 +52,13 @@ public class ActorManager extends ListManager<Actor> {
         if (checkNull(list)) return false;
         
         if (actor == null)
-            actor = (Actor) getById("Enter actor name");
+            actor = (Actor) getById("Enter actor's");
         if (checkNull(actor)) return false;
         
-        Actor temp = new Actor();
-        temp.setActorName(getName("Enter actor's name", actor.getActorName()));
-        temp.setRank((ActorRank) getEnumValue("Enter actor's rank", ActorRank.class, actor.getRank()));
-        temp.setDescription(getString("Enter actor's description", actor.getDescription()));
+        Actor temp = new Actor(actor);
+        temp.setActorName(getName("Enter actor's name", temp.getActorName()));
+        temp.setRank((ActorRank) getEnumValue("Enter actor's rank", ActorRank.class, temp.getRank()));
+        temp.setDescription(getString("Enter actor's description", temp.getDescription()));
         
         return update(actor, temp);
     }
@@ -78,8 +78,12 @@ public class ActorManager extends ListManager<Actor> {
 
     public boolean update(Actor oldActor, Actor newActor) {
         if (newActor == null || checkNull(list)) return false;
-        if (ActorDAO.updateActorInDB(newActor))
-            oldActor = newActor;
+        if (!ActorDAO.updateActorInDB(newActor)) return false;
+        
+        oldActor.setActorName(newActor.getActorName());
+        oldActor.setRank(newActor.getRank());
+        oldActor.setDescription(newActor.getDescription());
+        
         return true;
     }
     
