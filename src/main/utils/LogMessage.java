@@ -1,14 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.utils;
 
-/**
- *
- * @author trann
- */
+import java.util.Arrays;
+
 public class LogMessage {
+    
+    private static int flagNum = 1;
     
     public static boolean errorLog(String message, boolean returnValue) {
         System.out.printf("[ERROR] %s.\n", message);
@@ -43,7 +39,15 @@ public class LogMessage {
     }
     
     public static void debugLog() {
-        System.out.println("[FLAG]");
+        System.out.printf("[FLAG %d]\n", flagNum++);
+    }
+    
+    public static void valueLog(Object item) {
+        System.out.println("-> " + item.toString());
+    }
+    
+    public static void valueLog(Object... items) {
+        System.out.println("-> " +Arrays.toString(items));
     }
     
 }

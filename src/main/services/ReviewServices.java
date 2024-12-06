@@ -4,6 +4,7 @@
  */
 package main.services;
 
+import java.sql.SQLException;
 import java.util.List;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
@@ -27,6 +28,16 @@ import main.utils.Validator;
  * @author trann
  */
 public class ReviewServices {
+    
+    private static List<Review> myReviews;
+    private static String accountID;
+    
+    private static String[] showAtrributes = {"Movie", "Rating", "Comment", "Date"};
+    
+    public static void initDataFor(String id) {
+        accountID = id;
+        myReviews = ReviewDAO.getUserReviews(id);
+    }
         
     public static void displayAMovieReviews() {
         Movie movie = getMVM().getById("Enter movie's id");
@@ -60,11 +71,10 @@ public class ReviewServices {
         
     }
 
-    public static void displayMyReviews(String customerID) {
-        List<Review> myReviews = getRVM().searchBy(customerID);
+    public static void displayMyReviews() {
         if (getRVM().checkNull(myReviews)) return;
         
-        InfosTable.getTitle("Movie", "Rating", "Comment", "Date");
+        InfosTable.getTitle(showAtrributes);
         myReviews.forEach(item -> 
             InfosTable.calcLayout(
                 returnName(item.getMovieID(), getMVM()),
@@ -87,20 +97,18 @@ public class ReviewServices {
         pressEnterToContinue();
     }
     
-    public static boolean clearAllMyReviews(String customerID) {
-        List<Review> myReviews = getRVM().searchBy(customerID);
+    public static boolean clearAllMyReviews() {
         if (myReviews == null) 
             return errorLog("You have no reviews", false);
         
         for (Review item : myReviews) {
-            if (!ReviewDAO.deleteReviewFromDB(item.getMovieID()))
+            if (!ReviewDAO.deleteReviewFromDB(item.getCustomerID(), item.getMovieID()))
                 return errorLog("Error during clearing your reviews", false);
         }
         return successLog("All your reviews have been cleared", true);
     }
     
-    public static boolean updateMyReview(String customerID) {
-        List<Review> myReviews = getRVM().searchBy(customerID);
+    public static boolean updateMyReview() {
         if (myReviews == null) 
             return errorLog("You have no reviews", false);
         
@@ -116,8 +124,7 @@ public class ReviewServices {
         return getRVM().update(movieIsReview, temp);
     }
     
-    public static boolean deleteMyReview(String customerID) {
-        List<Review> myReviews = getRVM().searchBy(customerID);
+    public static boolean deleteMyReview() {
         if (myReviews == null) 
             return errorLog("You have no reviews", false);
         

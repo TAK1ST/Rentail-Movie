@@ -2,10 +2,10 @@ package main.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
-import main.constants.IDPrefix;
 import main.constants.wishlist.WishlistPriority;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
@@ -30,7 +30,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     
     public boolean addWishlist(String customerID) {
         if (customerID == null) 
-            customerID = getString("Enter customer's id", null);
+            customerID = getString("Enter customer's id");
         if (customerID == null) return false;
         
         Account customer = (Account) getACM().searchById(customerID);
@@ -43,13 +43,12 @@ public class WishlistManager extends ListManager<Wishlist> {
         if (items != null && !items.isEmpty()) 
             return errorLog("Already added this movie", false);
         
-        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, null);
+        WishlistPriority priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class);
         if (priority == null) return false;
         
         return add(new Wishlist(
-                createID(IDPrefix.WISHLIST_PREFIX),
-                movie.getId(),
                 customer.getId(),
+                movie.getId(),
                 LocalDate.now(),
                 priority
         ));
@@ -63,7 +62,7 @@ public class WishlistManager extends ListManager<Wishlist> {
         if (checkNull(wishlist)) return false;
         
         Wishlist temp = new Wishlist(wishlist);
-        temp.setPriority((WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, wishlist.getPriority()));
+        temp.setPriority((WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, temp.getPriority()));
         
         return update(wishlist, temp);
     }
@@ -83,14 +82,17 @@ public class WishlistManager extends ListManager<Wishlist> {
 
     public boolean update(Wishlist oldWishlist, Wishlist newWishlist) {
         if (newWishlist == null || checkNull(list)) return false;
-        if (WishlistDAO.updateWishlistInDB(newWishlist))
-            oldWishlist = newWishlist;
+        if (!WishlistDAO.updateWishlistInDB(newWishlist)) return false;
+        
+        oldWishlist.setAddedDate(newWishlist.getAddedDate());
+        oldWishlist.setPriority(newWishlist.getPriority());
+        
         return true;
     }
     
     public boolean delete(Wishlist wishlist) {
         if (wishlist == null) return false;     
-        return WishlistDAO.deleteWishlistFromDB(wishlist.getId()) && list.remove(wishlist);
+        return WishlistDAO.deleteWishlistFromDB(wishlist.getCustomerId(), wishlist.getMovieId()) && list.remove(wishlist);
     }
 
     @Override
@@ -113,7 +115,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     }
     
     @Override
-    public List<Wishlist> sortList(List<Wishlist> tempList, String propety) {
+    public List<Wishlist> sortList(List<Wishlist> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -134,6 +136,9 @@ public class WishlistManager extends ListManager<Wishlist> {
         } else {
             result.sort(Comparator.comparing(Wishlist::getId));
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
 

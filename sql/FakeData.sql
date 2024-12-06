@@ -133,17 +133,17 @@ INSERT INTO Discount_Movie (movie_id, discount_code) VALUES
 ('MV000009', 'DCH2Y5Z3'),
 ('MV000010', 'DCK9P2F1');
 
-INSERT INTO Rentals (rental_id, movie_id, staff_id, customer_id, due_date, rental_date, return_date, status, total_amount, late_fee) VALUES
-('RT000001', 'MV000001', 'AC000002', 'AC000001', '2024-12-15', '2024-12-01', NULL, 'PENDING', 3.99, 0.00),
-('RT000002', 'MV000002', 'AC000007', 'AC000005', '2024-12-18', '2024-12-05', NULL, 'APPROVED', 4.99, 0.00),
-('RT000003', 'MV000003', NULL, 'AC000006', '2024-12-20', '2024-12-08', '2024-12-10', 'APPROVED', 2.99, 0.00),
-('RT000004', 'MV000004', 'AC000008', 'AC000009', '2024-12-25', '2024-12-12', NULL, 'DENIED', 3.49, 0.00),
-('RT000005', 'MV000005', 'AC000007', 'AC000010', '2024-12-22', '2024-12-10', NULL, 'PENDING', 5.99, 0.00),
-('RT000006', 'MV000006', 'AC000008', 'AC000004', '2024-12-30', '2024-12-15', NULL, 'PENDING', 4.49, 0.00),
-('RT000007', 'MV000007', NULL, 'AC000001', '2024-12-10', '2024-12-02', '2024-12-09', 'APPROVED', 2.50, 0.00),
-('RT000008', 'MV000008', 'AC000002', 'AC000005', '2024-12-12', '2024-12-01', NULL, 'PENDING', 3.75, 0.00),
-('RT000009', 'MV000009', NULL, 'AC000006', '2024-12-14', '2024-12-05', NULL, 'APPROVED', 3.99, 0.00),
-('RT000010', 'MV000010', 'AC000002', 'AC000007', '2024-12-18', '2024-12-06', NULL, 'PENDING', 4.59, 0.00);
+INSERT INTO Rentals (movie_id, staff_id, customer_id, due_date, rental_date, return_date, status, total_amount, late_fee) VALUES
+('MV000001', 'AC000002', 'AC000001', '2024-12-15', '2024-12-01', NULL, 'PENDING', 3.99, 0.00),
+('MV000002', 'AC000007', 'AC000005', '2024-12-18', '2024-12-05', NULL, 'APPROVED', 4.99, 0.00),
+('MV000003', NULL, 'AC000006', '2024-12-20', '2024-12-08', '2024-12-10', 'APPROVED', 2.99, 0.00),
+('MV000004', 'AC000008', 'AC000009', '2024-12-25', '2024-12-12', NULL, 'DENIED', 3.49, 0.00),
+('MV000005', 'AC000007', 'AC000010', '2024-12-22', '2024-12-10', NULL, 'PENDING', 5.99, 0.00),
+('MV000006', 'AC000008', 'AC000004', '2024-12-30', '2024-12-15', NULL, 'PENDING', 4.49, 0.00),
+('MV000007', NULL, 'AC000001', '2024-12-10', '2024-12-02', '2024-12-09', 'APPROVED', 2.50, 0.00),
+('MV000008', 'AC000002', 'AC000005', '2024-12-12', '2024-12-01', NULL, 'PENDING', 3.75, 0.00),
+('MV000009', NULL, 'AC000006', '2024-12-14', '2024-12-05', NULL, 'APPROVED', 3.99, 0.00),
+('MV000010', 'AC000002', 'AC000007', '2024-12-18', '2024-12-06', NULL, 'PENDING', 4.59, 0.00);
 
 INSERT INTO Payments (payment_id, customer_id, amount, payment_method, transaction_time, status) VALUES
 ('PM000001', 'AC000001', 3.99, 'CARD', CURRENT_TIMESTAMP, 'COMPLETED'),
@@ -169,26 +169,26 @@ INSERT INTO Profiles (account_id, full_name, birthday, address, phone_number, cr
 ('AC000009', 'Banned User', '1991-08-08', '606 Willow St', '5559012345', 0.00),
 ('AC000010', 'Premium User', '1987-02-20', '707 Palm St', '5550123456', 50.00);
 
-INSERT INTO Reviews (review_id, movie_id, customer_id, review_text, rating, review_date) VALUES
-('RV000001', 'MV000001', 'AC000001', 'Amazing action scenes!', 5, '2024-12-01'),
-('RV000002', 'MV000002', 'AC000005', 'Touching and emotional.', 4, '2024-12-03'),
-('RV000003', 'MV000003', 'AC000006', 'Hilarious and fun!', 4, '2024-12-04'),
-('RV000004', 'MV000004', 'AC000009', 'Scary and intense.', 5, '2024-12-05'),
-('RV000005', 'MV000005', 'AC000010', 'Mind-blowing visuals.', 5, '2024-12-06'),
-('RV000006', 'MV000006', 'AC000004', 'Magical experience.', 4, '2024-12-07'),
-('RV000007', 'MV000007', 'AC000001', 'Informative and engaging.', 5, '2024-12-08'),
-('RV000008', 'MV000008', 'AC000005', 'Thrilling from start to end.', 4, '2024-12-09'),
-('RV000009', 'MV000009', 'AC000006', 'Romantic and heartwarming.', 4, '2024-12-10'),
-('RV000010', 'MV000010', 'AC000007', 'Family-friendly and fun.', 5, '2024-12-11');
+INSERT INTO Reviews (movie_id, customer_id, review_text, rating, review_date) VALUES
+('MV000001', 'AC000001', 'Amazing action scenes!', 5, '2024-12-01'),
+('MV000002', 'AC000005', 'Touching and emotional.', 4, '2024-12-03'),
+('MV000003', 'AC000006', 'Hilarious and fun!', 4, '2024-12-04'),
+('MV000004', 'AC000009', 'Scary and intense.', 5, '2024-12-05'),
+('MV000005', 'AC000010', 'Mind-blowing visuals.', 5, '2024-12-06'),
+('MV000006', 'AC000004', 'Magical experience.', 4, '2024-12-07'),
+('MV000007', 'AC000001', 'Informative and engaging.', 5, '2024-12-08'),
+('MV000008', 'AC000005', 'Thrilling from start to end.', 4, '2024-12-09'),
+('MV000009', 'AC000006', 'Romantic and heartwarming.', 4, '2024-12-10'),
+('MV000010', 'AC000007', 'Family-friendly and fun.', 5, '2024-12-11');
 
-INSERT INTO Wishlists (wishlist_id, customer_id, movie_id, added_date, priority) VALUES
-('WL000001', 'AC000001', 'MV000001', '2024-12-01', 'HIGH'),
-('WL000002', 'AC000005', 'MV000002', '2024-12-02', 'MEDIUM'),
-('WL000003', 'AC000006', 'MV000003', '2024-12-03', 'LOW'),
-('WL000004', 'AC000009', 'MV000004', '2024-12-04', 'HIGH'),
-('WL000005', 'AC000010', 'MV000005', '2024-12-05', 'MEDIUM'),
-('WL000006', 'AC000004', 'MV000006', '2024-12-06', 'LOW'),
-('WL000007', 'AC000001', 'MV000007', '2024-12-07', 'HIGH'),
-('WL000008', 'AC000005', 'MV000008', '2024-12-08', 'MEDIUM'),
-('WL000009', 'AC000006', 'MV000009', '2024-12-09', 'LOW'),
-('WL000010', 'AC000007', 'MV000010', '2024-12-10', 'HIGH');
+INSERT INTO Wishlists (customer_id, movie_id, added_date, priority) VALUES
+('AC000001', 'MV000001', '2024-12-01', 'HIGH'),
+('AC000005', 'MV000002', '2024-12-02', 'MEDIUM'),
+('AC000006', 'MV000003', '2024-12-03', 'LOW'),
+('AC000009', 'MV000004', '2024-12-04', 'HIGH'),
+('AC000010', 'MV000005', '2024-12-05', 'MEDIUM'),
+('AC000004', 'MV000006', '2024-12-06', 'LOW'),
+('AC000001', 'MV000007', '2024-12-07', 'HIGH'),
+('AC000005', 'MV000008', '2024-12-08', 'MEDIUM'),
+('AC000006', 'MV000009', '2024-12-09', 'LOW'),
+('AC000007', 'MV000010', '2024-12-10', 'HIGH');

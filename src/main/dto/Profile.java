@@ -2,7 +2,6 @@ package main.dto;
 
 import java.time.LocalDate;
 import main.base.Model;
-import main.utils.Validator;
 
 public class Profile extends Model {
     
@@ -18,7 +17,7 @@ public class Profile extends Model {
     public Profile(String accountID) {
         super(accountID);
     }
-
+    
     public Profile(String accountID, String fullName, String phoneNumber, String address, double credit, LocalDate birthday) {
         super(accountID);
         this.fullName = fullName;
@@ -44,6 +43,7 @@ public class Profile extends Model {
         int count = 0;
         return String.format(
                 "\n[%s]:\n"
+                + "%s: %s,\n"
                 + "%s: %s,\n"
                 + "%s: %s,\n"
                 + "%s: %s,\n"

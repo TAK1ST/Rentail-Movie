@@ -61,12 +61,12 @@ public class LanguageDAO {
         List<Language> languages = new ArrayList<>();
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet resultSet = ps.executeQuery()) {
+             ResultSet rs = ps.executeQuery()) {
 
-            while (resultSet.next()) {
+            while (rs.next()) {
                 Language language = new Language(
-                        resultSet.getString("language_code"),
-                        resultSet.getString("language_name")
+                        rs.getString("language_code"),
+                        rs.getString("language_name")
                 );
                 languages.add(language);
             }

@@ -1,13 +1,18 @@
 package main.services;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import main.config.Database;
 import main.constants.IDPrefix;
 import main.constants.account.AccRole;
 import main.constants.account.AccStatus;
+import main.controllers.Managers;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getPFM;
-import main.dao.AccountDAO;
 import main.dto.Account;
+import main.dto.Profile;
 import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
@@ -19,15 +24,20 @@ import static main.utils.Validator.getPassword;
 import static main.utils.Validator.getUsername;
 
 public class AuthenServices {
+    
+    public static void init() {
+        Managers.initACM();
+        Managers.initPFM();
+    }
 
     public static Account loginPannel() {
         Menu.showHeader("Login");
 
         String input = getString("Enter username or email", null);
-        if (input.isEmpty()) return null;
+        if (input == null) return null;
         
         String password = getString("Enter password", null);
-        if (password.isEmpty()) return null;
+        if (password == null) return null;
 
         for (Account item : getACM().getList()) {
             if (input.equals(item.getUsername()) || input.equals(item.getEmail())) {
@@ -70,40 +80,44 @@ public class AuthenServices {
     }
 
     public static boolean forgetPassword(String accountID) {
-        if (yesOrNo("Forgot password")) {
-            String newPassword = getPassword("Enter new password", null);
-            if (newPassword == null) 
-                return false;
-            
-            return updatePassword(accountID, newPassword);
-        }
-        return false;
+        Account account = (Account) getACM().getById(accountID);
+        if (getACM().checkNull(account)) 
+            return errorLog("Account not found", false);
+        
+        if (yesOrNo("Forgot password") && updatePassword(account))
+            return successLog("Success change password", true);
+        else 
+            return false;
     }
     
-    public static boolean updatePassword(String accountID, String newPassword) {
-        Account foundAccount = (Account) getACM().searchById(accountID);
-        if (getACM().checkNull(foundAccount)) return false;
+    public static boolean updatePassword(Account account) {
+        if (getACM().checkNull(account)) return false;
         
-        foundAccount.setPassword(newPassword);
-        return AccountDAO.updatePasswordInDB(accountID, newPassword);
+        String password = getPassword("Enter password", account.getPassword());
+        if (password == null) return false;
+        
+        account.setPassword(password);
+        return updatePasswordInDB(account.getId(), password);
     }
     
     public static boolean registorAccount(AccRole role) {
 
         String username = getUsername("Enter username", null, getACM().getList());
-        if (username.isEmpty()) return false;
+        if (username == null) return false;
         
         String password = getPassword("Enter password", null);
-        if (password.isEmpty()) return false;
+        if (password == null) return false;
 
         String email = getEmail("Enter email", null);
-        if (email.isEmpty()) return false;
+        if (email == null) return false;
         
         if (role == AccRole.ADMIN) {
-            role = (AccRole) getEnumValue("Choose a role", AccRole.class, role);
+            role = (AccRole) getEnumValue("Choose a role", AccRole.class, null);
             if (role == null) return false;
         } 
+        
         String id = getACM().createID(IDPrefix.ACCOUNT_PREFIX);
+        
         Account account = new Account(
                 id,
                 username,
@@ -124,12 +138,37 @@ public class AuthenServices {
     
     private static boolean registorProfile(String accountID) {
         if (yesOrNo("Fill in all infomation?")) {
-            if (getPFM().addProfile(accountID)) {
+            if (!getPFM().addProfile(accountID)) {
                 errorLog("Cannot registor account info");
                 return false;
             }
         }
+        getPFM().add(new Profile(accountID));
         return true;
+    }
+    
+    public static boolean updatePasswordInDB(String accountID, String newPassword) {
+        String sql = "UPDATE Accounts SET password = ? WHERE account_id = ?";
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setString(2, accountID);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public static boolean updateUsernameInDB(String accountID, String username) {
+        String sql = "UPDATE Accounts SET username = ? WHERE account_id = ?";
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, accountID);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
     
 }

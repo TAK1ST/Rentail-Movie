@@ -16,10 +16,11 @@ import static main.config.Database.getConnection;
  */
 public class MovieServices {
     
-    public static double calculateAverageRating(String movieID) throws SQLException {
+    public static double calculateAverageRating(String movieID) {
         String query = "SELECT AVG(rating) AM average_rating FROM Review WHERE movie_id = ?";
 
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection connection = getConnection(); 
+            PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, movieID);
 
@@ -28,6 +29,9 @@ public class MovieServices {
                     return resultSet.getDouble("average_rating");
                 }
             }
+        }
+        catch (SQLException e) {
+            e.printStackTrace(); 
         }
         return 0; 
     }
@@ -45,7 +49,9 @@ public class MovieServices {
 
         } catch (SQLException e) {
             e.printStackTrace(); 
-            return false;  
+            
         }
+        return false;  
     }
+    
 }

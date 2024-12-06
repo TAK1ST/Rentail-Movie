@@ -3,8 +3,10 @@ package main.base;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import main.utils.IDGenerator;
+import static main.utils.IDGenerator.ID_LENGTH;
 import static main.utils.Input.getString;
 import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.selectInfo;
@@ -16,6 +18,17 @@ import main.utils.Menu;
 public abstract class ListManager<T extends Model> {
 
     protected final List<T> list = new ArrayList<>();
+    private List<String> gapIDs = new ArrayList<>();
+    private final String[] attributes;
+    private final String className;
+
+    public ListManager(String className, String[] attributes) {
+        this.className = className;
+        this.attributes = attributes;
+    }
+    
+    public abstract List<T> sortList(List<T> tempList, String propety, boolean descending);
+    public abstract List<T> searchBy(List<T> tempList, String propety);
     
     protected boolean copy(List<T> tempList) {
         if (tempList == null)
@@ -25,23 +38,61 @@ public abstract class ListManager<T extends Model> {
         return true;
     }
     
-    private final String[] attributes;
-    private final String className;
-
-    public ListManager(String className, String[] attributes) {
-        this.className = className;
-        this.attributes = attributes;
+    public List<T> getList() {
+        return list;
     }
     
-    public abstract List<T> sortList(List<T> tempList, String propety);
-    public abstract List<T> searchBy(List<T> tempList, String propety);
-    
-    public String createID(String idPrefix) {
-        List<T> temp = sortList(list, attributes[0]);
+    public String createID(String prefix) {
+        if (gapIDs.isEmpty()) gapIDs = findIDGaps(prefix);
+        
         String lastID = null;
-        if (temp != null && temp.getLast().getId() != null)
-            lastID = temp.getLast().getId();
-        return IDGenerator.generateID(lastID, idPrefix);
+        if (gapIDs.isEmpty()) {
+            List<T> temp = sortList(list, attributes[0], false);
+            if (temp != null && !temp.isEmpty() && temp.getLast() != null && temp.getLast().getId() != null)
+                lastID = temp.getLast().getId();
+            
+            return IDGenerator.generateID(lastID, prefix);
+        }
+        else {
+            if (gapIDs.getFirst() != null) 
+                lastID = gapIDs.getFirst();
+            
+            gapIDs.removeFirst();
+            return IDGenerator.generateID(lastID, prefix);
+        }
+    }
+    
+    private List<String> findIDGaps(String prefix) {
+        // Step 1: Extract numeric parts and store in a sorted set
+        TreeSet<Integer> numericParts = new TreeSet<>();
+        int prefixLength = prefix.length();
+
+        for (T item : list) {
+            if (item.getId().startsWith(prefix) && item.getId().length() == ID_LENGTH) {
+                try {
+                    int numericPart = Integer.parseInt(item.getId().substring(prefixLength));
+                    numericParts.add(numericPart);
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid ID format: " + item.getId());
+                }
+            }
+        }
+
+        // Step 2: Find gaps
+        List<String> gaps = new ArrayList<>();
+        
+        int expected = 1;
+        for (int actual : numericParts) {
+            while (expected < actual) {
+                String id = prefix + String.format("%0" + (ID_LENGTH - prefixLength) + "d", expected - 1);
+                if (!gaps.contains(id))
+                    gaps.add(prefix + String.format("%0" + (ID_LENGTH - prefixLength) + "d", expected - 1));
+                expected++;
+            }
+            expected = actual + 1;
+        }
+
+        return gaps;
     }
 
     public boolean isNull() {
@@ -53,6 +104,18 @@ public abstract class ListManager<T extends Model> {
             return !errorLog(message, false);
         
         return false;
+    }
+    
+    public boolean checkNull(T item) {
+        if (item != null) 
+            return false;
+        return infoLog(String.format("No %s's data", className.toLowerCase()), true);
+    }
+
+    public boolean checkNull(List<T> tempList) {
+        if (tempList != null || !tempList.isEmpty()) 
+            return false;
+        return infoLog(String.format("No %s's data", className.toLowerCase()), true);
     }
     
     public T searchById(String id) {
@@ -111,24 +174,6 @@ public abstract class ListManager<T extends Model> {
         list.sort(Comparator.comparing(Model::getId));
     }
 
-    public boolean checkNull(T item) {
-        if (item != null) 
-            return infoLog(String.format("No %s's data", className), false);
-        
-        return true;
-    }
-
-    public boolean checkNull(List<T> tempList) {
-        if (!tempList.isEmpty()) 
-            return infoLog(String.format("No %s's data", className), false);
-        
-        return true;
-    }
-
-    public List<T> getList() {
-        return list;
-    }
-    
     public void show(T item, String header) {
         if (checkNull(item)) return;
         if (header != null && !header.isEmpty()) Menu.showHeader(header);
@@ -152,16 +197,17 @@ public abstract class ListManager<T extends Model> {
         if (checkNull(tempList)) return;
         
         String propety = null;
+        boolean descending = false;
         List<T> temp = new ArrayList<>(tempList);
         do {
-            show(sortList(temp, propety));
+            show(sortList(temp, propety, descending));
             if (options == null)
                 return;
             if (yesOrNo("\nSort list")) {
-                propety= selectInfo("Sort by", options);
+                propety = selectInfo("Sort by", options);
                 if (propety == null) return;
                 
-                
+                descending = yesOrNo("In decending order");
             } else return;
         } while(true);
     }
@@ -184,22 +230,33 @@ public abstract class ListManager<T extends Model> {
         if (checkNull(tempList)) return;
         
         String propety = null;
+        boolean descending = false;
         List<T> temp = new ArrayList<>(tempList);
         do {
-            show(sortList(temp, propety));
-            if (options == null)
-                return;
-            if (yesOrNo("\nSort list")) {
-                propety = selectInfo("Sort by", options);
-                infoLog(propety);
-                if (propety == null) return;
-            } 
-            else if (yesOrNo(String.format("\nDisplay %s details", className.toLowerCase()))) {
-                show(getById(String.format("Enter %s's id", className.toLowerCase())), "");
-                pressEnterToContinue();
+            show(sortList(temp, propety, descending));
+            
+            Menu.showOptions(new String[] {"Sort", "Show details", "Return"}, 0);
+            int choice = Menu.getChoice("Enter choice", 2, 3);
+            if (choice == Integer.MIN_VALUE) return;
+            
+            switch(choice) {
+                case 1: 
+                    if (options == null || (options.length <= 1 && options[0].isEmpty())) {
+                        infoLog("No options for sort");
+                        break;
+                    }
+                    propety = selectInfo("Sort by", options);
+                    if (propety == null) break;
+
+                    descending = yesOrNo("In decending order");
+                    break;
+                case 2:
+                    show(getById(String.format("Enter %s's id", className.toLowerCase())), "");
+                    break;
+                default:
+                    errorLog("Wrong choice");
+                    break;
             }
-            else 
-                return;
         } while(true);
     }
     

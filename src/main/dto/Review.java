@@ -6,26 +6,18 @@ import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
 public class Review extends Model {
-    private String movieID;
+    
     private String customerID;
+    private String movieID;
     private int rating;
-    private LocalDate reviewDate;
     private String reviewText;
+    private LocalDate reviewDate;
     
     public Review() {
     }
-    
-    public Review(String customerID) {
-        this.customerID = customerID;
-    }
-    
-    public Review(String movieID, String customerID) {
-        this.customerID = customerID;
-        this.movieID = movieID;
-    }
 
-    public Review(String id, String movieID, String customerID, int rating, String reviewText, LocalDate reviewDate) {
-        super(id);
+    public Review(String customerID, String movieID, int rating, String reviewText, LocalDate reviewDate) {
+        super(customerID);
         this.movieID = movieID;
         this.customerID = customerID;
         this.rating = rating;
@@ -34,7 +26,7 @@ public class Review extends Model {
     }
     
     public Review(Review other) {
-        super(other.getId());
+        super(other.customerID);
         this.movieID = other.movieID;
         this.customerID = other.customerID;
         this.rating = other.rating;
@@ -50,14 +42,12 @@ public class Review extends Model {
                 "\n[%s]:\n"
                 + "%s: %s,\n"
                 + "%s: %s,\n"
-                + "%s: %s,\n"
                 + "%s: %d,\n"
                 + "%s: %s,\n"
                 + "%s: %s.",
                 className(),
-                attr[count++], super.getId(),
-                attr[count++], movieID,
                 attr[count++], customerID,
+                attr[count++], movieID,
                 attr[count++], rating,
                 attr[count++], reviewText,
                 attr[count++], formatDate(reviewDate, Validator.DATE)
@@ -69,7 +59,12 @@ public class Review extends Model {
     }
      
     public static String[] getAttributes() {
-        return new String[] {"Id", "Movie Id", "Customer Id", "Rating", "Review text", "Review date"};
+        return new String[] {
+            "Customer Id", 
+            "Movie Id", 
+            "Rating", 
+            "Review text", 
+            "Review date"};
     }
 
     public String getMovieID() {

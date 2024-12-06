@@ -2,6 +2,7 @@ package main.controllers;
 
 import main.base.ListManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.account.AccRole;
@@ -27,18 +28,18 @@ public class AccountManager extends ListManager<Account> {
         if (checkNull(list)) return false;
         
         if (account == null)
-        account = (Account) getById("Enter user's id");
+            account = (Account) getById("Enter user's id");
         if (checkNull(account)) return false;
 
-        AccRole newRole = null;
-        if (account.getRole() == AccRole.ADMIN) 
-            newRole = (AccRole) getEnumValue("Choose a role", AccRole.class, account.getRole());
+        AccRole newRole = account.getRole();
+        if (newRole == AccRole.ADMIN) 
+            newRole = (AccRole) getEnumValue("Choose a role", AccRole.class, newRole);
         
-        Account temp = new Account();
-        temp.setUsername(getUsername("Enter new username", account.getUsername(), list));
-        temp.setPassword(getPassword("Enter new password", account.getPassword()));
+        Account temp = new Account(account);
+        temp.setUsername(getUsername("Enter new username", temp.getUsername(), list));
+        temp.setPassword(getPassword("Enter new password", temp.getPassword()));
         temp.setRole(newRole);
-        temp.setEmail(getEmail("Enter your email", account.getEmail()));
+        temp.setEmail(getEmail("Enter your email", temp.getEmail()));
         
         return update(account, temp);
     }
@@ -58,8 +59,18 @@ public class AccountManager extends ListManager<Account> {
 
     public boolean update(Account oldAccount, Account newAccount) {
         if (newAccount == null || checkNull(list)) return false;
-        if (AccountDAO.updateAccountInDB(newAccount))
-            oldAccount = newAccount;
+        if (!AccountDAO.updateAccountInDB(newAccount)) return false;
+        
+        oldAccount.setUsername(newAccount.getUsername());
+        oldAccount.setPassword(newAccount.getPassword());
+        oldAccount.setEmail(newAccount.getEmail());
+        oldAccount.setRole(newAccount.getRole());
+        oldAccount.setStatus(newAccount.getStatus());
+        oldAccount.setCreateAt(newAccount.getCreateAt());
+        oldAccount.setUpdateAt(newAccount.getUpdateAt());
+        oldAccount.setOnlineAt(newAccount.getOnlineAt());
+        oldAccount.setCreability(newAccount.getCreability());
+        
         return true;
     }
     
@@ -80,7 +91,7 @@ public class AccountManager extends ListManager<Account> {
                     || (item.getUsername() != null && item.getUsername().equals(propety))
                     || (item.getEmail() != null && item.getEmail().equals(propety))
                     || (item.getRole() != null && item.getRole().name().equals(propety))
-                    || (item.getStatus() != null && item.getStatus().equals(propety)))
+                    || (item.getStatus() != null && item.getStatus().name().equals(propety)))
             {
                 result.add(item);
             }
@@ -89,7 +100,7 @@ public class AccountManager extends ListManager<Account> {
     }
 
     @Override
-    public List<Account> sortList(List<Account> tempList, String propety) {
+    public List<Account> sortList(List<Account> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -118,6 +129,8 @@ public class AccountManager extends ListManager<Account> {
         } else {
             result.sort(Comparator.comparing(Account::getId));
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
 
         return result;
     }
