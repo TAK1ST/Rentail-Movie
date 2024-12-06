@@ -2,14 +2,12 @@ package main.views;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import main.controllers.Managers;
 import main.dto.Account;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
 public class App {
 
     public static void run() throws IOException, SQLException {
-        Managers.initAll();
         do {
             redirect(AuthenPannel.getAccounts());
         } while (!yesOrNo("Exit"));
@@ -18,7 +16,7 @@ public class App {
     private static void redirect(Account account) throws IOException {
         switch (account.getRole()) {
             case ADMIN:
-                AdminPannel.show();
+                AdminPannel.show(account);
                 break;
             case CUSTOMER:
                 CustomerPannel.show(account);

@@ -61,12 +61,12 @@ public class GenreDAO {
         List<Genre> genres = new ArrayList<>();
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet resultSet = ps.executeQuery()) {
+             ResultSet rs = ps.executeQuery()) {
 
-            while (resultSet.next()) {
+            while (rs.next()) {
                 Genre genre = new Genre(
-                        resultSet.getString("genre_name"),
-                        resultSet.getString("description")
+                        rs.getString("genre_name"),
+                        rs.getString("description")
                 );
                 genres.add(genre);
             }

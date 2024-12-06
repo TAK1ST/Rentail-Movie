@@ -5,7 +5,6 @@ import java.security.NoSuchAlgorithmException;
 
 public class PassEncryptor {
 
-    // Method to encrypt a password using SHA-256 algorithm (without salt)
     public static String encryptPassword(String password) {
         try {
             // Get an instance of the SHA-256 algorithm
@@ -27,7 +26,6 @@ public class PassEncryptor {
         }
     }
 
-    // Method to validate the entered password (for relogin)
     public static boolean validatePassword(String enteredPassword, String storedHash) {
         // Encrypt the entered password
         String hashedEnteredPassword = encryptPassword(enteredPassword);

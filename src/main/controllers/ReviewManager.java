@@ -1,12 +1,11 @@
 package main.controllers;
 
-import java.sql.SQLException;
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import main.constants.IDPrefix;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
 import main.dao.ReviewDAO;
@@ -29,9 +28,9 @@ public final class ReviewManager extends ListManager<Review> {
         copy(ReviewDAO.getAllReviews()); 
     }
     
-    public boolean addReview(String customerID) throws SQLException {
+    public boolean addReview(String customerID) {
         if (customerID == null) 
-            customerID = getString("Enter customer's id", null);
+            customerID = getString("Enter customer's id");
         if (customerID == null) return false;
         
         Account customer = (Account) getACM().searchById(customerID);
@@ -44,16 +43,15 @@ public final class ReviewManager extends ListManager<Review> {
         if (reviews != null && !reviews.isEmpty()) 
             return errorLog("Already reviewed this movie", false);
         
-        int rating = getInteger("Enter rating", 1, 5, Integer.MIN_VALUE);
+        int rating = getInteger("Enter rating", 1, 5);
         if (rating == Integer.MIN_VALUE) return false;
         
-        String comment = getString("Enter comment", null);
+        String comment = getString("Enter comment");
         
         double avgRating = MovieServices.calculateAverageRating(movie.getId());
         if (avgRating > 0) movie.setAvgRating(avgRating);
         
         return add(new Review(
-                createID(IDPrefix.REVIEW_PREFIX),
                 customer.getId(),
                 movie.getId(),
                 rating,
@@ -69,9 +67,9 @@ public final class ReviewManager extends ListManager<Review> {
             review = (Review) getById("Enter review's id");
         if (checkNull(review)) return false;
         
-        Review temp = new Review();
-        temp.setRating(getInteger("Enter rating", 1, 5, review.getRating()));
-        temp.setReviewText(getString("Enter comment", review.getReviewText()));
+        Review temp = new Review(review);
+        temp.setRating(getInteger("Enter rating", 1, 5, temp.getRating()));
+        temp.setReviewText(getString("Enter comment", temp.getReviewText()));
                 
         return update(review, temp);
     }
@@ -91,14 +89,18 @@ public final class ReviewManager extends ListManager<Review> {
 
     public boolean update(Review oldReview, Review newReview) {
         if (newReview == null || checkNull(list)) return false;
-        if (ReviewDAO.updateReviewInDB(newReview))
-            oldReview = newReview;
+        if (!ReviewDAO.updateReviewInDB(newReview)) return false;
+        
+        oldReview.setRating(newReview.getRating());
+        oldReview.setReviewText(newReview.getReviewText());
+        oldReview.setReviewDate(newReview.getReviewDate());
+        
         return true;
     }
     
     public boolean delete(Review review) {
         if (review == null) return false;     
-        return ReviewDAO.deleteReviewFromDB(review.getId()) && list.remove(review);
+        return ReviewDAO.deleteReviewFromDB(review.getCustomerID(), review.getMovieID()) && list.remove(review);
     }
 
     @Override
@@ -122,7 +124,7 @@ public final class ReviewManager extends ListManager<Review> {
     }
 
     @Override
-    public List<Review> sortList(List<Review> tempList, String propety) {
+    public List<Review> sortList(List<Review> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -145,6 +147,9 @@ public final class ReviewManager extends ListManager<Review> {
         } else {
             result.sort(Comparator.comparing(Review::getId)); // Default case
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
 

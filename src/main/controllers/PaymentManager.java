@@ -2,6 +2,7 @@ package main.controllers;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
@@ -28,16 +29,16 @@ public class PaymentManager extends ListManager<Payment> {
     
     public boolean addPayment(String customerID) {
         if (customerID == null) 
-            customerID = getString("Enter customer's id", null);
+            customerID = getString("Enter customer's id");
         if (customerID == null) return false;
         
         Account customer = (Account) getACM().searchById(customerID);
         if (getACM().checkNull(customer)) return false;
         
-        double amount = getDouble("Enter amount", 0, Double.MAX_VALUE, Double.MIN_VALUE);
+        double amount = getDouble("Enter amount", 0, Double.MAX_VALUE);
         if (amount == Integer.MIN_VALUE) return false;
         
-        PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, null);
+        PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class);
         if (method == null) return false;
         
         Payment payment = new Payment(
@@ -58,11 +59,11 @@ public class PaymentManager extends ListManager<Payment> {
             payment = (Payment) getById("Enter payment's id");
         if (checkNull(payment)) return false;
         
-        Payment temp = new Payment();
-        temp.setAmount(getDouble("Enter amount", 0, Double.MAX_VALUE, payment.getAmount()));
-        temp.setMethod((PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, payment.getMethod()));
-        temp.setStatus((PaymentStatus) getEnumValue("Choose payment status", PaymentStatus.class, payment.getStatus()));
-        temp.setTransactionTime(getDateTime(payment.getTransactionTime()));
+        Payment temp = new Payment(payment);
+        temp.setAmount(getDouble("Enter amount", 0, Double.MAX_VALUE, temp.getAmount()));
+        temp.setMethod((PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class, temp.getMethod()));
+        temp.setStatus((PaymentStatus) getEnumValue("Choose payment status", PaymentStatus.class, temp.getStatus()));
+        temp.setTransactionTime(getDateTime(temp.getTransactionTime()));
         
         return update(payment, temp);
     }
@@ -82,8 +83,14 @@ public class PaymentManager extends ListManager<Payment> {
 
     public boolean update(Payment oldPayment, Payment newPayment) {
         if (newPayment == null || checkNull(list)) return false;
-        if (PaymentDAO.updatePaymentInDB(newPayment))
-            oldPayment = newPayment;
+        if (!PaymentDAO.updatePaymentInDB(newPayment)) return false;
+        
+        oldPayment.setCustomerID(newPayment.getCustomerID());
+        oldPayment.setAmount(newPayment.getAmount());
+        oldPayment.setMethod(newPayment.getMethod());
+        oldPayment.setTransactionTime(newPayment.getTransactionTime());
+        oldPayment.setStatus(newPayment.getStatus());
+        
         return true;
     }
     
@@ -111,7 +118,7 @@ public class PaymentManager extends ListManager<Payment> {
     }
 
     @Override
-    public List<Payment> sortList(List<Payment> tempList, String propety) {
+    public List<Payment> sortList(List<Payment> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -135,6 +142,8 @@ public class PaymentManager extends ListManager<Payment> {
             result.sort(Comparator.comparing(Payment::getId)); 
         }
 
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
 
