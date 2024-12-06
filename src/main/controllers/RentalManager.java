@@ -3,6 +3,7 @@ package main.controllers;
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.IDPrefix;
@@ -14,6 +15,7 @@ import static main.controllers.Managers.getPMM;
 import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Rental;
+import main.services.DiscountServices;
 import main.services.RentalServices;
 import main.utils.InfosTable;
 import static main.utils.Input.getInteger;
@@ -53,7 +55,9 @@ public class RentalManager extends ListManager<Rental> {
         int howManyDays = getInteger("How many days to rent", 1, 365, Integer.MIN_VALUE);
         if (howManyDays == Integer.MIN_VALUE) return false;
         
-        double total = movie.getRentalPrice() * howManyDays;
+        
+        
+        double total = DiscountServices.applyDiscountForRental(customerID, movie) * howManyDays;
         LocalDate dueDate =  rentalDate.plusDays(howManyDays);
         
         String staffID = RentalServices.findStaffForRentalApproval();
@@ -151,7 +155,7 @@ public class RentalManager extends ListManager<Rental> {
     }
 
     @Override
-    public List<Rental> sortList(List<Rental> tempList, String propety) {
+    public List<Rental> sortList(List<Rental> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -182,6 +186,9 @@ public class RentalManager extends ListManager<Rental> {
         } else {
             result.sort(Comparator.comparing(Rental::getId)); // Default case
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
 

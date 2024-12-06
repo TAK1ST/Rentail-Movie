@@ -13,35 +13,43 @@ import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import main.dto.Profile;
 import static main.utils.Input.getDouble;
+import static main.utils.LogMessage.errorLog;
+import static main.utils.LogMessage.successLog;
 
 /**
  *
  * @author trann
  */
-public class CustomerServices {
+public class ProfileServices {
+    
+    private static Profile myProfile;
+    
+    public static void initDataFor(String id) {
+        myProfile = (Profile) getPFM().searchById(id);
+    }
     
     public static void showMyProfile(Account account) {
         getACM().show(account, "My Profile");
     }
     
-    public static boolean updateMyProfile(String accountID) {
-        Profile myProfile = (Profile) getPFM().searchById(accountID);
+    public static boolean updateMyProfile() {
         if (getPFM().checkNull(myProfile)) return false;
         
         return getPFM().updateProfile(myProfile);
     }
     
     public static boolean registorCredit(Account account) {
-        Profile profile = (Profile)getPFM().searchById(account.getId());
-        if (getPFM().checkNull(profile)) return false;
+        if (getPFM().checkNull(myProfile)) return false;
         
-        Profile temp = new Profile(profile);
+        Profile temp = new Profile(myProfile);
         double credit = getDouble("Amount to registor", 0, Double.MAX_VALUE, Double.MIN_VALUE);
         if (credit == Double.MIN_VALUE) return false;
         
-        profile.setCredit(profile.getCredit()  + credit);
-        
-        return getPFM().update(profile, temp);
+        if (updateUserCredit(account.getId(), credit)) {
+            myProfile.setCredit(myProfile.getCredit()  + credit);
+            return successLog("Successfully registor credit", true);
+        }
+        return errorLog("Fail to registor credit", false);
     }
     
     public static boolean adjustAccountCreability(Account account, int amount) {
@@ -54,6 +62,24 @@ public class CustomerServices {
 
             if (ps.executeUpdate() > 0)
                 account.setCreability(account.getCreability() + 1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    private static boolean updateUserCredit(String customerId, double creditAmount) {
+        String query = "UPDATE Profiles SET credit = credit + ? WHERE account_id = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setDouble(1, creditAmount); 
+            stmt.setString(2, customerId);    
+
+            int rowsUpdated = stmt.executeUpdate();
+
+            return rowsUpdated > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -31,68 +31,68 @@ public class Managers {
     }
     
     public static boolean initACM() {
-        if (ACM != null) return false;
-        ACM = new AccountManager();
+        if (ACM == null)
+            ACM = new AccountManager();
         return true;
     }
     
     public static boolean initATM() {
-        if (ATM != null) return false;
-        ATM = new ActorManager();
+        if (ATM == null)
+            ATM = new ActorManager();
         return true;
     }
     
     public static boolean initDCM() {
-        if (DCM != null) return false;
-        DCM = new DiscountManager();
+        if (DCM == null)
+            DCM = new DiscountManager();
         return true;
     }
     
     public static boolean initGRM() {
-        if (GRM != null) return false;
-        GRM = new GenreManager();
+        if (GRM == null)
+            GRM = new GenreManager();
         return true;
     }
     
     public static boolean initMVM() {
-        if (MVM != null) return false;
-        MVM = new MovieManager();
+        if (MVM == null)
+            MVM = new MovieManager();
         return true;
     }
     
     public static boolean initLGM() {
-        if (LGM != null) return false;
-        LGM = new LanguageManager();
+        if (LGM == null)
+            LGM = new LanguageManager();
         return true;
     }
     
     public static boolean initPMM() {
-        if (PMM != null) return false;
-        PMM = new PaymentManager();
+        if (PMM == null)
+            PMM = new PaymentManager();
         return true;
     }
     
     public static boolean initPFM() {
-        if (PFM != null) return false;
-        PFM = new ProfileManager();
+        if (PFM == null)
+            PFM = new ProfileManager();
         return true;
     }
     
     public static boolean initRVM() {
-        if (RVM != null) return false;
-        RVM = new ReviewManager();
+        if (RVM == null)
+            RVM = new ReviewManager();
         return true;
     }
     
     public static boolean initRTM() {
-        if (RTM != null) return false;
-        RTM = new RentalManager();
+        if (RTM == null)
+            RTM = new RentalManager();
         return true;
     }
     
     public static boolean initWLM() {
-        if (WLM != null) return false;
-        WLM = new WishlistManager();
+        if (WLM == null)
+            WLM = new WishlistManager();
         return true;
     }
     

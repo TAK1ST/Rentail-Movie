@@ -99,7 +99,9 @@ public class MovieDAO {
     public static List<Movie> getAllMovies() {
         String sql = "SELECT * FROM Movies";
         List<Movie> list = new ArrayList<>();
-        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection connection = Database.getConnection(); 
+                PreparedStatement ps = connection.prepareStatement(sql); 
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
 
                 Movie movie = new Movie(
@@ -124,5 +126,4 @@ public class MovieDAO {
         return list;
     }
     
-
 }

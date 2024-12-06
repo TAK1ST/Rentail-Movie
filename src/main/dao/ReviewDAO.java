@@ -105,4 +105,31 @@ public class ReviewDAO {
         }
         return list;
     }
+    
+    public static List<Review> getUserReviews(String customerId) throws SQLException {
+        String query = "SELECT movie_id, rating, review_text, review_date FROM Reviews WHERE customer_id = ?";
+
+        List<Review> reviews = new ArrayList<>();
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Review review = new Review(
+                        rs.getString("review_id"),
+                        rs.getString("movie_id"),
+                        rs.getString("customer_id"),
+                        rs.getInt("rating"),
+                        rs.getString("review_text"),
+                        rs.getDate("review_date").toLocalDate()
+                );
+                reviews.add(review);
+            }
+        }
+        return reviews;
+    }
+    
 }

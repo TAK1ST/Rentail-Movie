@@ -2,12 +2,14 @@ package main.controllers;
 
 import main.base.ListManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.account.AccRole;
 import main.dao.AccountDAO;
 import main.dto.Account;
 import main.utils.InfosTable;
+import static main.utils.LogMessage.debugLog;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -27,7 +29,7 @@ public class AccountManager extends ListManager<Account> {
         if (checkNull(list)) return false;
         
         if (account == null)
-        account = (Account) getById("Enter user's id");
+            account = (Account) getById("Enter user's id");
         if (checkNull(account)) return false;
 
         AccRole newRole = null;
@@ -80,7 +82,7 @@ public class AccountManager extends ListManager<Account> {
                     || (item.getUsername() != null && item.getUsername().equals(propety))
                     || (item.getEmail() != null && item.getEmail().equals(propety))
                     || (item.getRole() != null && item.getRole().name().equals(propety))
-                    || (item.getStatus() != null && item.getStatus().equals(propety)))
+                    || (item.getStatus() != null && item.getStatus().name().equals(propety)))
             {
                 result.add(item);
             }
@@ -89,7 +91,7 @@ public class AccountManager extends ListManager<Account> {
     }
 
     @Override
-    public List<Account> sortList(List<Account> tempList, String propety) {
+    public List<Account> sortList(List<Account> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -118,6 +120,8 @@ public class AccountManager extends ListManager<Account> {
         } else {
             result.sort(Comparator.comparing(Account::getId));
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
 
         return result;
     }

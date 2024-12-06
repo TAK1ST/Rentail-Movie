@@ -30,16 +30,23 @@ import static main.utils.Input.getString;
  */
 public class RentalServices {
     
-    public static void myHistoryRental(String customerID) {
-        List<Rental> myRentals = getRTM().searchBy(customerID);
+    private static List<Rental> myRentals;
+    private static String accountID;
+    
+    public static void initDataFor(String id) {
+        accountID = id;
+        myRentals = getRTM().searchBy(accountID);
+    }
+    
+    public static void myHistoryRental() {
         getRTM().display(myRentals);
     }
     
-    public static boolean returnMovie(String customerID) {
+    public static boolean returnMovie() {
         String movieID = getString("Enter movie' id", null);
         if (movieID == null) return false;
         
-        Rental rental = getRTM().searchBy(customerID, movieID).getFirst();
+        Rental rental = getRTM().searchBy(accountID, movieID).getFirst();
         if (getRTM().checkNull(rental)) return false;
         
         Rental temp = new Rental();
@@ -49,7 +56,7 @@ public class RentalServices {
         return getRTM().update(rental, temp);
     }
     
-    public static boolean extendReturnDate(String customerID) {
+    public static boolean extendReturnDate() {
         Rental rental = getRTM().getById("Enter rental's id to extend");
         rental.setLateFee(calcLateFee(LocalDate.now(), rental));
         

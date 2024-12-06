@@ -2,6 +2,7 @@ package main.controllers;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
@@ -111,7 +112,7 @@ public class PaymentManager extends ListManager<Payment> {
     }
 
     @Override
-    public List<Payment> sortList(List<Payment> tempList, String propety) {
+    public List<Payment> sortList(List<Payment> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -135,6 +136,8 @@ public class PaymentManager extends ListManager<Payment> {
             result.sort(Comparator.comparing(Payment::getId)); 
         }
 
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
 

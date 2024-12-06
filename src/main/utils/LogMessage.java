@@ -10,6 +10,8 @@ package main.utils;
  */
 public class LogMessage {
     
+    private static int flagNum = 1;
+    
     public static boolean errorLog(String message, boolean returnValue) {
         System.out.printf("[ERROR] %s.\n", message);
         return returnValue;
@@ -43,7 +45,7 @@ public class LogMessage {
     }
     
     public static void debugLog() {
-        System.out.println("[FLAG]");
+        System.out.printf("[FLAG %d]\n", flagNum++);
     }
     
 }

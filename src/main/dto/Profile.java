@@ -2,7 +2,6 @@ package main.dto;
 
 import java.time.LocalDate;
 import main.base.Model;
-import main.utils.Validator;
 
 public class Profile extends Model {
     
@@ -15,10 +14,6 @@ public class Profile extends Model {
     public Profile() {
     }
     
-    public Profile(String accountID) {
-        super(accountID);
-    }
-
     public Profile(String accountID, String fullName, String phoneNumber, String address, double credit, LocalDate birthday) {
         super(accountID);
         this.fullName = fullName;

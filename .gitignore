@@ -1,6 +1,9 @@
 # Ignore the user library
 /lib/
 
+# Ignore the global test package
+/test/
+
 # Ignore my own test package
 /src/test/
 

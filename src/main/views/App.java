@@ -9,7 +9,6 @@ import static main.utils.LogMessage.errorLog;
 public class App {
 
     public static void run() throws IOException, SQLException {
-        Managers.initAll();
         do {
             redirect(AuthenPannel.getAccounts());
         } while (!yesOrNo("Exit"));

@@ -122,4 +122,30 @@ public class RentalDAO {
         }
         return list;
     }
+    
+    public static List<String> getUserRentals(String customerId) throws SQLException {
+        String query = "SELECT rental_id, movie_id, rental_date, due_date, return_date, status FROM Rentals WHERE customer_id = ?";
+
+        List<String> rentals = new ArrayList<>();
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String rentalId = rs.getString("rental_id");
+                String movieId = rs.getString("movie_id");
+                Date rentalDate = rs.getDate("rental_date");
+                Date dueDate = rs.getDate("due_date");
+                Date returnDate = rs.getDate("return_date");
+                String status = rs.getString("status");
+
+                rentals.add("Rental ID: " + rentalId + ", Movie ID: " + movieId + ", Rental Date: " + rentalDate + ", Due Date: " + dueDate + ", Return Date: " + returnDate + ", Status: " + status);
+            }
+        }
+        return rentals;
+    }
+
 }

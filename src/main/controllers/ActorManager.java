@@ -2,6 +2,7 @@ package main.controllers;
 
 import main.base.ListManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.actor.ActorRank;
@@ -51,7 +52,7 @@ public class ActorManager extends ListManager<Actor> {
         if (checkNull(list)) return false;
         
         if (actor == null)
-        actor = (Actor) getById("Enter actor name");
+            actor = (Actor) getById("Enter actor name");
         if (checkNull(actor)) return false;
         
         Actor temp = new Actor();
@@ -88,7 +89,7 @@ public class ActorManager extends ListManager<Actor> {
     }
     
     @Override
-    public List<Actor> sortList(List<Actor> tempList, String propety) {
+    public List<Actor> sortList(List<Actor> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -105,6 +106,9 @@ public class ActorManager extends ListManager<Actor> {
         } else {
             result.sort(Comparator.comparing(Actor::getId));
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
     

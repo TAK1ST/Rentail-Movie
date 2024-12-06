@@ -1,6 +1,7 @@
 package main.controllers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
@@ -43,7 +44,7 @@ public class LanguageManager extends ListManager<Language> {
         if (checkNull(list)) return false;
         
         if (language == null)
-        language = (Language) getById("Enter language code");
+            language = (Language) getById("Enter language code");
         if (checkNull(language)) return false;
         
         Language temp = new Language();
@@ -95,7 +96,7 @@ public class LanguageManager extends ListManager<Language> {
     }
     
     @Override
-    public List<Language> sortList(List<Language> tempList, String propety) {
+    public List<Language> sortList(List<Language> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -110,6 +111,9 @@ public class LanguageManager extends ListManager<Language> {
         } else {
             result.sort(Comparator.comparing(Language::getCode));
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
  

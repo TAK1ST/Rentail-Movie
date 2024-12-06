@@ -6,6 +6,7 @@ import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
 public class Review extends Model {
+    
     private String movieID;
     private String customerID;
     private int rating;
@@ -13,10 +14,6 @@ public class Review extends Model {
     private String reviewText;
     
     public Review() {
-    }
-    
-    public Review(String customerID) {
-        this.customerID = customerID;
     }
     
     public Review(String movieID, String customerID) {

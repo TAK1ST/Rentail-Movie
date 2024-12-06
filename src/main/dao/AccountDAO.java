@@ -12,6 +12,7 @@ import main.dto.Account;
 import main.config.Database;
 import main.constants.account.AccRole;
 import main.constants.account.AccStatus;
+import main.services.AuthenServices;
 import main.utils.IDGenerator;
 
 public class AccountDAO {
@@ -113,7 +114,7 @@ public class AccountDAO {
                     && !rs.getString("account_id").equals(IDGenerator.DEFAULT_ADMIN_ID)) 
                 {
                     username = IDGenerator.generateDiscountCode();
-                    username = updateUsernameInDB(rs.getString("account_id"), username) ? username : rs.getString("username");
+                    username = AuthenServices.updateUsernameInDB(rs.getString("account_id"), username) ? username : rs.getString("username");
                 }
                 Account account = new Account(
                         rs.getString("account_id"),
@@ -151,27 +152,4 @@ public class AccountDAO {
         return list;
     }
 
-    public static boolean updatePasswordInDB(String accountID, String newPassword) {
-        String sql = "UPDATE Accounts SET password = ? WHERE account_id = ?";
-        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, newPassword);
-            ps.setString(2, accountID);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public static boolean updateUsernameInDB(String accountID, String username) {
-        String sql = "UPDATE Accounts SET username = ? WHERE account_id = ?";
-        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, username);
-            ps.setString(2, accountID);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 }

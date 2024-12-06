@@ -2,6 +2,7 @@ package main.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
@@ -113,7 +114,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     }
     
     @Override
-    public List<Wishlist> sortList(List<Wishlist> tempList, String propety) {
+    public List<Wishlist> sortList(List<Wishlist> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -134,6 +135,9 @@ public class WishlistManager extends ListManager<Wishlist> {
         } else {
             result.sort(Comparator.comparing(Wishlist::getId));
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
 
