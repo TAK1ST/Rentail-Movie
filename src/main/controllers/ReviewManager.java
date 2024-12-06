@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import main.constants.IDPrefix;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
 import main.dao.ReviewDAO;
@@ -53,7 +52,6 @@ public final class ReviewManager extends ListManager<Review> {
         if (avgRating > 0) movie.setAvgRating(avgRating);
         
         return add(new Review(
-                createID(IDPrefix.REVIEW_PREFIX),
                 customer.getId(),
                 movie.getId(),
                 rating,
@@ -69,9 +67,9 @@ public final class ReviewManager extends ListManager<Review> {
             review = (Review) getById("Enter review's id");
         if (checkNull(review)) return false;
         
-        Review temp = new Review();
-        temp.setRating(getInteger("Enter rating", 1, 5, review.getRating()));
-        temp.setReviewText(getString("Enter comment", review.getReviewText()));
+        Review temp = new Review(review);
+        temp.setRating(getInteger("Enter rating", 1, 5, temp.getRating()));
+        temp.setReviewText(getString("Enter comment", temp.getReviewText()));
                 
         return update(review, temp);
     }
@@ -91,14 +89,18 @@ public final class ReviewManager extends ListManager<Review> {
 
     public boolean update(Review oldReview, Review newReview) {
         if (newReview == null || checkNull(list)) return false;
-        if (ReviewDAO.updateReviewInDB(newReview))
-            oldReview = newReview;
+        if (!ReviewDAO.updateReviewInDB(newReview)) return false;
+        
+        oldReview.setRating(newReview.getRating());
+        oldReview.setReviewText(newReview.getReviewText());
+        oldReview.setReviewDate(newReview.getReviewDate());
+        
         return true;
     }
     
     public boolean delete(Review review) {
         if (review == null) return false;     
-        return ReviewDAO.deleteReviewFromDB(review.getId()) && list.remove(review);
+        return ReviewDAO.deleteReviewFromDB(review.getCustomerID(), review.getMovieID()) && list.remove(review);
     }
 
     @Override

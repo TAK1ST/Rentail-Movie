@@ -47,9 +47,8 @@ public class WishlistServices {
         if (priority == null) return false;
         
         return getWLM().add(new Wishlist(
-                getWLM().createID(IDPrefix.WISHLIST_PREFIX),
-                movie.getId(),
                 accountID,
+                movie.getId(),
                 LocalDate.now(),
                 priority
         ));
@@ -76,7 +75,7 @@ public class WishlistServices {
 
     public static boolean clearAllMyWishList() {
         for (Wishlist item : myWishlist) {
-            if (!WishlistDAO.deleteWishlistFromDB(item.getMovieId()))
+            if (!WishlistDAO.deleteWishlistFromDB(item.getCustomerId(), item.getMovieId()))
                 return errorLog("Error during clearing your wishlist", false);
         }
         myWishlist.clear();

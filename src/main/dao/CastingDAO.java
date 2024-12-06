@@ -59,13 +59,13 @@ public class CastingDAO {
         List<Casting> list = new ArrayList<>();
         try (Connection connection = Database.getConnection(); 
              PreparedStatement ps = connection.prepareStatement(sql); 
-             ResultSet resultSet = ps.executeQuery()) {
+             ResultSet rs = ps.executeQuery()) {
 
-            while (resultSet.next()) {
+            while (rs.next()) {
                 Casting casting = new Casting(
-                        resultSet.getString("movie_id"),
-                        resultSet.getString("actor_id"),
-                        ActorRole.valueOf(resultSet.getString("role"))  // Assuming Role is an Enum
+                        rs.getString("movie_id"),
+                        rs.getString("actor_id"),
+                        ActorRole.valueOf(rs.getString("role"))  // Assuming Role is an Enum
                 );
                 list.add(casting);
             }

@@ -27,7 +27,13 @@ public class Utility {
         enumListing(message, enumClass);
         E[] enumConstants = enumClass.getEnumConstants();
         
-        int choice = getInteger("Enter choice", 1, enumConstants.length, Integer.MIN_VALUE);
+        int oldChoice = 1;
+        for (E item : enumConstants) 
+            if (item != oldData) oldChoice++;
+            else break;
+        if (oldChoice >= enumConstants.length) oldChoice = Integer.MIN_VALUE;
+        
+        int choice = getInteger("Enter choice", 1, enumConstants.length, oldChoice);
         if (choice == Integer.MIN_VALUE && oldData != null) 
             return oldData;
         

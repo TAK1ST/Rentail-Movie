@@ -46,6 +46,7 @@ public class Profile extends Model {
                 + "%s: %s,\n"
                 + "%s: %s,\n"
                 + "%s: %s,\n"
+                + "%s: %s,\n"
                 + "%s: %.2f,\n"
                 + "%s: %s.",
                 className(),

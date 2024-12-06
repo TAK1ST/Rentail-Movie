@@ -48,7 +48,7 @@ public abstract class ListManager<T extends Model> {
         String lastID = null;
         if (gapIDs.isEmpty()) {
             List<T> temp = sortList(list, attributes[0], false);
-            if (temp != null && temp.getLast() != null && temp.getLast().getId() != null)
+            if (temp != null && !temp.isEmpty() && temp.getLast() != null && temp.getLast().getId() != null)
                 lastID = temp.getLast().getId();
             
             return IDGenerator.generateID(lastID, prefix);

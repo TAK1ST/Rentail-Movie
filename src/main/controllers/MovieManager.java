@@ -86,15 +86,15 @@ public class MovieManager extends ListManager<Movie> {
             movie = (Movie) getById("Enter movie's id");
         if (checkNull(movie)) return false;
         
-        Movie temp = new Movie();
-        temp.setTitle(getString("Enter title", movie.getTitle()));
-        temp.setDescription(getString("Enter description", movie.getDescription()));
-        temp.setGenreNames(selectByNumbers("Enter genres (Comma-separated)", getGRM(), movie.getGenreNames()));
-        temp.setActorIDs(selectByNumbers("Enter actors (Comma-separated)", getATM(), movie.getActorIDs()));
-        temp.setLanguageCodes(selectByNumbers("Enter languages (Comma-separated)", getLGM(), movie.getLanguageCodes()));
-        temp.setReleaseYear(getDate("Enter release date", movie.getReleaseYear()));
-        temp.setRentalPrice(getDouble("Enter rental price", 0, Double.MAX_VALUE, movie.getRentalPrice()));
-        temp.setAvailableCopies(getInteger("Enter available copies", 0, Integer.MAX_VALUE, movie.getAvailableCopies()));
+        Movie temp = new Movie(movie);
+        temp.setTitle(getString("Enter title", temp.getTitle()));
+        temp.setDescription(getString("Enter description", temp.getDescription()));
+        temp.setGenreNames(selectByNumbers("Enter genres (Comma-separated)", getGRM(), temp.getGenreNames()));
+        temp.setActorIDs(selectByNumbers("Enter actors (Comma-separated)", getATM(), temp.getActorIDs()));
+        temp.setLanguageCodes(selectByNumbers("Enter languages (Comma-separated)", getLGM(), temp.getLanguageCodes()));
+        temp.setReleaseYear(getDate("Enter release date", temp.getReleaseYear()));
+        temp.setRentalPrice(getDouble("Enter rental price", 0, Double.MAX_VALUE, temp.getRentalPrice()));
+        temp.setAvailableCopies(getInteger("Enter available copies", 0, Integer.MAX_VALUE, temp.getAvailableCopies()));
         
         temp.setUpdateDate(LocalDate.now());
         return update(movie, temp);
@@ -123,8 +123,20 @@ public class MovieManager extends ListManager<Movie> {
 
     public boolean update(Movie oldMovie, Movie newMovie) {
         if (newMovie == null || checkNull(list)) return false;
-        if (MovieDAO.updateMovieInDB(newMovie))
-            oldMovie = newMovie;
+        if (!MovieDAO.updateMovieInDB(newMovie)) return false;
+        
+        oldMovie.setTitle(newMovie.getTitle());
+        oldMovie.setDescription(newMovie.getDescription());
+        oldMovie.setAvgRating(newMovie.getAvgRating());
+        oldMovie.setGenreNames(newMovie.getGenreNames());
+        oldMovie.setActorIDs(newMovie.getActorIDs());
+        oldMovie.setLanguageCodes(newMovie.getLanguageCodes());
+        oldMovie.setReleaseYear(newMovie.getReleaseYear());
+        oldMovie.setRentalPrice(newMovie.getRentalPrice());
+        oldMovie.setAvailableCopies(newMovie.getAvailableCopies());
+        oldMovie.setCreateDate(newMovie.getCreateDate());
+        oldMovie.setUpdateDate(newMovie.getUpdateDate());
+        
         return true;
     }
     

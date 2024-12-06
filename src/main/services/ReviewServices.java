@@ -102,7 +102,7 @@ public class ReviewServices {
             return errorLog("You have no reviews", false);
         
         for (Review item : myReviews) {
-            if (!ReviewDAO.deleteReviewFromDB(item.getMovieID()))
+            if (!ReviewDAO.deleteReviewFromDB(item.getCustomerID(), item.getMovieID()))
                 return errorLog("Error during clearing your reviews", false);
         }
         return successLog("All your reviews have been cleared", true);

@@ -35,14 +35,14 @@ public class DiscountDAO {
 
             int count = 0;
             ps.setString(++count, discount.getCode());
-            ps.setDate(++count, Date.valueOf(discount.getStartDate()));
-            ps.setDate(++count, Date.valueOf(discount.getEndDate()));
-            ps.setString(++count, discount.getType().name());
+            ps.setDate(++count, discount.getStartDate() != null ? Date.valueOf(discount.getStartDate()) : null);
+            ps.setDate(++count, discount.getEndDate() != null ? Date.valueOf(discount.getEndDate()) : null);
+            ps.setString(++count, discount.getType() != null ? discount.getType().name() : null);
             ps.setInt(++count, discount.getQuantity());
             ps.setBoolean(++count, discount.isActive());
             ps.setDouble(++count, discount.getValue());
-            ps.setString(++count, discount.getApplyForWho().name());
-            ps.setString(++count, discount.getApplyForWhat().name());
+            ps.setString(++count, discount.getApplyForWho() != null ? discount.getApplyForWho().name() : null);
+            ps.setString(++count, discount.getApplyForWhat() != null ? discount.getApplyForWhat().name() : null);
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -66,15 +66,15 @@ public class DiscountDAO {
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             int count = 0;
-            ps.setDate(++count, Date.valueOf(discount.getStartDate()));
-            ps.setDate(++count, Date.valueOf(discount.getEndDate()));
-            ps.setString(++count, discount.getType().name());
+            ps.setDate(++count, discount.getStartDate() != null ? Date.valueOf(discount.getStartDate()) : null);
+            ps.setDate(++count, discount.getEndDate() != null ? Date.valueOf(discount.getEndDate()) : null);
+            ps.setString(++count, discount.getType() != null ? discount.getType().name() : null);
             ps.setInt(++count, discount.getQuantity());
             ps.setBoolean(++count, discount.isActive());
             ps.setDouble(++count, discount.getValue());
             ps.setString(++count, discount.getCode());
-            ps.setString(++count, discount.getApplyForWho().name());
-            ps.setString(++count, discount.getApplyForWhat().name());
+            ps.setString(++count, discount.getApplyForWho() != null ? discount.getApplyForWho().name() : null);
+            ps.setString(++count, discount.getApplyForWhat() != null ? discount.getApplyForWhat().name() : null);
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -108,14 +108,14 @@ public class DiscountDAO {
                         rs.getString("discount_code"),
                         getSubIdsByMainId("Discount_Account", rs.getString("discount_code"), "discount_code", "customer_id"),
                         getSubIdsByMainId("Discount_Movie", rs.getString("discount_code"), "discount_code", "movie_id"),
-                        rs.getDate("start_date").toLocalDate(),
-                        rs.getDate("end_date").toLocalDate(),
-                        DiscountType.valueOf(rs.getString("discount_type")),
+                        rs.getDate("start_date") != null ? rs.getDate("start_date").toLocalDate() : null,
+                        rs.getDate("end_date") != null ? rs.getDate("end_date").toLocalDate() : null,
+                        rs.getString("discount_type") != null ? DiscountType.valueOf(rs.getString("discount_type")) : null,
                         rs.getInt("quantity"),
                         rs.getBoolean("is_active"),
                         rs.getDouble("discount_value"),
-                        ApplyForWho.valueOf(rs.getString("apply_for_who")),
-                        ApplyForWhat.valueOf(rs.getString("apply_for_what"))
+                        rs.getString("apply_for_who") != null ? ApplyForWho.valueOf(rs.getString("apply_for_who")) : null,
+                        rs.getString("apply_for_what") != null ? ApplyForWhat.valueOf(rs.getString("apply_for_what")) : null
                 );
                 list.add(discount);
             }
@@ -184,14 +184,14 @@ public class DiscountDAO {
                         rs.getString("discount_code"),
                         getSubIdsByMainId("Discount_Account", rs.getString("discount_code"), "discount_code", "customer_id"),
                         getSubIdsByMainId("Discount_Movie", rs.getString("discount_code"), "discount_code", "movie_id"),
-                        rs.getDate("start_date").toLocalDate(),
-                        rs.getDate("end_date").toLocalDate(),
-                        DiscountType.valueOf(rs.getString("discount_type")),
+                        rs.getDate("start_date") != null ? rs.getDate("start_date").toLocalDate() : null,
+                        rs.getDate("end_date") != null ? rs.getDate("end_date").toLocalDate() : null,
+                        rs.getString("discount_type") != null ? DiscountType.valueOf(rs.getString("discount_type")) : null,
                         rs.getInt("quantity"),
                         rs.getBoolean("is_active"),
                         rs.getDouble("discount_value"),
-                        ApplyForWho.valueOf(rs.getString("apply_for_who")),
-                        ApplyForWhat.valueOf(rs.getString("apply_for_what"))
+                        rs.getString("apply_for_who") != null ? ApplyForWho.valueOf(rs.getString("apply_for_who")) : null,
+                        rs.getString("apply_for_what") != null ? ApplyForWhat.valueOf(rs.getString("apply_for_what")) : null
                 );
                 availableDiscounts.add(discount);
             }
@@ -235,9 +235,9 @@ public class DiscountDAO {
             statement.setString(5, customerId);
 
             // Execute the query
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt("discount_count") > 0;
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("discount_count") > 0;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -280,9 +280,9 @@ public class DiscountDAO {
             statement.setString(5, customerId);
 
             // Execute the query
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                String discountCode = resultSet.getString("discount_code");
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                String discountCode = rs.getString("discount_code");
 
                 return discountCode;
             }

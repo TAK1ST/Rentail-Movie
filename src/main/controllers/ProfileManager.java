@@ -65,12 +65,12 @@ public class ProfileManager extends ListManager<Profile> {
             profile = (Profile) getById("Enter profile's id");
         if (checkNull(profile)) return false;
         
-        Profile temp = new Profile();
-        temp.setFullName(getName("Enter full name", profile.getFullName()));
-        temp.setPhoneNumber(getPhoneNumber("Enter phone number", profile.getPhoneNumber()));
-        temp.setAddress(getString("Enter address", profile.getAddress()));
-        temp.setBirthday(getDate("Enter birthday", profile.getBirthday()));
-        temp.setCredit(getDouble("Enter credit", 0f, Double.MAX_VALUE, profile.getCredit()));
+        Profile temp = new Profile(profile);
+        temp.setFullName(getName("Enter full name", temp.getFullName()));
+        temp.setPhoneNumber(getPhoneNumber("Enter phone number", temp.getPhoneNumber()));
+        temp.setAddress(getString("Enter address", temp.getAddress()));
+        temp.setBirthday(getDate("Enter birthday", temp.getBirthday()));
+        temp.setCredit(getDouble("Enter credit", 0f, Double.MAX_VALUE, temp.getCredit()));
         
         return update(profile, temp);
     }
@@ -90,8 +90,14 @@ public class ProfileManager extends ListManager<Profile> {
 
     public boolean update(Profile oldProfile, Profile newProfile) {
         if (newProfile == null || checkNull(list)) return false;
-        if (ProfileDAO.updateProfileInDB(newProfile))
-            oldProfile = newProfile;
+        if (!ProfileDAO.updateProfileInDB(newProfile)) return false;
+        
+        oldProfile.setFullName(newProfile.getFullName());
+        oldProfile.setPhoneNumber(newProfile.getPhoneNumber());
+        oldProfile.setAddress(newProfile.getAddress());
+        oldProfile.setCredit(newProfile.getCredit());
+        oldProfile.setBirthday(newProfile.getBirthday());
+        
         return true;
     }
     

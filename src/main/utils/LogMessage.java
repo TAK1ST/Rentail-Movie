@@ -1,5 +1,7 @@
 package main.utils;
 
+import java.util.Arrays;
+
 public class LogMessage {
     
     private static int flagNum = 1;
@@ -38,6 +40,14 @@ public class LogMessage {
     
     public static void debugLog() {
         System.out.printf("[FLAG %d]\n", flagNum++);
+    }
+    
+    public static void valueLog(Object item) {
+        System.out.println("-> " + item.toString());
+    }
+    
+    public static void valueLog(Object... items) {
+        System.out.println("-> " +Arrays.toString(items));
     }
     
 }
