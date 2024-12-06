@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.utils;
 
 import java.util.ArrayList;
@@ -19,10 +15,6 @@ import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.infoLog;
 import static main.utils.Utility.toInt;
 
-/**
- *
- * @author trann
- */
 public class Input {
     
     private static final Scanner scanner = new Scanner(System.in);

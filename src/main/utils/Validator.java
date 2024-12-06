@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.utils;
 
 import static java.lang.Integer.getInteger;
@@ -18,10 +14,6 @@ import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.infoLog;
 
-/**
- *
- * @author trann
- */
 public class Validator {
     
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -39,7 +31,7 @@ public class Validator {
         boolean isUnique = false;
         do {
             input = getString(message, oldData);
-            if (input == null) return null;
+            if (input == oldData) return oldData;
 
             if (input.isEmpty()) {
                 errorLog("Username must not be empty");
@@ -137,8 +129,8 @@ public class Validator {
         boolean pass = false;
         do {
             input = getString(message, oldData);
-            if (input == null) 
-                return null;
+            if (input == oldData) 
+                return oldData;
             
             if (input.isEmpty()) {
                 errorLog("Name must not be empty");
@@ -162,8 +154,8 @@ public class Validator {
         boolean pass = false;
         do {
             input = getString(message, oldData);
-            if (input == null) 
-                return null;
+            if (input == oldData) 
+                return oldData;
             
             if (input.isEmpty()) {
                 errorLog("Full name must not be empty");
@@ -192,8 +184,8 @@ public class Validator {
         boolean pass = false;
         do {
             input = getString(message, oldData);
-            if (input == null) 
-                return null;
+            if (input == oldData) 
+                return oldData;
 
             if (input.isEmpty()) {
                 errorLog("Phone number must not be empty");
@@ -221,8 +213,8 @@ public class Validator {
         boolean pass = false;
         do {
             input = getString(message, oldData);
-            if (input == null) 
-                return null;
+            if (input == oldData) 
+                return oldData;
 
             if (input.isEmpty()) {
                 errorLog("Email must not be empty");
@@ -248,10 +240,11 @@ public class Validator {
     public static LocalDate getDate(String message, LocalDate oldData) {
         String input = null;
         do {
+            System.out.println();
             infoLog("Date must be in format dd/MM/yyyy");
             input = getString(message, oldData == null ? null : oldData.toString());
-            if (input == null) 
-                return null;
+            if (input == oldData.toString()) 
+                return oldData;
             
             if (input.isEmpty()) {
                 errorLog("Date must not be empty");

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.utils;
 
 import java.time.LocalDate;
@@ -9,10 +5,6 @@ import java.time.format.DateTimeFormatter;
 import static main.utils.Input.getInteger;
 import static main.utils.LogMessage.errorLog;
 
-/**
- *
- * @author trann
- */
 public class Utility {
        
     public static <E extends Enum<E>> void enumListing(String message, Class<E> enumClass) {

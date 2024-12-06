@@ -12,6 +12,7 @@ import main.controllers.Managers;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getPFM;
 import main.dto.Account;
+import main.dto.Profile;
 import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
@@ -142,6 +143,7 @@ public class AuthenServices {
                 return false;
             }
         }
+        getPFM().add(new Profile(accountID));
         return true;
     }
     
