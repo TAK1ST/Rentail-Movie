@@ -10,14 +10,14 @@ import main.config.Database;
 
 public class StatisticServices {
 
-    public static Map<String, Double> getTop5RevenueGeneratingMovies() {
+    public static Map<String, Double> getTheMostRevenueGeneratingMovies() {
         String sql = "SELECT m.title,"
                 + " SUM(r.total_amount + COALESCE(r.late_fee, 0)) as total_revenue "
                 + "FROM Movies m "
                 + "JOIN Rentals r ON m.movie_id = r.movie_id "
                 + "WHERE r.status = 'APPROVED'"
                 + "GROUP BY m.movie_id, m.title "
-                + "ORDER BY total_revenue DESC; ";
+                + "ORDER BY total_revenue DESC";
 
         Map<String, Double> results = new LinkedHashMap<>();
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -31,7 +31,7 @@ public class StatisticServices {
         return results;
     }
 
-    public static Map<String, Double> getTop5HighestRatedMovies() {
+    public static Map<String, Double> getTheMostHighestRatedMovies() {
         String sql = " SELECT m.title, "
                 + "    m.avg_rating,"
                 + " COUNT(r.review_id) as review_count"
@@ -40,7 +40,7 @@ public class StatisticServices {
                 + " GROUP BY m.movie_id, m.title, m.avg_rating"
                 + " HAVING review_count >= 5"
                 + " ORDER BY m.avg_rating DESC "
-                + " LIMIT 5";
+                + "LIMIT 1";
 
         Map<String, Double> results = new LinkedHashMap<>();
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -54,16 +54,16 @@ public class StatisticServices {
         return results;
     }
 
-    public static Map<String, Integer> getTop5MostWishlistedMovies() {
+    public static Map<String, Integer> getTheMostMostWishlistedMovies() {
         String sql
                 = "SELECT m.title, "
-                + "       COUNT(w.wishlist_id) as wishlist_count,"
-                + "       COUNT(CASE WHEN w.priority = 'HIGH' THEN 1 END) as high_priority_count"
+                + "COUNT(w.wishlist_id) as wishlist_count,"
+                + "COUNT(CASE WHEN w.priority = 'HIGH' THEN 1 END) as high_priority_count"
                 + " FROM Movies m "
                 + " JOIN Wishlists w ON m.movie_id = w.movie_id "
                 + " GROUP BY m.movie_id, m.title "
                 + " ORDER BY wishlist_count DESC, high_priority_count DESC "
-                + " LIMIT 5";
+                + "LIMIT 1";
 
         Map<String, Integer> results = new LinkedHashMap<>();
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -77,10 +77,10 @@ public class StatisticServices {
         return results;
     }
 
-    public static Map<String, Double> getTop5PremiumCustomersBySpending() {
-        String sql =
-                " SELECT p.full_name,"
-                + "     SUM(r.total_amount + COALESCE(r.late_fee, 0)) as total_spent "
+    public static Map<String, Double> getTheMostPremiumCustomersBySpending() {
+        String sql
+                = "SELECT p.full_name,"
+                + "SUM(r.total_amount + COALESCE(r.late_fee, 0)) as total_spent "
                 + "FROM Accounts a "
                 + "JOIN Profiles p ON a.account_id = p.account_id "
                 + "JOIN Rentals r ON a.account_id = r.customer_id "
@@ -88,7 +88,7 @@ public class StatisticServices {
                 + "AND r.status = 'APPROVED'"
                 + "GROUP BY a.account_id, p.full_name "
                 + "ORDER BY total_spent DESC "
-                + "LIMIT 5";
+                + "LIMIT 1";
 
         Map<String, Double> results = new LinkedHashMap<>();
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -102,18 +102,18 @@ public class StatisticServices {
         return results;
     }
 
-    public static Map<String, Integer> getTop5MostActiveGenres() {
-        String sql = 
-            " SELECT g.genre_name,"
-            + "       COUNT(r.rental_id) as rental_count "
-            + "FROM Genres g "
-            + "JOIN Movie_Genre mg ON g.genre_name = mg.genre_name "
-            + "JOIN Movies m ON mg.movie_id = m.movie_id "
-            + "JOIN Rentals r ON m.movie_id = r.movie_id "
-            + "WHERE r.status = 'APPROVED'"
-            + "GROUP BY g.genre_name "
-            + "ORDER BY rental_count DESC "
-            + "LIMIT 5";
+    public static Map<String, Integer> getTheMostMostActiveGenres() {
+        String sql
+                = " SELECT g.genre_name,"
+                + "COUNT(r.rental_id) as rental_count "
+                + "FROM Genres g "
+                + "JOIN Movie_Genre mg ON g.genre_name = mg.genre_name "
+                + "JOIN Movies m ON mg.movie_id = m.movie_id "
+                + "JOIN Rentals r ON m.movie_id = r.movie_id "
+                + "WHERE r.status = 'APPROVED'"
+                + "GROUP BY g.genre_name "
+                + "ORDER BY rental_count DESC "
+                + "LIMIT 1";
 
         Map<String, Integer> results = new LinkedHashMap<>();
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {

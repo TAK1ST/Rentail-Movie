@@ -34,7 +34,7 @@ public class DiscountServices {
     
     public static void initDataFor(String id) {
         accountID = id;
-        myDiscount = getDCM().searchBy(id);
+        myDiscount = DiscountDAO.getAvailableDiscounts(id);
     }
     
     private static String combineTypeAndValue(Discount discount) {
@@ -116,7 +116,7 @@ public class DiscountServices {
     public static boolean getDiscount() {
         if (getDCM().checkNull(myDiscount)) return false;
         
-        String code = getString("Enter discount code", null);
+        String code = getString("Enter discount code");
         if (code == null) return false;
         
         Discount discount = getDCM().searchBy(myDiscount, code).getFirst();

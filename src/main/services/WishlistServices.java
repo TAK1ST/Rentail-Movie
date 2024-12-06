@@ -14,7 +14,6 @@ import main.dto.Wishlist;
 import main.constants.wishlist.WishlistPriority;
 import java.time.LocalDate;
 import java.util.List;
-import main.constants.IDPrefix;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getWLM;
 import main.dto.Movie;
@@ -31,11 +30,11 @@ public class WishlistServices {
     private static List<Wishlist> myWishlist = null; 
     private static String accountID = null;
             
-    private static String[] showAtrributes = {"Movie", "Priority", "Added date"};
+    private static final String[] showAtrributes = {"Movie", "Priority", "Added date"};
     
     public static void initDataFor(String id) {
         accountID = id;
-        myWishlist = getWLM().searchBy(id);
+        myWishlist = WishlistDAO.getUserWishlist(id);
     }
     
     public static boolean addToMyWishList() {

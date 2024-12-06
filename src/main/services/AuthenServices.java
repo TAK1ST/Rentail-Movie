@@ -33,10 +33,10 @@ public class AuthenServices {
     public static Account loginPannel() {
         Menu.showHeader("Login");
 
-        String input = getString("Enter username or email", null);
+        String input = getString("Enter username or email");
         if (input == null) return null;
         
-        String password = getString("Enter password", null);
+        String password = getString("Enter password");
         if (password == null) return null;
 
         for (Account item : getACM().getList()) {
@@ -59,7 +59,7 @@ public class AuthenServices {
         Menu.showHeader("Register");
         String[] options = {"Register new account", "Back"};
         Menu.showOptions(options, 1);
-        
+
         int input = Menu.getChoice("Enter choice", options.length);
         switch (input) {
             case 1:
@@ -68,7 +68,7 @@ public class AuthenServices {
             default:
                 return null;
         }
-
+        
         if (!checkCreate) {
             errorLog("Cannot register account");
             return null;
@@ -99,20 +99,20 @@ public class AuthenServices {
         account.setPassword(password);
         return updatePasswordInDB(account.getId(), password);
     }
-    
+
     public static boolean registorAccount(AccRole role) {
 
-        String username = getUsername("Enter username", null, getACM().getList());
+        String username = getUsername("Enter username", getACM().getList());
         if (username == null) return false;
         
-        String password = getPassword("Enter password", null);
+        String password = getPassword("Enter password");
         if (password == null) return false;
 
-        String email = getEmail("Enter email", null);
+        String email = getEmail("Enter email");
         if (email == null) return false;
         
         if (role == AccRole.ADMIN) {
-            role = (AccRole) getEnumValue("Choose a role", AccRole.class, null);
+            role = (AccRole) getEnumValue("Choose a role", AccRole.class);
             if (role == null) return false;
         } 
         
@@ -135,7 +135,7 @@ public class AuthenServices {
         }
         return false;
     }
-    
+
     private static boolean registorProfile(String accountID) {
         if (yesOrNo("Fill in all infomation?")) {
             if (!getPFM().addProfile(accountID)) {
@@ -170,5 +170,4 @@ public class AuthenServices {
         }
         return false;
     }
-    
 }
