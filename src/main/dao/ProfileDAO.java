@@ -105,4 +105,32 @@ public class ProfileDAO {
         }
         return list;
     }
+    
+    public static Profile getProfile(String accountId) {
+        String query = "SELECT * FROM Profiles WHERE account_id = ?";
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, accountId);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                return new Profile(
+                    rs.getString("account_id"),
+                    rs.getString("full_name"),
+                    rs.getString("phone_number"),
+                    rs.getString("address"),
+                    rs.getDouble("credit"),
+                    rs.getDate("birthday") != null ? rs.getDate("birthday").toLocalDate() : null
+                );
+            } else {
+                System.out.println("Profile not found for account ID: " + accountId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
 }
