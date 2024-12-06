@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.constants.account.AccRole;
+import main.controllers.Managers;
 import static main.controllers.Managers.getATM;
 import static main.controllers.Managers.getGRM;
 import static main.controllers.Managers.getMVM;
@@ -17,6 +18,7 @@ import static main.controllers.Managers.getPMM;
 import static main.controllers.Managers.getWLM;
 import main.services.AuthenServices;
 import main.utils.Menu;
+import main.utils.Menu.Action;
 import main.utils.Menu.Option;
 import static main.utils.Menu.Option.After.ASK_FOR_AGAIN;
 import static main.utils.Menu.Option.After.EXIT_MENU;
@@ -27,7 +29,11 @@ public class AdminPannel {
     public static void show() {
         Menu.showManagerMenu(
             "Movie Rental (Admin)", 2,
-            null,
+            new Action[] {
+                () ->  { 
+                    Managers.initAll();
+                }
+            },
             new Option[]{
                 new Option("Account managment", () -> accountMenu()),
                 new Option("Actor managment",   () -> actorMenu()),

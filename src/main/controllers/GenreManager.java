@@ -2,6 +2,7 @@ package main.controllers;
 
 import main.base.ListManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.dao.GenreDAO;
@@ -43,7 +44,7 @@ public class GenreManager extends ListManager<Genre> {
         if (checkNull(list)) return false;
         
         if (genre == null)
-        genre = (Genre) getById("Enter genre name");
+            genre = (Genre) getById("Enter genre name");
         if (checkNull(genre)) return false;
         
         Genre temp = new Genre();
@@ -95,7 +96,7 @@ public class GenreManager extends ListManager<Genre> {
     }
     
     @Override
-    public List<Genre> sortList(List<Genre> tempList, String propety) {
+    public List<Genre> sortList(List<Genre> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -110,6 +111,9 @@ public class GenreManager extends ListManager<Genre> {
         } else {
             result.sort(Comparator.comparing(Genre::getGenreName));
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
 

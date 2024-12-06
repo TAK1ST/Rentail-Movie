@@ -33,11 +33,11 @@ public abstract class ListManager<T extends Model> {
         this.attributes = attributes;
     }
     
-    public abstract List<T> sortList(List<T> tempList, String propety);
+    public abstract List<T> sortList(List<T> tempList, String propety, boolean descending);
     public abstract List<T> searchBy(List<T> tempList, String propety);
     
     public String createID(String idPrefix) {
-        List<T> temp = sortList(list, attributes[0]);
+        List<T> temp = sortList(list, attributes[0], false);
         String lastID = null;
         if (temp != null && temp.getLast().getId() != null)
             lastID = temp.getLast().getId();
@@ -113,16 +113,16 @@ public abstract class ListManager<T extends Model> {
 
     public boolean checkNull(T item) {
         if (item != null) 
-            return infoLog(String.format("No %s's data", className), false);
+            return false;
         
-        return true;
+        return infoLog(String.format("No %s's data", className.toLowerCase()), true);
     }
 
     public boolean checkNull(List<T> tempList) {
-        if (!tempList.isEmpty()) 
-            return infoLog(String.format("No %s's data", className), false);
+        if (tempList != null || !tempList.isEmpty()) 
+            return false;
         
-        return true;
+        return infoLog(String.format("No %s's data", className.toLowerCase()), true);
     }
 
     public List<T> getList() {
@@ -152,16 +152,17 @@ public abstract class ListManager<T extends Model> {
         if (checkNull(tempList)) return;
         
         String propety = null;
+        boolean descending = false;
         List<T> temp = new ArrayList<>(tempList);
         do {
-            show(sortList(temp, propety));
+            show(sortList(temp, propety, descending));
             if (options == null)
                 return;
             if (yesOrNo("\nSort list")) {
-                propety= selectInfo("Sort by", options);
+                propety = selectInfo("Sort by", options);
                 if (propety == null) return;
                 
-                
+                descending = yesOrNo("In decending order");
             } else return;
         } while(true);
     }
@@ -184,15 +185,17 @@ public abstract class ListManager<T extends Model> {
         if (checkNull(tempList)) return;
         
         String propety = null;
+        boolean descending = false;
         List<T> temp = new ArrayList<>(tempList);
         do {
-            show(sortList(temp, propety));
+            show(sortList(temp, propety, descending));
             if (options == null)
                 return;
             if (yesOrNo("\nSort list")) {
                 propety = selectInfo("Sort by", options);
-                infoLog(propety);
                 if (propety == null) return;
+                
+                descending = yesOrNo("In decending order");
             } 
             else if (yesOrNo(String.format("\nDisplay %s details", className.toLowerCase()))) {
                 show(getById(String.format("Enter %s's id", className.toLowerCase())), "");

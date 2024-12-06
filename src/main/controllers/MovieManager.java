@@ -3,6 +3,7 @@ package main.controllers;
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.IDPrefix;
@@ -153,7 +154,7 @@ public class MovieManager extends ListManager<Movie> {
     }
     
     @Override
-    public List<Movie> sortList(List<Movie> tempList, String propety) {
+    public List<Movie> sortList(List<Movie> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -180,6 +181,9 @@ public class MovieManager extends ListManager<Movie> {
         } else {
             result.sort(Comparator.comparing(Movie::getId)); // Default case
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
     

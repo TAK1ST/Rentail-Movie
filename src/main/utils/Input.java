@@ -152,7 +152,7 @@ public class Input {
     }
 
     public static String selectInfo(String message, String[] infoLists, String oldData) {
-        if (oldData != null || !oldData.isEmpty())  {
+        if (oldData != null && !oldData.isEmpty())  {
             System.out.println();
             infoLog("Press Enter to skip");
         }

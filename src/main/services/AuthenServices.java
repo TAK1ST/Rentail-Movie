@@ -14,6 +14,7 @@ import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
+import static main.utils.LogMessage.debugLog;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.successLog;
 import main.utils.Menu;
@@ -111,10 +112,12 @@ public class AuthenServices {
         if (email == null) return false;
         
         if (role == AccRole.ADMIN) {
-            role = (AccRole) getEnumValue("Choose a role", AccRole.class, role);
+            role = (AccRole) getEnumValue("Choose a role", AccRole.class, null);
             if (role == null) return false;
         } 
+        
         String id = getACM().createID(IDPrefix.ACCOUNT_PREFIX);
+        
         Account account = new Account(
                 id,
                 username,
@@ -135,7 +138,7 @@ public class AuthenServices {
     
     private static boolean registorProfile(String accountID) {
         if (yesOrNo("Fill in all infomation?")) {
-            if (getPFM().addProfile(accountID)) {
+            if (!getPFM().addProfile(accountID)) {
                 errorLog("Cannot registor account info");
                 return false;
             }

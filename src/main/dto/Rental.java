@@ -20,15 +20,6 @@ public class Rental extends Model {
     
     public Rental() {
     }
-    
-    public Rental(String customerID) {
-        this.customerID = customerID;
-    }
-    
-    public Rental(String customerID, String movieID) {
-        this.customerID = customerID;
-        this.movieID = movieID;
-    }
 
     public Rental(
             String id, 
@@ -42,7 +33,6 @@ public class Rental extends Model {
             double totalAmount, 
             RentalStatus status) 
     {
-
         super(id);
         this.customerID = customerID;
         this.movieID = movieID;

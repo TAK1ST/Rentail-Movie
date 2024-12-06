@@ -1,9 +1,9 @@
 package main.controllers;
 
-import java.sql.SQLException;
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.IDPrefix;
@@ -122,7 +122,7 @@ public final class ReviewManager extends ListManager<Review> {
     }
 
     @Override
-    public List<Review> sortList(List<Review> tempList, String propety) {
+    public List<Review> sortList(List<Review> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -145,6 +145,9 @@ public final class ReviewManager extends ListManager<Review> {
         } else {
             result.sort(Comparator.comparing(Review::getId)); // Default case
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
 

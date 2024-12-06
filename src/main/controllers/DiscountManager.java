@@ -2,6 +2,7 @@ package main.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
@@ -90,7 +91,7 @@ public class DiscountManager extends ListManager<Discount> {
         if (checkNull(list)) return false;
         
         if (discount == null)
-        discount = (Discount) getById("Enter discount code");
+            discount = (Discount) getById("Enter discount code");
         if (checkNull(discount)) return false;
         
         Discount temp = new Discount();
@@ -161,7 +162,7 @@ public class DiscountManager extends ListManager<Discount> {
     }
     
     @Override
-    public List<Discount> sortList(List<Discount> tempList, String propety) {
+    public List<Discount> sortList(List<Discount> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -188,6 +189,9 @@ public class DiscountManager extends ListManager<Discount> {
         } else {
             result.sort(Comparator.comparing(Discount::getCode)); // Default case
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
 

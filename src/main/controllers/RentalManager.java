@@ -3,6 +3,7 @@ package main.controllers;
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.IDPrefix;
@@ -11,7 +12,6 @@ import main.dao.RentalDAO;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getPMM;
-import main.dao.DiscountDAO;
 import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Rental;
@@ -22,7 +22,6 @@ import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
-import static main.utils.LogMessage.infoLog;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -156,7 +155,7 @@ public class RentalManager extends ListManager<Rental> {
     }
 
     @Override
-    public List<Rental> sortList(List<Rental> tempList, String propety) {
+    public List<Rental> sortList(List<Rental> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -187,6 +186,9 @@ public class RentalManager extends ListManager<Rental> {
         } else {
             result.sort(Comparator.comparing(Rental::getId)); // Default case
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
 

@@ -248,7 +248,8 @@ public class Validator {
     public static LocalDate getDate(String message, LocalDate oldData) {
         String input = null;
         do {
-            input = getString("%s (%s): "+ message + "dd/MM/yyyy", oldData.toString());
+            infoLog("Date must be in format dd/MM/yyyy");
+            input = getString(message, oldData == null ? null : oldData.toString());
             if (input == null) 
                 return null;
             

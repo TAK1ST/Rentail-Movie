@@ -3,6 +3,7 @@ package main.controllers;
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import static main.controllers.Managers.getACM;
@@ -121,7 +122,7 @@ public class ProfileManager extends ListManager<Profile> {
     }
 
     @Override
-    public List<Profile> sortList(List<Profile> tempList, String propety) {
+    public List<Profile> sortList(List<Profile> tempList, String propety, boolean descending) {
         if (checkNull(tempList)) return null;
         
         if (propety == null) return tempList;
@@ -144,6 +145,9 @@ public class ProfileManager extends ListManager<Profile> {
         } else {
             result.sort(Comparator.comparing(Profile::getAccountId)); // Default case
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
     
