@@ -10,6 +10,8 @@ import main.dto.Language;
 import main.utils.InfosTable;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.Utility.capitalize;
+import static main.utils.Validator.getLanguageCode;
 import static main.utils.Validator.getName;
 
 
@@ -21,7 +23,7 @@ public class LanguageManager extends ListManager<Language> {
     }
     
     public boolean addLanguage() {
-        String code = getString("Enter language code");
+        String code = getLanguageCode("Enter language code", list);
         if (code == null) return false;
         
         for (Language item : list) 
@@ -35,7 +37,7 @@ public class LanguageManager extends ListManager<Language> {
         
         Language language = new Language(
                 code,
-                name
+                capitalize(name)
         );
         return add(language);
     }
@@ -133,7 +135,7 @@ public class LanguageManager extends ListManager<Language> {
                     );
             }
         );
-        
+        InfosTable.setShowNumber();
         InfosTable.showTitle();
         tempList.forEach(item -> 
             {
@@ -146,4 +148,5 @@ public class LanguageManager extends ListManager<Language> {
         );
         InfosTable.showFooter();
     }
+
 }

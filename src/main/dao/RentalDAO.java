@@ -24,7 +24,7 @@ public class RentalDAO {
                 + "late_fee, "
                 + "total_amount, "
                 + "status "
-                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 

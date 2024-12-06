@@ -133,7 +133,7 @@ public class GenreManager extends ListManager<Genre> {
                     );
             }
         );
-        
+        InfosTable.setShowNumber();
         InfosTable.showTitle();
         tempList.forEach(item -> 
             {

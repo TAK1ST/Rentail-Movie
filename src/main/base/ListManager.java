@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import main.utils.IDGenerator;
 import static main.utils.IDGenerator.ID_LENGTH;
 import static main.utils.Input.getString;
+import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.selectInfo;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
@@ -46,7 +47,7 @@ public abstract class ListManager<T extends Model> {
         
         String lastID = null;
         if (gapIDs.isEmpty()) {
-            List<T> temp = sortList(list, attributes[0], false);
+            List<T> temp = sortList(list, null, false);
             if (temp != null && !temp.isEmpty() && temp.getLast() != null && temp.getLast().getId() != null)
                 lastID = temp.getLast().getId();
             
@@ -177,6 +178,7 @@ public abstract class ListManager<T extends Model> {
         if (checkNull(item)) return;
         if (header != null && !header.isEmpty()) Menu.showHeader(header);
         System.out.println(item.toString());
+        pressEnterToContinue();
     }
     
     public void show(T item) {
@@ -235,7 +237,7 @@ public abstract class ListManager<T extends Model> {
             show(sortList(temp, propety, descending));
             
             String[] sortOptions = new String[] {"Sort", "Show details", "Return"};
-            Menu.showOptions(sortOptions, 0);
+            Menu.showOptions(sortOptions, 2);
             int choice = Menu.getChoice("Enter choice", sortOptions.length, 3);
             if (choice == Integer.MIN_VALUE) return;
             

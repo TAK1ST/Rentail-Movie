@@ -138,7 +138,7 @@ public class RentalServices {
         int earlyCount = 0;
 
         // Lấy tất cả các rental mà staff đã xử lý
-        String sql = "SELECT rental_id, rental_date, staff_id, status FROM Rentals WHERE staff_id = ? AND status = 'APPROVED'";
+        String sql = "SELECT = rental_date, staff_id, status FROM Rentals WHERE staff_id = ? AND status = 'APPROVED'";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, staffId);
             ResultSet rs = ps.executeQuery();

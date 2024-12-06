@@ -40,7 +40,7 @@ public class Input {
                 if (oldData != null && !oldData.isEmpty()) {
                     System.out.println();
                     infoLog("Press enter to pass");
-                    System.out.printf("If enter, default value is: %s", oldData);
+                    System.out.printf("If enter, default value is: %s\n", oldData);
                 }
                 
                 System.out.print(message + ": ");
@@ -67,7 +67,7 @@ public class Input {
             if (oldData != Integer.MIN_VALUE)  {
                 System.out.println();
                 infoLog("Press enter to pass");
-                System.out.printf("If enter, default value is: %d", oldData);
+                System.out.printf("If enter, default value is: %d\n", oldData);
             }
             
             if (min == Integer.MIN_VALUE || max == Integer.MAX_VALUE)
@@ -107,7 +107,7 @@ public class Input {
             if (oldData != Double.MIN_VALUE) {
                 System.out.println();
                 infoLog("Press enter to pass");
-                System.out.printf("If enter, default value is: %.2f", oldData);
+                System.out.printf("If enter, default value is: %.2f\n", oldData);
             }
             
             if (min == Double.MIN_VALUE || max == Double.MAX_VALUE)
@@ -168,8 +168,8 @@ public class Input {
     }
     
     public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager, String oldData) {
-        manager.display(false);
-        String temps = null;
+        manager.show();
+        List<String> temps = new ArrayList<>();
 
         String input = getString(message, null);
         if (input == null) return oldData;
@@ -180,11 +180,11 @@ public class Input {
             item = item.trim();
             int index = toInt(item);
             if (index > 0 && index <= manager.getList().size()) {
-                temps += manager.getList().get(index).getId();
+                temps.add(manager.getList().get(index).getId());
             }
         }
 
-        return temps;
+        return String.join(", ", temps);
     }
     
     public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager) {
