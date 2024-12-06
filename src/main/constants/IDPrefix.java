@@ -9,11 +9,7 @@ package main.constants;
  * @author trann
  */
 public class IDPrefix {
-    public static final String ADMIN_PREFIX =       "AD";
-    public static final String STAFF_PREFIX =       "ST";
-    public static final String CUSTOMER_PREFIX =    "CU";
-    public static final String PREMIUM_PREFIX =     "PR";
-    
+    public static final String ACCOUNT_PREFIX =     "AC";
     public static final String ACTOR_PREFIX =       "AT";
     public static final String DISCOUNT_PREFIX =    "DC";
     public static final String GENRE_PREFIX =       "GR";

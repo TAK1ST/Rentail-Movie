@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.utils;
 
 import java.util.ArrayList;
@@ -19,10 +15,6 @@ import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.infoLog;
 import static main.utils.Utility.toInt;
 
-/**
- *
- * @author trann
- */
 public class Input {
     
     private static final Scanner scanner = new Scanner(System.in);
@@ -45,8 +37,11 @@ public class Input {
     public static String getString(String message, String oldData) {
             String result = null;
             do {
-                if (oldData != null && !oldData.isEmpty()) 
-                    infoLog("Press Enter to skip");
+                if (oldData != null && !oldData.isEmpty()) {
+                    System.out.println();
+                    infoLog("Press enter to pass");
+                    System.out.printf("If enter, default value is: %s", oldData);
+                }
                 
                 System.out.print(message + ": ");
                 result = scanner.nextLine();
@@ -61,14 +56,25 @@ public class Input {
 
             return result;
         }
+    
+    public static String getString(String message) {
+        return getString(message, null);
+    }
 
     public static int getInteger(String message, int min, int max, int oldData) {
         int number;
         while (true) {
-            if (oldData != Integer.MIN_VALUE) 
-                infoLog("Press Enter to skip");
+            if (oldData != Integer.MIN_VALUE)  {
+                System.out.println();
+                infoLog("Press enter to pass");
+                System.out.printf("If enter, default value is: %d", oldData);
+            }
             
-            System.out.printf("%s (%d -> %d): ", message, min, max);
+            if (min == Integer.MIN_VALUE || max == Integer.MAX_VALUE)
+                System.out.printf("%s: ", message);
+            else 
+                System.out.printf("%s (%d -> %d): ", message, min, max);
+            
             String input = scanner.nextLine();
             if (input.isEmpty() && oldData != Integer.MIN_VALUE) {
                 return oldData;
@@ -90,14 +96,25 @@ public class Input {
             }
         }
     }
+    
+    public static int getInteger(String message, int min, int max) {
+        return getInteger(message, min, max, Integer.MIN_VALUE);
+    }
 
     public static double getDouble(String message, double min, double max, double oldData) {
         double number;
         while (true) {
-            if (oldData != Double.MIN_VALUE) 
-                infoLog("Press Enter to skip");
+            if (oldData != Double.MIN_VALUE) {
+                System.out.println();
+                infoLog("Press enter to pass");
+                System.out.printf("If enter, default value is: %.2f", oldData);
+            }
             
-            System.out.printf("%s (%.2f -> %.2f): ", message, min, max);
+            if (min == Double.MIN_VALUE || max == Double.MAX_VALUE)
+                System.out.printf("%s: ", message);
+            else 
+                System.out.printf("%s (%.2f -> %.2f): ", message, min, max);
+            
             String input = scanner.nextLine();
             if (input.isEmpty() && oldData != Double.MIN_VALUE) {
                 return oldData;
@@ -119,28 +136,35 @@ public class Input {
             }
         }
     }
+    
+    public static double getDouble(String message, double min, double max) {
+        return getDouble(message, min, max, Double.MIN_VALUE);
+    }
 
     public static boolean yesOrNo(String message) {
         System.out.print(message + " (Y): ");
         return scanner.nextLine().equalsIgnoreCase("y");
     }
 
-    public static String selectInfo(String message, String[] infoLists, boolean enterToPass) {
-        if (enterToPass) infoLog("Press Enter to skip");
-        
+    public static String selectInfo(String message, String[] infoLists, String oldData) {
         System.out.println("\n" + message + ": ");
-        for (int index = 0; index < infoLists.length; index++) {
-                if (index % 4 == 0) System.out.println();
-                System.out.printf("[%02d] %-25s ", index, infoLists[index]);
+        for (int index = 1; index <= infoLists.length; index++) {
+                if (index % 4 == 1) System.out.println();
+                System.out.printf("[%02d] %-25s ", index, infoLists[index - 1]);
         }
-        System.out.println("\n");
-        if (!enterToPass) {
-            int option = getInteger("Enter an option", 0, infoLists.length - 1, Integer.MIN_VALUE);
-            if (option == Integer.MIN_VALUE)
-                return null;
-            return infoLists[option];
-        } else 
-            return null;
+        if (oldData != null && !oldData.isEmpty())  {
+            System.out.println();
+            infoLog("Press enter to pass");
+            System.out.printf("If enter, default value is: %s\n", oldData);
+        }
+        int option = getInteger("Enter an option", 1, infoLists.length, Integer.MIN_VALUE);
+        if (option == Integer.MIN_VALUE)
+            return oldData;
+        return infoLists[option - 1];
+    }
+    
+    public static String selectInfo(String message, String[] infoLists) {
+        return selectInfo(message, infoLists, null);
     }
     
     public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager, String oldData) {
@@ -161,6 +185,10 @@ public class Input {
         }
 
         return temps;
+    }
+    
+    public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager) {
+        return selectByNumbers(message, manager, null);
     }
     
     public static <T extends Model> String[] returnNames(String stringList, ListManager<T> manager) {
@@ -204,6 +232,10 @@ public class Input {
         }
 
         return result.toArray(new String[0]);
+    }
+    
+    public static <T extends Model> String returnName(String string, ListManager<T> manager) {
+        return String.join(", ", returnNames(string, manager));
     }
 
 }

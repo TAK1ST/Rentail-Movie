@@ -9,7 +9,6 @@ package main.constants.discount;
  * @author trann
  */
 public enum DiscountType {
-    NONE,
     PERCENT,
     FIXED_AMOUNT,
     BUY_X_GET_Y_FREE

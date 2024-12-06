@@ -2,6 +2,7 @@ package main.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.base.ListManager;
@@ -20,8 +21,6 @@ import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.returnNames;
 import static main.utils.Input.selectByNumbers;
-import static main.utils.Input.yesOrNo;
-import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -32,186 +31,186 @@ public class DiscountManager extends ListManager<Discount> {
     
     public DiscountManager() {
         super(Discount.className(), Discount.getAttributes());
-        list = DiscountDAO.getAllDiscounts();
-    }
-
-    public boolean add(Discount discount) {
-        if (checkNull(discount) || checkNull(list)) return false;
-        
-        list.add(discount);
-        if (DiscountDAO.addDiscountToDB(discount)) {
-            return (
-                discount.getCustomerIds() != null ? addDataToMidTable("Discount_Discount", discount.getId(), "discount_code", discount.getCustomerIds(),"customer_id") : true
-                        &&
-                discount.getMovieIds() != null ? addDataToMidTable("Discount_Movie", discount.getId(), "discount_code", discount.getMovieIds(), "movie_id") : false
-            );
-        }
-        return false;
-    }
-
-    public boolean update(Discount discount) {
-        if (checkNull(discount) || checkNull(list)) return false;
-
-        Discount newDiscount = getInputs(new boolean[] {true, true, true, true, true, true, true, true}, discount);
-        if (newDiscount != null)
-            discount = newDiscount;
-        else 
-            return false;
-        
-        return DiscountDAO.updateDiscountInDB(newDiscount);
-    }
-
-    public boolean delete(Discount discount) { 
-        if (checkNull(discount) || checkNull(list)) return false;     
-
-        if (!list.remove(discount)) {
-            errorLog("Discount not found");
-            return false;
-        }
-        return DiscountDAO.deleteDiscountFromDB(discount.getId());
+        copy(DiscountDAO.getAllDiscounts());
     }
     
-    @Override
-    public Discount getInputs(boolean[] options, Discount oldData) {
-        if (options.length < 10) {
-            errorLog("Not enough option length");
-            return null;
-        }
+    public boolean addDiscount() {
         
-        int quantity = 0;
-        double value = 0f;
-        String movies = null, customers = null;
-        LocalDate startDate = null, endDate = null; 
-        DiscountType type = DiscountType.NONE;
-        ApplyForWho applyForWho = ApplyForWho.NONE;
-        ApplyForWhat applyForWhat = ApplyForWhat.NONE;
-        boolean active = false;
+        LocalDate startDate = getDate("Enter start date");
+        if (startDate == null) return false;
         
-        if (oldData != null) {
-            movies = oldData.getMovieIds();
-            customers = oldData.getCustomerIds();
-            startDate = oldData.getStartDate();
-            endDate = oldData.getEndDate();
-            type = oldData.getType();
-            active = oldData.isActive();
-            applyForWho = oldData.getApplyForWho();
-            applyForWhat = oldData.getApplyForWhat();
-        }
+        LocalDate endDate = getDate("Enter end date");
+        if (endDate == null) return false;
         
-        if (options[0]) {
-            startDate = getDate("Enter start date", oldData.getStartDate());
-            if (startDate == null) return null;
-        }
-        if (options[1]) {
-            endDate = getDate("Enter end date", oldData.getEndDate());
-            if (endDate == null) return null;
-        }
-        if (options[2]) {
-            type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class, oldData.getType());
-            if (type == DiscountType.NONE) return null;
-        }
-        if (options[3]) {
-            applyForWho = (ApplyForWho) getEnumValue("Apply for who", ApplyForWho.class, oldData.getApplyForWho());
-            if (type == DiscountType.NONE) return null;
-        }
-        if (options[4]) {
-            applyForWhat = (ApplyForWhat) getEnumValue("Apply for what", ApplyForWhat.class, oldData.getApplyForWhat());
-            if (type == DiscountType.NONE) return null;
-        }
-        if (options[5]) {
-            quantity = getInteger("Enter available quantity", 1, 1000, oldData.getQuantity());
-            if (quantity == Integer.MIN_VALUE) return null;
-        }
-        if (options[6]) {
-            value = getDouble("Enter value", 1, 20, oldData.getValue());
-            if (value == Double.MIN_VALUE) return null;
-        }
-        if (options[7] && applyForWhat == ApplyForWhat.SPECIFIC_MOVIES && yesOrNo("Assign to movie's right now")) {
-            movies = selectByNumbers("Enter movie's id (Comma-separated)", getMVM(), oldData.getMovieIds());
-            if (movies.isEmpty()) return null;
-        }
-        if (options[8] && applyForWho == ApplyForWho.SPECIFIC_USERS && yesOrNo("Assign to customers right now")) {
-            customers = selectByNumbers("Enter customer's id (Comma-separated)", getACM(), oldData.getCustomerIds());
-            if (customers.isEmpty()) return null;
-        }
-        if (options[9]) {
-            active = oldData == null ? yesOrNo("Set active") : oldData.isActive();
-        }
+        DiscountType type = (DiscountType) getEnumValue("Choose discount type", DiscountType.class);
+        if (type == null) return false;
         
-        String id = (oldData == null) ? IDGenerator.generateDiscountCode()
-                :
-            oldData.getId();
+        int quantity = getInteger("Enter available quantity", 1, 1000);
+        if (quantity == Integer.MIN_VALUE) return false;
+
+        double value = getDouble("Enter value", 1f, 100f);
+        if (value == Double.MIN_VALUE) return false;
+
+        ApplyForWhat applyForWhat = (ApplyForWhat) getEnumValue("Apply for what", ApplyForWhat.class, ApplyForWhat.GLOBAL);
+        String movies = getAppliedMovie(applyForWhat, null);
+        if (movies == null) return false;
+
+        ApplyForWho applyForWho = (ApplyForWho) getEnumValue("Apply for who", ApplyForWho.class, ApplyForWho.ALL_USERS);
+        String customers = getAppliedCustomer(applyForWho, null);
+        if (customers == null) return false;
         
-        return new Discount(
-                id, 
-                customers,
+        Discount discount = new Discount(
+                IDGenerator.generateDiscountCode(), 
+                customers, 
                 movies,
                 startDate,
                 endDate,
                 type,
                 quantity,
-                active,
+                false,
                 value,
                 applyForWho,
                 applyForWhat
         );
+        return add(discount);
+    }
+        
+    public String getAppliedMovie(ApplyForWhat applyMovie, String movies) {
+        if (applyMovie == null) return null;
+        
+        return selectByNumbers("Enter movie's id (Comma-separated)", getMVM(), movies);
+    }
+    
+    public String getAppliedCustomer(ApplyForWho applyCustomer, String customers) {
+        if (applyCustomer == null) return null;
+        
+        return selectByNumbers("Enter customer's id (Comma-separated)", getACM(), customers);
+    }
+    
+    public boolean updateDiscount(Discount discount) {
+        if (checkNull(list)) return false;
+        
+        if (discount == null)
+            discount = (Discount) getById("Enter discount code");
+        if (checkNull(discount)) return false;
+        
+        Discount temp = new Discount(discount);
+        temp.setStartDate(getDate("Enter start date", temp.getStartDate()));
+        temp.setEndDate(getDate("Enter end date", temp.getEndDate()));
+        temp.setType((DiscountType) getEnumValue("Choose discount type", DiscountType.class, temp.getType()));
+        temp.setQuantity(getInteger("Enter available quantity", 1, 1000, temp.getQuantity()));
+        temp.setValue(getDouble("Enter value", 1f, 100f, temp.getValue()));
+        temp.setApplyForWhat((ApplyForWhat) getEnumValue("Apply for what", ApplyForWhat.class, temp.getApplyForWhat()));
+        temp.setMovieIds(getAppliedMovie(temp.getApplyForWhat(), temp.getMovieIds()));
+        temp.setApplyForWho((ApplyForWho) getEnumValue("Apply for who", ApplyForWho.class, temp.getApplyForWho()));
+        temp.setCustomerIds(getAppliedCustomer(temp.getApplyForWho(), temp.getCustomerIds()));
+        
+        return update(discount, temp);
+    }
+    
+    public boolean deleteDiscount(Discount discount) {
+        if (checkNull(list)) return false;
+        if (discount == null) 
+            discount = (Discount) getById("Enter discount's id");
+        if (checkNull(discount)) return false;
+        return delete(discount);
+    }
+
+    public boolean add(Discount discount) {
+        if (discount == null) return false;
+        return 
+            DiscountDAO.addDiscountToDB(discount)    
+            && discount.getCustomerIds() != null 
+                ? addDataToMidTable("Discount_Discount", discount.getId(), "discount_code", discount.getCustomerIds(),"customer_id") : true
+            && discount.getMovieIds() != null 
+                ? addDataToMidTable("Discount_Movie", discount.getId(), "discount_code", discount.getMovieIds(), "movie_id") : false
+            && list.add(discount);
+    }
+
+    public boolean update(Discount oldDiscount, Discount newDiscount) {
+        if (newDiscount == null || checkNull(list)) return false;
+        if (!DiscountDAO.updateDiscountInDB(newDiscount)) return false;
+        
+        oldDiscount.setStartDate(newDiscount.getStartDate());
+        oldDiscount.setEndDate(newDiscount.getEndDate());
+        oldDiscount.setType(newDiscount.getType());
+        oldDiscount.setQuantity(newDiscount.getQuantity());
+        oldDiscount.setActive(newDiscount.isActive());
+        oldDiscount.setValue(newDiscount.getValue());
+        oldDiscount.setApplyForWho(newDiscount.getApplyForWho());
+        oldDiscount.setApplyForWhat(newDiscount.getApplyForWhat());
+        
+        return true;
+    }
+    
+    public boolean delete(Discount discount) {
+        if (discount == null) return false;     
+        return DiscountDAO.deleteDiscountFromDB(discount.getId()) && list.remove(discount);
     }
    
     @Override
-    public List<Discount> searchBy(String propety) {
+    public List<Discount> searchBy(List<Discount> tempList, String propety) {
+        if (checkNull(tempList)) return null;
+        
         List<Discount> result = new ArrayList<>();
-        for (Discount item : list) 
+        for (Discount item : tempList) {
+            if (item == null)
+                continue;
             if (item.getCode().equals(propety) 
-                || item.getCustomerIds().equals(propety)
-                || item.getStartDate().format(Validator.DATE).contains(propety)
-                || item.getEndDate().format(Validator.DATE).contains(propety)
-                || item.getType().name().equals(propety)
+                || (item.getCustomerIds() != null && item.getCustomerIds().equals(propety))
+                || (item.getStartDate() != null && item.getStartDate().format(Validator.DATE).contains(propety))
+                || (item.getEndDate() != null && item.getEndDate().format(Validator.DATE).contains(propety))
+                || (item.getType() != null && item.getType().name().equals(propety))
                 || String.valueOf(item.getQuantity()).equals(propety)
                 || String.valueOf(item.getValue()).equals(propety))
             {
                 result.add(item);
             }   
+        }
         return result;
     }
     
     @Override
-    public List<Discount> sortList(List<Discount> tempList, String property) {
-        if (checkNull(tempList)) {
-            return null;
-        }
+    public List<Discount> sortList(List<Discount> tempList, String propety, boolean descending) {
+        if (checkNull(tempList)) return null;
+        
+        if (propety == null) return tempList;
+        
         String[] options = Discount.getAttributes();
         List<Discount> result = new ArrayList<>(tempList);
         
-        if (property.equals(options[0])) {
+        if (propety.equalsIgnoreCase(options[0])) {
             result.sort(Comparator.comparing(Discount::getCode));
-        } else if (property.equals(options[1])) {
+        } else if (propety.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Discount::getCustomerIds));
-        } else if (property.equals(options[2])) {
+        } else if (propety.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Discount::getType));
-        } else if (property.equals(options[3])) {
+        } else if (propety.equalsIgnoreCase(options[3])) {
             result.sort(Comparator.comparing(Discount::getValue));
-        } else if (property.equals(options[4])) {
+        } else if (propety.equalsIgnoreCase(options[4])) {
             result.sort(Comparator.comparing(Discount::getStartDate));
-        } else if (property.equals(options[5])) {
+        } else if (propety.equalsIgnoreCase(options[5])) {
             result.sort(Comparator.comparing(Discount::getEndDate));
-        } else if (property.equals(options[6])) {
+        } else if (propety.equalsIgnoreCase(options[6])) {
             result.sort(Comparator.comparing(Discount::getQuantity));
-        } else if (property.equals(options[7])) {
+        } else if (propety.equalsIgnoreCase(options[7])) {
             result.sort(Comparator.comparing(Discount::isActive));
         } else {
             result.sort(Comparator.comparing(Discount::getCode)); // Default case
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
 
     @Override
     public void show(List<Discount> tempList) {
-        if (checkNull(tempList)) {
-            return;
-        } 
+        if (checkNull(tempList)) return;
         
         InfosTable.getTitle(Discount.getAttributes());
         tempList.forEach(item -> 
+            {if (item != null)
                 InfosTable.calcLayout(
                     item.getCode(), 
                     String.join(", ", returnNames(item.getCustomerIds(), getPFM())),
@@ -222,11 +221,12 @@ public class DiscountManager extends ListManager<Discount> {
                     formatDate(item.getEndDate(), Validator.DATE),
                     item.getQuantity(),
                     item.isActive()
-                )
+            );}
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
+            {if (item != null)
                 InfosTable.displayByLine(
                     item.getCode(), 
                     String.join(", ", returnNames(item.getCustomerIds(), getPFM())),
@@ -237,7 +237,7 @@ public class DiscountManager extends ListManager<Discount> {
                     formatDate(item.getEndDate(), Validator.DATE),
                     item.getQuantity(),
                     item.isActive()
-                )
+            );}
         );
         InfosTable.showFooter();
         

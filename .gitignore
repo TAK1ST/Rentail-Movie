@@ -1,6 +1,9 @@
 # Ignore the user library
 /lib/
 
+# Ignore the global test package
+/test/
+
 # Ignore my own test package
 /src/test/
 
@@ -13,9 +16,3 @@ nbproject/private/
 # Ignore build files
 /build/
 /dist/
-
-# Ignore generated files
-nbproject/genfiles.properties
-nbproject/build-impl.xml
-nbproject/Makefile-impl.mk
-nbproject/output/

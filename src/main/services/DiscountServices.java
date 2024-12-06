@@ -5,14 +5,21 @@
 package main.services;
 
 import java.util.List;
-import main.constants.discount.DiscountType;
+import static main.constants.discount.DiscountType.BUY_X_GET_Y_FREE;
+import static main.constants.discount.DiscountType.FIXED_AMOUNT;
+import static main.constants.discount.DiscountType.PERCENT;
 import static main.controllers.Managers.getDCM;
 import static main.controllers.Managers.getMVM;
+import main.dao.DiscountDAO;
 import main.dto.Discount;
+import main.dto.Movie;
 import main.utils.InfosTable;
 import static main.utils.Input.getString;
 import static main.utils.Input.pressEnterToContinue;
-import static main.utils.Input.returnNames;
+import static main.utils.Input.returnName;
+import static main.utils.Input.yesOrNo;
+import static main.utils.LogMessage.errorLog;
+import static main.utils.LogMessage.infoLog;
 import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 
@@ -22,15 +29,23 @@ import main.utils.Validator;
  */
 public class DiscountServices {
     
-    private static String combineTypeAndValue(DiscountType type, double value) {
-        int[] ratio = null;
-        switch(type) {
+    private static List<Discount> myDiscount = null;
+    private static String accountID = null;
+    
+    public static void initDataFor(String id) {
+        accountID = id;
+        myDiscount = getDCM().searchBy(id);
+    }
+    
+    private static String combineTypeAndValue(Discount discount) {
+        if (discount == null) return null;
+        switch(discount.getType()) {
             case PERCENT: 
-                return String.format("%2.0f%%%", value);
+                return String.format("%.2f", discount.getValue());
             case FIXED_AMOUNT: 
-                return String.format("%.2f", value);
+                return String.format("%.2f", discount.getValue());
             case BUY_X_GET_Y_FREE: 
-                ratio = analyzeRatio(value);
+                int[] ratio = analyzeRatio(discount.getValue());
                 return String.format("Buy %.0f get %.0f free", ratio[0], ratio[1]);
             default:
                 return "N/A";
@@ -63,31 +78,30 @@ public class DiscountServices {
         return new int[] {numerator, denominator};
     }
     
-    public static void showDiscountAvailableForCustomer(String customerID) {
-        List<Discount> discountsForCutomer = getDCM().searchBy(customerID);
-        if (getDCM().checkNull(discountsForCutomer)) return;
+    public static void showDiscountForCustomer(List<Discount> dicountsAvailable) {
+        if (getDCM().checkNull(dicountsAvailable)) return;
     
         InfosTable.getTitle("Code", "Apply for (moives)", "Start date", "End date", "Type", "Available");
-        discountsForCutomer.forEach(item -> 
+        dicountsAvailable.forEach(item -> 
             InfosTable.calcLayout(
                     item.getCode(),
-                    item.getMovieIds(),
+                    returnName(item.getMovieIds(), getMVM()),
                     formatDate(item.getStartDate(), Validator.DATE),
                     formatDate(item.getEndDate(), Validator.DATE),
-                    combineTypeAndValue(item.getType(), item.getValue()),
+                    combineTypeAndValue(item),
                     item.getQuantity()
             )
         );
         
         InfosTable.showTitle();
-        discountsForCutomer.forEach(item -> {
+        dicountsAvailable.forEach(item -> {
             if (item.isActive()) 
                 InfosTable.displayByLine(
                         item.getCode(),
-                        item.getMovieIds(),
+                        returnName(item.getMovieIds(), getMVM()),
                         formatDate(item.getStartDate(), Validator.DATE),
                         formatDate(item.getEndDate(), Validator.DATE),
-                        combineTypeAndValue(item.getType(), item.getValue()),
+                        combineTypeAndValue(item),
                         item.getQuantity()
                 );
         });
@@ -95,22 +109,56 @@ public class DiscountServices {
         pressEnterToContinue();
     }
     
-    public static boolean getDiscount(String customerID) {
-        List<Discount> discountsForCutomer = getDCM().searchBy(customerID);
-        if (getDCM().checkNull(discountsForCutomer)) return false;
+    public static void showMyAvailableDiscount() {
+        showDiscountForCustomer(DiscountDAO.getAvailableDiscounts(accountID));
+    }
+    
+    public static boolean getDiscount() {
+        if (getDCM().checkNull(myDiscount)) return false;
         
         String code = getString("Enter discount code", null);
         if (code == null) return false;
         
-        Discount discount = null;
-        for (Discount item : discountsForCutomer) {
-            if (item.getCode().equals(code)) {
-                discount = item;
-            }
-        }
+        Discount discount = getDCM().searchBy(myDiscount, code).getFirst();
         if (getDCM().checkNull(discount)) return false;
         
         return getDCM().add(discount);
     }
     
+    public static double calcAfterDiscount(Discount discount, double moviePrice) {
+        if (discount == null) return moviePrice;
+                
+        switch(discount.getType()) {
+            case PERCENT: 
+                return moviePrice * discount.getValue()/100;
+            case FIXED_AMOUNT: 
+                return moviePrice - discount.getValue();
+            case BUY_X_GET_Y_FREE: 
+                return moviePrice;
+            default:
+                return moviePrice;
+        }
+    }
+    
+    public static boolean hasDiscount() {
+        return myDiscount != null && !myDiscount.isEmpty();
+    }
+    
+    public static double applyDiscountForRental(String customerID, Movie movie) {
+        if(DiscountDAO.isDiscountAvailable(movie.getId(), customerID)) 
+            infoLog("You have discount for this movie");
+        else 
+            return movie.getRentalPrice();
+                    
+        Discount discount = (Discount) getDCM().searchById(DiscountDAO.getMovieDiscountForUser(movie.getId(), customerID));
+        if (discount == null) {
+            errorLog("Can not retrive the discount");
+            return movie.getRentalPrice();
+        }
+        
+        if (yesOrNo("Do you want to apply discount")) {
+            return calcAfterDiscount(discount, movie.getRentalPrice());
+        }
+        return movie.getRentalPrice();
+    }
 }

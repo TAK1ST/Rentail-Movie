@@ -8,25 +8,16 @@ import main.utils.Validator;
 
 public class Wishlist extends Model {
     
-    private String movieID;
     private String customerID;
+    private String movieID;
     private LocalDate addedDate;
     private WishlistPriority priority;
     
     public Wishlist() {
     }
     
-    public Wishlist(String customerID) {
-        this.customerID = customerID;
-    }
-    
-    public Wishlist(String movieID, String customerID) {
-        this.movieID = movieID;
-        this.customerID = customerID;
-    }
-
-    public Wishlist(String id, String movieID, String customerID, LocalDate addedDate, WishlistPriority priority) {
-        super(id);
+    public Wishlist(String customerID, String movieID, LocalDate addedDate, WishlistPriority priority) {
+        super(customerID);
         this.movieID = movieID;
         this.customerID = customerID;
         this.addedDate = addedDate;
@@ -34,7 +25,7 @@ public class Wishlist extends Model {
     }
 
     public Wishlist(Wishlist other) {
-        super(other.getId());
+        super(other.customerID);
         this.movieID = other.movieID;
         this.customerID = other.customerID;
         this.addedDate = other.addedDate;
@@ -50,12 +41,10 @@ public class Wishlist extends Model {
                 + "%s: %s,\n"
                 + "%s: %s,\n"
                 + "%s: %s,\n"
-                + "%s: %s,\n"
                 + "%s: %s.",
                 className(),
-                attr[count++], super.getId(),
-                attr[count++], movieID,
                 attr[count++], customerID,
+                attr[count++], movieID,
                 attr[count++], formatDate(addedDate, Validator.DATE),
                 attr[count++], priority
         );
@@ -66,7 +55,7 @@ public class Wishlist extends Model {
     }
      
     public static String[] getAttributes() {
-        return new String[] {"Id", "Movie Id", "Customer Id", "Added date", "Priority"};
+        return new String[] {"Customer Id", "Movie Id", "Added date", "Priority"};
     }
 
     public String getMovieId() {

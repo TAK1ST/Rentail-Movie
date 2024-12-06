@@ -1,164 +1,194 @@
-USE movierentalsystemdb;
 
-INSERT INTO Accounts VALUES 
-('AD000001', 'admin_user', 'password123', 'ADMIN', 'admin@mail.com', 'OFFLINE', DEFAULT, DEFAULT, DEFAULT, 10),
-('CU000002', 'cust_user1', 'password123', 'CUSTOMER', 'cust1@mail.com', 'ONLINE', DEFAULT, DEFAULT, DEFAULT, 5),
-('CU000003', 'cust_user2', 'password123', 'CUSTOMER', 'cust2@mail.com', 'BANNED', DEFAULT, DEFAULT, DEFAULT, 3),
-('ST000004', 'staff_user', 'password123', 'STAFF', 'staff@mail.com', 'OFFLINE', DEFAULT, DEFAULT, DEFAULT, 7),
-('PR000005', 'premium_user1', 'password123', 'PREMIUM', 'premium1@mail.com', 'OFFLINE', DEFAULT, DEFAULT, DEFAULT, 20),
-('PR000006', 'premium_user2', 'password123', 'PREMIUM', 'premium2@mail.com', 'ONLINE', DEFAULT, DEFAULT, DEFAULT, 15),
-('CU000007', 'cust_user3', 'password123', 'CUSTOMER', 'cust3@mail.com', 'OFFLINE', DEFAULT, DEFAULT, DEFAULT, 4),
-('ST000008', 'staff_user2', 'password123', 'STAFF', 'staff2@mail.com', 'OFFLINE', DEFAULT, DEFAULT, DEFAULT, 6),
-('CU000009', 'cust_user4', 'password123', 'CUSTOMER', 'cust4@mail.com', 'ONLINE', DEFAULT, DEFAULT, DEFAULT, 8),
-('PR000010', 'premium_user3', 'password123', 'PREMIUM', 'premium3@mail.com', 'OFFLINE', DEFAULT, DEFAULT, DEFAULT, 25);
+-- USE movierentalsystemdb;
 
-INSERT INTO Languages VALUES
+INSERT INTO Accounts (account_id, username, password, role, email, status, online_at, created_at, updated_at, creability) VALUES
+('AC000001', 'john_doe', 'password123', 'CUSTOMER', 'john@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+('AC000002', 'jane_doe', 'password123', 'STAFF', 'jane@example.com', 'ONLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+('AC000003', 'admin_user', 'adminpass', 'ADMIN', 'admin@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+('AC000004', 'premium_guy', 'premium123', 'PREMIUM', 'premium@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+('AC000005', 'user1', 'user123', 'CUSTOMER', 'user1@example.com', 'ONLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+('AC000006', 'user2', 'user123', 'CUSTOMER', 'user2@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+('AC000007', 'staff1', 'staff123', 'STAFF', 'staff1@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+('AC000008', 'staff2', 'staff123', 'STAFF', 'staff2@example.com', 'ONLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+('AC000009', 'banned_user', 'banned123', 'CUSTOMER', 'banned@example.com', 'BANNED', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+('AC000010', 'premium_user', 'premiumpass', 'PREMIUM', 'premium2@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0);
+
+INSERT INTO Languages (language_code, language_name) VALUES
 ('EN', 'English'),
 ('FR', 'French'),
 ('ES', 'Spanish'),
 ('DE', 'German'),
 ('IT', 'Italian'),
-('RU', 'Russian'),
-('CN', 'Chinese'),
 ('JP', 'Japanese'),
-('KR', 'Korean'),
-('PT', 'Portuguese');
+('CN', 'Chinese'),
+('RU', 'Russian'),
+('PT', 'Portuguese'),
+('AR', 'Arabic');
 
-INSERT INTO Genres VALUES 
-('GR001', 'Action'),
-('GR002', 'Comedy'),
-('GR003', 'Drama'),
-('GR004', 'Thriller'),
-('GR005', 'Horror'),
-('GR006', 'Sci-Fi'),
-('GR007', 'Romance'),
-('GR008', 'Fantasy'),
-('GR009', 'Documentary'),
-('GR010', 'Animation');
+INSERT INTO Genres (genre_name, description) VALUES
+('Action', 'High-energy scenes with physical feats'),
+('Drama', 'Serious, plot-driven stories'),
+('Comedy', 'Humorous or satirical content'),
+('Horror', 'Designed to frighten and thrill'),
+('Romance', 'Focuses on romantic relationships'),
+('Sci-Fi', 'Fictional science and futuristic elements'),
+('Fantasy', 'Magical and supernatural elements'),
+('Documentary', 'Non-fictional films'),
+('Thriller', 'High suspense and tension'),
+('Animation', 'Animated films');
 
-INSERT INTO Movies VALUES 
-('MV000001', 'Movie 1', 'Description 1', 3.5, '2022-01-01', 12.99, 5, DEFAULT, DEFAULT),
-('MV000002', 'Movie 2', 'Description 2', 4.0, '2021-05-10', 10.50, 3, DEFAULT, DEFAULT),
-('MV000003', 'Movie 3', 'Description 3', 4.5, '2020-07-15', 8.99, 7, DEFAULT, DEFAULT),
-('MV000004', 'Movie 4', 'Description 4', 2.5, '2019-02-20', 6.00, 1, DEFAULT, DEFAULT),
-('MV000005', 'Movie 5', 'Description 5', 5.0, '2018-11-11', 15.00, 4, DEFAULT, DEFAULT),
-('MV000006', 'Movie 6', 'Description 6', 3.0, '2023-03-25', 9.99, 10, DEFAULT, DEFAULT),
-('MV000007', 'Movie 7', 'Description 7', 4.2, '2022-08-17', 13.00, 2, DEFAULT, DEFAULT),
-('MV000008', 'Movie 8', 'Description 8', 4.8, '2020-12-30', 14.75, 6, DEFAULT, DEFAULT),
-('MV000009', 'Movie 9', 'Description 9', 2.0, '2021-06-01', 5.50, 9, DEFAULT, DEFAULT),
-('MV000010', 'Movie 10', 'Description 10', 3.7, '2022-04-13', 11.20, 8, DEFAULT, DEFAULT);
+INSERT INTO Movies (movie_id, title, description, avg_rating, release_year, rental_price, available_copies, created_at, updated_at) VALUES
+('MV000001', 'Action Movie 1', 'Explosive action scenes', 4.5, '2022-01-15', 3.99, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('MV000002', 'Drama Movie 1', 'Touching story', 4.0, '2021-03-12', 4.99, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('MV000003', 'Comedy Movie 1', 'Laugh-out-loud moments', 3.8, '2020-07-19', 2.99, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('MV000004', 'Horror Movie 1', 'Chilling experience', 4.2, '2019-10-31', 3.49, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('MV000005', 'Sci-Fi Movie 1', 'Futuristic adventures', 3.9, '2018-04-21', 5.99, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('MV000006', 'Fantasy Movie 1', 'Magical world', 4.3, '2022-11-10', 4.49, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('MV000007', 'Documentary 1', 'In-depth analysis', 4.8, '2017-05-13', 2.50, 6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('MV000008', 'Thriller Movie 1', 'Edge of the seat thriller', 4.1, '2021-08-18', 3.75, 7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('MV000009', 'Romance Movie 1', 'Heartwarming romance', 4.7, '2020-02-14', 3.99, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('MV000010', 'Animation Movie 1', 'Family-friendly animation', 4.6, '2023-06-25', 4.59, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO Discounts VALUES
-('NN1KD2FD', 'PERCENT', 10.00, '2023-11-01', '2023-12-31', 100, TRUE, 'GLOBAL', 'ALL_USERS'),
-('XY8QW9RT', 'FIXED_AMOUNT', 5.00, '2023-10-01', '2023-12-15', 50, TRUE, 'SPECIFIC_MOVIES', 'PREMIUM'),
-('ZL4MP3XB', 'PERCENT', 15.00, '2023-09-01', '2024-01-01', 30, TRUE, 'GENRE', 'SPECIFIC_USERS'),
-('QR7HT8JN', 'BUY_X_GET_Y_FREE', 1.00, '2023-12-01', '2023-12-25', 10, TRUE, 'CART_TOTAL', 'ALL_USERS'),
-('KL2CD4NM', 'FIXED_AMOUNT', 20.00, '2023-12-01', '2024-02-28', 20, TRUE, 'GLOBAL', 'PREMIUM');
+INSERT INTO Discounts (discount_code, discount_type, discount_value, start_date, end_date, quantity, is_active, apply_for_what, apply_for_who) VALUES
+('DCX7A9T3', 'PERCENT', 10.00, '2024-01-01', '2024-06-01', 100, TRUE, 'GLOBAL', 'ALL_USERS'),
+('DCR5L8N9', 'FIXED_AMOUNT', 5.00, '2024-02-01', '2024-07-01', 50, TRUE, 'GENRE', 'PREMIUM'),
+('DCJ3K4F6', 'PERCENT', 15.00, '2024-03-01', '2024-08-01', 200, TRUE, 'SPECIFIC_MOVIES', 'GUESTS'),
+('DCH9Y2Z1', 'BUY_X_GET_Y_FREE', 0.00, '2024-04-01', '2024-09-01', 150, TRUE, 'CART_TOTAL', 'ALL_USERS'),
+('DCK7P1F3', 'FIXED_AMOUNT', 7.50, '2024-05-01', '2024-10-01', 80, TRUE, 'GLOBAL', 'SPECIFIC_USERS'),
+('DCX2A4G8', 'PERCENT', 20.00, '2024-06-01', '2024-11-01', 120, TRUE, 'GENRE', 'ALL_USERS'),
+('DCR3L5M7', 'FIXED_AMOUNT', 3.00, '2024-07-01', '2024-12-01', 90, TRUE, 'SPECIFIC_MOVIES', 'PREMIUM'),
+('DCJ4H6K9', 'BUY_X_GET_Y_FREE', 0.00, '2024-08-01', '2025-01-01', 60, TRUE, 'CART_TOTAL', 'GUESTS'),
+('DCH2Y5Z3', 'PERCENT', 25.00, '2024-09-01', '2025-02-01', 200, TRUE, 'GLOBAL', 'SPECIFIC_USERS'),
+('DCK9P2F1', 'FIXED_AMOUNT', 10.00, '2024-10-01', '2025-03-01', 100, TRUE, 'GENRE', 'ALL_USERS');
 
-INSERT INTO Actors VALUES
-('AT000001', 'Actor One', 'A', 'Lead actor in many films.'),
-('AT000002', 'Actor Two', 'B', 'Known for supporting roles.'),
-('AT000003', 'Actor Three', 'C', 'Upcoming star.'),
-('AT000004', 'Actor Four', 'A', 'Multiple award winner.'),
-('AT000005', 'Actor Five', 'D', 'Occasional appearances.'),
-('AT000006', 'Actor Six', 'B', 'Strong performances in thrillers.'),
-('AT000007', 'Actor Seven', 'C', 'Known for indie films.'),
-('AT000008', 'Actor Eight', 'A', 'Box office favorite.'),
-('AT000009', 'Actor Nine', 'D', 'Comedic roles.'),
-('AT000010', 'Actor Ten', 'B', 'Sci-fi genre specialist.');
+INSERT INTO Actors (actor_id, actor_name, actor_rank, actor_description) VALUES
+('AT000001', 'Robert Downey Jr.', 'A', 'Famous for superhero roles'),
+('AT000002', 'Scarlett Johansson', 'A', 'Versatile actress with many action roles'),
+('AT000003', 'Chris Hemsworth', 'B', 'Known for action and comedy'),
+('AT000004', 'Jennifer Lawrence', 'A', 'Award-winning actress with diverse roles'),
+('AT000005', 'Dwayne Johnson', 'A', 'Action hero and former wrestler'),
+('AT000006', 'Tom Holland', 'B', 'Young rising star in action films'),
+('AT000007', 'Emma Watson', 'A', 'Known for fantasy and drama roles'),
+('AT000008', 'Will Smith', 'A', 'Multi-talented actor with a range of genres'),
+('AT000009', 'Gal Gadot', 'A', 'Popular for superhero and action roles'),
+('AT000010', 'Morgan Freeman', 'A', 'Legendary actor with iconic voice');
 
-INSERT INTO Movie_Actor VALUES
+INSERT INTO Movie_Actor (movie_id, actor_id, role) VALUES
 ('MV000001', 'AT000001', 'MAIN'),
-('MV000001', 'AT000002', 'SUPPORT'),
-('MV000002', 'AT000003', 'MAIN'),
-('MV000002', 'AT000004', 'VILLAIN'),
-('MV000003', 'AT000005', 'CAMEO'),
-('MV000004', 'AT000006', 'MAIN'),
-('MV000005', 'AT000007', 'SUPPORT'),
-('MV000006', 'AT000008', 'MAIN'),
-('MV000007', 'AT000009', 'CAMEO'),
-('MV000008', 'AT000010', 'VILLAIN');
+('MV000002', 'AT000002', 'SUPPORT'),
+('MV000003', 'AT000003', 'MAIN'),
+('MV000004', 'AT000004', 'VILLAIN'),
+('MV000005', 'AT000005', 'MAIN'),
+('MV000006', 'AT000006', 'SUPPORT'),
+('MV000007', 'AT000007', 'CAMEO'),
+('MV000008', 'AT000008', 'MAIN'),
+('MV000009', 'AT000009', 'MAIN'),
+('MV000010', 'AT000010', 'SUPPORT');
 
-INSERT INTO Movie_Genre VALUES
-('MV000001', 'GR001'),
-('MV000002', 'GR002'),
-('MV000003', 'GR003'),
-('MV000004', 'GR004'),
-('MV000005', 'GR005'),
-('MV000006', 'GR006'),
-('MV000007', 'GR007'),
-('MV000008', 'GR008'),
-('MV000009', 'GR009'),
-('MV000010', 'GR010');
+INSERT INTO Movie_Genre (movie_id, genre_name) VALUES
+('MV000001', 'Action'),
+('MV000002', 'Drama'),
+('MV000003', 'Comedy'),
+('MV000004', 'Horror'),
+('MV000005', 'Sci-Fi'),
+('MV000006', 'Fantasy'),
+('MV000007', 'Documentary'),
+('MV000008', 'Thriller'),
+('MV000009', 'Romance'),
+('MV000010', 'Animation');
 
-INSERT INTO Movie_Language VALUES
+INSERT INTO Movie_Language (movie_id, language_code) VALUES
 ('MV000001', 'EN'),
 ('MV000002', 'FR'),
 ('MV000003', 'ES'),
 ('MV000004', 'DE'),
 ('MV000005', 'IT'),
-('MV000006', 'RU'),
+('MV000006', 'JP'),
 ('MV000007', 'CN'),
-('MV000008', 'JP'),
-('MV000009', 'KR'),
-('MV000010', 'PT');
+('MV000008', 'RU'),
+('MV000009', 'PT'),
+('MV000010', 'AR');
 
-INSERT INTO Discount_Account VALUES
-('CU000002', 'NN1KD2FD'),
-('CU000003', 'XY8QW9RT'),
-('PR000005', 'ZL4MP3XB'),
-('CU000007', 'QR7HT8JN'),
-('CU000009', 'KL2CD4NM'),
-('ST000004', 'NN1KD2FD'),
-('PR000005', 'XY8QW9RT'),
-('ST000004', 'ZL4MP3XB'),
-('PR000006', 'QR7HT8JN'),
-('AD000001', 'KL2CD4NM');
+INSERT INTO Discount_Account (customer_id, discount_code) VALUES
+('AC000001', 'DCX7A9T3'),
+('AC000002', 'DCR5L8N9'),
+('AC000003', 'DCJ3K4F6'),
+('AC000004', 'DCH9Y2Z1'),
+('AC000005', 'DCK7P1F3'),
+('AC000006', 'DCX2A4G8'),
+('AC000007', 'DCR3L5M7'),
+('AC000008', 'DCJ4H6K9'),
+('AC000009', 'DCH2Y5Z3'),
+('AC000010', 'DCK9P2F1');
 
-INSERT INTO Discount_Movie VALUES
-('MV000001', 'NN1KD2FD'),
-('MV000002', 'XY8QW9RT'),
-('MV000003', 'ZL4MP3XB'),
-('MV000004', 'QR7HT8JN'),
-('MV000005', 'KL2CD4NM'),
-('MV000006', 'NN1KD2FD'),
-('MV000007', 'XY8QW9RT'),
-('MV000008', 'ZL4MP3XB'),
-('MV000009', 'QR7HT8JN'),
-('MV000010', 'KL2CD4NM');
+INSERT INTO Discount_Movie (movie_id, discount_code) VALUES
+('MV000001', 'DCX7A9T3'),
+('MV000002', 'DCR5L8N9'),
+('MV000003', 'DCJ3K4F6'),
+('MV000004', 'DCH9Y2Z1'),
+('MV000005', 'DCK7P1F3'),
+('MV000006', 'DCX2A4G8'),
+('MV000007', 'DCR3L5M7'),
+('MV000008', 'DCJ4H6K9'),
+('MV000009', 'DCH2Y5Z3'),
+('MV000010', 'DCK9P2F1');
 
-INSERT INTO Rentals VALUES
-('RT000001', 'MV000001', 'ST000004', 'CU000002', '2023-12-10', '2023-12-01', NULL, 'PENDING', 12.99, 0.00),
-('RT000002', 'MV000002', 'ST000008', 'CU000003', '2023-12-15', '2023-12-05', NULL, 'APPROVED', 10.50, 0.00),
-('RT000003', 'MV000003', NULL, 'PR000005', '2023-12-12', '2023-12-02', '2023-12-10', 'DENIED', 8.99, 0.00),
-('RT000004', 'MV000004', 'ST000008', 'CU000007', '2023-12-20', '2023-12-03', NULL, 'PENDING', 6.00, 0.00),
-('RT000005', 'MV000005', 'ST000004', 'CU000009', '2023-12-18', '2023-12-04', NULL, 'APPROVED', 15.00, 1.50);
+INSERT INTO Rentals (movie_id, staff_id, customer_id, due_date, rental_date, return_date, status, total_amount, late_fee) VALUES
+('MV000001', 'AC000002', 'AC000001', '2024-12-15', '2024-12-01', NULL, 'PENDING', 3.99, 0.00),
+('MV000002', 'AC000007', 'AC000005', '2024-12-18', '2024-12-05', NULL, 'APPROVED', 4.99, 0.00),
+('MV000003', NULL, 'AC000006', '2024-12-20', '2024-12-08', '2024-12-10', 'APPROVED', 2.99, 0.00),
+('MV000004', 'AC000008', 'AC000009', '2024-12-25', '2024-12-12', NULL, 'DENIED', 3.49, 0.00),
+('MV000005', 'AC000007', 'AC000010', '2024-12-22', '2024-12-10', NULL, 'PENDING', 5.99, 0.00),
+('MV000006', 'AC000008', 'AC000004', '2024-12-30', '2024-12-15', NULL, 'PENDING', 4.49, 0.00),
+('MV000007', NULL, 'AC000001', '2024-12-10', '2024-12-02', '2024-12-09', 'APPROVED', 2.50, 0.00),
+('MV000008', 'AC000002', 'AC000005', '2024-12-12', '2024-12-01', NULL, 'PENDING', 3.75, 0.00),
+('MV000009', NULL, 'AC000006', '2024-12-14', '2024-12-05', NULL, 'APPROVED', 3.99, 0.00),
+('MV000010', 'AC000002', 'AC000007', '2024-12-18', '2024-12-06', NULL, 'PENDING', 4.59, 0.00);
 
-INSERT INTO Payments VALUES
-('PM000001', 'CU000002', 12.99, 'ONLINE', DEFAULT, 'COMPLETED'),
-('PM000002', 'CU000003', 10.50, 'CARD', DEFAULT, 'COMPLETED'),
-('PM000003', 'PR000005', 8.99, 'ONLINE', DEFAULT, 'FAILED'),
-('PM000004', 'CU000007', 6.00, 'BANKING', DEFAULT, 'PENDING'),
-('PM000005', 'CU000009', 15.00, 'CARD', DEFAULT, 'COMPLETED');
+INSERT INTO Payments (payment_id, customer_id, amount, payment_method, transaction_time, status) VALUES
+('PM000001', 'AC000001', 3.99, 'CARD', CURRENT_TIMESTAMP, 'COMPLETED'),
+('PM000002', 'AC000005', 4.99, 'ONLINE', CURRENT_TIMESTAMP, 'COMPLETED'),
+('PM000003', 'AC000006', 2.99, 'BANKING', CURRENT_TIMESTAMP, 'COMPLETED'),
+('PM000004', 'AC000009', 3.49, 'CARD', CURRENT_TIMESTAMP, 'PENDING'),
+('PM000005', 'AC000010', 5.99, 'ONLINE', CURRENT_TIMESTAMP, 'FAILED'),
+('PM000006', 'AC000004', 4.49, 'BANKING', CURRENT_TIMESTAMP, 'COMPLETED'),
+('PM000007', 'AC000001', 2.50, 'CARD', CURRENT_TIMESTAMP, 'COMPLETED'),
+('PM000008', 'AC000005', 3.75, 'ONLINE', CURRENT_TIMESTAMP, 'PENDING'),
+('PM000009', 'AC000006', 3.99, 'CARD', CURRENT_TIMESTAMP, 'COMPLETED'),
+('PM000010', 'AC000007', 4.59, 'BANKING', CURRENT_TIMESTAMP, 'PENDING');
 
-INSERT INTO Profiles VALUES
-('AD000001', 'Admin User', '1990-01-01', '123 Admin St', '1234567890', 50.00),
-('CU000002', 'Customer User1', '1995-05-05', '456 Customer Ave', '0987654321', 25.00),
-('CU000003', 'Customer User2', '1988-03-15', '789 Customer Blvd', '1122334455', 15.00),
-('ST000004', 'Staff User1', '1985-08-20', '321 Staff Way', '6677889900', 30.00),
-('PR000005', 'Premium User1', '1992-12-12', '654 Premium Lane', '1234432112', 100.00);
+INSERT INTO Profiles (account_id, full_name, birthday, address, phone_number, credit) VALUES
+('AC000001', 'John Doe', '1990-01-01', '123 Main St', '5551234567', 20.00),
+('AC000002', 'Jane Doe', '1985-05-15', '456 Elm St', '5552345678', 15.50),
+('AC000003', 'Admin User', '1980-09-25', '789 Oak St', '5553456789', 0.00),
+('AC000004', 'Premium Guy', '1992-04-12', '101 Maple St', '5554567890', 25.75),
+('AC000005', 'User One', '1995-07-18', '202 Birch St', '5555678901', 10.00),
+('AC000006', 'User Two', '1988-11-30', '303 Pine St', '5556789012', 5.50),
+('AC000007', 'Staff One', '1993-03-22', '404 Cedar St', '5557890123', 30.00),
+('AC000008', 'Staff Two', '1979-10-05', '505 Spruce St', '5558901234', 12.75),
+('AC000009', 'Banned User', '1991-08-08', '606 Willow St', '5559012345', 0.00),
+('AC000010', 'Premium User', '1987-02-20', '707 Palm St', '5550123456', 50.00);
 
-INSERT INTO Reviews VALUES
-('RV000001', 'MV000001', 'CU000002', 'Great movie!', 5, '2023-12-02'),
-('RV000002', 'MV000002', 'CU000003', 'Not bad.', 3, '2023-12-04'),
-('RV000003', 'MV000003', 'PR000005', 'Loved it!', 4, '2023-12-06'),
-('RV000004', 'MV000004', 'CU000007', 'Could be better.', 2, '2023-12-07'),
-('RV000005', 'MV000005', 'CU000009', 'Amazing experience!', 5, '2023-12-09');
+INSERT INTO Reviews (movie_id, customer_id, review_text, rating, review_date) VALUES
+('MV000001', 'AC000001', 'Amazing action scenes!', 5, '2024-12-01'),
+('MV000002', 'AC000005', 'Touching and emotional.', 4, '2024-12-03'),
+('MV000003', 'AC000006', 'Hilarious and fun!', 4, '2024-12-04'),
+('MV000004', 'AC000009', 'Scary and intense.', 5, '2024-12-05'),
+('MV000005', 'AC000010', 'Mind-blowing visuals.', 5, '2024-12-06'),
+('MV000006', 'AC000004', 'Magical experience.', 4, '2024-12-07'),
+('MV000007', 'AC000001', 'Informative and engaging.', 5, '2024-12-08'),
+('MV000008', 'AC000005', 'Thrilling from start to end.', 4, '2024-12-09'),
+('MV000009', 'AC000006', 'Romantic and heartwarming.', 4, '2024-12-10'),
+('MV000010', 'AC000007', 'Family-friendly and fun.', 5, '2024-12-11');
 
-INSERT INTO Wishlists VALUES
-('WL000001', 'CU000002', 'MV000001', '2023-12-01', 'HIGH'),
-('WL000002', 'CU000003', 'MV000002', '2023-12-02', 'MEDIUM'),
-('WL000003', 'PR000005', 'MV000003', '2023-12-03', 'LOW'),
-('WL000004', 'CU000007', 'MV000004', '2023-12-04', 'HIGH'),
-('WL000005', 'CU000009', 'MV000005', '2023-12-05', 'MEDIUM');
-
+INSERT INTO Wishlists (customer_id, movie_id, added_date, priority) VALUES
+('AC000001', 'MV000001', '2024-12-01', 'HIGH'),
+('AC000005', 'MV000002', '2024-12-02', 'MEDIUM'),
+('AC000006', 'MV000003', '2024-12-03', 'LOW'),
+('AC000009', 'MV000004', '2024-12-04', 'HIGH'),
+('AC000010', 'MV000005', '2024-12-05', 'MEDIUM'),
+('AC000004', 'MV000006', '2024-12-06', 'LOW'),
+('AC000001', 'MV000007', '2024-12-07', 'HIGH'),
+('AC000005', 'MV000008', '2024-12-08', 'MEDIUM'),
+('AC000006', 'MV000009', '2024-12-09', 'LOW'),
+('AC000007', 'MV000010', '2024-12-10', 'HIGH');

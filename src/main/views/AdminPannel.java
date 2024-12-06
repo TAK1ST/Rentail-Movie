@@ -1,9 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.views;
 
+import main.constants.account.AccRole;
+import main.constants.account.AccStatus;
+import main.controllers.Managers;
 import static main.controllers.Managers.getATM;
 import static main.controllers.Managers.getGRM;
 import static main.controllers.Managers.getMVM;
@@ -15,210 +14,222 @@ import static main.controllers.Managers.getLGM;
 import static main.controllers.Managers.getPFM;
 import static main.controllers.Managers.getPMM;
 import static main.controllers.Managers.getWLM;
-import main.dto.*;
-import main.utils.IDGenerator;
-import static main.utils.Input.getString;
+import main.dto.Account;
+import main.services.AuthenServices;
+import main.services.ProfileServices;
 import main.utils.Menu;
-import main.utils.Menu.MenuOption;
-import static main.utils.Menu.MenuOption.Finally.ASK_FOR_AGAIN;
-import static main.utils.Menu.MenuOption.Finally.EXIT_MENU;
+import main.utils.Menu.Action;
+import main.utils.Menu.Option;
+import static main.utils.Menu.Option.After.ASK_FOR_AGAIN;
+import static main.utils.Menu.Option.After.EXIT_MENU;
 
-/**
- *
- * @author trann
- */
+
 public class AdminPannel {
     
-    public static void show() {
+    public static void show(Account account) {
         Menu.showManagerMenu(
-            "Movie Rental (Admin)",
-            null,
-            new MenuOption[]{
-                new MenuOption("Account managment", () -> accountMenu()),
-                new MenuOption("Actor managment",   () -> actorMenu()),
-                new MenuOption("Discount managment",  () -> discountMenu()),
-                new MenuOption("Genre managment",   () -> genreMenu()),
-                new MenuOption("Language managment",  () -> languageMenu()),
-                new MenuOption("Movie managment",   () -> movieMenu()),
-                new MenuOption("Payment managment",  () -> paymentMenu()),
-                new MenuOption("Profile managment",  () -> profileMenu()),
-                new MenuOption("Rental managment",  () -> rentalMenu()),
-                new MenuOption("Review managment",  () -> reviewMenu()),
-                new MenuOption("Wishlist managment",  () -> wishlistMenu()),
-                new MenuOption("Log Out", EXIT_MENU),
+            "Movie Rental (Admin)", 2,
+            new Action[] {
+                () ->  { 
+                    Managers.initAll();
+                    ProfileServices.updateAccountStatus(account, AccStatus.ONLINE);
+                }
             },
-            null
+            new Option[]{
+                new Option("Account managment", () -> accountMenu()),
+                new Option("Actor managment",   () -> actorMenu()),
+                new Option("Discount managment",  () -> discountMenu()),
+                new Option("Genre managment",   () -> genreMenu()),
+                new Option("Language managment",  () -> languageMenu()),
+                new Option("Movie managment",   () -> movieMenu()),
+                new Option("Payment managment",  () -> paymentMenu()),
+                new Option("Profile managment",  () -> profileMenu()),
+                new Option("Rental managment",  () -> rentalMenu()),
+                new Option("Review managment",  () -> reviewMenu()),
+                new Option("Wishlist managment",  () -> wishlistMenu()),
+                new Option("Log Out", EXIT_MENU),
+            },
+            null, 
+            new Action[] {
+                () -> ProfileServices.updateAccountStatus(account, AccStatus.OFFLINE)
+            }
         );
     }
     
     private static void accountMenu() {
-        Menu.showManagerMenu("Account Managment",
+        Menu.showManagerMenu(
+            "Account Managment", 1,
             null,
-            new MenuOption[]{
-                new MenuOption("Add Account", () -> getACM().add(new Account()), ASK_FOR_AGAIN),
-                new MenuOption("Delete Account", () -> getACM().delete(null), ASK_FOR_AGAIN),
-                new MenuOption("Update Account", () -> getACM().update(null), ASK_FOR_AGAIN),
-                new MenuOption("Search Account", () -> getACM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Display Accounts", () -> getACM().displaySortDetail()),
-                new MenuOption("Back", EXIT_MENU)
+            new Option[]{
+                new Option("Add Account", () -> AuthenServices.registorAccount(AccRole.ADMIN), ASK_FOR_AGAIN),
+                new Option("Delete Account", () -> getACM().deleteAccount(null), ASK_FOR_AGAIN),
+                new Option("Update Account", () -> getACM().updateAccount(null), ASK_FOR_AGAIN),
+                new Option("Search Account", () -> getACM().search(), ASK_FOR_AGAIN),
+                new Option("Display Accounts", () -> getACM().displaySortDetail()),
+                new Option("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
     private static void actorMenu() {  
         Menu.showManagerMenu(
-            "Actor Management",
+            "Actor Management", 1,
             null,
-            new MenuOption[]{
-                new MenuOption("Add actor", () -> getATM().add(null), ASK_FOR_AGAIN),
-                new MenuOption("Delete actor", () -> getATM().delete(null), ASK_FOR_AGAIN),
-                new MenuOption("Update actor", () -> getATM().update(null), ASK_FOR_AGAIN),
-                new MenuOption("Search actor", () -> getATM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Show all actor", () -> getATM().displaySortDetail()),
-                new MenuOption("Back", EXIT_MENU)
+            new Option[]{
+                new Option("Add actor", () -> getATM().addActor(), ASK_FOR_AGAIN),
+                new Option("Delete actor", () -> getATM().deleteActor(null), ASK_FOR_AGAIN),
+                new Option("Update actor", () -> getATM().updateActor(null), ASK_FOR_AGAIN),
+                new Option("Search actor", () -> getATM().search(), ASK_FOR_AGAIN),
+                new Option("Show all actor", () -> getATM().displaySortDetail()),
+                new Option("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
     private static void discountMenu() {
-        Menu.showManagerMenu("Discount Managment",
+        Menu.showManagerMenu(
+            "Discount Managment", 1,
             null,
-            new MenuOption[]{
-                new MenuOption("Add Discount", () -> getDCM().add(null), ASK_FOR_AGAIN),
-                new MenuOption("Delete Discount", () -> getDCM().delete(null), ASK_FOR_AGAIN),
-                new MenuOption("Update Discount", () -> getDCM().update(null), ASK_FOR_AGAIN),
-                new MenuOption("Search Discount", () -> getDCM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Display Discount", () -> getDCM().displaySortDetail()),
-                new MenuOption("Back", EXIT_MENU)
+            new Option[]{
+                new Option("Add Discount", () -> getDCM().addDiscount(), ASK_FOR_AGAIN),
+                new Option("Delete Discount", () -> getDCM().deleteDiscount(null), ASK_FOR_AGAIN),
+                new Option("Update Discount", () -> getDCM().updateDiscount(null), ASK_FOR_AGAIN),
+                new Option("Search Discount", () -> getDCM().search(), ASK_FOR_AGAIN),
+                new Option("Display Discount", () -> getDCM().displaySortDetail()),
+                new Option("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
     private static void genreMenu() {  
         Menu.showManagerMenu(
-            "Genre Management",
+            "Genre Management", 1,
             null,
-            new MenuOption[]{
-                new MenuOption("Add genre",    () -> getGRM().add(null), ASK_FOR_AGAIN),
-                new MenuOption("Delete genre", () -> getGRM().delete(null), ASK_FOR_AGAIN),
-                new MenuOption("Update genre", () -> getGRM().update(null), ASK_FOR_AGAIN),
-                new MenuOption("Search genre", () -> getGRM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Show all genre", () -> getGRM().displaySortDetail()),
-                new MenuOption("Back", EXIT_MENU)
+            new Option[]{
+                new Option("Add genre",    () -> getGRM().addGenre(), ASK_FOR_AGAIN),
+                new Option("Delete genre", () -> getGRM().deleteGenre(null), ASK_FOR_AGAIN),
+                new Option("Update genre", () -> getGRM().updateGenre(null), ASK_FOR_AGAIN),
+                new Option("Search genre", () -> getGRM().search(), ASK_FOR_AGAIN),
+                new Option("Show all genre", () -> getGRM().displaySortDetail()),
+                new Option("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
     private static void languageMenu() {
-        Menu.showManagerMenu("Language Managment",
+        Menu.showManagerMenu(
+            "Language Managment", 1,
             null,
-            new MenuOption[]{
-                new MenuOption("Add Language", () -> getLGM().add(null), ASK_FOR_AGAIN),
-                new MenuOption("Delete Language", () -> getLGM().delete(null), ASK_FOR_AGAIN),
-                new MenuOption("Update Language", () -> getLGM().update(null), ASK_FOR_AGAIN),
-                new MenuOption("Search Language", () -> getLGM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Display Languages", () -> getLGM().displaySortDetail()),
-                new MenuOption("Back", EXIT_MENU)
+            new Option[]{
+                new Option("Add Language", () -> getLGM().addLanguage(), ASK_FOR_AGAIN),
+                new Option("Delete Language", () -> getLGM().deleteLanguage(null), ASK_FOR_AGAIN),
+                new Option("Update Language", () -> getLGM().updateLanguage(null), ASK_FOR_AGAIN),
+                new Option("Search Language", () -> getLGM().search(), ASK_FOR_AGAIN),
+                new Option("Display Languages", () -> getLGM().displaySortDetail()),
+                new Option("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
     private static void movieMenu() {
         Menu.showManagerMenu(
-            "Movie Management",
+            "Movie Management", 1,
             null,
-            new MenuOption[]{
-                new MenuOption("Add movie", () -> getMVM().add(null), ASK_FOR_AGAIN),
-                new MenuOption("Delete movie", () -> getMVM().delete(null), ASK_FOR_AGAIN),
-                new MenuOption("Update movie", () -> getMVM().update(null), ASK_FOR_AGAIN),
-                new MenuOption("Search movie", () -> getMVM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Show all movie", () -> getMVM().displaySortDetail()),
-                new MenuOption("Back", EXIT_MENU)
+            new Option[]{
+                new Option("Add movie", () -> getMVM().addMovie(), ASK_FOR_AGAIN),
+                new Option("Delete movie", () -> getMVM().deleteMovie(null), ASK_FOR_AGAIN),
+                new Option("Update movie", () -> getMVM().updateMovie(null), ASK_FOR_AGAIN),
+                new Option("Search movie", () -> getMVM().search(), ASK_FOR_AGAIN),
+                new Option("Show all movie", () -> getMVM().displaySortDetail()),
+                new Option("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
     private static void paymentMenu() {
-        Menu.showManagerMenu("Payment Managment",
+        Menu.showManagerMenu(
+            "Payment Managment", 1,
             null,
-            new MenuOption[]{
-                new MenuOption("Add Payment", () -> getPMM().add(null), ASK_FOR_AGAIN),
-                new MenuOption("Delete Payment", () -> getPMM().delete(null), ASK_FOR_AGAIN),
-                new MenuOption("Update Payment", () -> getPMM().update(null), ASK_FOR_AGAIN),
-                new MenuOption("Search Payment", () -> getPMM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Display Payments", () -> getPMM().displaySortDetail()),
-                new MenuOption("Back", EXIT_MENU)
+            new Option[]{
+                new Option("Add Payment", () -> getPMM().addPayment(null), ASK_FOR_AGAIN),
+                new Option("Delete Payment", () -> getPMM().deletePayment(null), ASK_FOR_AGAIN),
+                new Option("Update Payment", () -> getPMM().updatePayment(null), ASK_FOR_AGAIN),
+                new Option("Search Payment", () -> getPMM().search(), ASK_FOR_AGAIN),
+                new Option("Display Payments", () -> getPMM().displaySortDetail()),
+                new Option("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
     private static void profileMenu() {
-        Menu.showManagerMenu("Profile Managment",
+        Menu.showManagerMenu(
+            "Profile Managment", 1,
             null,
-            new MenuOption[]{
-                new MenuOption("Add Profile", () -> getPFM().add(null), ASK_FOR_AGAIN),
-                new MenuOption("Delete Profile", () -> getPFM().delete(null), ASK_FOR_AGAIN),
-                new MenuOption("Update Profile", () -> getPFM().update(null), ASK_FOR_AGAIN),
-                new MenuOption("Search Profile", () -> getPFM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Display Profiles", () -> getPFM().displaySortDetail()),
-                new MenuOption("Back", EXIT_MENU)
+            new Option[]{
+                new Option("Add Profile", () -> getPFM().addProfile(null), ASK_FOR_AGAIN),
+                new Option("Delete Profile", () -> getPFM().deleteProfile(null), ASK_FOR_AGAIN),
+                new Option("Update Profile", () -> getPFM().updateProfile(null), ASK_FOR_AGAIN),
+                new Option("Search Profile", () -> getPFM().search(), ASK_FOR_AGAIN),
+                new Option("Display Profiles", () -> getPFM().displaySortDetail()),
+                new Option("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     
     private static void rentalMenu() {
         Menu.showManagerMenu(
-                "Rental Management",
-                null,
-                new MenuOption[]{
-                    new MenuOption("Add rental", () -> getRTM().add(null), ASK_FOR_AGAIN),
-                    new MenuOption("Delete rental", () -> getRTM().delete(null), ASK_FOR_AGAIN),
-                    new MenuOption("Update rental", () -> getRTM().update(null), ASK_FOR_AGAIN),
-                    new MenuOption("Search rental", () -> getRTM().search(), ASK_FOR_AGAIN),
-                    new MenuOption("Show all rental", () -> getRTM().displaySortDetail()),
-                    new MenuOption("Back", EXIT_MENU)
-                },
-                null
+            "Rental Management", 1,
+            null,
+            new Option[]{
+                new Option("Add rental", () -> getRTM().addRental(null), ASK_FOR_AGAIN),
+                new Option("Delete rental", () -> getRTM().deleteRental(null), ASK_FOR_AGAIN),
+                new Option("Update rental", () -> getRTM().updateRental(null), ASK_FOR_AGAIN),
+                new Option("Search rental", () -> getRTM().search(), ASK_FOR_AGAIN),
+                new Option("Show all rental", () -> getRTM().displaySortDetail()),
+                new Option("Back", EXIT_MENU)
+            },
+            null, null
         );
     }
     
     private static void reviewMenu() {
         Menu.showManagerMenu(
-            "Review Management",
+            "Review Management", 1,
             null,
-            new MenuOption[]{
-                new MenuOption("Add review", () -> getRVM().add(null), ASK_FOR_AGAIN),
-                new MenuOption("Delete review", () -> getRVM().delete(null), ASK_FOR_AGAIN),
-                new MenuOption("Update review", () -> getRVM().update(null), ASK_FOR_AGAIN),
-                new MenuOption("Search review", () -> getRVM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Show all review", () -> getRVM().displaySortDetail()),
-                new MenuOption("Back", EXIT_MENU)
+            new Option[]{
+                new Option("Add review", () -> getRVM().addReview(null), ASK_FOR_AGAIN),
+                new Option("Delete review", () -> getRVM().deleteReview(null), ASK_FOR_AGAIN),
+                new Option("Update review", () -> getRVM().updateReview(null), ASK_FOR_AGAIN),
+                new Option("Search review", () -> getRVM().search(), ASK_FOR_AGAIN),
+                new Option("Show all review", () -> getRVM().displaySortDetail()),
+                new Option("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
   
     }
  
     private static void wishlistMenu() {
-        Menu.showManagerMenu("Wishlist Managment",
+        Menu.showManagerMenu(
+            "Wishlist Managment", 1,
             null,
-            new MenuOption[]{
-                new MenuOption("Add Wishlist", () -> getWLM().add(null), ASK_FOR_AGAIN),
-                new MenuOption("Delete Wishlist", () -> getWLM().delete(null), ASK_FOR_AGAIN),
-                new MenuOption("Update Wishlist", () -> getWLM().update(null), ASK_FOR_AGAIN),
-                new MenuOption("Search Wishlist", () -> getWLM().search(), ASK_FOR_AGAIN),
-                new MenuOption("Display Wishlists", () -> getWLM().displaySortDetail()),
-                new MenuOption("Back", EXIT_MENU)
+            new Option[]{
+                new Option("Add Wishlist", () -> getWLM().addWishlist(null), ASK_FOR_AGAIN),
+                new Option("Delete Wishlist", () -> getWLM().deleteWishlist(null), ASK_FOR_AGAIN),
+                new Option("Update Wishlist", () -> getWLM().updateWishlist(null), ASK_FOR_AGAIN),
+                new Option("Search Wishlist", () -> getWLM().search(), ASK_FOR_AGAIN),
+                new Option("Display Wishlists", () -> getWLM().displaySortDetail()),
+                new Option("Back", EXIT_MENU)
             },
-            null
+            null, null
         );
     }
     

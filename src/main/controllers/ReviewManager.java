@@ -3,137 +3,119 @@ package main.controllers;
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import main.constants.IDPrefix;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
 import main.dao.ReviewDAO;
 import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Review;
-import main.utils.IDGenerator;
+import main.services.MovieServices;
 import main.utils.InfosTable;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
 import main.utils.Validator;
-import static main.utils.Validator.getDate;
 
 
 public final class ReviewManager extends ListManager<Review> {
     
     public ReviewManager() {
         super(Review.className(), Review.getAttributes());
-        list = ReviewDAO.getAllReviews();
-    }
-
-    public boolean add(Review review) {
-        if (checkNull(review) || checkNull(list)) return false;
-        
-        list.add(review);
-        return ReviewDAO.addReviewToDB(list.getLast());
-    }
-
-    public boolean update(Review review) {
-        if (checkNull(review) || checkNull(list)) return false;
-
-        Review newReview = getInputs(new boolean[] {true, true, true, true, true}, review);
-        if (newReview != null)
-            review = newReview;
-        else 
-            return false;
-        return ReviewDAO.updateReviewInDB(newReview);
+        copy(ReviewDAO.getAllReviews()); 
     }
     
-    public boolean delete(Review review) {
-        if (checkNull(review) || checkNull(list)) return false;     
-
-        if (!list.remove(review)) {
-            errorLog("Review not found");
-            return false;
-        }
-        return ReviewDAO.deleteReviewFromDB(review.getId());
-    }
-
-    @Override
-    public Review getInputs(boolean[] options, Review oldData) {
-        if (options == null) {
-            options = new boolean[] {true, true, true, true, true};
-        }
-        if (options.length < 5) {
-            errorLog("Not enough option length");
-            return null;
-        }
+    public boolean addReview(String customerID) {
+        if (customerID == null) 
+            customerID = getString("Enter customer's id");
+        if (customerID == null) return false;
         
-        Account customer = null;
-        Movie movie = null;
-        String comment = null;
-        LocalDate reviewDate = null;
-        int rating = 0;
+        Account customer = (Account) getACM().searchById(customerID);
+        if (getACM().checkNull(customer)) return false;
         
-        if (oldData != null) {
-            List<Review> review = searchBy(oldData.getCustomerID());
-            if (!checkNull(review)) {
-                errorLog("Already review this movie");
-                    return null;
-            }
-            
-            customer = (Account) getACM().searchById(oldData.getCustomerID());
-            if (getACM().checkNull(customer)) return null;
-            movie = (Movie) getMVM().searchById(oldData.getMovieID());
-            if (getMVM().checkNull(movie)) return null;
-            rating = oldData.getRating();
-            comment = oldData.getReviewText();
-            reviewDate = oldData.getReviewDate();
-        }
+        Movie movie = (Movie) getMVM().getById("Enter movie' id to rent");
+        if (getMVM().checkNull(movie)) return false;
         
-        if (options[0] && customer == null) {
-            customer = (Account) getACM().getById("Enter customer's id");
-            if (getACM().checkNull(customer)) return null;
-        }
-        if (options[1]) {
-            movie = (Movie) getMVM().getById("Enter movie' id to rent");
-            if (getMVM().checkNull(movie)) return null;
-        }
-        if (options[2]) {
-            rating = getInteger("Enter rating", 1, 5, oldData.getRating());
-            if (rating == Integer.MIN_VALUE) return null;
-        }
-        if (options[3]) {
-            comment = getString("Enter comment", oldData.getReviewText());
-            if (comment == null) return null;
-        }
-        if (options[4]) {
-            reviewDate = (oldData == null) ? LocalDate.now() : getDate("Enter review date", oldData.getReviewDate());
-            if (reviewDate == null) return null;
-        }
+        List<Review> reviews = searchBy(list, customer.getId(), movie.getId());
+        if (reviews != null && !reviews.isEmpty()) 
+            return errorLog("Already reviewed this movie", false);
         
-        String id = (oldData == null) ? IDGenerator.generateID(list.isEmpty() ? null : list.getLast().getId(), IDPrefix.REVIEW_PREFIX)
-            :
-        oldData.getId();
+        int rating = getInteger("Enter rating", 1, 5);
+        if (rating == Integer.MIN_VALUE) return false;
         
-        return new Review(
-                id,
+        String comment = getString("Enter comment");
+        
+        double avgRating = MovieServices.calculateAverageRating(movie.getId());
+        if (avgRating > 0) movie.setAvgRating(avgRating);
+        
+        return add(new Review(
                 customer.getId(),
                 movie.getId(),
                 rating,
                 comment,
-                reviewDate
-        );
+                LocalDate.now()
+        ));
+    }
+    
+    public boolean updateReview(Review review) {
+        if (checkNull(list)) return false;
+        
+        if (review == null)
+            review = (Review) getById("Enter review's id");
+        if (checkNull(review)) return false;
+        
+        Review temp = new Review(review);
+        temp.setRating(getInteger("Enter rating", 1, 5, temp.getRating()));
+        temp.setReviewText(getString("Enter comment", temp.getReviewText()));
+                
+        return update(review, temp);
+    }
+    
+    public boolean deleteReview(Review review) {
+        if (checkNull(list)) return false;
+        if (review == null) 
+            review = (Review) getById("Enter review's id");
+        if (checkNull(review)) return false;
+        return delete(review);
+    }
+
+    public boolean add(Review review) {
+        if (review == null) return false;
+        return ReviewDAO.addReviewToDB(review) && list.add(review);
+    }
+
+    public boolean update(Review oldReview, Review newReview) {
+        if (newReview == null || checkNull(list)) return false;
+        if (!ReviewDAO.updateReviewInDB(newReview)) return false;
+        
+        oldReview.setRating(newReview.getRating());
+        oldReview.setReviewText(newReview.getReviewText());
+        oldReview.setReviewDate(newReview.getReviewDate());
+        
+        return true;
+    }
+    
+    public boolean delete(Review review) {
+        if (review == null) return false;     
+        return ReviewDAO.deleteReviewFromDB(review.getCustomerID(), review.getMovieID()) && list.remove(review);
     }
 
     @Override
-    public List<Review> searchBy(String propety) {
+    public List<Review> searchBy(List<Review> tempList, String propety) {
+        if (checkNull(tempList)) return null;
+        
         List<Review> result = new ArrayList<>();
-
-        for (Review item : list) {
-            if (item.getId().equals(propety)
-                    || item.getMovieID().equals(propety)
-                    || item.getReviewText().trim().toLowerCase().contains(propety.trim().toLowerCase())
-                    || item.getReviewDate().format(Validator.DATE).contains(propety.trim())
-                    || item.getCustomerID().equals(propety)
+        for (Review item : tempList) {
+            if (item == null)
+                continue;
+            if ((item.getId() != null && item.getId().equals(propety))
+                    || (item.getMovieID() != null && item.getMovieID().equals(propety))
+                    || (item.getReviewText() != null && item.getReviewText().trim().toLowerCase().contains(propety.trim().toLowerCase()))
+                    || (item.getReviewDate() != null && item.getReviewDate().format(Validator.DATE).contains(propety.trim()))
+                    || (item.getCustomerID() != null && item.getCustomerID().equals(propety))
                     || String.valueOf(item.getRating()).equals(propety)) {
                 result.add(item);
             }
@@ -142,59 +124,67 @@ public final class ReviewManager extends ListManager<Review> {
     }
 
     @Override
-    public List<Review> sortList(List<Review> tempList, String property) {
-        if (checkNull(tempList)) {
-            return null;
-        }
+    public List<Review> sortList(List<Review> tempList, String propety, boolean descending) {
+        if (checkNull(tempList)) return null;
+        
+        if (propety == null) return tempList;
+        
         String[] options = Review.getAttributes();
         List<Review> result = new ArrayList<>(tempList);
 
-        if (property.equals(options[0])) {
+        if (propety.equalsIgnoreCase(options[0])) {
             result.sort(Comparator.comparing(Review::getId));
-        } else if (property.equals(options[1])) {
+        } else if (propety.equalsIgnoreCase(options[1])) {
             result.sort(Comparator.comparing(Review::getMovieID));
-        } else if (property.equals(options[2])) {
+        } else if (propety.equalsIgnoreCase(options[2])) {
             result.sort(Comparator.comparing(Review::getCustomerID));
-        } else if (property.equals(options[3])) {
+        } else if (propety.equalsIgnoreCase(options[3])) {
             result.sort(Comparator.comparing(Review::getReviewText));
-        } else if (property.equals(options[4])) {
+        } else if (propety.equalsIgnoreCase(options[4])) {
             result.sort(Comparator.comparing(Review::getRating));
-        } else if (property.equals(options[5])) {
+        } else if (propety.equalsIgnoreCase(options[5])) {
             result.sort(Comparator.comparing(Review::getReviewDate));
         } else {
             result.sort(Comparator.comparing(Review::getId)); // Default case
         }
+        
+        if (descending) Collections.sort(tempList, Collections.reverseOrder());
+        
         return result;
     }
 
     @Override
     public void show(List<Review> tempList) {
-        if (checkNull(tempList)) {
-            return;
-        } 
+        if (checkNull(tempList)) return;
         
         InfosTable.getTitle(Review.getAttributes());
         tempList.forEach(item -> 
-                InfosTable.calcLayout(
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
                         item.getId(), 
                         item.getMovieID(),
                         item.getCustomerID(),
                         item.getRating(),
                         item.getReviewText(),
                         formatDate(item.getReviewDate(), Validator.DATE)
-                )
+                );
+            }
         );
         
         InfosTable.showTitle();
         tempList.forEach(item -> 
-                InfosTable.displayByLine(
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
                         item.getId(), 
                         item.getMovieID(),
                         item.getCustomerID(),
                         item.getRating(),
                         item.getReviewText(),
                         formatDate(item.getReviewDate(), Validator.DATE)
-                )
+                );
+            }
         );
         InfosTable.showFooter();
     }

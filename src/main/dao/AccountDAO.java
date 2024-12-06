@@ -12,6 +12,7 @@ import main.dto.Account;
 import main.config.Database;
 import main.constants.account.AccRole;
 import main.constants.account.AccStatus;
+import main.services.AuthenServices;
 import main.utils.IDGenerator;
 
 public class AccountDAO {
@@ -27,7 +28,7 @@ public class AccountDAO {
                 + "online_at,"
                 + "created_at,"
                 + "updated_at, "
-                + "creability"
+                + "creability "
                 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
@@ -36,8 +37,8 @@ public class AccountDAO {
             ps.setString(++count, account.getUsername());
             ps.setString(++count, account.getPassword());
             ps.setString(++count, account.getEmail());
-            ps.setString(++count, account.getRole().name());
-            ps.setString(++count, account.getStatus().name());
+            ps.setString(++count, account.getRole() != null ? account.getRole().name() : null);
+            ps.setString(++count, account.getStatus() != null ? account.getStatus().name() : null);
             ps.setDate(++count, account.getOnlineAt() != null ? Date.valueOf(account.getOnlineAt()) : null);
             ps.setDate(++count, account.getCreateAt() != null ? Date.valueOf(account.getCreateAt()) : null);
             ps.setDate(++count, account.getUpdateAt() != null ? Date.valueOf(account.getUpdateAt()) : null);
@@ -60,7 +61,7 @@ public class AccountDAO {
                 + "created_at = ?,"
                 + "updated_at = ?,"
                 + "online_at = ?, "
-                + "creability = ?"
+                + "creability = ? "
                 + "WHERE account_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
@@ -68,8 +69,8 @@ public class AccountDAO {
             ps.setString(++count, account.getUsername());
             ps.setString(++count, account.getPassword());
             ps.setString(++count, account.getEmail());
-            ps.setString(++count, account.getRole().name());
-            ps.setString(++count, account.getStatus().name());
+            ps.setString(++count, account.getRole() != null ? account.getRole().name() : null);
+            ps.setString(++count, account.getStatus() != null ? account.getStatus().name() : null);
             ps.setDate(++count, account.getCreateAt() != null ? Date.valueOf(account.getCreateAt()) : null);
             ps.setDate(++count, account.getUpdateAt() != null ? Date.valueOf(account.getUpdateAt()) : null);
             ps.setDate(++count, account.getOnlineAt() != null ? Date.valueOf(account.getOnlineAt()) : null);
@@ -113,19 +114,19 @@ public class AccountDAO {
                     && !rs.getString("account_id").equals(IDGenerator.DEFAULT_ADMIN_ID)) 
                 {
                     username = IDGenerator.generateDiscountCode();
-                    username = updateUsernameInDB(rs.getString("account_id"), username) ? username : rs.getString("username");
+                    username = AuthenServices.updateUsernameInDB(rs.getString("account_id"), username) ? username : rs.getString("username");
                 }
                 Account account = new Account(
                         rs.getString("account_id"),
                         username,
                         rs.getString("password"),
                         rs.getString("email"),
-                        AccRole.valueOf(rs.getString("role")),
-                        AccStatus.valueOf(rs.getString("status")),
+                        rs.getString("role") != null ? AccRole.valueOf(rs.getString("role")) : null,
+                        rs.getString("status") != null ? AccStatus.valueOf(rs.getString("status")) : null,
                         rs.getDate("created_at") != null ? rs.getDate("created_at").toLocalDate() : null,
                         rs.getDate("updated_at") != null ? rs.getDate("updated_at").toLocalDate() : null,
                         rs.getDate("online_at") != null ? rs.getDate("online_at").toLocalDate() : null,
-                        rs.getInt("creability")
+                        rs.getInt("creability") > 100 ? 100 : rs.getInt("creability")
                 );
                 list.add(account);
             }
@@ -151,27 +152,4 @@ public class AccountDAO {
         return list;
     }
 
-    public static boolean updatePasswordInDB(String accountID, String newPassword) {
-        String sql = "UPDATE Accounts SET password = ? WHERE account_id = ?";
-        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, newPassword);
-            ps.setString(2, accountID);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public static boolean updateUsernameInDB(String accountID, String username) {
-        String sql = "UPDATE Accounts SET username = ? WHERE account_id = ?";
-        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, username);
-            ps.setString(2, accountID);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 }

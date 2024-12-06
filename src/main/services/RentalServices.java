@@ -22,6 +22,7 @@ import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Rental;
 import static main.utils.Input.getInteger;
+import static main.utils.Input.getString;
 
 /**
  *
@@ -29,37 +30,42 @@ import static main.utils.Input.getInteger;
  */
 public class RentalServices {
     
-    public static boolean rentMovie(String customerID) {
-        Rental rental = getRTM().getInputs(new boolean[] {false, true, true, false}, new Rental(customerID));
-        return getRTM().add(rental);
+    private static List<Rental> myRentals;
+    private static String accountID;
+    
+    public static void initDataFor(String id) {
+        accountID = id;
+        myRentals = getRTM().searchBy(accountID);
     }
     
-    public static void myHistoryRental(String customerID) {
-        List<Rental> myRentals = getRTM().searchBy(customerID);
+    public static void myHistoryRental() {
         getRTM().display(myRentals);
     }
     
-    public static boolean returnMovie(String customerID) {
-        Rental rental = getRTM().getById("Enter rental's id to return");
+    public static boolean returnMovie() {
+        String movieID = getString("Enter movie' id", null);
+        if (movieID == null) return false;
+        
+        Rental rental = getRTM().searchBy(accountID, movieID).getFirst();
         if (getRTM().checkNull(rental)) return false;
         
-        rental.setReturnDate(LocalDate.now());
-        rental.setLateFee(calcLateFee(LocalDate.now(), rental));
+        Rental temp = new Rental();
+        temp.setReturnDate(LocalDate.now());
+        temp.setLateFee(calcLateFee(LocalDate.now(), rental));
         
-        return RentalDAO.updateRentalInDB(rental);
+        return getRTM().update(rental, temp);
     }
     
     public static boolean extendReturnDate() {
         Rental rental = getRTM().getById("Enter rental's id to extend");
         rental.setLateFee(calcLateFee(LocalDate.now(), rental));
         
-        int howManyDays = getInteger("How many days to extends", 1, 365, Integer.MIN_VALUE);
-        if (howManyDays == Integer.MIN_VALUE) return false;
-        
         Movie movie = (Movie) getMVM().searchById(rental.getMovieID());
         if (getMVM().checkNull(movie)) return false;
         
-        rental.setTotalAmount(0);
+        int howManyDays = getInteger("How many days to extends", 1, 365, Integer.MIN_VALUE);
+        if (howManyDays == Integer.MIN_VALUE) return false;
+        
         rental.setTotalAmount(movie.getRentalPrice() * howManyDays * 1.5);
         rental.setDueDate(rental.getDueDate().plusDays(howManyDays));
         

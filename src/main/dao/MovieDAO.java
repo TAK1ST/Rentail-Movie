@@ -41,11 +41,11 @@ public class MovieDAO {
             ps.setString(++count, movie.getTitle());
             ps.setString(++count, movie.getDescription());
             ps.setDouble(++count, movie.getAvgRating());
-            ps.setDate(++count, Date.valueOf(movie.getReleaseYear()));
+            ps.setDate(++count, movie.getReleaseYear() != null ? Date.valueOf(movie.getReleaseYear()) : null);
             ps.setDouble(++count, movie.getRentalPrice());
             ps.setInt(++count, movie.getAvailableCopies());
-            ps.setDate(++count, Date.valueOf(movie.getCreateDate()));
-            ps.setDate(++count, Date.valueOf(movie.getUpdateDate()));
+            ps.setDate(++count, movie.getCreateDate() != null ? Date.valueOf(movie.getCreateDate()) : null);
+            ps.setDate(++count, movie.getUpdateDate() != null ? Date.valueOf(movie.getUpdateDate()) : null);
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -69,11 +69,11 @@ public class MovieDAO {
             int count = 0;
             ps.setString(++count, movie.getTitle());
             ps.setString(++count, movie.getDescription());
-            ps.setDate(++count, Date.valueOf(movie.getReleaseYear()));
+            ps.setDate(++count, movie.getReleaseYear() != null ? Date.valueOf(movie.getReleaseYear()) : null);
             ps.setDouble(++count, movie.getRentalPrice());
             ps.setInt(++count, movie.getAvailableCopies());
-            ps.setDate(++count, Date.valueOf(movie.getCreateDate()));
-            ps.setDate(++count, Date.valueOf(movie.getUpdateDate()));
+            ps.setDate(++count, movie.getCreateDate() != null ? Date.valueOf(movie.getCreateDate()) : null);
+            ps.setDate(++count, movie.getUpdateDate() != null ? Date.valueOf(movie.getUpdateDate()) : null);
             ps.setString(++count, movie.getId());
 
             return ps.executeUpdate() > 0;
@@ -99,7 +99,9 @@ public class MovieDAO {
     public static List<Movie> getAllMovies() {
         String sql = "SELECT * FROM Movies";
         List<Movie> list = new ArrayList<>();
-        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection connection = Database.getConnection(); 
+                PreparedStatement ps = connection.prepareStatement(sql); 
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
 
                 Movie movie = new Movie(
@@ -110,11 +112,11 @@ public class MovieDAO {
                         getSubIdsByMainId("Movie_Genre", rs.getString("movie_id"), "movie_id", "genre_name"),
                         getSubIdsByMainId("Movie_Actor", rs.getString("movie_id"), "movie_id", "actor_id"),
                         getSubIdsByMainId("Movie_Language", rs.getString("movie_id"), "movie_id", "language_code"),
-                        rs.getDate("release_year").toLocalDate(),
+                        rs.getDate("release_year") != null ? rs.getDate("release_year").toLocalDate() : null,
                         rs.getDouble("rental_price"),
                         rs.getInt("available_copies"),
-                        rs.getDate("created_at").toLocalDate(),
-                        rs.getDate("updated_at").toLocalDate()
+                        rs.getDate("created_at") != null ? rs.getDate("created_at").toLocalDate() : null,
+                        rs.getDate("updated_at") != null ? rs.getDate("updated_at").toLocalDate() : null
                 );
                 list.add(movie);
             }
@@ -123,5 +125,5 @@ public class MovieDAO {
         }
         return list;
     }
-
+    
 }

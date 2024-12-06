@@ -85,6 +85,8 @@ CREATE TABLE IF NOT EXISTS Movie_Language (
 CREATE TABLE IF NOT EXISTS Discount_Account (
     customer_id CHAR(8) NOT NULL,
     discount_code CHAR(8) NOT NULL,
+    is_chosen BOOLEAN DEFAULT FALSE,
+	used_on DATETIME,
     PRIMARY KEY (customer_id, discount_code),
     FOREIGN KEY (customer_id) REFERENCES Accounts(account_id) ON DELETE CASCADE,
     FOREIGN KEY (discount_code) REFERENCES Discounts(discount_code) ON DELETE CASCADE
@@ -99,16 +101,16 @@ CREATE TABLE IF NOT EXISTS Discount_Movie (
 );
 
 CREATE TABLE IF NOT EXISTS Rentals (
-    rental_id CHAR(8) PRIMARY KEY,
+    customer_id CHAR(8) NOT NULL,
     movie_id CHAR(8) NOT NULL,
     staff_id CHAR(8),
-    customer_id CHAR(8) NOT NULL,
     due_date DATE NOT NULL,
     rental_date DATE NOT NULL,
     return_date DATE,
     status ENUM('PENDING', 'APPROVED', 'DENIED') NOT NULL DEFAULT 'PENDING',
     total_amount DECIMAL(10, 2) DEFAULT 0.00,
     late_fee DECIMAL(10, 2) DEFAULT 0.00,
+    PRIMARY KEY (customer_id, movie_id),
     FOREIGN KEY (movie_id) REFERENCES Movies (movie_id) ON DELETE CASCADE,
     FOREIGN KEY (staff_id) REFERENCES Accounts (account_id) ON DELETE SET NULL,
     FOREIGN KEY (customer_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
@@ -117,17 +119,19 @@ CREATE TABLE IF NOT EXISTS Rentals (
 CREATE TABLE IF NOT EXISTS Payments (
     payment_id CHAR(8) PRIMARY KEY,
     customer_id CHAR(8) NOT NULL,
+    transaction_context ENUM('RENTAL', 'PURCHASE', 'SUBSCRIPTION') NOT NULL,
+    reference_id CHAR(8), -- Can refer to rental_id, movie_id, etc.
     amount DECIMAL(10, 2) NOT NULL,
     payment_method ENUM('ONLINE', 'CARD', 'BANKING') NOT NULL,
     transaction_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     status ENUM('PENDING', 'COMPLETED', 'FAILED') DEFAULT 'PENDING',
-    FOREIGN KEY (customer_id) REFERENCES Accounts(account_id) ON DELETE CASCADE
+    FOREIGN KEY (customer_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Profiles (
     account_id CHAR(8) NOT NULL,
     full_name NVARCHAR(60),
-    birthday DATE NOT NULL,
+    birthday DATE,
     address NVARCHAR(255),
     phone_number CHAR(10),
     credit DECIMAL(10, 2) DEFAULT 0.00,
@@ -135,22 +139,22 @@ CREATE TABLE IF NOT EXISTS Profiles (
 );
 
 CREATE TABLE IF NOT EXISTS Reviews (
-    review_id CHAR(8) PRIMARY KEY,
-    movie_id CHAR(8) NOT NULL,
     customer_id CHAR(8) NOT NULL,
+    movie_id CHAR(8) NOT NULL,
     review_text TEXT,
     rating INT CHECK (rating BETWEEN 1 AND 5),
     review_date DATE NOT NULL,
+    PRIMARY KEY (customer_id, movie_id),
     FOREIGN KEY (movie_id) REFERENCES Movies (movie_id) ON DELETE CASCADE,
     FOREIGN KEY (customer_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Wishlists (
-    wishlist_id CHAR(8) PRIMARY KEY,
     customer_id CHAR(8) NOT NULL,
     movie_id CHAR(8) NOT NULL,
     added_date DATE NOT NULL,
     priority ENUM('HIGH', 'MEDIUM', 'LOW') NOT NULL DEFAULT 'MEDIUM',
+    PRIMARY KEY (customer_id, movie_id),
     FOREIGN KEY (movie_id) REFERENCES Movies (movie_id) ON DELETE CASCADE,
     FOREIGN KEY (customer_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
 );
@@ -225,4 +229,3 @@ BEGIN
     WHERE movie_id = NEW.movie_id;
 END; //
 DELIMITER ;
-
