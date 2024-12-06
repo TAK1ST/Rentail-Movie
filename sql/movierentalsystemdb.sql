@@ -229,4 +229,3 @@ BEGIN
     WHERE movie_id = NEW.movie_id;
 END; //
 DELIMITER ;
-
