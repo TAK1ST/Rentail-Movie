@@ -5,6 +5,7 @@ import static main.utils.Input.getInteger;
 import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.LogMessage.valueLog;
 import main.utils.Menu.Option.After;
 import static main.utils.Menu.Option.After.ASK_FOR_AGAIN;
 import static main.utils.Menu.Option.After.ASK_TO_CONFIRM;
@@ -16,7 +17,7 @@ import static main.utils.Menu.Option.After.TERMINATE;
 public class Menu {
     
     private static final int INIT_NUM = 1;
-    private static final int MAX_MENU_WIDTH = 100;
+    private static final int MAX_MENU_WIDTH = 120;
     private static final int DEFAULT_ROW_FORMAT = 2;
        
     public static void showManagerMenu(
@@ -84,7 +85,15 @@ public class Menu {
         int optionWidth = MAX_MENU_WIDTH / colFormat - 6;
         for (int index = 1; index <= options.length; index++) {
             String format = "";
-                if (colFormat == 1) {
+                if (index == options.length) {
+                    int unitLeft = options.length % colFormat  + 1;
+                    int lengthLeft = unitLeft * (optionWidth);
+                    if (unitLeft > 1)
+                        format = "|[%02d] %-" + lengthLeft + "s|\n";
+                    else
+                        format = "[%02d] %-" + lengthLeft + "s|\n";
+                }
+                else if (colFormat == 1) {
                     format = "|[%02d] %-" + (optionWidth - 1) + "s|\n";
                 }
                 else if (index % colFormat == 1) {
@@ -94,7 +103,7 @@ public class Menu {
                     format = "[%02d] %-" + optionWidth + "s|\n" ;
                 }
                 else
-                    format = " [%02d] %-" + optionWidth + "s ";
+                    format = "[%02d] %-" + optionWidth + "s ";
        
             System.out.printf(format, (index + INIT_NUM - 1), options[index - 1].optionTitle);
         }
