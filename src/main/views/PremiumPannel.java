@@ -1,8 +1,6 @@
 package main.views;
 
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import main.constants.account.AccStatus;
 import main.controllers.Managers;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
@@ -29,19 +27,15 @@ public class PremiumPannel {
         Menu.showManagerMenu("Movie Rental (Premium)", 3,
             new Action[] {
                 () ->  { 
-                    try {
-                        DiscountServices.initDataFor(account.getId()); 
-                        WishlistServices.initDataFor(account.getId());
-                        ProfileServices.initDataFor(account.getId());
-                        ReviewServices.initDataFor(account.getId());
-                        
-                        Managers.initMVM();
-                        Managers.initRTM();
-                        Managers.initWLM();
-                        Managers.initRVM();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(PremiumPannel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    DiscountServices.initDataFor(account.getId()); 
+                    WishlistServices.initDataFor(account.getId());
+                    ProfileServices.initDataFor(account.getId());
+                    ReviewServices.initDataFor(account.getId());
+                    Managers.initMVM();
+                    Managers.initRTM();
+                    Managers.initWLM();
+                    Managers.initRVM();
+                    ProfileServices.updateAccountStatus(account, AccStatus.ONLINE);
                 }
             },
             new Option[]{
@@ -81,7 +75,10 @@ public class PremiumPannel {
                         () -> getACM().deleteAccount(account), ASK_TO_CONFIRM),
                 new Option("Log Out", EXIT_MENU),
             },
-            null, null
+            null, 
+            new Action[] {
+                () -> ProfileServices.updateAccountStatus(account, AccStatus.OFFLINE)
+            }
         );
     }
 }

@@ -100,19 +100,20 @@ public class ReviewDAO {
                 );
                 list.add(review);
             }
+            return list;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return list;
+        return null;
     }
     
-    public static List<Review> getUserReviews(String customerId) throws SQLException {
+    public static List<Review> getUserReviews(String customerId) {
         String query = "SELECT movie_id, rating, review_text, review_date FROM Reviews WHERE customer_id = ?";
 
         List<Review> reviews = new ArrayList<>();
 
         try (Connection conn = Database.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+            PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, customerId);
             ResultSet rs = stmt.executeQuery();
@@ -128,8 +129,11 @@ public class ReviewDAO {
                 );
                 reviews.add(review);
             }
+            return reviews;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return reviews;
+        return null;
     }
     
 }

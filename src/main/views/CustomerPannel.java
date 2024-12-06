@@ -1,8 +1,6 @@
 package main.views;
 
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import main.constants.account.AccStatus;
 import main.controllers.Managers;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRVM;
@@ -29,19 +27,15 @@ public class CustomerPannel {
         Menu.showManagerMenu("Movie Rental (Customer)", 3,
             new Action[] {
                 () ->  {
-                    try {
-                        DiscountServices.initDataFor(account.getId());
-                        WishlistServices.initDataFor(account.getId());
-                        ProfileServices.initDataFor(account.getId());
-                        ReviewServices.initDataFor(account.getId());
-                        
-                        Managers.initMVM();
-                        Managers.initRTM();
-                        Managers.initWLM();
-                        Managers.initRVM();
-                    } catch (SQLException ex) { 
-                        Logger.getLogger(CustomerPannel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    DiscountServices.initDataFor(account.getId());
+                    WishlistServices.initDataFor(account.getId());
+                    ProfileServices.initDataFor(account.getId());
+                    ReviewServices.initDataFor(account.getId());
+                    Managers.initMVM();
+                    Managers.initRTM();
+                    Managers.initWLM();
+                    Managers.initRVM();
+                    ProfileServices.updateAccountStatus(account, AccStatus.ONLINE);
                 }
             },
             new Option[]{
@@ -65,6 +59,8 @@ public class CustomerPannel {
                         () -> getRVM().addReview(account.getId()), ASK_FOR_AGAIN),
                 new Option("My reviews history", 
                         () -> ReviewServices.displayMyReviews(), ENTER_TO_CONTINUE), 
+                new Option("Update my review", 
+                        () -> ReviewServices.updateMyReview(), ASK_FOR_AGAIN),
                 new Option("My rental history", 
                         () -> RentalServices.myHistoryRental(), ENTER_TO_CONTINUE),
                 new Option("Add movie to wishlist", 
@@ -81,7 +77,10 @@ public class CustomerPannel {
                         () -> getACM().deleteAccount(account), ASK_TO_CONFIRM),
                 new Option("Log Out", EXIT_MENU),
             },
-            null, null
+            null, 
+            new Action[] {
+                () -> ProfileServices.updateAccountStatus(account, AccStatus.OFFLINE)
+            }
         );
     }
     

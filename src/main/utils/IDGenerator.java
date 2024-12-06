@@ -5,8 +5,17 @@
 package main.utils;
 
 import java.security.SecureRandom;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeSet;
+import main.base.Model;
+import main.config.Database;
 import main.constants.IDPrefix;
 
 
@@ -15,7 +24,7 @@ public class IDGenerator {
     public static final int ID_LENGTH = 8;
     public static final int CODE_LENGTH = 8;
     public static final String DEFAULT_ADMIN_ID = String.format("%s%0"+ (ID_LENGTH - IDPrefix.ACCOUNT_PREFIX.length()) + "d", IDPrefix.ACCOUNT_PREFIX, 0);
-    
+
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final SecureRandom RANDOM = new SecureRandom();
     

@@ -83,8 +83,8 @@ public class Validator {
         boolean pass = false;
         do {
             input = getString(message, oldData);
-            if (input == null) 
-                return null;
+            if (input == oldData) 
+                return oldData;
             
             if (input.isEmpty()) {
                 errorLog("Password must not be empty");

@@ -1,8 +1,6 @@
 package main.views;
 
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import main.constants.account.AccStatus;
 import main.controllers.Managers;
 import static main.controllers.Managers.getATM;
 import static main.controllers.Managers.getDCM;
@@ -26,7 +24,6 @@ public class StaffPannel {
         Menu.showManagerMenu("Movie Rental (Staff)", 3,
             new Action[] {
                 () ->  {  
-                    try {
                         Managers.initATM(); 
                         Managers.initMVM(); 
                         Managers.initGRM(); 
@@ -35,10 +32,7 @@ public class StaffPannel {
                         Managers.initRVM(); 
                         ProfileServices.initDataFor(account.getId());
                         ReviewServices.initDataFor(account.getId());
-                    } 
-                    catch (SQLException ex) {
-                        Logger.getLogger(StaffPannel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                        ProfileServices.updateAccountStatus(account, AccStatus.ONLINE);
                 },
             },
             new Option[]{
@@ -66,7 +60,10 @@ public class StaffPannel {
                         () -> ReviewServices.displayAMovieReviews(), ENTER_TO_CONTINUE),
                 new Option("Log Out", EXIT_MENU),
             },
-            null, null
+            null,
+            new Action[] {
+                () -> ProfileServices.updateAccountStatus(account, AccStatus.OFFLINE)
+            }
         );
     }
     

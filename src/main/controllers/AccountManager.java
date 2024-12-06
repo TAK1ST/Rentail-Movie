@@ -9,7 +9,6 @@ import main.constants.account.AccRole;
 import main.dao.AccountDAO;
 import main.dto.Account;
 import main.utils.InfosTable;
-import static main.utils.LogMessage.debugLog;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;

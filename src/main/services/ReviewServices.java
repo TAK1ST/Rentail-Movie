@@ -34,7 +34,7 @@ public class ReviewServices {
     
     private static String[] showAtrributes = {"Movie", "Rating", "Comment", "Date"};
     
-    public static void initDataFor(String id) throws SQLException {
+    public static void initDataFor(String id) {
         accountID = id;
         myReviews = ReviewDAO.getUserReviews(id);
     }

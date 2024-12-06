@@ -1,9 +1,7 @@
 package main.views;
 
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.constants.account.AccRole;
+import main.constants.account.AccStatus;
 import main.controllers.Managers;
 import static main.controllers.Managers.getATM;
 import static main.controllers.Managers.getGRM;
@@ -16,7 +14,9 @@ import static main.controllers.Managers.getLGM;
 import static main.controllers.Managers.getPFM;
 import static main.controllers.Managers.getPMM;
 import static main.controllers.Managers.getWLM;
+import main.dto.Account;
 import main.services.AuthenServices;
+import main.services.ProfileServices;
 import main.utils.Menu;
 import main.utils.Menu.Action;
 import main.utils.Menu.Option;
@@ -26,12 +26,13 @@ import static main.utils.Menu.Option.After.EXIT_MENU;
 
 public class AdminPannel {
     
-    public static void show() {
+    public static void show(Account account) {
         Menu.showManagerMenu(
             "Movie Rental (Admin)", 2,
             new Action[] {
                 () ->  { 
                     Managers.initAll();
+                    ProfileServices.updateAccountStatus(account, AccStatus.ONLINE);
                 }
             },
             new Option[]{
@@ -48,7 +49,10 @@ public class AdminPannel {
                 new Option("Wishlist managment",  () -> wishlistMenu()),
                 new Option("Log Out", EXIT_MENU),
             },
-            null, null
+            null, 
+            new Action[] {
+                () -> ProfileServices.updateAccountStatus(account, AccStatus.OFFLINE)
+            }
         );
     }
     
