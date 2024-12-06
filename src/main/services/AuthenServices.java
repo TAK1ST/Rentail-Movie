@@ -59,7 +59,7 @@ public class AuthenServices {
         Menu.showHeader("Register");
         String[] options = {"Register new account", "Back"};
         Menu.showOptions(options, 1);
-        
+
         int input = Menu.getChoice("Enter choice", options.length);
         switch (input) {
             case 1:
@@ -68,7 +68,7 @@ public class AuthenServices {
             default:
                 return null;
         }
-
+        
         if (!checkCreate) {
             errorLog("Cannot register account");
             return null;
@@ -99,7 +99,7 @@ public class AuthenServices {
         account.setPassword(password);
         return updatePasswordInDB(account.getId(), password);
     }
-    
+
     public static boolean registorAccount(AccRole role) {
 
         String username = getUsername("Enter username", getACM().getList());
@@ -135,7 +135,7 @@ public class AuthenServices {
         }
         return false;
     }
-    
+
     private static boolean registorProfile(String accountID) {
         if (yesOrNo("Fill in all infomation?")) {
             if (!getPFM().addProfile(accountID)) {
@@ -170,5 +170,4 @@ public class AuthenServices {
         }
         return false;
     }
-    
 }

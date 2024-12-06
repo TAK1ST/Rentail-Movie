@@ -21,7 +21,6 @@ import static main.utils.Menu.Option.After.ASK_TO_CONFIRM;
 import static main.utils.Menu.Option.After.ENTER_TO_CONTINUE;
 import static main.utils.Menu.Option.After.EXIT_MENU;
 
-
 public class CustomerPannel {
     
     public static void show(Account account) {

@@ -13,10 +13,25 @@ import static main.services.StatisticServices.*;
  */
 public class GuestPannel {
 
-    public static void getTopRevenueGeneratingMovies() {
-        Map<String, Double> top5RevenueGeneratingMovies = getTop5RevenueGeneratingMovies();
+    public static void show() {
+        introduction();
+        showTopRevenueGeneratingMovies();
+        showTopHighestRatedMovies();
+        showTopMostWishlistedMovies();
+        showTopPremiumCustomersBySpending();
+        showTopMostActiveGenres();
+    }
+
+    public static void introduction() {
+        System.out.println("Introduction");
+        
+        System.out.println();
+    }
+
+    public static void showTopRevenueGeneratingMovies() {
+        Map<String, Double> top5RevenueGeneratingMovies = getTheMostRevenueGeneratingMovies();
         System.out.println(
-                "Top 5 Revenue Generating Movies:");
+                "The Most Revenue Generating Movies:");
         top5RevenueGeneratingMovies.forEach(
                 (title, revenue)
                 -> System.out.println("Movie: " + title + ", Revenue: $" + revenue)
@@ -24,33 +39,33 @@ public class GuestPannel {
         System.out.println();
     }
 
-    public static void getTopHighestRatedMovies() {
-        Map<String, Double> top5HighestRatedMovies = getTop5HighestRatedMovies();
-        System.out.println("Top 5 Highest Rate Movie:");
+    public static void showTopHighestRatedMovies() {
+        Map<String, Double> top5HighestRatedMovies = getTheMostHighestRatedMovies();
+        System.out.println("The Most Highest Rate Movie:");
         top5HighestRatedMovies.forEach((title, avg_rating)
                 -> System.out.println("Movie: " + title + ", Review: " + avg_rating));
         System.out.println();
     }
 
-    public static void getTopMostWishlistedMovies() {
-        Map<String, Integer> top5MostWishlistedMovies = getTop5MostWishlistedMovies();
-        System.out.println("Top 5 Most Wishlist Movie: ");
+    public static void showTopMostWishlistedMovies() {
+        Map<String, Integer> top5MostWishlistedMovies = getTheMostMostWishlistedMovies();
+        System.out.println("The Most Wishlist Movie: ");
         top5MostWishlistedMovies.forEach((title, wishlist_count)
                 -> System.out.println("Movie:" + title + "Wishlist's Quantity : " + wishlist_count));
         System.out.println();
     }
 
-    public static void getTopPremiumCustomersBySpending() {
-        Map<String, Double> top5PremiumCustomersBySpending = getTop5PremiumCustomersBySpending();
-        System.out.println("Top 5 Premium Customer By Spending");
+    public static void showTopPremiumCustomersBySpending() {
+        Map<String, Double> top5PremiumCustomersBySpending = getTheMostPremiumCustomersBySpending();
+        System.out.println("The Most Premium Customer By Spending");
         top5PremiumCustomersBySpending.forEach((full_name, total_spent)
                 -> System.out.println("User: " + full_name + "Spending:" + total_spent));
         System.out.println();
     }
 
-    public static void getTopMostActiveGenres() {
-        Map<String, Integer> top5MostActiveGenres = getTop5MostActiveGenres();
-        System.out.println("Top 5 Most Active Genres: ");
+    public static void showTopMostActiveGenres() {
+        Map<String, Integer> top5MostActiveGenres = getTheMostMostActiveGenres();
+        System.out.println("The Most Active Genres: ");
         top5MostActiveGenres.forEach((genre_name, rental_count) -> System.out.println("Genre: " + genre_name + "Rental's Quantity" + rental_count));
         System.out.println();
     }
