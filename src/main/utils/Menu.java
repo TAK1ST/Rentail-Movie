@@ -5,7 +5,6 @@ import static main.utils.Input.getInteger;
 import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
-import static main.utils.LogMessage.valueLog;
 import main.utils.Menu.Option.After;
 import static main.utils.Menu.Option.After.ASK_FOR_AGAIN;
 import static main.utils.Menu.Option.After.ASK_TO_CONFIRM;
@@ -86,12 +85,16 @@ public class Menu {
         for (int index = 1; index <= options.length; index++) {
             String format = "";
                 if (index == options.length) {
-                    int unitLeft = options.length % colFormat  + 1;
-                    int lengthLeft = unitLeft * (optionWidth);
-                    if (unitLeft > 1)
+                    int unitLeft = colFormat - options.length % colFormat;
+                    int lengthLeft = (unitLeft + 1) * optionWidth + unitLeft * 6 - 1;
+                    if (colFormat == 1) 
+                        format = "|[%02d] %-" + (optionWidth-1) + "s|\n";
+                    else if (colFormat - unitLeft == 1)
                         format = "|[%02d] %-" + lengthLeft + "s|\n";
-                    else
-                        format = "[%02d] %-" + lengthLeft + "s|\n";
+                    else if (colFormat - unitLeft == 0)
+                        format = "[%02d] %-" + optionWidth + "s|\n";
+                    else 
+                        format = "[%02d] %-" + (lengthLeft+1) + "s|\n";
                 }
                 else if (colFormat == 1) {
                     format = "|[%02d] %-" + (optionWidth - 1) + "s|\n";
