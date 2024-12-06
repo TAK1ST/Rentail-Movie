@@ -66,7 +66,7 @@ public class InfosTable {
     public static void displayByLine(Object... args) {
         for (int index = 0; index < args.length; index++) {
             if (args[index] instanceof String[]) {
-                System.out.printf(columns.get(index).format(), String.join(", ", args[index].toString()));
+                System.out.printf(columns.get(index).format(), String.join(", ", (String[]) args[index]));
             }
             else if (args[index] instanceof String)
                 System.out.printf(columns.get(index).format(), truncate(args[index]));
