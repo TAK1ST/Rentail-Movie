@@ -39,7 +39,8 @@ public final class ReviewManager extends ListManager<Review> {
         Movie movie = (Movie) getMVM().searchById("Enter movie' id to rent");
         if (getMVM().checkNull(movie)) return false;
         
-        List<Review> reviews = searchBy(list, customer.getId(), movie.getId());
+        List<Review> reviews = searchBy(list, customer.getId());
+        reviews = searchBy(list, movie.getId());
         if (reviews != null && !reviews.isEmpty()) 
             return errorLog("Already reviewed this movie", false);
         
@@ -105,7 +106,7 @@ public final class ReviewManager extends ListManager<Review> {
 
     @Override
     public List<Review> searchBy(List<Review> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Review> result = new ArrayList<>();
         for (Review item : tempList) {
@@ -125,7 +126,7 @@ public final class ReviewManager extends ListManager<Review> {
 
     @Override
     public List<Review> sortList(List<Review> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         
@@ -162,9 +163,8 @@ public final class ReviewManager extends ListManager<Review> {
             {
                 if (item != null)
                     InfosTable.calcLayout(
-                        item.getId(), 
-                        item.getMovieID(),
                         item.getCustomerID(),
+                        item.getMovieID(),
                         item.getRating(),
                         item.getReviewText(),
                         formatDate(item.getReviewDate(), Validator.DATE)
@@ -177,9 +177,8 @@ public final class ReviewManager extends ListManager<Review> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
-                        item.getId(), 
-                        item.getMovieID(),
                         item.getCustomerID(),
+                        item.getMovieID(),
                         item.getRating(),
                         item.getReviewText(),
                         formatDate(item.getReviewDate(), Validator.DATE)

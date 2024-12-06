@@ -150,7 +150,7 @@ public class DiscountManager extends ListManager<Discount> {
    
     @Override
     public List<Discount> searchBy(List<Discount> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Discount> result = new ArrayList<>();
         for (Discount item : tempList) {
@@ -172,7 +172,7 @@ public class DiscountManager extends ListManager<Discount> {
     
     @Override
     public List<Discount> sortList(List<Discount> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         
@@ -213,8 +213,8 @@ public class DiscountManager extends ListManager<Discount> {
             {if (item != null)
                 InfosTable.calcLayout(
                     item.getCode(), 
-                    String.join(", ", returnNames(item.getCustomerIds(), getPFM())),
-                    String.join(", ", returnNames(item.getMovieIds(), getMVM())),
+                    returnNames(item.getCustomerIds(), getPFM()),
+                    returnNames(item.getMovieIds(), getMVM()),
                     item.getType(),
                     item.getValue(),
                     formatDate(item.getStartDate(), Validator.DATE), 
@@ -229,8 +229,8 @@ public class DiscountManager extends ListManager<Discount> {
             {if (item != null)
                 InfosTable.displayByLine(
                     item.getCode(), 
-                    String.join(", ", returnNames(item.getCustomerIds(), getPFM())),
-                    String.join(", ", returnNames(item.getMovieIds(), getMVM())),
+                    returnNames(item.getCustomerIds(), getPFM()),
+                    returnNames(item.getMovieIds(), getMVM()),
                     item.getType(),
                     item.getValue(),
                     formatDate(item.getStartDate(), Validator.DATE), 

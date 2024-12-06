@@ -70,7 +70,7 @@ public class InfosTable {
     }
     
     public static void displayByLine(Object... args) {
-        if (showNumber) System.out.print(++count);
+        if (showNumber) System.out.printf(" %-2d ", count++);
         for (int index = 0; index < args.length; index++) {
             if (args[index] instanceof String[]) {
                 System.out.printf(columns.get(index).format(), String.join(", ", (String[]) args[index]));
@@ -85,10 +85,12 @@ public class InfosTable {
     
     public static void showTitle() {
         setWidth();
+        
         System.out.println();
         for (int index = 0; index < width; index++) System.out.print("-");
         System.out.println();
-        for (int index = 0; index < columns.size(); index++)
+        if (showNumber) System.out.print(" No ");
+        for (int index = 0; index < columns.size(); index++) 
             System.out.printf("| %-" + columns.get(index).length + "s ", columns.get(index).title);
         System.out.print("|\n");
         for (int index = 0; index < width; index++) System.out.print("-");
@@ -106,6 +108,7 @@ public class InfosTable {
     private static void setWidth() {
         columns.forEach(item -> width+= item.length + 3);
         width++;
+        if (showNumber) width+= 4;
     }
     
     private static String getFormat(Object arg) {

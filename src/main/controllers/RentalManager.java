@@ -200,14 +200,10 @@ public class RentalManager extends ListManager<Rental> {
 
     @Override
     public List<Rental> sortList(List<Rental> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) {
-            return null;
-        }
-
-        if (propety == null) {
-            return tempList;
-        }
-
+        if (tempList == null) return null;
+        
+        if (propety == null) return tempList;
+        
         String[] options = Rental.getAttributes();
         List<Rental> result = new ArrayList<>(tempList);
 
@@ -265,7 +261,11 @@ public class RentalManager extends ListManager<Rental> {
                         item.getStatus()
                 );
             }
+<<<<<<< HEAD
         });
+=======
+        );
+>>>>>>> e26c450c0c18390cb8fb13160b3bbaf28fd65c46
 
         InfosTable.showTitle();
         tempList.forEach(item
@@ -283,7 +283,11 @@ public class RentalManager extends ListManager<Rental> {
                         item.getStatus()
                 );
             }
+<<<<<<< HEAD
         });
+=======
+        );
+>>>>>>> e26c450c0c18390cb8fb13160b3bbaf28fd65c46
         InfosTable.showFooter();
     }
 }
