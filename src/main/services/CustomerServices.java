@@ -4,6 +4,10 @@
  */
 package main.services;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import main.config.Database;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getPFM;
 import main.dto.Account;
@@ -38,6 +42,22 @@ public class CustomerServices {
         profile.setCredit(profile.getCredit()  + credit);
         
         return getPFM().update(profile, temp);
+    }
+    
+    public static boolean adjustAccountCreability(Account account, int amount) {
+        String sql = "UPDATE Accounts SET creability = ? WHERE account_id = ?";
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            
+            int count = 0;
+            ps.setInt(++count, account.getCreability() + amount);
+            ps.setString(++count, account.getId());
+
+            if (ps.executeUpdate() > 0)
+                account.setCreability(account.getCreability() + 1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
     
 }

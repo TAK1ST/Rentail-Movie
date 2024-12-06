@@ -39,12 +39,12 @@ public class RentalServices {
         String movieID = getString("Enter movie' id", null);
         if (movieID == null) return false;
         
-        List<Rental> rental = getRTM().searchBy(customerID, movieID);
+        Rental rental = getRTM().searchBy(customerID, movieID).getFirst();
         if (getRTM().checkNull(rental)) return false;
         
-        Rental temp = new Rental(rental);
+        Rental temp = new Rental();
         temp.setReturnDate(LocalDate.now());
-        temp.setLateFee(calcLateFee(LocalDate.now(), temp));
+        temp.setLateFee(calcLateFee(LocalDate.now(), rental));
         
         return getRTM().update(rental, temp);
     }
@@ -53,13 +53,12 @@ public class RentalServices {
         Rental rental = getRTM().getById("Enter rental's id to extend");
         rental.setLateFee(calcLateFee(LocalDate.now(), rental));
         
-        int howManyDays = getInteger("How many days to extends", 1, 365, Integer.MIN_VALUE);
-        if (howManyDays == Integer.MIN_VALUE) return false;
-        
         Movie movie = (Movie) getMVM().searchById(rental.getMovieID());
         if (getMVM().checkNull(movie)) return false;
         
-        rental.setTotalAmount(0);
+        int howManyDays = getInteger("How many days to extends", 1, 365, Integer.MIN_VALUE);
+        if (howManyDays == Integer.MIN_VALUE) return false;
+        
         rental.setTotalAmount(movie.getRentalPrice() * howManyDays * 1.5);
         rental.setDueDate(rental.getDueDate().plusDays(howManyDays));
         

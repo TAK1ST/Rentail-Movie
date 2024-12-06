@@ -5,21 +5,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRVM;
+import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getRTM;
 import static main.controllers.Managers.getWLM;
 import main.dto.Account;
-import main.dto.Wishlist;
 import main.services.CustomerServices;
 import main.services.DiscountServices;
 import main.services.RentalServices;
 import main.services.ReviewServices;
 import main.services.WishlistServices;
+import static main.utils.Input.yesOrNo;
 import main.utils.Menu;
 import main.utils.Menu.MenuOption;
 import static main.utils.Menu.MenuOption.After.ASK_FOR_AGAIN;
 import static main.utils.Menu.MenuOption.After.ENTER_TO_CONTINUE;
 import static main.utils.Menu.MenuOption.After.EXIT_MENU;
-
 
 public class CustomerPannel {
     
@@ -54,7 +54,7 @@ public class CustomerPannel {
                 new MenuOption("My rental history", 
                         () -> RentalServices.myHistoryRental(account.getId()), ENTER_TO_CONTINUE),
                 new MenuOption("Add movie to wishlist", 
-                        () -> getWLM().addWishlist(), ASK_FOR_AGAIN),
+                        () -> getWLM().addWishlist(account.getId()), ASK_FOR_AGAIN),
                 new MenuOption("My wishlist", 
                         () -> WishlistServices.myWishlist(account.getId())),
                 new MenuOption("View discounts", 
@@ -64,7 +64,7 @@ public class CustomerPannel {
                 new MenuOption("Registor credit", 
                         () -> CustomerServices.registorCredit(account), ASK_FOR_AGAIN),
                 new MenuOption("Delete account", 
-                        () -> CustomerServices.deleteAccount(account), EXIT_MENU),
+                        () -> yesOrNo("Are you sure") && getACM().deleteAccount(account), EXIT_MENU),
                 new MenuOption("Log Out", EXIT_MENU),
             },
             null, null

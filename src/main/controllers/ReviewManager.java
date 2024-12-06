@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import main.base.ListManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import main.constants.IDPrefix;
@@ -43,7 +42,7 @@ public final class ReviewManager extends ListManager<Review> {
         
         List<Review> reviews = searchBy(list, customer.getId(), movie.getId());
         if (reviews != null && !reviews.isEmpty()) 
-            return errorLog("Already reviewed this movie");
+            return errorLog("Already reviewed this movie", false);
         
         int rating = getInteger("Enter rating", 1, 5, Integer.MIN_VALUE);
         if (rating == Integer.MIN_VALUE) return false;
@@ -72,7 +71,7 @@ public final class ReviewManager extends ListManager<Review> {
         
         Review temp = new Review();
         temp.setRating(getInteger("Enter rating", 1, 5, review.getRating()));
-        temp.setReviewText(getString("Enter comment", null));
+        temp.setReviewText(getString("Enter comment", review.getReviewText()));
                 
         return update(review, temp);
     }
