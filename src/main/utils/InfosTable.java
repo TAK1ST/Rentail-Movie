@@ -33,7 +33,13 @@ public class InfosTable {
     private static int width = 0;
     private static int colMaxLength;
     private static final List<Column> columns = new ArrayList<>();
-
+    private static boolean showNumber = false;
+    private static int count = 0;
+    
+    public static void setShowNumber() {
+        showNumber = true;
+    }
+    
     public static void getTitle(String... args) {
         resetData();
         for (String item : args) {
@@ -64,6 +70,7 @@ public class InfosTable {
     }
     
     public static void displayByLine(Object... args) {
+        if (showNumber) System.out.print(++count);
         for (int index = 0; index < args.length; index++) {
             if (args[index] instanceof String[]) {
                 System.out.printf(columns.get(index).format(), String.join(", ", (String[]) args[index]));
@@ -124,6 +131,8 @@ public class InfosTable {
     private static void resetData() {
         width = 0;
         columns.clear();
+        showNumber = false;
+        count = 0;
     }
     
     private static String truncate(Object input) {

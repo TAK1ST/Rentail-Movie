@@ -20,7 +20,7 @@ public class WishlistDAO {
                 + "customer_id, "
                 + "added_date, "
                 + "priority "
-                + ") VALUES (?, ?, ?, ?, ?)";
+                + ") VALUES (?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             
             int count = 0;

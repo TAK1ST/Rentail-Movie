@@ -54,16 +54,15 @@ public class RentalManager extends ListManager<Rental> {
         int howManyDays = getInteger("How many days to rent", 1, 365);
         if (howManyDays == Integer.MIN_VALUE) return false;
         
-        
-        
-        double total = DiscountServices.applyDiscountForRental(customerID, movie) * howManyDays;
+        double total = movie.getRentalPrice() * howManyDays;
         LocalDate dueDate =  rentalDate.plusDays(howManyDays);
         
-        String staffID = RentalServices.findStaffForRentalApproval();
-        if (staffID == null) {
-            errorLog("No staff are available for your rental");
-            return false;
-        }
+        String staffID = null;
+//                RentalServices.findStaffForRentalApproval();
+//        if (staffID == null) {
+//            errorLog("No staff are available for your rental");
+//            return false;
+//        }
         
         return add(new Rental(
                 customer.getId(),
@@ -208,16 +207,15 @@ public class RentalManager extends ListManager<Rental> {
             {
                 if (item != null) 
                     InfosTable.calcLayout(
-                        item.getId(),
                         item.getMovieID(),
                         item.getCustomerID(),
                         item.getStaffID(),
-                        formatDate(item.getDueDate(), Validator.DATE),
                         formatDate(item.getRentalDate(), Validator.DATE),
+                        formatDate(item.getDueDate(), Validator.DATE),
                         formatDate(item.getReturnDate(), Validator.DATE),
-                        item.getStatus(),
+                        item.getLateFee(),
                         item.getTotalAmount(),
-                        item.getLateFee()
+                        item.getStatus()
                 );
             }
         );
@@ -227,16 +225,15 @@ public class RentalManager extends ListManager<Rental> {
             {
                 if (item != null) 
                     InfosTable.displayByLine(
-                        item.getId(),
                         item.getMovieID(),
                         item.getCustomerID(),
                         item.getStaffID(),
-                        formatDate(item.getDueDate(), Validator.DATE),
                         formatDate(item.getRentalDate(), Validator.DATE),
+                        formatDate(item.getDueDate(), Validator.DATE),
                         formatDate(item.getReturnDate(), Validator.DATE),
-                        item.getStatus(),
+                        item.getLateFee(),
                         item.getTotalAmount(),
-                        item.getLateFee()
+                        item.getStatus()
                 );
             }
         );

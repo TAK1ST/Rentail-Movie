@@ -44,13 +44,13 @@ public class MovieManager extends ListManager<Movie> {
         String description = getString("Enter description");
         if (description == null) return false;
         
-        String genres = selectByNumbers("Enter genres (Comma-separated)", getGRM());
+        String genres = selectByNumbers("Enter genres by numbers on display (Comma-separated)", getGRM());
         if (genres == null) return false;
         
-        String actors = selectByNumbers("Enter actors (Comma-separated)", getATM());
+        String actors = selectByNumbers("Enter actors by numbers on display (Comma-separated)", getATM());
         if (actors == null) return false;
         
-        String languages = selectByNumbers("Enter languages (Comma-separated)", getLGM());
+        String languages = selectByNumbers("Enter languages by numbers on display (Comma-separated)", getLGM());
         if (languages == null) return false;
 
         LocalDate releaseDate = getDate("Enter release date");

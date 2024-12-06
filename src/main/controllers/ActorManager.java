@@ -147,7 +147,7 @@ public class ActorManager extends ListManager<Actor> {
                         item.getDescription());
             }
         );
-        
+        InfosTable.setShowNumber();
         InfosTable.showTitle();
         tempList.forEach(item -> 
             {

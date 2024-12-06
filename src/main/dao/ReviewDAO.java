@@ -23,7 +23,7 @@ public class ReviewDAO {
                 + "review_text, "
                 + "rating, "
                 + "review_date"
-                + ") VALUES (?, ?, ?, ?, ?, ?)";
+                + ") VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 

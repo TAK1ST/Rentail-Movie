@@ -9,6 +9,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 import main.dto.Account;
+import main.dto.Language;
 import static main.utils.Input.askToExit;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
@@ -25,6 +26,10 @@ public class Validator {
     private static final String FULLNAME_SPECIAL_CHAR_PATTERN = "[^a-zA-Z ]";
     
     private static final Scanner scanner = new Scanner(System.in);
+    
+    public static String getLanguageCode(String message, List<Language> list) {
+        return getLanguageCode(message, null, list);
+    }
     
     public static String getUsername(String message, List<Account> list) {
         return getUsername(message, null, list);
@@ -60,6 +65,50 @@ public class Validator {
             
     public static LocalDateTime getDateTime() {
         return getDateTime(null);
+    }
+    
+    public static String getLanguageCode(String message, String oldData, List<Language> list) {
+        String input = null;
+        boolean isUnique = false;
+        do {
+            input = getString(message, oldData);
+            if (input == oldData) return oldData;
+
+            if (input.isEmpty()) {
+                errorLog("Language code must not be empty");
+                if(askToExit()) return null;
+                continue;
+            }
+            if (input.length() != 2) {
+                errorLog("Language code must in format 2 character");   
+                if(askToExit()) return null;
+                continue;
+            }
+            if (input.contains(" ")) {
+                errorLog("Language code must not contain space");    
+                if(askToExit()) return null;
+                continue;
+            }
+            if (input.matches(".*\\d.*")) {
+                errorLog("Full name must not contain number");
+                if(askToExit()) return null;
+                continue;
+            }
+            if (input.matches(".*" + NAME_SPECIAL_CHAR_PATTERN + ".*")) {
+                errorLog("Language code contains special characters");
+                if(askToExit()) return null;
+                continue;
+            } 
+            
+            isUnique = true;
+            for(Language item : list) 
+                if (item.getCode().equals(input)) {
+                    errorLog("Language code has already exist");
+                    if(askToExit()) return null;
+                    isUnique = false;
+                }
+        } while (!isUnique);
+        return input.toUpperCase();
     }
     
     public static String getUsername(String message, String oldData, List<Account> list) {
@@ -170,6 +219,11 @@ public class Validator {
             
             if (input.isEmpty()) {
                 errorLog("Name must not be empty");
+                if(askToExit()) return null;
+                continue;
+            }
+            if (input.matches(".*\\d.*")) {
+                errorLog("Name must not contain number");
                 if(askToExit()) return null;
                 continue;
             }
