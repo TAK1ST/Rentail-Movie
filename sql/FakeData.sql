@@ -1,8 +1,8 @@
 
--- USE movierentalsystemdb;
+USE movierentalsystemdb;
 
 INSERT INTO Accounts (account_id, username, password, role, email, status, online_at, created_at, updated_at, creability) VALUES
-('AC000001', 'john_doe', 'password123', 'CUSTOMER', 'john@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+('AC000011', 'john_doe', 'password123', 'CUSTOMER', 'john@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
 ('AC000002', 'jane_doe', 'password123', 'STAFF', 'jane@example.com', 'ONLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
 ('AC000003', 'admin_user', 'adminpass', 'ADMIN', 'admin@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
 ('AC000004', 'premium_guy', 'premium123', 'PREMIUM', 'premium@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
