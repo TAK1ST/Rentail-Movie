@@ -112,7 +112,7 @@ public class ReviewServices {
         if (myReviews == null) 
             return errorLog("You have no reviews", false);
         
-        String movieID = getString("Enter movie's id", null);
+        String movieID = getString("Enter movie's id");
         if (movieID == null) return false;
         
         Review movieIsReview = getRVM().searchBy(myReviews, movieID).getFirst();
@@ -128,7 +128,7 @@ public class ReviewServices {
         if (myReviews == null) 
             return errorLog("You have no reviews", false);
         
-        String movieID = getString("Enter movie's id", null);
+        String movieID = getString("Enter movie's id");
         if (movieID == null) return false;
         
         Review movieIsReview = getRVM().searchBy(myReviews, movieID).getFirst();
