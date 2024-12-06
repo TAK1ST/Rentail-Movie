@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import main.config.Database;
+import main.constants.account.AccStatus;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getPFM;
 import main.dto.Account;
@@ -45,7 +46,7 @@ public class ProfileServices {
         double credit = getDouble("Amount to registor", 0, Double.MAX_VALUE, Double.MIN_VALUE);
         if (credit == Double.MIN_VALUE) return false;
         
-        if (updateUserCredit(account.getId(), credit)) {
+        if (updateCustomerCredit(account.getId(), credit)) {
             myProfile.setCredit(myProfile.getCredit()  + credit);
             return successLog("Successfully registor credit", true);
         }
@@ -68,7 +69,7 @@ public class ProfileServices {
         return false;
     }
     
-    private static boolean updateUserCredit(String customerId, double creditAmount) {
+    private static boolean updateCustomerCredit(String customerId, double creditAmount) {
         String query = "UPDATE Profiles SET credit = credit + ? WHERE account_id = ?";
 
         try (Connection conn = Database.getConnection();
@@ -84,6 +85,29 @@ public class ProfileServices {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    public static boolean updateAccountStatus(Account account, AccStatus newStatus) {
+        String query = "UPDATE Accounts SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE account_id = ?";
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, newStatus.name());
+            preparedStatement.setString(2, account.getId());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                account.setStatus(newStatus);
+                return true;
+            } 
+            else 
+                return false;
+        } catch (SQLException e) {
+            System.err.println("Error updating user status: " + e.getMessage());
+            return false;
+        }
     }
     
 }

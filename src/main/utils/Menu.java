@@ -60,11 +60,12 @@ public class Menu {
                     perform(terminates);
                     return;
                 } 
-                else if (option.after == ENTER_TO_CONTINUE) {
+                if (option.after == ENTER_TO_CONTINUE) {
                     pressEnterToContinue();
+            
                 }
-                else if (option.after == ASK_FOR_AGAIN && yesOrNo("Again")) {
-                } 
+                if (option.after == ASK_FOR_AGAIN && yesOrNo("Again")) {
+                }
                 else break;
                 
             } while (true);

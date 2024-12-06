@@ -14,7 +14,6 @@ import static main.controllers.Managers.getPFM;
 import main.dto.Account;
 import static main.utils.Input.getString;
 import static main.utils.Input.yesOrNo;
-import static main.utils.LogMessage.debugLog;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.successLog;
 import main.utils.Menu;

@@ -3,8 +3,10 @@ package main.base;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import main.utils.IDGenerator;
+import static main.utils.IDGenerator.ID_LENGTH;
 import static main.utils.Input.getString;
 import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.selectInfo;
@@ -16,15 +18,7 @@ import main.utils.Menu;
 public abstract class ListManager<T extends Model> {
 
     protected final List<T> list = new ArrayList<>();
-    
-    protected boolean copy(List<T> tempList) {
-        if (tempList == null)
-            return errorLog("Can not copy", false);
-        for (T item : tempList) 
-            list.add(item);
-        return true;
-    }
-    
+    private List<String> gapIDs = new ArrayList<>();
     private final String[] attributes;
     private final String className;
 
@@ -36,12 +30,69 @@ public abstract class ListManager<T extends Model> {
     public abstract List<T> sortList(List<T> tempList, String propety, boolean descending);
     public abstract List<T> searchBy(List<T> tempList, String propety);
     
-    public String createID(String idPrefix) {
-        List<T> temp = sortList(list, attributes[0], false);
+    protected boolean copy(List<T> tempList) {
+        if (tempList == null)
+            return errorLog("Can not copy", false);
+        for (T item : tempList) 
+            list.add(item);
+        return true;
+    }
+    
+    public List<T> getList() {
+        return list;
+    }
+    
+    public String createID(String prefix) {
+        if (gapIDs.isEmpty()) gapIDs = findIDGaps(prefix);
+        
         String lastID = null;
-        if (temp != null && temp.getLast().getId() != null)
-            lastID = temp.getLast().getId();
-        return IDGenerator.generateID(lastID, idPrefix);
+        if (gapIDs.isEmpty()) {
+            List<T> temp = sortList(list, attributes[0], false);
+            if (temp != null && temp.getLast().getId() != null)
+                lastID = temp.getLast().getId();
+            
+            return IDGenerator.generateID(lastID, prefix);
+        }
+        else {
+            if (gapIDs.getFirst() != null) 
+                lastID = gapIDs.getFirst();
+            
+            gapIDs.removeFirst();
+            return IDGenerator.generateID(lastID, prefix);
+        }
+    }
+    
+    private List<String> findIDGaps(String prefix) {
+        // Step 1: Extract numeric parts and store in a sorted set
+        TreeSet<Integer> numericParts = new TreeSet<>();
+        int prefixLength = prefix.length();
+
+        for (T item : list) {
+            if (item.getId().startsWith(prefix) && item.getId().length() == ID_LENGTH) {
+                try {
+                    int numericPart = Integer.parseInt(item.getId().substring(prefixLength));
+                    numericParts.add(numericPart);
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid ID format: " + item.getId());
+                }
+            }
+        }
+
+        // Step 2: Find gaps
+        List<String> gaps = new ArrayList<>();
+        
+        int expected = 1;
+        for (int actual : numericParts) {
+            while (expected < actual) {
+                String id = prefix + String.format("%0" + (ID_LENGTH - prefixLength) + "d", expected - 1);
+                if (!gaps.contains(id))
+                    gaps.add(prefix + String.format("%0" + (ID_LENGTH - prefixLength) + "d", expected - 1));
+                expected++;
+            }
+            expected = actual + 1;
+        }
+
+        return gaps;
     }
 
     public boolean isNull() {
@@ -53,6 +104,20 @@ public abstract class ListManager<T extends Model> {
             return !errorLog(message, false);
         
         return false;
+    }
+    
+    public boolean checkNull(T item) {
+        if (item != null) 
+            return false;
+        
+        return infoLog(String.format("No %s's data", className.toLowerCase()), true);
+    }
+
+    public boolean checkNull(List<T> tempList) {
+        if (tempList != null || !tempList.isEmpty()) 
+            return false;
+        
+        return infoLog(String.format("No %s's data", className.toLowerCase()), true);
     }
     
     public T searchById(String id) {
@@ -111,24 +176,6 @@ public abstract class ListManager<T extends Model> {
         list.sort(Comparator.comparing(Model::getId));
     }
 
-    public boolean checkNull(T item) {
-        if (item != null) 
-            return false;
-        
-        return infoLog(String.format("No %s's data", className.toLowerCase()), true);
-    }
-
-    public boolean checkNull(List<T> tempList) {
-        if (tempList != null || !tempList.isEmpty()) 
-            return false;
-        
-        return infoLog(String.format("No %s's data", className.toLowerCase()), true);
-    }
-
-    public List<T> getList() {
-        return list;
-    }
-    
     public void show(T item, String header) {
         if (checkNull(item)) return;
         if (header != null && !header.isEmpty()) Menu.showHeader(header);
