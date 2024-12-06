@@ -41,7 +41,7 @@ public class DiscountServices {
         if (discount == null) return null;
         switch(discount.getType()) {
             case PERCENT: 
-                return String.format("%2.0f%%%", discount.getValue());
+                return String.format("%.2f", discount.getValue());
             case FIXED_AMOUNT: 
                 return String.format("%.2f", discount.getValue());
             case BUY_X_GET_Y_FREE: 

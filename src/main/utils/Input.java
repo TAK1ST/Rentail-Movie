@@ -168,8 +168,8 @@ public class Input {
     }
     
     public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager, String oldData) {
-        manager.display(false);
-        String temps = null;
+        manager.show();
+        List<String> temps = new ArrayList<>();
 
         String input = getString(message, null);
         if (input == null) return oldData;
@@ -180,11 +180,11 @@ public class Input {
             item = item.trim();
             int index = toInt(item);
             if (index > 0 && index <= manager.getList().size()) {
-                temps += manager.getList().get(index).getId();
+                temps.add(manager.getList().get(index).getId());
             }
         }
 
-        return temps;
+        return String.join(", ", temps);
     }
     
     public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager) {
