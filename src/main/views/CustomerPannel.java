@@ -27,11 +27,7 @@ public class CustomerPannel {
         Menu.showManagerMenu("Movie Rental (Customer)", 3,
             new Action[] {
                 () ->  {
-                    Managers.initMVM();
-                    Managers.initRTM();
-                    Managers.initWLM();
-                    Managers.initRVM();
-                    Managers.initDCM();
+                    Managers.initAll();
                     DiscountServices.initDataFor(account.getId());
                     WishlistServices.initDataFor(account.getId());
                     ProfileServices.initDataFor(account.getId());

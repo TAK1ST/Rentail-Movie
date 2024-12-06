@@ -1,8 +1,8 @@
 
 USE movierentalsystemdb;
-
+SELECT username FROM Accounts WHERE username = 'jane_doe';
 INSERT INTO Accounts (account_id, username, password, role, email, status, online_at, created_at, updated_at, creability) VALUES
-('AC000011', 'john_doe', 'password123', 'CUSTOMER', 'john@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+('AC000001', 'john_doe', 'password123', 'CUSTOMER', 'john@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
 ('AC000002', 'jane_doe', 'password123', 'STAFF', 'jane@example.com', 'ONLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
 ('AC000003', 'admin_user', 'adminpass', 'ADMIN', 'admin@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
 ('AC000004', 'premium_guy', 'premium123', 'PREMIUM', 'premium@example.com', 'OFFLINE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
@@ -122,7 +122,7 @@ INSERT INTO Discount_Account (customer_id, discount_code) VALUES
 ('AC000010', 'DCK9P2F1');
 
 INSERT INTO Discount_Movie (movie_id, discount_code) VALUES
-('MV000001', 'DCX7A9T3'),
+('MV000011', 'DCX7A9T3'),
 ('MV000002', 'DCR5L8N9'),
 ('MV000003', 'DCJ3K4F6'),
 ('MV000004', 'DCH9Y2Z1'),
