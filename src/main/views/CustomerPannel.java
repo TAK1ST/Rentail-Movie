@@ -21,18 +21,13 @@ import static main.utils.Menu.Option.After.ASK_TO_CONFIRM;
 import static main.utils.Menu.Option.After.ENTER_TO_CONTINUE;
 import static main.utils.Menu.Option.After.EXIT_MENU;
 
-
 public class CustomerPannel {
     
     public static void show(Account account) {
         Menu.showManagerMenu("Movie Rental (Customer)", 3,
             new Action[] {
                 () ->  {
-                    Managers.initMVM();
-                    Managers.initRTM();
-                    Managers.initWLM();
-                    Managers.initRVM();
-                    Managers.initDCM();
+                    Managers.initAll();
                     DiscountServices.initDataFor(account.getId());
                     WishlistServices.initDataFor(account.getId());
                     ProfileServices.initDataFor(account.getId());

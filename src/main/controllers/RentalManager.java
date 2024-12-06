@@ -30,27 +30,36 @@ public class RentalManager extends ListManager<Rental> {
 
     public RentalManager() {
         super(Rental.className(), Rental.getAttributes());
-        copy(RentalDAO.getAllRentals()); 
+        copy(RentalDAO.getAllRentals());
     }
-    
+
     public boolean addRental(String customerID) {
-        if (customerID == null) 
+        if (customerID == null) {
             customerID = getString("Enter customer's id");
-        if (customerID == null) return false;
-        
+        }
+        if (customerID == null) {
+            return false;
+        }
+
         Account customer = (Account) getACM().searchById(customerID);
-        if (getACM().checkNull(customer)) return false;
-        
+        if (getACM().checkNull(customer)) {
+            return false;
+        }
+
         Movie movie = (Movie) getMVM().getById("Enter movie' id to rent");
-        if (getMVM().checkNull(movie)) return false;
+        if (getMVM().checkNull(movie)) {
+            return false;
+        }
         if (movie.getAvailableCopies() <= 0) {
             errorLog("No available copies for this movie!");
             return false;
         }
-        
+
         LocalDate rentalDate = getPMM().addPayment(customer.getId()) ? LocalDate.now() : null;
-        if (rentalDate == null) return false;
-        
+        if (rentalDate == null) {
+            return false;
+        }
+
         int howManyDays = getInteger("How many days to rent", 1, 365);
         if (howManyDays == Integer.MIN_VALUE) return false;
         
@@ -76,50 +85,72 @@ public class RentalManager extends ListManager<Rental> {
                 RentalStatus.PENDING
         ));
     }
-    
+
     public boolean updateRental(Rental rental) {
-        if (checkNull(list)) return false;
-        
-        if (rental == null)
+        if (checkNull(list)) {
+            return false;
+        }
+
+        if (rental == null) {
             rental = (Rental) getById("Enter rental's id");
-        if (checkNull(rental)) return false;
-        
+        }
+        if (checkNull(rental)) {
+            return false;
+        }
+
         Movie movie = (Movie) getMVM().getById(rental.getId());
-        if (getMVM().checkNull(movie)) return false;
-        
+        if (getMVM().checkNull(movie)) {
+            return false;
+        }
+
         Rental temp = new Rental(rental);
         temp.setRentalDate(getDate("Enter rental date", temp.getRentalDate()));
-        
+
         int howManyDays = getInteger("How many days to rent", 1, 365, Integer.MIN_VALUE);
-        if (howManyDays == Integer.MIN_VALUE) return false;
-        
+        if (howManyDays == Integer.MIN_VALUE) {
+            return false;
+        }
+
         temp.setDueDate(temp.getRentalDate().plusDays(howManyDays));
         temp.setReturnDate(getDate("Enter rental date", temp.getReturnDate()));
         temp.setTotalAmount(movie.getRentalPrice() * howManyDays);
         temp.setLateFee(RentalServices.calcLateFee(LocalDate.now(), temp));
-        temp.setStatus((RentalStatus)getEnumValue("Choose a status", RentalStatus.class, temp.getStatus()));
-        if (yesOrNo("Assign new staff")) temp.setStaffID(RentalServices.findStaffForRentalApproval());
-        
+        temp.setStatus((RentalStatus) getEnumValue("Choose a status", RentalStatus.class, temp.getStatus()));
+        if (yesOrNo("Assign new staff")) {
+            temp.setStaffID(RentalServices.findStaffForRentalApproval());
+        }
+
         return update(rental, temp);
     }
-    
+
     public boolean deleteRental(Rental rental) {
-        if (checkNull(list)) return false;
-        if (rental == null) 
+        if (checkNull(list)) {
+            return false;
+        }
+        if (rental == null) {
             rental = (Rental) getById("Enter customer's id");
-        if (checkNull(rental)) return false;
+        }
+        if (checkNull(rental)) {
+            return false;
+        }
         return delete(rental);
     }
-    
+
     public boolean add(Rental rental) {
-        if (rental == null) return false;
+        if (rental == null) {
+            return false;
+        }
         return RentalDAO.addRentalToDB(rental) && list.add(rental);
     }
 
     public boolean update(Rental oldRental, Rental newRental) {
-        if (newRental == null || checkNull(list)) return false;
-        if (!RentalDAO.updateRentalInDB(newRental)) return false;
-        
+        if (newRental == null || checkNull(list)) {
+            return false;
+        }
+        if (!RentalDAO.updateRentalInDB(newRental)) {
+            return false;
+        }
+
         oldRental.setStaffID(newRental.getStaffID());
         oldRental.setRentalDate(newRental.getRentalDate());
         oldRental.setReturnDate(newRental.getReturnDate());
@@ -127,23 +158,28 @@ public class RentalManager extends ListManager<Rental> {
         oldRental.setLateFee(newRental.getLateFee());
         oldRental.setTotalAmount(newRental.getTotalAmount());
         oldRental.setStatus(newRental.getStatus());
-        
+
         return true;
     }
-    
+
     public boolean delete(Rental rental) {
-        if (rental == null) return false;     
+        if (rental == null) {
+            return false;
+        }
         return RentalDAO.deleteRentalFromDB(rental.getCustomerID(), rental.getMovieID()) && list.remove(rental);
     }
-    
+
     @Override
     public List<Rental> searchBy(List<Rental> tempList, String propety) {
-        if (checkNull(tempList)) return null;
-        
+        if (checkNull(tempList)) {
+            return null;
+        }
+
         List<Rental> result = new ArrayList<>();
         for (Rental item : tempList) {
-            if (item == null)
+            if (item == null) {
                 continue;
+            }
             if ((item.getId() != null && item.getId().equals(propety))
                     || (item.getCustomerID() != null && item.getCustomerID().equals(propety))
                     || (item.getMovieID() != null && item.getMovieID().equals(propety))
@@ -192,17 +228,22 @@ public class RentalManager extends ListManager<Rental> {
         } else {
             result.sort(Comparator.comparing(Rental::getId)); // Default case
         }
-        
-        if (descending) Collections.sort(tempList, Collections.reverseOrder());
-        
+
+        if (descending) {
+            Collections.sort(tempList, Collections.reverseOrder());
+        }
+
         return result;
     }
 
     @Override
     public void show(List<Rental> tempList) {
-        if (checkNull(tempList)) return;
-        
+        if (checkNull(tempList)) {
+            return;
+        }
+
         InfosTable.getTitle(Rental.getAttributes());
+
         tempList.forEach(item ->
             {
                 if (item != null) 
@@ -219,12 +260,13 @@ public class RentalManager extends ListManager<Rental> {
                 );
             }
         );
-        
+
         InfosTable.showTitle();
         tempList.forEach(item -> 
             {
                 if (item != null) 
                     InfosTable.displayByLine(
+
                         item.getMovieID(),
                         item.getCustomerID(),
                         item.getStaffID(),
