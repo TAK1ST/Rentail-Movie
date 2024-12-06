@@ -36,7 +36,7 @@ public final class ReviewManager extends ListManager<Review> {
         Account customer = (Account) getACM().searchById(customerID);
         if (getACM().checkNull(customer)) return false;
         
-        Movie movie = (Movie) getMVM().getById("Enter movie' id to rent");
+        Movie movie = (Movie) getMVM().searchById("Enter movie' id to rent");
         if (getMVM().checkNull(movie)) return false;
         
         List<Review> reviews = searchBy(list, customer.getId(), movie.getId());

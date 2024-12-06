@@ -61,18 +61,20 @@ public class RentalManager extends ListManager<Rental> {
         }
 
         int howManyDays = getInteger("How many days to rent", 1, 365);
-        if (howManyDays == Integer.MIN_VALUE) return false;
-        
+        if (howManyDays == Integer.MIN_VALUE) {
+            return false;
+        }
+
         double total = movie.getRentalPrice() * howManyDays;
-        LocalDate dueDate =  rentalDate.plusDays(howManyDays);
-        
+        LocalDate dueDate = rentalDate.plusDays(howManyDays);
+
         String staffID = null;
 //                RentalServices.findStaffForRentalApproval();
 //        if (staffID == null) {
 //            errorLog("No staff are available for your rental");
 //            return false;
 //        }
-        
+
         return add(new Rental(
                 customer.getId(),
                 movie.getId(),
@@ -248,10 +250,10 @@ public class RentalManager extends ListManager<Rental> {
 
         InfosTable.getTitle(Rental.getAttributes());
 
-        tempList.forEach(item ->
-            {
-                if (item != null) 
-                    InfosTable.calcLayout(
+        tempList.forEach(item
+                -> {
+            if (item != null) {
+                InfosTable.calcLayout(
                         item.getMovieID(),
                         item.getCustomerID(),
                         item.getStaffID(),
@@ -263,15 +265,13 @@ public class RentalManager extends ListManager<Rental> {
                         item.getStatus()
                 );
             }
-        }
-        );
+        });
 
         InfosTable.showTitle();
-        tempList.forEach(item -> 
-            {
-                if (item != null) 
-                    InfosTable.displayByLine(
-
+        tempList.forEach(item
+                -> {
+            if (item != null) {
+                InfosTable.displayByLine(
                         item.getMovieID(),
                         item.getCustomerID(),
                         item.getStaffID(),
@@ -283,9 +283,7 @@ public class RentalManager extends ListManager<Rental> {
                         item.getStatus()
                 );
             }
-        }
-        );
+        });
         InfosTable.showFooter();
     }
-
 }
