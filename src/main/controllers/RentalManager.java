@@ -14,7 +14,6 @@ import static main.controllers.Managers.getPMM;
 import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Rental;
-import main.services.DiscountServices;
 import main.services.RentalServices;
 import main.utils.InfosTable;
 import static main.utils.Input.getInteger;
