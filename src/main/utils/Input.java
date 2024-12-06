@@ -179,7 +179,7 @@ public class Input {
         for (String item : inputs) {
             item = item.trim();
             int index = toInt(item);
-            if (index > 0 && index <= manager.getList().size()) {
+            if (index >= 0 && index < manager.getList().size()) {
                 temps.add(manager.getList().get(index).getId());
             }
         }
@@ -189,6 +189,41 @@ public class Input {
     
     public static <T extends Model> String selectByNumbers(String message, ListManager<T> manager) {
         return selectByNumbers(message, manager, null);
+    }
+    
+    public static <T extends Model> String[] returnIDs(String stringList, ListManager<T> manager) {
+        if (stringList.isEmpty() || stringList.isBlank())
+            return new String[] {};
+        
+        List<T> items = manager.getList();
+        String[] ids = stringList.split(",");
+        
+        List<String> result = new ArrayList<>();
+        for (String id : ids) {
+            for (T item : items) {
+                if (item.getId().equals(id.trim())) {
+                    if (item instanceof Genre) {
+                        Genre res = (Genre) item;
+                        result.add(res.getGenreName()); 
+                    } 
+                    else if (item instanceof Actor) {
+                        Actor res = (Actor) item;
+                        result.add(res.getId()); 
+                    } 
+                    else if (item instanceof Language) {
+                        Language res = (Language) item;
+                        result.add(res.getCode()); 
+                    } 
+                    break; 
+                }
+            }
+        }
+
+        return result.toArray(new String[0]);
+    }
+    
+    public static <T extends Model> String returnID(String string, ListManager<T> manager) {
+        return String.join(", ", returnIDs(string, manager));
     }
     
     public static <T extends Model> String[] returnNames(String stringList, ListManager<T> manager) {

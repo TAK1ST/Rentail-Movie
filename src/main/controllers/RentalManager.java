@@ -162,7 +162,7 @@ public class RentalManager extends ListManager<Rental> {
 
     @Override
     public List<Rental> sortList(List<Rental> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         
