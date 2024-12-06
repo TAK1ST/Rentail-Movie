@@ -1,12 +1,9 @@
 package test.services;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.InjectMocks;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -18,7 +15,6 @@ import main.dto.Account;
 import main.constants.IDPrefix;
 import main.utils.IDGenerator;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ServicesTest {

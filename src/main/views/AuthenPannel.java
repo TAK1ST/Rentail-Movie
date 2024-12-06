@@ -14,7 +14,7 @@ public class AuthenPannel {
             if(yesOrNo("\nHave account?"))  
                 account = AuthenServices.loginPannel();
             else 
-                account =   AuthenServices.registorPannel();
+                account = AuthenServices.registorPannel();
 
             if (account == null) 
                 infoLog("Please try again");      
