@@ -24,10 +24,14 @@ public class AuthenServices {
         Menu.showHeader("Login");
 
         String input = getString("Enter username or email", null);
-        if (input.isEmpty()) return null;
-        
+        if (input.isEmpty()) {
+            return null;
+        }
+
         String password = getString("Enter password", null);
-        if (password.isEmpty()) return null;
+        if (password.isEmpty()) {
+            return null;
+        }
 
         for (Account item : getACM().getList()) {
             if (input.equals(item.getUsername()) || input.equals(item.getEmail())) {
@@ -49,7 +53,7 @@ public class AuthenServices {
         Menu.showHeader("Register");
         String[] options = {"Register new account", "Back"};
         Menu.showOptions(options, 1);
-        
+
         int input = Menu.getChoice("Enter choice", options.length);
         switch (input) {
             case 1:
@@ -58,7 +62,7 @@ public class AuthenServices {
             default:
                 return null;
         }
-
+        
         if (!checkCreate) {
             errorLog("Cannot register account");
             return null;
@@ -72,36 +76,46 @@ public class AuthenServices {
     public static boolean forgetPassword(String accountID) {
         if (yesOrNo("Forgot password")) {
             String newPassword = getPassword("Enter new password", null);
-            if (newPassword == null) 
+            if (newPassword == null) {
                 return false;
-            
+            }
+
             return updatePassword(accountID, newPassword);
         }
         return false;
     }
-    
+
     public static boolean updatePassword(String accountID, String newPassword) {
         Account foundAccount = (Account) getACM().searchById(accountID);
-        if (getACM().checkNull(foundAccount)) return false;
-        
+        if (getACM().checkNull(foundAccount)) {
+            return false;
+        }
+
         foundAccount.setPassword(newPassword);
         return AccountDAO.updatePasswordInDB(accountID, newPassword);
     }
-    
+
     public static boolean registorAccount(AccRole role) {
 
         String username = getUsername("Enter username", null, getACM().getList());
-        if (username.isEmpty()) return false;
-        
+        if (username.isEmpty()) {
+            return false;
+        }
+
         String password = getPassword("Enter password", null);
-        if (password.isEmpty()) return false;
+        if (password.isEmpty()) {
+            return false;
+        }
 
         String email = getEmail("Enter email", null);
-        if (email.isEmpty()) return false;
-        
-        if (role == null)
-            role = (AccRole) getEnumValue("Choose a role", AccRole.class, role);
-        if (role == null) return false;
+        if (email.isEmpty()) {
+            return false;
+        }
+
+        if (role == AccRole.ADMIN) {
+            role = (AccRole) getEnumValue("Choose a Role", AccRole.class, role);
+            if (role == null) return false;
+        }
 
         String id = getACM().createID(IDPrefix.ACCOUNT_PREFIX);
         Account account = new Account(
@@ -121,7 +135,7 @@ public class AuthenServices {
         }
         return false;
     }
-    
+
     private static boolean registorProfile(String accountID) {
         if (yesOrNo("Fill in all infomation?")) {
             if (getPFM().addProfile(accountID)) {
@@ -131,5 +145,5 @@ public class AuthenServices {
         }
         return true;
     }
-    
+
 }
