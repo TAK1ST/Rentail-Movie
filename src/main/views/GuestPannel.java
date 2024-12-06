@@ -48,7 +48,7 @@ public class GuestPannel {
     }
 
     public static void showTopMostWishlistedMovies() {
-        Map<String, Integer> top5MostWishlistedMovies = getTheMostMostWishlistedMovies();
+        Map<String, Integer> top5MostWishlistedMovies = getTheMostWishlistedMovies();
         System.out.println("The Most Wishlist Movie: ");
         top5MostWishlistedMovies.forEach((title, wishlist_count)
                 -> System.out.println("Movie:" + title + "Wishlist's Quantity : " + wishlist_count));
@@ -64,7 +64,7 @@ public class GuestPannel {
     }
 
     public static void showTopMostActiveGenres() {
-        Map<String, Integer> top5MostActiveGenres = getTheMostMostActiveGenres();
+        Map<String, Integer> top5MostActiveGenres = getTheMostActiveGenres();
         System.out.println("The Most Active Genres: ");
         top5MostActiveGenres.forEach((genre_name, rental_count) -> System.out.println("Genre: " + genre_name + "Rental's Quantity" + rental_count));
         System.out.println();
