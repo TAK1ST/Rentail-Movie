@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import main.utils.IDGenerator;
 import static main.utils.IDGenerator.ID_LENGTH;
 import static main.utils.Input.getString;
+import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.selectInfo;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
@@ -177,6 +178,7 @@ public abstract class ListManager<T extends Model> {
         if (checkNull(item)) return;
         if (header != null && !header.isEmpty()) Menu.showHeader(header);
         System.out.println(item.toString());
+        pressEnterToContinue();
     }
     
     public void show(T item) {
