@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS Payments (
 CREATE TABLE IF NOT EXISTS Profiles (
     account_id CHAR(8) NOT NULL,
     full_name NVARCHAR(60),
-    birthday DATE NOT NULL,
+    birthday DATE,
     address NVARCHAR(255),
     phone_number CHAR(10),
     credit DECIMAL(10, 2) DEFAULT 0.00,
@@ -229,4 +229,3 @@ BEGIN
     WHERE movie_id = NEW.movie_id;
 END; //
 DELIMITER ;
-

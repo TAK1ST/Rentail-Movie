@@ -22,37 +22,36 @@ public class Rental extends Model {
     }
 
     public Rental(
-            String id, 
             String customerID, 
             String movieID, 
             String staffID, 
             LocalDate rentalDate, 
-            LocalDate returnDate, 
             LocalDate dueDate, 
+            LocalDate returnDate, 
             double lateFee, 
             double totalAmount, 
             RentalStatus status) 
     {
-        super(id);
+        super(customerID);
         this.customerID = customerID;
         this.movieID = movieID;
         this.staffID = staffID;
         this.rentalDate = rentalDate;
-        this.returnDate = returnDate;
         this.dueDate = dueDate;
+        this.returnDate = returnDate;
         this.lateFee = lateFee;
         this.totalAmount = totalAmount;
         this.status = status;
     }
 
     public Rental(Rental other) {
-        super(other.getId());
+        super(other.customerID);
         this.customerID = other.customerID;
         this.movieID = other.movieID;
         this.staffID = other.staffID;
         this.rentalDate = other.rentalDate;
-        this.returnDate = other.returnDate;
         this.dueDate = other.dueDate;
+        this.returnDate = other.returnDate;
         this.lateFee = other.lateFee;
         this.totalAmount = other.totalAmount;
         this.status = other.status;
@@ -70,18 +69,16 @@ public class Rental extends Model {
                 + "%s: %s,\n"
                 + "%s: %s,\n"
                 + "%s: %s,\n"
-                + "%s: %s,\n"
                 + "%s: %.2f,\n"
                 + "%s: %.2f,\n"
                 + "%s: %s.",
                 className(),
-                attr[count++], super.getId(),
                 attr[count++], customerID,
                 attr[count++], movieID,
                 attr[count++], staffID,
                 attr[count++], formatDate(rentalDate, Validator.DATE),
-                attr[count++], formatDate(returnDate, Validator.DATE),
                 attr[count++], formatDate(dueDate, Validator.DATE),
+                attr[count++], formatDate(returnDate, Validator.DATE),
                 attr[count++], lateFee,
                 attr[count++], totalAmount,
                 attr[count++], status.name()
@@ -94,13 +91,12 @@ public class Rental extends Model {
     
     public static String[] getAttributes() {
         return new String[] {
-            "Id", 
             "Custome Id", 
             "Movie Id", 
             "Staff Id", 
             "Rental date", 
-            "Return date", 
             "Due date",
+            "Return date", 
             "Late fee",
             "Total amount", 
             "Status"};

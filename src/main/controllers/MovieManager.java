@@ -17,6 +17,7 @@ import main.utils.InfosTable;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
+import static main.utils.Input.returnIDs;
 import static main.utils.Input.returnNames;
 import static main.utils.Input.selectByNumbers;
 import static main.utils.Utility.formatDate;
@@ -41,25 +42,25 @@ public class MovieManager extends ListManager<Movie> {
         String title = getString("Enter title", null);
         if (title == null) return false;
         
-        String description = getString("Enter description", null);
+        String description = getString("Enter description");
         if (description == null) return false;
         
-        String genres = selectByNumbers("Enter genres (Comma-separated)", getGRM(), null);
+        String genres = selectByNumbers("Enter genres by numbers on display (Comma-separated)", getGRM());
         if (genres == null) return false;
         
-        String actors = selectByNumbers("Enter actors (Comma-separated)", getATM(), null);
+        String actors = selectByNumbers("Enter actors by numbers on display (Comma-separated)", getATM());
         if (actors == null) return false;
         
-        String languages = selectByNumbers("Enter languages (Comma-separated)", getLGM(), null);
+        String languages = selectByNumbers("Enter languages by numbers on display (Comma-separated)", getLGM());
         if (languages == null) return false;
 
-        LocalDate releaseDate = getDate("Enter release date", null);
+        LocalDate releaseDate = getDate("Enter release date");
         if (releaseDate == null) return false;
 
-        double price = getDouble("Enter rental price", 0, Double.MAX_VALUE, Double.MIN_VALUE);
+        double price = getDouble("Enter rental price", 0, Double.MAX_VALUE);
         if (price == Double.MIN_VALUE) return false;
         
-        int availableCopies = getInteger("Enter available copies", 0, Integer.MAX_VALUE, Integer.MIN_VALUE);
+        int availableCopies = getInteger("Enter available copies", 0, Integer.MAX_VALUE);
         if (availableCopies == Integer.MIN_VALUE) return false;
         
         Movie movie =  new Movie(
@@ -86,15 +87,15 @@ public class MovieManager extends ListManager<Movie> {
             movie = (Movie) getById("Enter movie's id");
         if (checkNull(movie)) return false;
         
-        Movie temp = new Movie();
-        temp.setTitle(getString("Enter title", movie.getTitle()));
-        temp.setDescription(getString("Enter description", movie.getDescription()));
-        temp.setGenreNames(selectByNumbers("Enter genres (Comma-separated)", getGRM(), movie.getGenreNames()));
-        temp.setActorIDs(selectByNumbers("Enter actors (Comma-separated)", getATM(), movie.getActorIDs()));
-        temp.setLanguageCodes(selectByNumbers("Enter languages (Comma-separated)", getLGM(), movie.getLanguageCodes()));
-        temp.setReleaseYear(getDate("Enter release date", movie.getReleaseYear()));
-        temp.setRentalPrice(getDouble("Enter rental price", 0, Double.MAX_VALUE, movie.getRentalPrice()));
-        temp.setAvailableCopies(getInteger("Enter available copies", 0, Integer.MAX_VALUE, movie.getAvailableCopies()));
+        Movie temp = new Movie(movie);
+        temp.setTitle(getString("Enter title", temp.getTitle()));
+        temp.setDescription(getString("Enter description", temp.getDescription()));
+        temp.setGenreNames(selectByNumbers("Enter genres (Comma-separated)", getGRM(), temp.getGenreNames()));
+        temp.setActorIDs(selectByNumbers("Enter actors (Comma-separated)", getATM(), temp.getActorIDs()));
+        temp.setLanguageCodes(selectByNumbers("Enter languages (Comma-separated)", getLGM(), temp.getLanguageCodes()));
+        temp.setReleaseYear(getDate("Enter release date", temp.getReleaseYear()));
+        temp.setRentalPrice(getDouble("Enter rental price", 0, Double.MAX_VALUE, temp.getRentalPrice()));
+        temp.setAvailableCopies(getInteger("Enter available copies", 0, Integer.MAX_VALUE, temp.getAvailableCopies()));
         
         temp.setUpdateDate(LocalDate.now());
         return update(movie, temp);
@@ -123,8 +124,20 @@ public class MovieManager extends ListManager<Movie> {
 
     public boolean update(Movie oldMovie, Movie newMovie) {
         if (newMovie == null || checkNull(list)) return false;
-        if (MovieDAO.updateMovieInDB(newMovie))
-            oldMovie = newMovie;
+        if (!MovieDAO.updateMovieInDB(newMovie)) return false;
+        
+        oldMovie.setTitle(newMovie.getTitle());
+        oldMovie.setDescription(newMovie.getDescription());
+        oldMovie.setAvgRating(newMovie.getAvgRating());
+        oldMovie.setGenreNames(newMovie.getGenreNames());
+        oldMovie.setActorIDs(newMovie.getActorIDs());
+        oldMovie.setLanguageCodes(newMovie.getLanguageCodes());
+        oldMovie.setReleaseYear(newMovie.getReleaseYear());
+        oldMovie.setRentalPrice(newMovie.getRentalPrice());
+        oldMovie.setAvailableCopies(newMovie.getAvailableCopies());
+        oldMovie.setCreateDate(newMovie.getCreateDate());
+        oldMovie.setUpdateDate(newMovie.getUpdateDate());
+        
         return true;
     }
     
@@ -135,7 +148,7 @@ public class MovieManager extends ListManager<Movie> {
 
     @Override
     public List<Movie> searchBy(List<Movie> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Movie> result = new ArrayList<>();
         for (Movie item : tempList) {
@@ -155,7 +168,7 @@ public class MovieManager extends ListManager<Movie> {
     
     @Override
     public List<Movie> sortList(List<Movie> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         

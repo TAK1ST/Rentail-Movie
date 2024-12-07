@@ -102,7 +102,7 @@ public class ReviewServices {
             return errorLog("You have no reviews", false);
         
         for (Review item : myReviews) {
-            if (!ReviewDAO.deleteReviewFromDB(item.getMovieID()))
+            if (!ReviewDAO.deleteReviewFromDB(item.getCustomerID(), item.getMovieID()))
                 return errorLog("Error during clearing your reviews", false);
         }
         return successLog("All your reviews have been cleared", true);
@@ -112,7 +112,7 @@ public class ReviewServices {
         if (myReviews == null) 
             return errorLog("You have no reviews", false);
         
-        String movieID = getString("Enter movie's id", null);
+        String movieID = getString("Enter movie's id");
         if (movieID == null) return false;
         
         Review movieIsReview = getRVM().searchBy(myReviews, movieID).getFirst();
@@ -128,7 +128,7 @@ public class ReviewServices {
         if (myReviews == null) 
             return errorLog("You have no reviews", false);
         
-        String movieID = getString("Enter movie's id", null);
+        String movieID = getString("Enter movie's id");
         if (movieID == null) return false;
         
         Review movieIsReview = getRVM().searchBy(myReviews, movieID).getFirst();

@@ -31,15 +31,15 @@ public class AccountManager extends ListManager<Account> {
             account = (Account) getById("Enter user's id");
         if (checkNull(account)) return false;
 
-        AccRole newRole = null;
-        if (account.getRole() == AccRole.ADMIN) 
-            newRole = (AccRole) getEnumValue("Choose a role", AccRole.class, account.getRole());
+        AccRole newRole = account.getRole();
+        if (newRole == AccRole.ADMIN) 
+            newRole = (AccRole) getEnumValue("Choose a role", AccRole.class, newRole);
         
-        Account temp = new Account();
-        temp.setUsername(getUsername("Enter new username", account.getUsername(), list));
-        temp.setPassword(getPassword("Enter new password", account.getPassword()));
+        Account temp = new Account(account);
+        temp.setUsername(getUsername("Enter new username", temp.getUsername(), list));
+        temp.setPassword(getPassword("Enter new password", temp.getPassword()));
         temp.setRole(newRole);
-        temp.setEmail(getEmail("Enter your email", account.getEmail()));
+        temp.setEmail(getEmail("Enter your email", temp.getEmail()));
         
         return update(account, temp);
     }
@@ -59,8 +59,18 @@ public class AccountManager extends ListManager<Account> {
 
     public boolean update(Account oldAccount, Account newAccount) {
         if (newAccount == null || checkNull(list)) return false;
-        if (AccountDAO.updateAccountInDB(newAccount))
-            oldAccount = newAccount;
+        if (!AccountDAO.updateAccountInDB(newAccount)) return false;
+        
+        oldAccount.setUsername(newAccount.getUsername());
+        oldAccount.setPassword(newAccount.getPassword());
+        oldAccount.setEmail(newAccount.getEmail());
+        oldAccount.setRole(newAccount.getRole());
+        oldAccount.setStatus(newAccount.getStatus());
+        oldAccount.setCreateAt(newAccount.getCreateAt());
+        oldAccount.setUpdateAt(newAccount.getUpdateAt());
+        oldAccount.setOnlineAt(newAccount.getOnlineAt());
+        oldAccount.setCreability(newAccount.getCreability());
+        
         return true;
     }
     
@@ -71,7 +81,7 @@ public class AccountManager extends ListManager<Account> {
 
     @Override
     public List<Account> searchBy(List<Account> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Account> result = new ArrayList<>();
         for (Account item : tempList) {
@@ -91,7 +101,7 @@ public class AccountManager extends ListManager<Account> {
 
     @Override
     public List<Account> sortList(List<Account> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         

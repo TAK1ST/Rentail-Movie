@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.utils;
 
 import static java.lang.Integer.getInteger;
@@ -13,15 +9,12 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 import main.dto.Account;
+import main.dto.Language;
 import static main.utils.Input.askToExit;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.infoLog;
 
-/**
- *
- * @author trann
- */
 public class Validator {
     
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -34,12 +27,96 @@ public class Validator {
     
     private static final Scanner scanner = new Scanner(System.in);
     
+    public static String getLanguageCode(String message, List<Language> list) {
+        return getLanguageCode(message, null, list);
+    }
+    
+    public static String getUsername(String message, List<Account> list) {
+        return getUsername(message, null, list);
+    }
+            
+    public static String getPassword(String message) {
+        return getPassword(message, null);
+    }
+            
+    public static String getName(String message)     {
+        return getName(message, null);
+    }    
+            
+    public static String getFullName(String message)  {
+        return getFullName(message, null);
+    }       
+            
+    public static String getPhoneNumber(String message) {        
+        return getPhoneNumber(message, null);
+    }
+            
+    public static String getEmail(String message) {
+        return getEmail(message, null);
+    }        
+            
+    public static LocalDate getDate(String message) {
+        return getDate(message, null);
+    }
+            
+    public static LocalTime getTime() {
+        return getTime(null);
+    }        
+            
+    public static LocalDateTime getDateTime() {
+        return getDateTime(null);
+    }
+    
+    public static String getLanguageCode(String message, String oldData, List<Language> list) {
+        String input = null;
+        boolean isUnique = false;
+        do {
+            input = getString(message, oldData);
+            if (input == oldData) return oldData;
+
+            if (input.isEmpty()) {
+                errorLog("Language code must not be empty");
+                if(askToExit()) return null;
+                continue;
+            }
+            if (input.length() != 2) {
+                errorLog("Language code must in format 2 character");   
+                if(askToExit()) return null;
+                continue;
+            }
+            if (input.contains(" ")) {
+                errorLog("Language code must not contain space");    
+                if(askToExit()) return null;
+                continue;
+            }
+            if (input.matches(".*\\d.*")) {
+                errorLog("Full name must not contain number");
+                if(askToExit()) return null;
+                continue;
+            }
+            if (input.matches(".*" + NAME_SPECIAL_CHAR_PATTERN + ".*")) {
+                errorLog("Language code contains special characters");
+                if(askToExit()) return null;
+                continue;
+            } 
+            
+            isUnique = true;
+            for(Language item : list) 
+                if (item.getCode().equals(input)) {
+                    errorLog("Language code has already exist");
+                    if(askToExit()) return null;
+                    isUnique = false;
+                }
+        } while (!isUnique);
+        return input.toUpperCase();
+    }
+    
     public static String getUsername(String message, String oldData, List<Account> list) {
         String input = null;
         boolean isUnique = false;
         do {
             input = getString(message, oldData);
-            if (input == null) return null;
+            if (input == oldData) return oldData;
 
             if (input.isEmpty()) {
                 errorLog("Username must not be empty");
@@ -137,11 +214,16 @@ public class Validator {
         boolean pass = false;
         do {
             input = getString(message, oldData);
-            if (input == null) 
-                return null;
+            if (input == oldData) 
+                return oldData;
             
             if (input.isEmpty()) {
                 errorLog("Name must not be empty");
+                if(askToExit()) return null;
+                continue;
+            }
+            if (input.matches(".*\\d.*")) {
+                errorLog("Name must not contain number");
                 if(askToExit()) return null;
                 continue;
             }
@@ -162,8 +244,8 @@ public class Validator {
         boolean pass = false;
         do {
             input = getString(message, oldData);
-            if (input == null) 
-                return null;
+            if (input == oldData) 
+                return oldData;
             
             if (input.isEmpty()) {
                 errorLog("Full name must not be empty");
@@ -192,8 +274,8 @@ public class Validator {
         boolean pass = false;
         do {
             input = getString(message, oldData);
-            if (input == null) 
-                return null;
+            if (input == oldData) 
+                return oldData;
 
             if (input.isEmpty()) {
                 errorLog("Phone number must not be empty");
@@ -221,8 +303,8 @@ public class Validator {
         boolean pass = false;
         do {
             input = getString(message, oldData);
-            if (input == null) 
-                return null;
+            if (input == oldData) 
+                return oldData;
 
             if (input.isEmpty()) {
                 errorLog("Email must not be empty");
@@ -248,10 +330,11 @@ public class Validator {
     public static LocalDate getDate(String message, LocalDate oldData) {
         String input = null;
         do {
+            System.out.println();
             infoLog("Date must be in format dd/MM/yyyy");
             input = getString(message, oldData == null ? null : oldData.toString());
-            if (input == null) 
-                return null;
+            if (input == null || (oldData != null && input == oldData.toString())) 
+                return oldData;
             
             if (input.isEmpty()) {
                 errorLog("Date must not be empty");

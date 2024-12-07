@@ -23,14 +23,15 @@ public class ProfileDAO {
                 + "birthday, "
                 + "address, "
                 + "phone_number, "
-                + "credit) VALUES (?, ?, ?, ?, ?, ?)";
+                + "credit "
+                + ") VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement(sql)) {
             
             int count = 0;
             ps.setString(++count, account.getId());
             ps.setString(++count, account.getFullName());
-            ps.setDate(++count, Date.valueOf(account.getBirthday()));
+            ps.setDate(++count, account.getBirthday() != null ? Date.valueOf(account.getBirthday()) : null);
             ps.setString(++count, account.getAddress());
             ps.setString(++count, account.getPhoneNumber());
             ps.setDouble(++count, account.getCredit());
@@ -55,7 +56,7 @@ public class ProfileDAO {
 
             int count = 0;
             ps.setString(++count, account.getFullName());
-            ps.setDate(++count, Date.valueOf(account.getBirthday()));
+            ps.setDate(++count, account.getBirthday() != null ? Date.valueOf(account.getBirthday()) : null);
             ps.setString(++count, account.getAddress());
             ps.setString(++count, account.getPhoneNumber());
             ps.setDouble(++count, account.getCredit());
@@ -86,16 +87,16 @@ public class ProfileDAO {
         List<Profile> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet resultSet = ps.executeQuery()) {
+             ResultSet rs = ps.executeQuery()) {
 
-            while (resultSet.next()) {
+            while (rs.next()) {
                 Profile account = new Profile(
-                    resultSet.getString("account_id"),
-                    resultSet.getString("full_name"),
-                    resultSet.getString("phone_number"),
-                    resultSet.getString("address"),
-                    resultSet.getDouble("credit"),
-                    resultSet.getDate("birthday").toLocalDate()
+                    rs.getString("account_id"),
+                    rs.getString("full_name"),
+                    rs.getString("phone_number"),
+                    rs.getString("address"),
+                    rs.getDouble("credit"),
+                    rs.getDate("birthday") != null ? rs.getDate("birthday").toLocalDate() : null
                 );
                 list.add(account);
             }
@@ -104,4 +105,32 @@ public class ProfileDAO {
         }
         return list;
     }
+    
+    public static Profile getProfile(String accountId) {
+        String query = "SELECT * FROM Profiles WHERE account_id = ?";
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, accountId);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                return new Profile(
+                    rs.getString("account_id"),
+                    rs.getString("full_name"),
+                    rs.getString("phone_number"),
+                    rs.getString("address"),
+                    rs.getDouble("credit"),
+                    rs.getDate("birthday") != null ? rs.getDate("birthday").toLocalDate() : null
+                );
+            } else {
+                System.out.println("Profile not found for account ID: " + accountId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
 }

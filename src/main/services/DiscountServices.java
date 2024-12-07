@@ -34,14 +34,14 @@ public class DiscountServices {
     
     public static void initDataFor(String id) {
         accountID = id;
-        myDiscount = getDCM().searchBy(id);
+        myDiscount = DiscountDAO.getAvailableDiscounts(id);
     }
     
     private static String combineTypeAndValue(Discount discount) {
         if (discount == null) return null;
         switch(discount.getType()) {
             case PERCENT: 
-                return String.format("%2.0f%%%", discount.getValue());
+                return String.format("%.2f", discount.getValue());
             case FIXED_AMOUNT: 
                 return String.format("%.2f", discount.getValue());
             case BUY_X_GET_Y_FREE: 
@@ -116,7 +116,7 @@ public class DiscountServices {
     public static boolean getDiscount() {
         if (getDCM().checkNull(myDiscount)) return false;
         
-        String code = getString("Enter discount code", null);
+        String code = getString("Enter discount code");
         if (code == null) return false;
         
         Discount discount = getDCM().searchBy(myDiscount, code).getFirst();

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.utils;
 
 import java.time.LocalDate;
@@ -9,10 +5,6 @@ import java.time.format.DateTimeFormatter;
 import static main.utils.Input.getInteger;
 import static main.utils.LogMessage.errorLog;
 
-/**
- *
- * @author trann
- */
 public class Utility {
        
     public static <E extends Enum<E>> void enumListing(String message, Class<E> enumClass) {
@@ -35,7 +27,13 @@ public class Utility {
         enumListing(message, enumClass);
         E[] enumConstants = enumClass.getEnumConstants();
         
-        int choice = getInteger("Enter choice", 1, enumConstants.length, Integer.MIN_VALUE);
+        int oldChoice = 1;
+        for (E item : enumConstants) 
+            if (item != oldData) oldChoice++;
+            else break;
+        if (oldChoice >= enumConstants.length) oldChoice = Integer.MIN_VALUE;
+        
+        int choice = getInteger("Enter choice", 1, enumConstants.length, oldChoice);
         if (choice == Integer.MIN_VALUE && oldData != null) 
             return oldData;
         
@@ -43,6 +41,10 @@ public class Utility {
             return enumConstants[0];
         
         return enumConstants[choice - 1];
+    }
+    
+    public static <E extends Enum<E>> E getEnumValue(String message, Class<E> enumClass) {
+        return getEnumValue(message, enumClass, null);
     }
     
     public static long extractNumber(String str) {
@@ -71,6 +73,13 @@ public class Utility {
             errorLog("Can not convert to Number");
             return Integer.MIN_VALUE;
         }
+    }
+    
+    public static String capitalize(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
     }
     
 }

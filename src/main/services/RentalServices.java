@@ -35,7 +35,7 @@ public class RentalServices {
     
     public static void initDataFor(String id) {
         accountID = id;
-        myRentals = getRTM().searchBy(accountID);
+        myRentals = RentalDAO.getUserRentals(id);
     }
     
     public static void myHistoryRental() {
@@ -43,17 +43,18 @@ public class RentalServices {
     }
     
     public static boolean returnMovie() {
-        String movieID = getString("Enter movie' id", null);
+        String movieID = getString("Enter movie' id");
         if (movieID == null) return false;
         
-        Rental rental = getRTM().searchBy(accountID, movieID).getFirst();
+        List<Rental> rental = getRTM().searchBy(accountID);
+        rental = getRTM().searchBy(rental, movieID);
         if (getRTM().checkNull(rental)) return false;
         
         Rental temp = new Rental();
         temp.setReturnDate(LocalDate.now());
-        temp.setLateFee(calcLateFee(LocalDate.now(), rental));
+        temp.setLateFee(calcLateFee(LocalDate.now(), rental.getFirst()));
         
-        return getRTM().update(rental, temp);
+        return getRTM().update(rental.getFirst(), temp);
     }
     
     public static boolean extendReturnDate() {
@@ -137,7 +138,7 @@ public class RentalServices {
         int earlyCount = 0;
 
         // Lấy tất cả các rental mà staff đã xử lý
-        String sql = "SELECT rental_id, rental_date, staff_id, status FROM Rentals WHERE staff_id = ? AND status = 'APPROVED'";
+        String sql = "SELECT = rental_date, staff_id, status FROM Rentals WHERE staff_id = ? AND status = 'APPROVED'";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, staffId);
             ResultSet rs = ps.executeQuery();

@@ -15,7 +15,6 @@ public class RentalDAO {
 
     public static boolean addRentalToDB(Rental rental) {
         String sql = "INSERT INTO Rentals ("
-                + "rental_id, "
                 + "customer_id, "
                 + "movie_id, "
                 + "staff_id, "
@@ -24,22 +23,21 @@ public class RentalDAO {
                 + "due_date, "
                 + "late_fee, "
                 + "total_amount, "
-                + "status"
-                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "status "
+                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             int count = 0;
-            ps.setString(++count, rental.getId());
             ps.setString(++count, rental.getCustomerID());
             ps.setString(++count, rental.getMovieID());
             ps.setString(++count, rental.getStaffID());
-            ps.setDate(++count, Date.valueOf(rental.getRentalDate()));
-            ps.setDate(++count, Date.valueOf(rental.getReturnDate()));
-            ps.setDate(++count, Date.valueOf(rental.getDueDate()));
+            ps.setDate(++count, rental.getRentalDate() != null ? Date.valueOf(rental.getRentalDate()) : null);
+            ps.setDate(++count, rental.getReturnDate() != null ? Date.valueOf(rental.getReturnDate()) : null);
+            ps.setDate(++count, rental.getDueDate() != null ? Date.valueOf(rental.getDueDate()) : null);
             ps.setDouble(++count, rental.getLateFee());
             ps.setDouble(++count, rental.getTotalAmount());
-            ps.setString(++count, rental.getStatus().name());
+            ps.setString(++count, rental.getStatus() != null ? rental.getStatus().name() : null);
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -50,8 +48,6 @@ public class RentalDAO {
 
     public static boolean updateRentalInDB(Rental rental) {
         String sql = "UPDATE Rentals SET "
-                + "customer_id = ?, "
-                + "movie_id = ?, "
                 + "staff_id = ?, "
                 + "rental_date = ?, "
                 + "return_date = ?, "
@@ -59,21 +55,22 @@ public class RentalDAO {
                 + "due_date = ?, "
                 + "total_amount = ?, "
                 + "status = ? "
-                + "WHERE rental_id = ?";
+                + "WHERE "
+                + "customer_id = ?, "
+                + "movie_id = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             int count = 0;
-            ps.setString(++count, rental.getCustomerID());
-            ps.setString(++count, rental.getMovieID());
             ps.setString(++count, rental.getStaffID());
-            ps.setDate(++count, Date.valueOf(rental.getRentalDate()));
-            ps.setDate(++count, Date.valueOf(rental.getReturnDate()));
-            ps.setDate(++count, Date.valueOf(rental.getDueDate()));
+            ps.setDate(++count, rental.getRentalDate() != null ? Date.valueOf(rental.getRentalDate()) : null);
+            ps.setDate(++count, rental.getReturnDate() != null ? Date.valueOf(rental.getReturnDate()) : null);
+            ps.setDate(++count, rental.getDueDate() != null ? Date.valueOf(rental.getDueDate()) : null);
             ps.setDouble(++count, rental.getLateFee());
             ps.setDouble(++count, rental.getTotalAmount());
-            ps.setString(++count, rental.getStatus().name());
-            ps.setString(++count, rental.getId());
+            ps.setString(++count, rental.getStatus() != null ? rental.getStatus().name() : null);
+            ps.setString(++count, rental.getCustomerID());
+            ps.setString(++count, rental.getMovieID());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -82,12 +79,13 @@ public class RentalDAO {
         return false;
     }
 
-    public static boolean deleteRentalFromDB(String rentalID) {
-        String sql = "DELETE FROM Rentals WHERE rental_id = ?";
+    public static boolean deleteRentalFromDB(String customerID, String movieID) {
+        String sql = "DELETE FROM Rentals WHERE customer_id = ?, movie_id = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setString(1, rentalID);
+            ps.setString(1, customerID);
+            ps.setString(2, movieID);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -100,20 +98,19 @@ public class RentalDAO {
         List<Rental> list = new ArrayList<>();
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet resultSet = ps.executeQuery()) {
+             ResultSet rs = ps.executeQuery()) {
 
-            while (resultSet.next()) {
+            while (rs.next()) {
                 Rental rental = new Rental(
-                        resultSet.getString("rental_id"),
-                        resultSet.getString("customer_id"),
-                        resultSet.getString("movie_id"),
-                        resultSet.getString("staff_id"),
-                        resultSet.getDate("rental_date").toLocalDate(),
-                        resultSet.getDate("return_date") != null ? resultSet.getDate("return_date").toLocalDate() : null,
-                        resultSet.getDate("due_date").toLocalDate(),
-                        resultSet.getDouble("late_fee"),
-                        resultSet.getDouble("total_amount"),
-                        RentalStatus.valueOf(resultSet.getString("status"))
+                        rs.getString("customer_id"),
+                        rs.getString("movie_id"),
+                        rs.getString("staff_id"),
+                        rs.getDate("rental_date") != null ? rs.getDate("rental_date").toLocalDate() : null,
+                        rs.getDate("return_date") != null ? rs.getDate("return_date").toLocalDate() : null,
+                        rs.getDate("due_date") != null ? rs.getDate("due_date").toLocalDate() : null,
+                        rs.getDouble("late_fee"),
+                        rs.getDouble("total_amount"),
+                        rs.getString("status") != null ? RentalStatus.valueOf(rs.getString("status")) : null
                 );
                 list.add(rental);
             }
@@ -123,10 +120,10 @@ public class RentalDAO {
         return list;
     }
     
-    public static List<String> getUserRentals(String customerId) throws SQLException {
-        String query = "SELECT rental_id, movie_id, rental_date, due_date, return_date, status FROM Rentals WHERE customer_id = ?";
+    public static List<Rental> getUserRentals(String customerId) {
+        String query = "SELECT movie_id, staff_id, rental_date, due_date, return_date, late_fee, total_amount, status FROM Rentals WHERE customer_id = ?";
 
-        List<String> rentals = new ArrayList<>();
+        List<Rental> list = new ArrayList<>();
 
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -135,17 +132,23 @@ public class RentalDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String rentalId = rs.getString("rental_id");
-                String movieId = rs.getString("movie_id");
-                Date rentalDate = rs.getDate("rental_date");
-                Date dueDate = rs.getDate("due_date");
-                Date returnDate = rs.getDate("return_date");
-                String status = rs.getString("status");
-
-                rentals.add("Rental ID: " + rentalId + ", Movie ID: " + movieId + ", Rental Date: " + rentalDate + ", Due Date: " + dueDate + ", Return Date: " + returnDate + ", Status: " + status);
+                Rental rental = new Rental(
+                        customerId,
+                        rs.getString("movie_id"),
+                        rs.getString("staff_id"),
+                        rs.getDate("rental_date") != null ? rs.getDate("rental_date").toLocalDate() : null,
+                        rs.getDate("return_date") != null ? rs.getDate("return_date").toLocalDate() : null,
+                        rs.getDate("due_date") != null ? rs.getDate("due_date").toLocalDate() : null,
+                        rs.getDouble("late_fee"),
+                        rs.getDouble("total_amount"),
+                        rs.getString("status") != null ? RentalStatus.valueOf(rs.getString("status")) : null
+                );
+                list.add(rental);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return rentals;
+        return list;
     }
 
 }

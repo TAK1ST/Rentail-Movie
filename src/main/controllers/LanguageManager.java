@@ -10,6 +10,8 @@ import main.dto.Language;
 import main.utils.InfosTable;
 import static main.utils.Input.getString;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.Utility.capitalize;
+import static main.utils.Validator.getLanguageCode;
 import static main.utils.Validator.getName;
 
 
@@ -21,7 +23,7 @@ public class LanguageManager extends ListManager<Language> {
     }
     
     public boolean addLanguage() {
-        String code = getString("Enter language code", null);
+        String code = getLanguageCode("Enter language code", list);
         if (code == null) return false;
         
         for (Language item : list) 
@@ -30,12 +32,12 @@ public class LanguageManager extends ListManager<Language> {
                 return false;
             }
 
-        String name = getName("Enter language name", null);
+        String name = getName("Enter language name");
         if (name == null) return false;
         
         Language language = new Language(
                 code,
-                name
+                capitalize(name)
         );
         return add(language);
     }
@@ -47,8 +49,8 @@ public class LanguageManager extends ListManager<Language> {
             language = (Language) getById("Enter language code");
         if (checkNull(language)) return false;
         
-        Language temp = new Language();
-        temp.setName(getString("Enter language name", language.getName()));
+        Language temp = new Language(language);
+        temp.setName(getString("Enter language name", temp.getName()));
         
         return update(language, temp);
     }
@@ -68,8 +70,10 @@ public class LanguageManager extends ListManager<Language> {
 
     public boolean update(Language oldLanguage, Language newLanguage) {
         if (newLanguage == null || checkNull(list)) return false;
-        if (LanguageDAO.updateLanguageInDB(newLanguage))
-            oldLanguage = newLanguage;
+        if (!LanguageDAO.updateLanguageInDB(newLanguage)) return false;
+        
+        oldLanguage.setName(newLanguage.getName());
+        
         return true;
     }
     
@@ -80,7 +84,7 @@ public class LanguageManager extends ListManager<Language> {
    
     @Override
     public List<Language> searchBy(List<Language> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Language> result = new ArrayList<>();
         for (Language item : tempList) {
@@ -97,7 +101,7 @@ public class LanguageManager extends ListManager<Language> {
     
     @Override
     public List<Language> sortList(List<Language> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         
@@ -131,7 +135,7 @@ public class LanguageManager extends ListManager<Language> {
                     );
             }
         );
-        
+        InfosTable.setShowNumber();
         InfosTable.showTitle();
         tempList.forEach(item -> 
             {
@@ -144,4 +148,5 @@ public class LanguageManager extends ListManager<Language> {
         );
         InfosTable.showFooter();
     }
+
 }

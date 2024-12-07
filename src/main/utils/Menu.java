@@ -16,7 +16,7 @@ import static main.utils.Menu.Option.After.TERMINATE;
 public class Menu {
     
     private static final int INIT_NUM = 1;
-    private static final int MAX_MENU_WIDTH = 100;
+    private static final int MAX_MENU_WIDTH = 120;
     private static final int DEFAULT_ROW_FORMAT = 2;
        
     public static void showManagerMenu(
@@ -84,7 +84,19 @@ public class Menu {
         int optionWidth = MAX_MENU_WIDTH / colFormat - 6;
         for (int index = 1; index <= options.length; index++) {
             String format = "";
-                if (colFormat == 1) {
+                if (index == options.length) {
+                    int unitLeft = colFormat - options.length % colFormat;
+                    int lengthLeft = (unitLeft + 1) * optionWidth + unitLeft * 6 - 1;
+                    if (colFormat == 1) 
+                        format = "|[%02d] %-" + (optionWidth-1) + "s|\n";
+                    else if (colFormat - unitLeft == 1)
+                        format = "|[%02d] %-" + lengthLeft + "s|\n";
+                    else if (colFormat - unitLeft == 0)
+                        format = "[%02d] %-" + optionWidth + "s|\n";
+                    else 
+                        format = "[%02d] %-" + (lengthLeft+1) + "s|\n";
+                }
+                else if (colFormat == 1) {
                     format = "|[%02d] %-" + (optionWidth - 1) + "s|\n";
                 }
                 else if (index % colFormat == 1) {
@@ -94,7 +106,7 @@ public class Menu {
                     format = "[%02d] %-" + optionWidth + "s|\n" ;
                 }
                 else
-                    format = " [%02d] %-" + optionWidth + "s ";
+                    format = "[%02d] %-" + optionWidth + "s ";
        
             System.out.printf(format, (index + INIT_NUM - 1), options[index - 1].optionTitle);
         }
@@ -134,7 +146,11 @@ public class Menu {
     }
     
     public static int getChoice(String message, int max) {
-        return getInteger("\n[MENU] " + message, INIT_NUM, max, Integer.MIN_VALUE);
+        return getChoice(message, max, Integer.MIN_VALUE);
+    }
+    
+    public static int getChoice(String message, int max, int oldData) {
+        return getInteger("\n[MENU] " + message, 1, max, oldData);
     }
     
     public static int getChoice(String message, List<Integer> list) {
