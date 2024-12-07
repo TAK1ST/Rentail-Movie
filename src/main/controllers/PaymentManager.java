@@ -154,6 +154,7 @@ public class PaymentManager extends ListManager<Payment> {
         InfosTable.getTitle(new String [] {"Amount","Method","Transaction Time", "Status"});
         tempList.forEach(item -> 
                 InfosTable.calcLayout(
+                        item.getId(),
                         item.getCustomerID(),                        
                         item.getAmount(),
                         item.getMethod(),
@@ -165,6 +166,7 @@ public class PaymentManager extends ListManager<Payment> {
         InfosTable.showTitle();
         tempList.forEach(item -> 
                 InfosTable.displayByLine(
+                        item.getId(),
                         item.getCustomerID(),
                         item.getAmount(),
                         item.getMethod(),
