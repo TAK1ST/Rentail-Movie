@@ -51,12 +51,12 @@ public class RentalDAO {
                 + "staff_id = ?, "
                 + "rental_date = ?, "
                 + "return_date = ?, "
-                + "late_fee = ?, "
                 + "due_date = ?, "
-                + "total_amount = ?, "
+                + "late_fee = ?, "
+                + "total_amount = ?,"
                 + "status = ? "
                 + "WHERE "
-                + "customer_id = ?, "
+                + "customer_id = ? AND "
                 + "movie_id = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -80,7 +80,7 @@ public class RentalDAO {
     }
 
     public static boolean deleteRentalFromDB(String customerID, String movieID) {
-        String sql = "DELETE FROM Rentals WHERE customer_id = ?, movie_id = ?";
+        String sql = "DELETE FROM Rentals WHERE customer_id = ? AND movie_id = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 

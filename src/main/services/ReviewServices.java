@@ -33,7 +33,7 @@ public class ReviewServices {
     private static List<Review> myReviews;
     private static String accountID;
     
-    private static String[] showAtrributes = {"Movie", "Rating", "Comment", "Date"};
+    private static String[] showAtrributes = {"Movie ID", "Movie", "Rating", "Comment", "Date"};
     
     public static void initDataFor(String id) {
         accountID = id;
@@ -76,6 +76,7 @@ public class ReviewServices {
         InfosTable.getTitle(showAtrributes);
         myReviews.forEach(item -> 
             InfosTable.calcLayout(
+                item.getMovieID(),
                 returnName(item.getMovieID(), getMVM()),
                 item.getRating(),
                 item.getReviewText(),
@@ -86,6 +87,7 @@ public class ReviewServices {
         InfosTable.showTitle();
         myReviews.forEach(item -> 
             InfosTable.displayByLine(
+                item.getMovieID(),
                 returnName(item.getMovieID(), getMVM()),
                 item.getRating(),
                 item.getReviewText(),
@@ -93,7 +95,6 @@ public class ReviewServices {
             )
         );
         InfosTable.showFooter();
-        pressEnterToContinue();
     }
     
     public static boolean clearAllMyReviews() {
@@ -114,9 +115,10 @@ public class ReviewServices {
         String movieID = getString("Enter movie's id");
         if (movieID == null) return false;
         
-        Review movieIsReview = getRVM().searchBy(myReviews, movieID).getFirst();
+        Review movieIsReview = getRVM().searchBy(myReviews, movieID).getLast();
+        getRVM().show(movieIsReview);
         
-        Review temp = new Review();
+        Review temp = new Review(movieIsReview);
         temp.setRating(getInteger("Enter rating", 1, 5, movieIsReview.getRating()));
         temp.setReviewText(getString("Enter comment", movieIsReview.getReviewText()));
         

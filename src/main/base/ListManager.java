@@ -7,6 +7,7 @@ import java.util.TreeSet;
 import main.utils.IDGenerator;
 import static main.utils.IDGenerator.ID_LENGTH;
 import static main.utils.Input.getString;
+import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.selectInfo;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
@@ -258,6 +259,7 @@ public abstract class ListManager<T extends Model> {
                     break;
                 case 2:
                     show(getById(String.format("Enter %s's id", className.toLowerCase())), "");
+                    pressEnterToContinue();
                     break;
                 case 3:    
                     return;

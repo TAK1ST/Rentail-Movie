@@ -94,7 +94,7 @@ public class ProfileServices {
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, newStatus.name());
+            preparedStatement.setString(1, newStatus!= null ? newStatus.name() : null);
             preparedStatement.setString(2, account.getId());
 
             int rowsAffected = preparedStatement.executeUpdate();
