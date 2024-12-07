@@ -68,6 +68,7 @@ public class RentalServices {
         InfosTable.showTitle();
         myRentals.forEach(item -> 
             InfosTable.displayByLine(
+                item.getMovieID(),
                 returnName(item.getMovieID(), getMVM()),
                 formatDate(item.getRentalDate(), Validator.DATE),
                 formatDate(item.getDueDate(), Validator.DATE),

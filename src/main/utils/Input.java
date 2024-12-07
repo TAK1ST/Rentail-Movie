@@ -312,7 +312,10 @@ public class Input {
     }
     
     public static <T extends Model> String returnName(String string, ListManager<T> manager) {
-        return String.join(", ", returnNames(string, manager));
+        String[] temp = returnNames(string, manager);
+        if (temp == null) 
+            return null;
+        return String.join(", ", temp);
     }
 
 }
