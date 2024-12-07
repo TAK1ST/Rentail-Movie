@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/D:/Java/Rental-Movie/src/main/views/GuestPannel.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/dao/DiscountDAO.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/services/RentalServices.java</file>
@@ -10,6 +11,43 @@
             <file>file:/D:/Java/Rental-Movie/src/main/controllers/MovieManager.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/services/MovieServices.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/controllers/RentalManager.java</file>
+=======
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dto/Wishlist.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/Main.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dto/Account.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Validator.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/RentalDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/DiscountManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/PaymentManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/base/ListManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/AccountManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/services/ReviewServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/MovieManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/RentalManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/ReviewManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/LanguageManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/DiscountDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/WishlistManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/ProfileManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/GenreManager.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/services/RentalServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/views/CustomerPannel.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/WishlistDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/test/Test.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/test/test/services/ServicesTest.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/InfosTable.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/ReviewDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/services/MovieServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/views/PremiumPannel.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Input.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/services/DiscountServices.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Menu.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/MiddleTableDAO.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/views/StaffPannel.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Utility.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/views/AdminPannel.java</file>
+            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/controllers/ActorManager.java</file>
+>>>>>>> b24cab1ea969114ab388f7616742ce79c586bf29
         </group>
     </open-files>
 </project-private>

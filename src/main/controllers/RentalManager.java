@@ -49,13 +49,13 @@ public class RentalManager extends ListManager<Rental> {
         if (getMVM().checkNull(movie)) {
             return false;
         }
+        List<Rental> retals = searchBy(customer.getId());
+        retals = searchBy(retals, movie.getId());
+        if (retals != null && !retals.isEmpty()) 
+            return errorLog("Already rented this movie", false);
+        
         if (movie.getAvailableCopies() <= 0) {
             errorLog("No available copies for this movie!");
-            return false;
-        }
-
-        LocalDate rentalDate = getPMM().addPayment(customer.getId()) ? LocalDate.now() : null;
-        if (rentalDate == null) {
             return false;
         }
 
@@ -63,6 +63,12 @@ public class RentalManager extends ListManager<Rental> {
         if (howManyDays == Integer.MIN_VALUE) return false;
         
         double total = movie.getRentalPrice() * howManyDays;
+        
+        LocalDate rentalDate = getPMM().addPayment(customer.getId(), total) ? LocalDate.now() : null;
+        if (rentalDate == null) {
+            return false;
+        }
+        
         LocalDate dueDate =  rentalDate.plusDays(howManyDays);
         
         String staffID = null;
@@ -242,13 +248,12 @@ public class RentalManager extends ListManager<Rental> {
         }
 
         InfosTable.getTitle(Rental.getAttributes());
-
         tempList.forEach(item ->
             {
                 if (item != null) 
                     InfosTable.calcLayout(
-                        item.getMovieID(),
                         item.getCustomerID(),
+                        item.getMovieID(),
                         item.getStaffID(),
                         formatDate(item.getRentalDate(), Validator.DATE),
                         formatDate(item.getDueDate(), Validator.DATE),
@@ -265,9 +270,8 @@ public class RentalManager extends ListManager<Rental> {
             {
                 if (item != null) 
                     InfosTable.displayByLine(
-
-                        item.getMovieID(),
                         item.getCustomerID(),
+                        item.getMovieID(),
                         item.getStaffID(),
                         formatDate(item.getRentalDate(), Validator.DATE),
                         formatDate(item.getDueDate(), Validator.DATE),

@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import main.config.Database;
 import static main.config.Database.getConnection;
 import static main.controllers.Managers.getMVM;
 import main.utils.InfosTable;
@@ -18,28 +19,59 @@ import main.utils.InfosTable;
  */
 public class MovieServices {
     
-    public static double calculateAverageRating(String movieID) {
-        String query = "SELECT AVG(rating) AM average_rating FROM Review WHERE movie_id = ?";
+    public static double saveAndReturnAverageRating(String movieId) {
+        Connection connection = null;
+        PreparedStatement avgRatingStmt = null;
+        PreparedStatement updateMovieStmt = null;
+        double avgRating = -1; // Default value if no reviews exist
 
-        try (Connection connection = getConnection(); 
-            PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try {
+            // Establish connection to the database
+            connection = Database.getConnection();
 
-            preparedStatement.setString(1, movieID);
+            // Query to calculate the average rating for a movie
+            String avgRatingQuery = "SELECT AVG(rating) AS avg_rating FROM Reviews WHERE movie_id = ?";
+            avgRatingStmt = connection.prepareStatement(avgRatingQuery);
+            avgRatingStmt.setString(1, movieId);
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getDouble("average_rating");
+            // Execute the query
+            ResultSet resultSet = avgRatingStmt.executeQuery();
+            if (resultSet.next()) {
+                avgRating = resultSet.getDouble("avg_rating");
+                if (resultSet.wasNull()) {
+                    avgRating = -1; // Handle case where there are no reviews
                 }
             }
+
+            // Update the Movies table with the new average rating if valid
+            if (avgRating >= 0) {
+                String updateMovieQuery = "UPDATE Movies SET avg_rating = ? WHERE movie_id = ?";
+                updateMovieStmt = connection.prepareStatement(updateMovieQuery);
+                updateMovieStmt.setDouble(1, avgRating);
+                updateMovieStmt.setString(2, movieId);
+
+                // Execute the update query
+                updateMovieStmt.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close resources
+            try {
+                if (avgRatingStmt != null) avgRatingStmt.close();
+                if (updateMovieStmt != null) updateMovieStmt.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        catch (SQLException e) {
-            e.printStackTrace(); 
-        }
-        return 0; 
+
+        return avgRating;
     }
 
     public static boolean adjustAvailableCopy(String movieID, int amount) {
-        String reduceCopiesSql = "UPDATE Movie SET available_copies = available_copies - " + amount + " WHERE movie_id = ? AND available_copies > 0";
+        String reduceCopiesSql = "UPDATE Movies SET available_copies = available_copies - " + amount + " WHERE movie_id = ? AND available_copies > 0";
 
         try (Connection conn = getConnection();
                  PreparedStatement stmt = conn.prepareStatement(reduceCopiesSql)) {

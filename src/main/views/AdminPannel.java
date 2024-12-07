@@ -20,8 +20,9 @@ import main.services.ProfileServices;
 import main.utils.Menu;
 import main.utils.Menu.Action;
 import main.utils.Menu.Option;
-import static main.utils.Menu.Option.After.ASK_FOR_AGAIN;
-import static main.utils.Menu.Option.After.EXIT_MENU;
+import static main.utils.Menu.Option.Trigger.ASK_FOR_AGAIN;
+import static main.utils.Menu.Option.Trigger.EXIT_MENU;
+import static main.utils.Menu.Option.Trigger.LOCK;
 
 
 public class AdminPannel {
@@ -157,7 +158,7 @@ public class AdminPannel {
             "Payment Managment", 1,
             null,
             new Option[]{
-                new Option("Add Payment", () -> getPMM().addPayment(null), ASK_FOR_AGAIN),
+                new Option("Add Payment", () -> getPMM().addPayment(null, 0), LOCK),
                 new Option("Delete Payment", () -> getPMM().deletePayment(null), ASK_FOR_AGAIN),
                 new Option("Update Payment", () -> getPMM().updatePayment(null), ASK_FOR_AGAIN),
                 new Option("Search Payment", () -> getPMM().search(), ASK_FOR_AGAIN),

@@ -16,10 +16,10 @@ import main.services.WishlistServices;
 import main.utils.Menu;
 import main.utils.Menu.Action;
 import main.utils.Menu.Option;
-import static main.utils.Menu.Option.After.ASK_FOR_AGAIN;
-import static main.utils.Menu.Option.After.ASK_TO_CONFIRM;
-import static main.utils.Menu.Option.After.ENTER_TO_CONTINUE;
-import static main.utils.Menu.Option.After.EXIT_MENU;
+import static main.utils.Menu.Option.Trigger.ASK_FOR_AGAIN;
+import static main.utils.Menu.Option.Trigger.ASK_TO_CONFIRM;
+import static main.utils.Menu.Option.Trigger.ENTER_TO_CONTINUE;
+import static main.utils.Menu.Option.Trigger.EXIT_MENU;
 
 public class PremiumPannel {
     
