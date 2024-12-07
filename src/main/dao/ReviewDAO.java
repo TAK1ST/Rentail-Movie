@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import main.dto.Review;
 import main.config.Database;
+import static main.utils.LogMessage.errorLog;
 
 /**
  * Data Access Object for Reviews
@@ -47,7 +48,7 @@ public class ReviewDAO {
                 + "review_date = ?, "
                 + "review_text = ? "
                 + "WHERE "
-                + "customer_id = ?, "
+                + "customer_id = ? AND "
                 + "movie_id = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -63,11 +64,12 @@ public class ReviewDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        errorLog("cann not");
         return false;
     }
 
     public static boolean deleteReviewFromDB(String customerID, String movieID) {
-        String sql = "DELETE FROM Reviews WHERE customer_id = ?, movie_id = ?";
+        String sql = "DELETE FROM Reviews WHERE customer_id = ? AND movie_id = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 

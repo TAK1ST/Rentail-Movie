@@ -21,6 +21,7 @@ import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.returnNames;
 import static main.utils.Input.selectByNumbers;
+import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -118,13 +119,22 @@ public class DiscountManager extends ListManager<Discount> {
 
     public boolean add(Discount discount) {
         if (discount == null) return false;
-        return 
-            DiscountDAO.addDiscountToDB(discount)    
-            && discount.getCustomerIds() != null 
-                ? addDataToMidTable("Discount_Discount", discount.getId(), "discount_code", discount.getCustomerIds(),"customer_id") : true
-            && discount.getMovieIds() != null 
-                ? addDataToMidTable("Discount_Movie", discount.getId(), "discount_code", discount.getMovieIds(), "movie_id") : false
-            && list.add(discount);
+        
+        if (!DiscountDAO.addDiscountToDB(discount))
+            return errorLog("Error in saving database", false);
+
+        if (discount.getCustomerIds() == null || discount.getCustomerIds().isEmpty())
+            return errorLog("Discount need to have customer", false);
+        if (!addDataToMidTable("Discount_Account", discount.getId(), "discount_code", discount.getCustomerIds(),"customer_id"))
+            return errorLog("Error in saving database Discount_Account", false);
+        
+        if (discount.getMovieIds() != null || discount.getMovieIds().isEmpty())
+            return errorLog("Discount need to have customer", false);
+            
+        if (!addDataToMidTable("Discount_Movie", discount.getId(), "discount_code", discount.getMovieIds(), "movie_id"))
+            return errorLog("Error in saving database Discount_Movie", false);
+        
+        return list.add(discount);
     }
 
     public boolean update(Discount oldDiscount, Discount newDiscount) {
