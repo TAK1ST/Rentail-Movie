@@ -39,8 +39,8 @@ public class WishlistManager extends ListManager<Wishlist> {
         Movie movie = (Movie) getMVM().getById("Enter movie' id to rent");
         if (getMVM().checkNull(movie)) return false;
         
-        List<Wishlist> items = searchBy(list, customer.getId());
-        items = searchBy(list, movie.getId());
+        List<Wishlist> items = searchBy(customer.getId());
+        items = searchBy(items, movie.getId());
         if (items != null && !items.isEmpty()) 
             return errorLog("Already added this movie", false);
         

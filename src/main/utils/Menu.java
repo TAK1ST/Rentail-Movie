@@ -5,12 +5,14 @@ import static main.utils.Input.getInteger;
 import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
-import main.utils.Menu.Option.After;
-import static main.utils.Menu.Option.After.ASK_FOR_AGAIN;
-import static main.utils.Menu.Option.After.ASK_TO_CONFIRM;
-import static main.utils.Menu.Option.After.ENTER_TO_CONTINUE;
-import static main.utils.Menu.Option.After.EXIT_MENU;
-import static main.utils.Menu.Option.After.TERMINATE;
+import static main.utils.LogMessage.infoLog;
+import main.utils.Menu.Option.Trigger;
+import static main.utils.Menu.Option.Trigger.ASK_FOR_AGAIN;
+import static main.utils.Menu.Option.Trigger.ASK_TO_CONFIRM;
+import static main.utils.Menu.Option.Trigger.ENTER_TO_CONTINUE;
+import static main.utils.Menu.Option.Trigger.EXIT_MENU;
+import static main.utils.Menu.Option.Trigger.LOCK;
+import static main.utils.Menu.Option.Trigger.TERMINATE;
 
 
 public class Menu {
@@ -24,7 +26,7 @@ public class Menu {
             int colFormat,
             Action[] inits,
             Option[] options, 
-            Action[] afters,
+            Action[] triggers,
             Action[] terminates
     ) 
     {
@@ -37,34 +39,39 @@ public class Menu {
             Menu.showTitle(title);
             perform(inits);
             show(options, colFormat);
-            perform(afters);
+            perform(triggers);
         
             int choice = Menu.getChoice("Enter choice", options.length + INIT_NUM - 1);
             if (choice == Integer.MIN_VALUE) continue;
             do {
                 Option option = options[choice - INIT_NUM];
+                if (option.trigger == LOCK) {
+                    infoLog("THIS ACTION HAS BEEN LOCKED");
+                    pressEnterToContinue();
+                    break;
+                }
+                
                 if (option.action != null) {
-                    if (option.after == ASK_TO_CONFIRM)
+                    if (option.trigger == ASK_TO_CONFIRM)
                         yesOrNo("Are you sure");
                     
                     option.action.performAction();
                 }
                 if (option.bAction != null) {
-                    if (option.after == TERMINATE) {
+                    if (option.trigger == TERMINATE) {
                         if (option.bAction.performAction())
                             return;
                     }
                     else showSuccess(option.bAction.performAction());
                 }
-                if (option.after == EXIT_MENU) {
+                if (option.trigger == EXIT_MENU) {
                     perform(terminates);
                     return;
                 } 
-                if (option.after == ENTER_TO_CONTINUE) {
+                if (option.trigger == ENTER_TO_CONTINUE) {
                     pressEnterToContinue();
-            
                 }
-                if (option.after == ASK_FOR_AGAIN && yesOrNo("Again")) {
+                if (option.trigger == ASK_FOR_AGAIN && yesOrNo("Again")) {
                 }
                 else break;
                 
@@ -190,18 +197,19 @@ public class Menu {
 
     public static class Option {
         
-        public enum After {
+        public enum Trigger {
             EXIT_MENU,
             ASK_FOR_AGAIN,
             ASK_TO_CONFIRM,
             ENTER_TO_CONTINUE,
-            TERMINATE
+            TERMINATE,
+            LOCK
         }
         
         String optionTitle;
         Action action;
         BooleanAction bAction;
-        After after;
+        Trigger trigger;
         
         public Option(String optionTitle) {
             this.optionTitle = optionTitle;
@@ -217,21 +225,21 @@ public class Menu {
             this.bAction = bAction;
         }
         
-        public Option(String optionTitle, After after) {
+        public Option(String optionTitle, Trigger trigger) {
             this.optionTitle = optionTitle;
-            this.after = after;
+            this.trigger = trigger;
         }
 
-        public Option(String optionTitle, Action action, After after) {
+        public Option(String optionTitle, Action action, Trigger trigger) {
             this.optionTitle = optionTitle;
             this.action = action;
-            this.after = after;
+            this.trigger = trigger;
         }
         
-        public Option(String optionTitle, BooleanAction bAction, After after) {
+        public Option(String optionTitle, BooleanAction bAction, Trigger trigger) {
             this.optionTitle = optionTitle;
             this.bAction = bAction;
-            this.after = after;
+            this.trigger = trigger;
         }
         
     }
@@ -247,7 +255,7 @@ public class Menu {
 //                () -> {},
 //            },
 //            new Option[]{
-//                new Option( null,  () -> null, optional: you can put any Option.After enum),
+//                new Option( null,  () -> null, optional: you can put any Option.Trigger enum),
 //                ...
 //                new Option( null,  () -> null, ASK_FOR_AGAIN),
 //                new Option( null,  () -> null, ENTER_TO_PASS),

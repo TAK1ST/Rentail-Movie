@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 import main.utils.IDGenerator;
 import static main.utils.IDGenerator.ID_LENGTH;
 import static main.utils.Input.getString;
-import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.selectInfo;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
@@ -52,13 +50,8 @@ public abstract class ListManager<T extends Model> {
 
         String lastID = null;
         if (gapIDs.isEmpty()) {
-<<<<<<< HEAD
-            List<T> temp = sortList(list, attributes[0], false);
-                            if (temp != null && temp.getLast().getId() != null)
-=======
             List<T> temp = sortList(list, null, false);
             if (temp != null && !temp.isEmpty() && temp.getLast() != null && temp.getLast().getId() != null) {
->>>>>>> c53aeb6a7f2dfbeb4fe220da856fb57b940104cd
                 lastID = temp.getLast().getId();
             }
 
@@ -166,21 +159,6 @@ public abstract class ListManager<T extends Model> {
     public List<T> searchBy(String propety) {
         return searchBy(list, propety);
     }
-<<<<<<< HEAD
-
-    public List<T> searchBy(List<T> tempList, String propety1, String propety2) {
-        List<T> temp1 = searchBy(tempList, propety1);
-        List<T> temp2 = searchBy(tempList, propety2);
-        List<T> common = temp1.stream()
-                .filter(temp2::contains)
-                .collect(Collectors.toList());
-        return common;
-    }
-
-    public List<T> searchBy(String propety1, String propety2) {
-        return searchBy(list, propety1, propety2);
-    }
-=======
     
 //    public List<T> searchBy(List<T> tempList, String propety1, String propety2) {
 //        List<T> temp1 = searchBy(tempList, propety1);
@@ -202,7 +180,6 @@ public abstract class ListManager<T extends Model> {
 //    public List<T> searchBy(String propety1, String propety2) {
 //        return searchBy(list, propety1, propety2);
 //    }
->>>>>>> e26c450c0c18390cb8fb13160b3bbaf28fd65c46
 
     public List<T> getBy(String message) {
         return searchBy(list, getString(message));
@@ -224,7 +201,6 @@ public abstract class ListManager<T extends Model> {
             Menu.showHeader(header);
         }
         System.out.println(item.toString());
-        pressEnterToContinue();
     }
 
     public void show(T item) {

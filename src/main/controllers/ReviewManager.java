@@ -36,11 +36,11 @@ public final class ReviewManager extends ListManager<Review> {
         Account customer = (Account) getACM().searchById(customerID);
         if (getACM().checkNull(customer)) return false;
         
-        Movie movie = (Movie) getMVM().searchById("Enter movie' id to rent");
+        Movie movie = (Movie) getMVM().getById("Enter movie' id to review");
         if (getMVM().checkNull(movie)) return false;
         
-        List<Review> reviews = searchBy(list, customer.getId());
-        reviews = searchBy(list, movie.getId());
+        List<Review> reviews = searchBy(customer.getId());
+        reviews = searchBy(reviews, movie.getId());
         if (reviews != null && !reviews.isEmpty()) 
             return errorLog("Already reviewed this movie", false);
         
@@ -49,16 +49,23 @@ public final class ReviewManager extends ListManager<Review> {
         
         String comment = getString("Enter comment");
         
-        double avgRating = MovieServices.calculateAverageRating(movie.getId());
-        if (avgRating > 0) movie.setAvgRating(avgRating);
+       
         
-        return add(new Review(
+        if(add(new Review(
                 customer.getId(),
                 movie.getId(),
                 rating,
                 comment,
                 LocalDate.now()
-        ));
+        ))) {
+            double avgRating = MovieServices.saveAndReturnAverageRating(movie.getId());
+            if (avgRating < 0) 
+                return errorLog("Can not calculate movie average rating", false);
+                
+            movie.setAvgRating(avgRating);
+            return true;
+        }
+        return false;
     }
     
     public boolean updateReview(Review review) {

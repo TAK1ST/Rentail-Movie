@@ -14,7 +14,6 @@ import static main.controllers.Managers.getPMM;
 import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Rental;
-import main.services.DiscountServices;
 import main.services.RentalServices;
 import main.utils.InfosTable;
 import static main.utils.Input.getInteger;
@@ -50,13 +49,13 @@ public class RentalManager extends ListManager<Rental> {
         if (getMVM().checkNull(movie)) {
             return false;
         }
+        List<Rental> retals = searchBy(customer.getId());
+        retals = searchBy(retals, movie.getId());
+        if (retals != null && !retals.isEmpty()) 
+            return errorLog("Already rented this movie", false);
+        
         if (movie.getAvailableCopies() <= 0) {
             errorLog("No available copies for this movie!");
-            return false;
-        }
-
-        LocalDate rentalDate = getPMM().addPayment(customer.getId()) ? LocalDate.now() : null;
-        if (rentalDate == null) {
             return false;
         }
 
@@ -66,8 +65,13 @@ public class RentalManager extends ListManager<Rental> {
         }
 
         double total = movie.getRentalPrice() * howManyDays;
-        LocalDate dueDate = rentalDate.plusDays(howManyDays);
-
+        LocalDate rentalDate = getPMM().addPayment(customer.getId(), total) ? LocalDate.now() : null;
+        if (rentalDate == null) {
+            return false;
+        }
+        
+        LocalDate dueDate =  rentalDate.plusDays(howManyDays);
+        
         String staffID = null;
 //                RentalServices.findStaffForRentalApproval();
 //        if (staffID == null) {
@@ -245,13 +249,12 @@ public class RentalManager extends ListManager<Rental> {
         }
 
         InfosTable.getTitle(Rental.getAttributes());
-
-        tempList.forEach(item
-                -> {
-            if (item != null) {
-                InfosTable.calcLayout(
-                        item.getMovieID(),
+        tempList.forEach(item ->
+            {
+                if (item != null) 
+                    InfosTable.calcLayout(
                         item.getCustomerID(),
+                        item.getMovieID(),
                         item.getStaffID(),
                         formatDate(item.getRentalDate(), Validator.DATE),
                         formatDate(item.getDueDate(), Validator.DATE),
@@ -261,19 +264,15 @@ public class RentalManager extends ListManager<Rental> {
                         item.getStatus()
                 );
             }
-<<<<<<< HEAD
-        });
-=======
         );
->>>>>>> e26c450c0c18390cb8fb13160b3bbaf28fd65c46
 
         InfosTable.showTitle();
-        tempList.forEach(item
-                -> {
-            if (item != null) {
-                InfosTable.displayByLine(
-                        item.getMovieID(),
+        tempList.forEach(item -> 
+            {
+                if (item != null) 
+                    InfosTable.displayByLine(
                         item.getCustomerID(),
+                        item.getMovieID(),
                         item.getStaffID(),
                         formatDate(item.getRentalDate(), Validator.DATE),
                         formatDate(item.getDueDate(), Validator.DATE),
@@ -283,11 +282,7 @@ public class RentalManager extends ListManager<Rental> {
                         item.getStatus()
                 );
             }
-<<<<<<< HEAD
-        });
-=======
         );
->>>>>>> e26c450c0c18390cb8fb13160b3bbaf28fd65c46
         InfosTable.showFooter();
     }
 }
