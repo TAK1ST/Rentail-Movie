@@ -46,7 +46,7 @@ public class CustomerPannel {
                         () -> getMVM().search(), ASK_FOR_AGAIN),
                 new Option("Rent movie", 
                         () -> getRTM().addRental(account.getId()), ASK_FOR_AGAIN),
-                new Option("Renturn movie", 
+                new Option("Return movie", 
                         () -> RentalServices.returnMovie(), ASK_FOR_AGAIN),
                 new Option("Extend return date", 
                         () -> RentalServices.extendReturnDate(), ASK_FOR_AGAIN),
