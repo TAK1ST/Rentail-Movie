@@ -223,6 +223,7 @@ public class DiscountManager extends ListManager<Discount> {
         tempList.forEach(item -> 
             {if (item != null)
                 InfosTable.calcLayout(
+                    item.getCode(),
                     item.getCustomerIds(),
                     item.getMovieIds(),
                     formatDate(item.getStartDate(), Validator.DATE), 
@@ -240,6 +241,7 @@ public class DiscountManager extends ListManager<Discount> {
         tempList.forEach(item -> 
             {if (item != null)
                 InfosTable.displayByLine(
+                    item.getCode(),
                     item.getCustomerIds(),
                     item.getMovieIds(),
                     formatDate(item.getStartDate(), Validator.DATE), 

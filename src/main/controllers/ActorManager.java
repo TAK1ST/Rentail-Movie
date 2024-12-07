@@ -142,6 +142,7 @@ public class ActorManager extends ListManager<Actor> {
             {
                 if (item != null)
                     InfosTable.calcLayout(
+                        item.getId(),
                         item.getActorName(), 
                         item.getRank(), 
                         item.getDescription());
@@ -154,6 +155,7 @@ public class ActorManager extends ListManager<Actor> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
+                        item.getId(),
                         item.getActorName(), 
                         item.getRank(), 
                         item.getDescription());

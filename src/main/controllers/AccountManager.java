@@ -144,6 +144,7 @@ public class AccountManager extends ListManager<Account> {
             {
                 if (item != null)
                     InfosTable.calcLayout(
+                        item.getId(),
                         item.getUsername(),
                         item.getPassword(),
                         item.getEmail(),
@@ -161,6 +162,7 @@ public class AccountManager extends ListManager<Account> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
+                        item.getId(),
                         item.getUsername(),
                         item.getPassword(),
                         item.getEmail(),
