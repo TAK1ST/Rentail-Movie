@@ -129,6 +129,7 @@ public class ActorManager extends ListManager<Actor> {
             ) 
             result.add(item);
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
     
@@ -136,11 +137,12 @@ public class ActorManager extends ListManager<Actor> {
     public void show(List<Actor> tempList) {
         if (checkNull(tempList)) return;
         
-        InfosTable.getTitle(new String [] {"Actor Name", "Rank", "Descrription"});
+        InfosTable.getTitle(Actor.getAttributes());
         tempList.forEach(item -> 
             {
                 if (item != null)
                     InfosTable.calcLayout(
+                        item.getId(),
                         item.getActorName(), 
                         item.getRank(), 
                         item.getDescription());
@@ -153,6 +155,7 @@ public class ActorManager extends ListManager<Actor> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
+                        item.getId(),
                         item.getActorName(), 
                         item.getRank(), 
                         item.getDescription());

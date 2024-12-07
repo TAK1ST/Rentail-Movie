@@ -29,15 +29,14 @@ public abstract class ListManager<T extends Model> {
     public abstract List<T> sortList(List<T> tempList, String propety, boolean descending);
 
     public abstract List<T> searchBy(List<T> tempList, String propety);
-
+    
     public boolean copy(List<T> tempList) {
-        if (tempList == null) {
+        if (tempList == null)
             return errorLog("Can not copy", false);
-        }
         list.clear();
-        for (T item : tempList) {
+        for (T item : tempList) 
             list.add(item);
-        }
+        
         return true;
     }
 

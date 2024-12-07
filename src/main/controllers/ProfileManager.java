@@ -124,6 +124,7 @@ public class ProfileManager extends ListManager<Profile> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
 

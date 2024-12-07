@@ -1,15 +1,11 @@
 package main.views;
 
 import main.constants.account.AccRole;
-import main.constants.account.AccStatus;
 import main.controllers.Managers;
 import static main.controllers.Managers.*;
-
 import main.dao.*;
-
 import main.dto.Account;
 import main.services.AuthenServices;
-import main.services.ProfileServices;
 import main.utils.Menu;
 import main.utils.Menu.Action;
 import main.utils.Menu.Option;
@@ -24,10 +20,7 @@ public class AdminPannel {
         Menu.showManagerMenu(
             "Movie Rental (Admin)", 2,
             new Action[] {
-                () ->  { 
-                    Managers.initAll();
-                    ProfileServices.updateAccountStatus(account, AccStatus.ONLINE);
-                }
+                () ->  Managers.initAll()
             },
             new Option[]{
                 new Option("Account managment", () -> accountMenu()),
@@ -44,9 +37,7 @@ public class AdminPannel {
                 new Option("Log Out", EXIT_MENU),
             },
             null,
-            new Action[] {
-                () -> ProfileServices.updateAccountStatus(account, AccStatus.OFFLINE)
-            }
+            null
         );  
     }
     
@@ -82,7 +73,7 @@ public class AdminPannel {
             },
             new Action [] {
                 () -> getATM().copy(ActorDAO.getAllActors())
-                    }, null
+            }, null
         );
     }
     
@@ -100,7 +91,7 @@ public class AdminPannel {
             },
             new Action [] {
                 () -> getDCM().copy(DiscountDAO.getAllDiscounts())
-                    }, null
+            }, null
         );
     }
     
@@ -118,7 +109,7 @@ public class AdminPannel {
             },
             new Action [] {
                 () -> getGRM().copy(GenreDAO.getAllGenres())
-                    }, null
+            }, null
         );
     }
     
@@ -136,7 +127,7 @@ public class AdminPannel {
             },
             new Action [] {
                 () -> getLGM().copy(LanguageDAO.getAllLanguages())
-                    }, null
+            }, null
         );
     }
     
@@ -153,7 +144,7 @@ public class AdminPannel {
                 new Option("Back", EXIT_MENU)
             },new Action [] {
                 () -> getMVM().copy(MovieDAO.getAllMovies())
-                    },null
+            },null
         );
     }
     
@@ -171,7 +162,7 @@ public class AdminPannel {
             },
             new Action [] {
                 () -> getPMM().copy(PaymentDAO.getAllPayments())
-                    }, null
+            }, null
         );
     }
     
@@ -189,7 +180,7 @@ public class AdminPannel {
             },
             new Action [] {
                 () -> getPFM().copy(ProfileDAO.getAllProfiles())
-                    }, null
+            }, null
         );
     }
     
@@ -207,7 +198,7 @@ public class AdminPannel {
             },
             new Action [] {
                 () -> getRTM().copy(RentalDAO.getAllRentals())
-                    }, null
+            }, null
         );
     }
     
@@ -225,7 +216,7 @@ public class AdminPannel {
             },
             new Action [] {
                 () -> getRVM().copy(ReviewDAO.getAllReviews())
-                    }, null
+            }, null
         );
   
     }
@@ -244,7 +235,7 @@ public class AdminPannel {
             },
             new Action [] {
                 () -> getWLM().copy(WishlistDAO.getAllWishlists())
-                    }, null
+            }, null
         );
     }
     

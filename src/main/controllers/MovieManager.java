@@ -17,7 +17,7 @@ import main.utils.InfosTable;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
-import static main.utils.Input.returnNames;
+import static main.utils.Input.returnName;
 import static main.utils.Input.selectByNumbers;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
@@ -174,6 +174,7 @@ public class MovieManager extends ListManager<Movie> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
     
@@ -215,18 +216,23 @@ public class MovieManager extends ListManager<Movie> {
     public void show(List<Movie> tempList) {
         if (checkNull(tempList)) return;
             
-        InfosTable.getTitle(new String [] {"Title", "Description", "Average", "Release Year", 
-            "Price", "Available Copies"});
+        InfosTable.getTitle(Movie.getAttributes());
         tempList.forEach(item -> 
             {
                 if (item != null)
                     InfosTable.calcLayout(
+                        item.getId(),
                         item.getTitle(),
                         item.getDescription(),
                         item.getAvgRating(),
+                        returnName(item.getGenreNames(), getGRM()),
+                        returnName(item.getActorIDs(), getATM()),
+                        returnName(item.getLanguageCodes(), getLGM()),
                         formatDate(item.getReleaseYear(), Validator.YEAR),
                         item.getRentalPrice(),
-                        item.getAvailableCopies()
+                        item.getAvailableCopies(),
+                        formatDate(item.getCreateDate(), Validator.DATE),
+                        formatDate(item.getUpdateDate(), Validator.DATE)
                 );
             }
         );
@@ -236,12 +242,18 @@ public class MovieManager extends ListManager<Movie> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
+                        item.getId(),
                         item.getTitle(),
                         item.getDescription(),
                         item.getAvgRating(),
+                        returnName(item.getGenreNames(), getGRM()),
+                        returnName(item.getActorIDs(), getATM()),
+                        returnName(item.getLanguageCodes(), getLGM()),
                         formatDate(item.getReleaseYear(), Validator.YEAR),
                         item.getRentalPrice(),
-                        item.getAvailableCopies()
+                        item.getAvailableCopies(),
+                        formatDate(item.getCreateDate(), Validator.DATE),
+                        formatDate(item.getUpdateDate(), Validator.DATE)
                 );
             }
         );

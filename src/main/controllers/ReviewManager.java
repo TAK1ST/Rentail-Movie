@@ -130,6 +130,7 @@ public final class ReviewManager extends ListManager<Review> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
 
@@ -172,8 +173,8 @@ public final class ReviewManager extends ListManager<Review> {
             {
                 if (item != null)
                     InfosTable.calcLayout(
-                        String.join(", ", returnNames(item.getCustomerID(), getACM())),
-                        String.join(", ", returnNames(item.getMovieID(), getMVM())),
+                        item.getCustomerID(),
+                        item.getMovieID(),
                         item.getRating(),
                         item.getReviewText(),
                         formatDate(item.getReviewDate(), Validator.DATE)
@@ -186,8 +187,8 @@ public final class ReviewManager extends ListManager<Review> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
-                        String.join(", ", returnNames(item.getCustomerID(), getACM())),
-                        String.join(", ", returnNames(item.getMovieID(), getMVM())),
+                        item.getCustomerID(),
+                        item.getMovieID(),
                         item.getRating(),
                         item.getReviewText(),
                         formatDate(item.getReviewDate(), Validator.DATE)

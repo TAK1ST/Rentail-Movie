@@ -23,6 +23,7 @@ import static main.utils.Input.getString;
 import static main.utils.Input.returnNames;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.LogMessage.valueLog;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -52,12 +53,11 @@ public class RentalManager extends ListManager<Rental> {
         if (getMVM().checkNull(movie)) {
             return false;
         }
-        List<Rental> retals = searchBy(customer.getId());
-        retals = searchBy(retals, movie.getId());
-        if (retals != null && !retals.isEmpty()) {
-            return errorLog("Already rented this movie", false);
+        List<Rental> myRental = searchBy(customer.getId());
+        if (myRental != null && !myRental.isEmpty()) {
+            if (searchBy(myRental, movie.getId()) != null) 
+                return errorLog("Already rented this movie", false);
         }
-
         if (movie.getAvailableCopies() <= 0) {
             errorLog("No available copies for this movie!");
             return false;
@@ -75,6 +75,7 @@ public class RentalManager extends ListManager<Rental> {
         }
 
         LocalDate dueDate = rentalDate.plusDays(howManyDays);
+        valueLog(dueDate);
 
         String staffID = null;
 //                RentalServices.findStaffForRentalApproval();
@@ -203,6 +204,7 @@ public class RentalManager extends ListManager<Rental> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
 
@@ -256,14 +258,14 @@ public class RentalManager extends ListManager<Rental> {
             return;
         }
 
-        InfosTable.getTitle(new String[]{"due_date", "rental_date", "return_date", "status", "total_amount", "late_fee"});
+        InfosTable.getTitle(Rental.getAttributes());
         tempList.forEach(item
                 -> {
             if (item != null) {
                 InfosTable.calcLayout(
-                        String.join(", ", returnNames(item.getCustomerID(), getACM())),
-                        String.join(", ", returnNames(item.getMovieID(), getMVM())),
-                        String.join(", ", returnNames(item.getStaffID(), getACM())),
+                        item.getCustomerID(),
+                        item.getMovieID(),
+                        item.getStaffID(),
                         formatDate(item.getRentalDate(), Validator.DATE),
                         formatDate(item.getDueDate(), Validator.DATE),
                         formatDate(item.getReturnDate(), Validator.DATE),
@@ -280,9 +282,9 @@ public class RentalManager extends ListManager<Rental> {
                 -> {
             if (item != null) {
                 InfosTable.displayByLine(
-                        String.join(", ", returnNames(item.getCustomerID(), getACM())),
-                        String.join(", ", returnNames(item.getMovieID(), getMVM())),
-                        String.join(", ", returnNames(item.getStaffID(), getACM())),
+                        item.getCustomerID(),
+                        item.getMovieID(),
+                        item.getStaffID(),
                         formatDate(item.getRentalDate(), Validator.DATE),
                         formatDate(item.getDueDate(), Validator.DATE),
                         formatDate(item.getReturnDate(), Validator.DATE),
