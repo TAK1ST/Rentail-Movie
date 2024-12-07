@@ -27,16 +27,13 @@ public class PaymentManager extends ListManager<Payment> {
         copy(PaymentDAO.getAllPayments()); 
     }
     
-    public boolean addPayment(String customerID) {
+    public boolean addPayment(String customerID, double amount) {
         if (customerID == null) 
             customerID = getString("Enter customer's id");
         if (customerID == null) return false;
         
         Account customer = (Account) getACM().searchById(customerID);
         if (getACM().checkNull(customer)) return false;
-        
-        double amount = getDouble("Enter amount", 0, Double.MAX_VALUE);
-        if (amount == Integer.MIN_VALUE) return false;
         
         PaymentMethod method = (PaymentMethod) getEnumValue("Choose payment method", PaymentMethod.class);
         if (method == null) return false;
