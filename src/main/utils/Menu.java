@@ -26,7 +26,7 @@ public class Menu {
             int colFormat,
             Action[] inits,
             Option[] options, 
-            Action[] triggers,
+            Action[] updates,
             Action[] terminates
     ) 
     {
@@ -35,11 +35,11 @@ public class Menu {
             perform(terminates);
             return;
         }
+        perform(inits);
         do {
+            perform(updates);
             Menu.showTitle(title);
-            perform(inits);
             show(options, colFormat);
-            perform(triggers);
         
             int choice = Menu.getChoice("Enter choice", options.length + INIT_NUM - 1);
             if (choice == Integer.MIN_VALUE) continue;
@@ -178,11 +178,14 @@ public class Menu {
             System.out.println("\n[MENU] Data have changed!! Please save.");
     }
     
-    public static void showSuccess(boolean isSuccess) {
-        if (isSuccess) 
+    public static boolean showSuccess(boolean isSuccess) {
+        if (isSuccess) {
             System.out.println("[MENU] Success.");
+            return true;
+        }
         else 
             System.out.println("[MENU] Fail.");
+        return false;
     }
     
     @FunctionalInterface

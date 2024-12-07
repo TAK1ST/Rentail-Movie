@@ -41,7 +41,7 @@ public class WishlistDAO {
                 + "added_date = ?, "
                 + "priority = ? "
                 + "WHERE "
-                + "movie_id = ?, "
+                + "movie_id = ? AND "
                 + "customer_id = ?";
         try (Connection connection = Database.getConnection(); 
             PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -61,7 +61,7 @@ public class WishlistDAO {
     }
 
     public static boolean deleteWishlistFromDB(String customerID, String movieID) {
-        String sql = "DELETE FROM Wishlists WHERE customer_id = ? movie_id = ?";
+        String sql = "DELETE FROM Wishlists WHERE customer_id = ? AND movie_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, customerID);

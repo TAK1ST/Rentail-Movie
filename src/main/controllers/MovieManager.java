@@ -17,9 +17,9 @@ import main.utils.InfosTable;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
-import static main.utils.Input.returnIDs;
 import static main.utils.Input.returnNames;
 import static main.utils.Input.selectByNumbers;
+import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
 import main.utils.Validator;
 import static main.utils.Validator.getDate;
@@ -53,7 +53,7 @@ public class MovieManager extends ListManager<Movie> {
         
         String languages = selectByNumbers("Enter languages by numbers on display (Comma-separated)", getLGM());
         if (languages == null) return false;
-
+        
         LocalDate releaseDate = getDate("Enter release date");
         if (releaseDate == null) return false;
 
@@ -111,15 +111,26 @@ public class MovieManager extends ListManager<Movie> {
 
     public boolean add(Movie movie) {
         if (movie == null) return false;
-        return 
-            MovieDAO.addMovieToDB(movie)
-            && movie.getGenreNames() != null 
-                ? addDataToMidTable("Movie_Genre", movie.getId(), "movie_id", movie.getGenreNames(), "genre_name") : false
-            && movie.getActorIDs() != null 
-                ? addDataToMidTable("Movie_Actor", movie.getId(), "movie_id", movie.getActorIDs(), "actor_id") : false
-            && movie.getLanguageCodes() != null 
-                ? addDataToMidTable("Movie_Language", movie.getId(), "movie_id", movie.getLanguageCodes(), "language_code") : false
-            && list.add(movie);    
+        
+        if (!MovieDAO.addMovieToDB(movie))
+            return errorLog("Error in saving database", false);
+        
+        if (movie.getGenreNames() == null || movie.getGenreNames().isEmpty())
+                return errorLog("Movie needs to have genre", false);
+        if (!addDataToMidTable("Movie_Genre", movie.getId(), "movie_id", movie.getGenreNames(), "genre_name"))
+            return errorLog("Error in saving database Movie_Genre", false);
+                    
+        if (movie.getActorIDs() == null || movie.getActorIDs().isEmpty())
+            return errorLog("Movie needs to have actor", false);
+        if (!addDataToMidTable("Movie_Actor", movie.getId(), "movie_id", movie.getActorIDs(), "actor_id"))
+            return errorLog("Error in saving database Movie_Actor", false);
+        
+        if (movie.getLanguageCodes() == null || movie.getLanguageCodes().isEmpty())
+            return errorLog("Movie needs to have language", false);
+        if (!addDataToMidTable("Movie_Language", movie.getId(), "movie_id", movie.getLanguageCodes(), "language_code"))
+            return errorLog("Error in saving database Movie_Language", false); 
+         
+        return list.add(movie);    
     }
 
     public boolean update(Movie oldMovie, Movie newMovie) {
