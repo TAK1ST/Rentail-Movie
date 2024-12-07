@@ -223,15 +223,16 @@ public class DiscountManager extends ListManager<Discount> {
         tempList.forEach(item -> 
             {if (item != null)
                 InfosTable.calcLayout(
-                    item.getCode(), 
-                    returnNames(item.getCustomerIds(), getPFM()),
-                    returnNames(item.getMovieIds(), getMVM()),
-                    item.getType(),
-                    item.getValue(),
+                    item.getCustomerIds(),
+                    item.getMovieIds(),
                     formatDate(item.getStartDate(), Validator.DATE), 
                     formatDate(item.getEndDate(), Validator.DATE),
+                    item.getType(),
                     item.getQuantity(),
-                    item.isActive()
+                    item.isActive(),
+                    item.getValue(),
+                    item.getApplyForWho(),
+                    item.getApplyForWhat()
             );}
         );
         
@@ -239,15 +240,16 @@ public class DiscountManager extends ListManager<Discount> {
         tempList.forEach(item -> 
             {if (item != null)
                 InfosTable.displayByLine(
-                    item.getCode(), 
-                    returnNames(item.getCustomerIds(), getPFM()),
-                    returnNames(item.getMovieIds(), getMVM()),
-                    item.getType(),
-                    item.getValue(),
+                    item.getCustomerIds(),
+                    item.getMovieIds(),
                     formatDate(item.getStartDate(), Validator.DATE), 
                     formatDate(item.getEndDate(), Validator.DATE),
+                    item.getType(),
                     item.getQuantity(),
-                    item.isActive()
+                    item.isActive(),
+                    item.getValue(),
+                    item.getApplyForWho(),
+                    item.getApplyForWhat()
             );}
         );
         InfosTable.showFooter();

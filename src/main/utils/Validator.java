@@ -146,7 +146,7 @@ public class Validator {
             
             isUnique = true;
             for(Account item : list) 
-                if (item.getUsername().equals(input)) {
+                if (item.getUsername().equalsIgnoreCase(input)) {
                     errorLog("Username has already exist");
                     if(askToExit()) return null;
                     isUnique = false;

@@ -17,7 +17,7 @@ import main.utils.InfosTable;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
-import static main.utils.Input.returnNames;
+import static main.utils.Input.returnName;
 import static main.utils.Input.selectByNumbers;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
@@ -223,11 +223,11 @@ public class MovieManager extends ListManager<Movie> {
                     InfosTable.calcLayout(
                         item.getId(),
                         item.getTitle(),
-                        String.join(", ", returnNames(item.getGenreNames(), getGRM())),
-                        String.join(", ", returnNames(item.getActorIDs(), getATM())),
-                        String.join(", ", returnNames(item.getLanguageCodes(), getLGM())),
                         item.getDescription(),
                         item.getAvgRating(),
+                        returnName(item.getGenreNames(), getGRM()),
+                        returnName(item.getActorIDs(), getATM()),
+                        returnName(item.getLanguageCodes(), getLGM()),
                         formatDate(item.getReleaseYear(), Validator.YEAR),
                         item.getRentalPrice(),
                         item.getAvailableCopies(),
@@ -244,11 +244,11 @@ public class MovieManager extends ListManager<Movie> {
                     InfosTable.displayByLine(
                         item.getId(),
                         item.getTitle(),
-                        String.join(", ", returnNames(item.getGenreNames(), getGRM())),
-                        String.join(", ", returnNames(item.getActorIDs(), getATM())),
-                        String.join(", ", returnNames(item.getLanguageCodes(), getLGM())),
                         item.getDescription(),
                         item.getAvgRating(),
+                        returnName(item.getGenreNames(), getGRM()),
+                        returnName(item.getActorIDs(), getATM()),
+                        returnName(item.getLanguageCodes(), getLGM()),
                         formatDate(item.getReleaseYear(), Validator.YEAR),
                         item.getRentalPrice(),
                         item.getAvailableCopies(),

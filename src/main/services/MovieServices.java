@@ -10,12 +10,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import main.config.Database;
 import static main.config.Database.getConnection;
+import static main.controllers.Managers.getMVM;
+import main.utils.InfosTable;
+import static main.utils.Utility.formatDate;
+import main.utils.Validator;
 
 /**
  *
  * @author trann
  */
 public class MovieServices {
+    
+    private static final String[] showAttributes = {"Title", "Description", "Average", "Release Year", "Price", "Available Copies"};
     
     public static double saveAndReturnAverageRating(String movieId) {
         Connection connection = null;
@@ -84,6 +90,41 @@ public class MovieServices {
             
         }
         return false;  
+    }
+    
+    public static void showMovie() {
+        if (getMVM().isNull()) return;
+        
+        InfosTable.getTitle(showAttributes);
+        getMVM().getList().forEach(item -> 
+            {
+                if (item != null)
+                    InfosTable.calcLayout(
+                        item.getTitle(),
+                        item.getDescription(),
+                        item.getAvgRating(),
+                        formatDate(item.getReleaseYear(), Validator.YEAR),
+                        item.getRentalPrice(),
+                        item.getAvailableCopies()
+                );
+            }
+        );
+        
+        InfosTable.showTitle();
+        getMVM().getList().forEach(item -> 
+            {
+                if (item != null)
+                    InfosTable.displayByLine(
+                        item.getTitle(),
+                        item.getDescription(),
+                        item.getAvgRating(),
+                        formatDate(item.getReleaseYear(), Validator.YEAR),
+                        item.getRentalPrice(),
+                        item.getAvailableCopies()
+                );
+            }
+        );
+        InfosTable.showFooter();
     }
     
 }

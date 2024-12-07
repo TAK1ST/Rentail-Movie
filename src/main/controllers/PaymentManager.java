@@ -10,12 +10,14 @@ import main.constants.IDPrefix;
 import main.constants.payment.PaymentMethod;
 import main.constants.payment.PaymentStatus;
 import static main.controllers.Managers.getACM;
+import static main.controllers.Managers.getMVM;
 import main.dao.PaymentDAO;
 import main.dto.Account;
 import main.dto.Payment;
 import main.utils.InfosTable;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getString;
+import static main.utils.Input.returnNames;
 import static main.utils.Utility.getEnumValue;
 import static main.utils.Validator.getDateTime;
 
@@ -149,11 +151,10 @@ public class PaymentManager extends ListManager<Payment> {
     public void show(List<Payment> tempList) {
         if (checkNull(tempList)) return;
 
-        InfosTable.getTitle(Payment.getAttributes());
+        InfosTable.getTitle(new String [] {"Amount","Method","Transaction Time", "Status"});
         tempList.forEach(item -> 
                 InfosTable.calcLayout(
-                        item.getId(),
-                        item.getCustomerID(),
+                        item.getCustomerID(),                        
                         item.getAmount(),
                         item.getMethod(),
                         item.getTransactionTime(),
@@ -164,7 +165,6 @@ public class PaymentManager extends ListManager<Payment> {
         InfosTable.showTitle();
         tempList.forEach(item -> 
                 InfosTable.displayByLine(
-                        item.getId(),
                         item.getCustomerID(),
                         item.getAmount(),
                         item.getMethod(),

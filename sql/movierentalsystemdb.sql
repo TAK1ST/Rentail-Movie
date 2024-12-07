@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS Movies (
     description TEXT,
     avg_rating DOUBLE(3, 1) DEFAULT 0.0,
     release_year DATE,
-    rental_price DECIMAL(10, 2) NOT NULL,
+    rental_price DOUBLE NOT NULL,
     available_copies INT DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS Movies (
 CREATE TABLE IF NOT EXISTS Discounts (
     discount_code CHAR(8) PRIMARY KEY,
     discount_type ENUM('PERCENT', 'FIXED_AMOUNT', 'BUY_X_GET_Y_FREE') NOT NULL DEFAULT 'PERCENT',
-    discount_value DECIMAL(10, 2) NOT NULL,
+    discount_value DOUBLE NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     quantity INT DEFAULT 1,
@@ -108,8 +108,8 @@ CREATE TABLE IF NOT EXISTS Rentals (
     rental_date DATE NOT NULL,
     return_date DATE,
     status ENUM('PENDING', 'APPROVED', 'DENIED') NOT NULL DEFAULT 'PENDING',
-    total_amount DECIMAL(10, 2) DEFAULT 0.00,
-    late_fee DECIMAL(10, 2) DEFAULT 0.00,
+    total_amount DOUBLE DEFAULT 0.00,
+    late_fee DOUBLE DEFAULT 0.00,
     PRIMARY KEY (customer_id, movie_id),
     FOREIGN KEY (movie_id) REFERENCES Movies (movie_id) ON DELETE CASCADE,
     FOREIGN KEY (staff_id) REFERENCES Accounts (account_id) ON DELETE SET NULL,
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS Payments (
     customer_id CHAR(8) NOT NULL,
     transaction_context ENUM('RENTAL', 'PURCHASE', 'SUBSCRIPTION') NOT NULL,
     reference_id CHAR(8), -- Can refer to rental_id, movie_id, etc.
-    amount DECIMAL(10, 2) NOT NULL,
+    amount DOUBLE NOT NULL,
     payment_method ENUM('ONLINE', 'CARD', 'BANKING') NOT NULL,
     transaction_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     status ENUM('PENDING', 'COMPLETED', 'FAILED') DEFAULT 'PENDING',
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS Profiles (
     birthday DATE,
     address NVARCHAR(255),
     phone_number CHAR(10),
-    credit DECIMAL(10, 2) DEFAULT 0.00,
+    credit DOUBLE DEFAULT 0.00,
     FOREIGN KEY (account_id) REFERENCES Accounts (account_id) ON DELETE CASCADE
 );
 

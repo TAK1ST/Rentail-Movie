@@ -139,13 +139,11 @@ public class AccountManager extends ListManager<Account> {
     @Override
     public void show(List<Account> tempList) {
         if (checkNull(tempList)) return;
-        
-        InfosTable.getTitle(Account.getAttributes());
+        InfosTable.getTitle(Account.getAttributes() );
         tempList.forEach(item -> 
             {
                 if (item != null)
                     InfosTable.calcLayout(
-                        item.getId(), 
                         item.getUsername(),
                         item.getPassword(),
                         item.getEmail(),
@@ -163,7 +161,6 @@ public class AccountManager extends ListManager<Account> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
-                        item.getId(), 
                         item.getUsername(),
                         item.getPassword(),
                         item.getEmail(),
