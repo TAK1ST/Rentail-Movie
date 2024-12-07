@@ -138,21 +138,17 @@ public class AccountManager extends ListManager<Account> {
     @Override
     public void show(List<Account> tempList) {
         if (checkNull(tempList)) return;
-        
-        InfosTable.getTitle(Account.getAttributes());
+        InfosTable.getTitle(new String [] {"Username", "Password", "Email", "Role", 
+            "Status", "Creability"} );
         tempList.forEach(item -> 
             {
                 if (item != null)
                     InfosTable.calcLayout(
-                        item.getId(), 
                         item.getUsername(),
                         item.getPassword(),
                         item.getEmail(),
                         item.getRole(),
                         item.getStatus(),
-                        formatDate(item.getCreateAt(), Validator.DATE),
-                        formatDate(item.getUpdateAt(), Validator.DATE),
-                        formatDate(item.getOnlineAt(), Validator.DATE),
                         item.getCreability());
             }
         );
@@ -162,15 +158,11 @@ public class AccountManager extends ListManager<Account> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
-                        item.getId(), 
                         item.getUsername(),
                         item.getPassword(),
                         item.getEmail(),
                         item.getRole(),
                         item.getStatus(),
-                        formatDate(item.getCreateAt(), Validator.DATE),
-                        formatDate(item.getUpdateAt(), Validator.DATE),
-                        formatDate(item.getOnlineAt(), Validator.DATE),
                         item.getCreability());
             }
         );

@@ -2,11 +2,14 @@ package main.views;
 
 import main.constants.account.AccStatus;
 import main.controllers.Managers;
+import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getATM;
 import static main.controllers.Managers.getDCM;
 import static main.controllers.Managers.getGRM;
 import static main.controllers.Managers.getLGM;
 import static main.controllers.Managers.getMVM;
+import main.dao.GenreDAO;
+import main.dao.MovieDAO;
 import main.dto.Account;
 import main.services.ProfileServices;
 import main.services.ReviewServices;
@@ -60,7 +63,9 @@ public class StaffPannel {
                         () -> ReviewServices.displayAMovieReviews(), ENTER_TO_CONTINUE),
                 new Option("Log Out", EXIT_MENU),
             },
-            null,
+            new Action [] {
+                () -> getMVM().copy(MovieDAO.getAllMovies())
+                    },
             new Action[] {
                 () -> ProfileServices.updateAccountStatus(account, AccStatus.OFFLINE)
             }

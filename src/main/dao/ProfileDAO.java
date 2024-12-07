@@ -56,10 +56,10 @@ public class ProfileDAO {
 
             int count = 0;
             ps.setString(++count, account.getFullName());
-            ps.setDate(++count, account.getBirthday() != null ? Date.valueOf(account.getBirthday()) : null);
-            ps.setString(++count, account.getAddress());
             ps.setString(++count, account.getPhoneNumber());
+            ps.setString(++count, account.getAddress());
             ps.setDouble(++count, account.getCredit());
+            ps.setDate(++count, account.getBirthday() != null ? Date.valueOf(account.getBirthday()) : null);
             ps.setString(++count, account.getId());
 
             return ps.executeUpdate() > 0;
