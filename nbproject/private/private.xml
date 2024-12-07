@@ -4,26 +4,39 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/LanguageManager.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/GenreManager.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/RentalManager.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/test/test.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/ActorManager.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/ProfileManager.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/ReviewManager.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/views/AdminPannel.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/views/CustomerPannel.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/DiscountManager.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/AccountManager.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/views/App.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/views/AuthenPannel.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/utils/InfosTable.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/base/ListManager.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/utils/Input.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/services/RentalServices.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/views/StaffPannel.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/Managers.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/utils/Menu.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/MovieManager.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/Main.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/PaymentManager.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/WishlistManager.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/GenreManager.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/utils/Validator.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/ProfileManager.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/services/ReviewServices.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/dao/AccountDAO.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/services/AuthenServices.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/AccountManager.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/dao/ProfileDAO.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/base/ListManager.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/dao/RentalDAO.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/controllers/MovieManager.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/services/ProfileServices.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/dto/Profile.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/views/GuestPannel.java</file>
+            <file>file:/home/tak/Code/Rentail-Movie/src/main/views/PremiumPannel.java</file>
             <file>file:/home/tak/Code/Rentail-Movie/src/main/utils/Utility.java</file>
         </group>
     </open-files>

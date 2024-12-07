@@ -1,6 +1,5 @@
 package main.views;
 
-import main.constants.account.AccStatus;
 import main.controllers.Managers;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRVM;
@@ -16,6 +15,7 @@ import main.dao.WishlistDAO;
 import main.dto.Account;
 import main.services.ProfileServices;
 import main.services.DiscountServices;
+import main.services.MovieServices;
 import main.services.RentalServices;
 import main.services.ReviewServices;
 import main.services.WishlistServices;
@@ -31,8 +31,9 @@ import static main.utils.Menu.Option.Trigger.LOCK;
 public class CustomerPannel {
 
     public static void show(Account account) {
-        Menu.showManagerMenu("Movie Rental (Customer)", 3,
-                new Action[]{
+        Menu.showManagerMenu(
+                "Movie Rental (Customer)", 3,
+                new Action[] {
                     () -> {
                         Managers.initAll();
                         DiscountServices.initDataFor(account.getId());
@@ -40,8 +41,7 @@ public class CustomerPannel {
                         ProfileServices.initDataFor(account.getId());
                         ReviewServices.initDataFor(account.getId());
                         RentalServices.initDataFor(account.getId());
-                        ProfileServices.updateAccountStatus(account, AccStatus.ONLINE);
-                    }
+                    },
                 },
                 new Option[]{
                     new Option("Show my profile",
@@ -49,9 +49,11 @@ public class CustomerPannel {
                     new Option("Update profile",
                             () -> ProfileServices.updateMyProfile(), ASK_FOR_AGAIN),
                     new Option("Display movies",
-                            () -> getMVM().displaySortDetail()),
+                            () -> MovieServices.showMovie(), ENTER_TO_CONTINUE),
                     new Option("Search movie",
                             () -> getMVM().search(), ASK_FOR_AGAIN),
+                    new Option("See the movie's reviews",
+                            () -> ReviewServices.displayAMovieReviews(), ENTER_TO_CONTINUE),
                     new Option("Rent movie",
                             () -> RentalServices.rentMovie(), ASK_FOR_AGAIN),
                     new Option("Renturn movie",
@@ -60,18 +62,22 @@ public class CustomerPannel {
                             () -> RentalServices.extendReturnDate(), ASK_FOR_AGAIN),
                     new Option("My rental history",
                             () -> RentalServices.myHistoryRental(), ENTER_TO_CONTINUE),
-                    new Option("See the movie's reviews",
-                            () -> ReviewServices.displayAMovieReviews(), ENTER_TO_CONTINUE),
                     new Option("Make reviews",
-                            () -> getRVM().addReview(account.getId()), ASK_FOR_AGAIN),
-                    new Option("My reviews history",
-                            () -> ReviewServices.displayMyReviews(), ENTER_TO_CONTINUE),
+                            () -> ReviewServices.makeReview(), ASK_FOR_AGAIN),
                     new Option("Update my review",
                             () -> ReviewServices.updateMyReview(), ASK_FOR_AGAIN),
+                    new Option("Delete my review",
+                            () -> ReviewServices.deleteMyReview(), ASK_FOR_AGAIN),
+                    new Option("Clear my review",
+                            () -> ReviewServices.clearAllMyReviews()),
+                    new Option("My reviews history",
+                            () -> ReviewServices.displayMyReviews(), ENTER_TO_CONTINUE),
                     new Option("Add movie to wishlist",
-                            () -> getWLM().addWishlist(account.getId()), ASK_FOR_AGAIN),
+                            () -> WishlistServices.addToMyWishList(), ASK_FOR_AGAIN),
                     new Option("My wishlist",
                             () -> WishlistServices.displayMyWishList(), ENTER_TO_CONTINUE),
+                    new Option("Clear my wishlist",
+                            () -> WishlistServices.clearAllMyWishList()),
                     new Option("View discounts",
                             () -> DiscountServices.showMyAvailableDiscount(), LOCK),
                     new Option("Take discount",
@@ -91,9 +97,8 @@ public class CustomerPannel {
                         getDCM().copy(DiscountDAO.getAllDiscounts());
                     }
                 },
-                new Action[]{
-                    () -> ProfileServices.updateAccountStatus(account, AccStatus.OFFLINE)
-                }
+                null
         );
     }
+    
 }

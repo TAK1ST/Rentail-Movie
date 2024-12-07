@@ -39,7 +39,6 @@ public class WishlistServices {
     }
     
     public static boolean addToMyWishList() {
-        
         Movie movie = (Movie) getMVM().getById("Enter movie's id");
         if (getMVM().checkNull(movie)) return false;
         

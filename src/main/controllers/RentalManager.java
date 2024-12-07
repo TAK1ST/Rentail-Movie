@@ -23,6 +23,7 @@ import static main.utils.Input.getString;
 import static main.utils.Input.returnNames;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
+import static main.utils.LogMessage.valueLog;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
 import main.utils.Validator;
@@ -74,6 +75,7 @@ public class RentalManager extends ListManager<Rental> {
         }
 
         LocalDate dueDate = rentalDate.plusDays(howManyDays);
+        valueLog(dueDate);
 
         String staffID = null;
 //                RentalServices.findStaffForRentalApproval();
