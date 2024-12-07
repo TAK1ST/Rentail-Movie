@@ -142,6 +142,7 @@ public class AuthenServices {
                 errorLog("Cannot registor account info");
                 return false;
             }
+            return true;
         }
         getPFM().add(new Profile(accountID));
         return true;

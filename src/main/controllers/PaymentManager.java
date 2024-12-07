@@ -113,6 +113,7 @@ public class PaymentManager extends ListManager<Payment> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
 
@@ -153,7 +154,7 @@ public class PaymentManager extends ListManager<Payment> {
         InfosTable.getTitle(new String [] {"Amount","Method","Transaction Time", "Status"});
         tempList.forEach(item -> 
                 InfosTable.calcLayout(
-                        String.join(", ", returnNames(item.getCustomerID(), getACM())),
+                        item.getCustomerID(),                        
                         item.getAmount(),
                         item.getMethod(),
                         item.getTransactionTime(),
@@ -164,7 +165,7 @@ public class PaymentManager extends ListManager<Payment> {
         InfosTable.showTitle();
         tempList.forEach(item -> 
                 InfosTable.displayByLine(
-                        String.join(", ", returnNames(item.getCustomerID(), getACM())),
+                        item.getCustomerID(),
                         item.getAmount(),
                         item.getMethod(),
                         item.getTransactionTime(),

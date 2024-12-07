@@ -96,6 +96,7 @@ public class LanguageManager extends ListManager<Language> {
                 result.add(item);
             }   
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
     
@@ -125,11 +126,12 @@ public class LanguageManager extends ListManager<Language> {
     public void show(List<Language> tempList) {
         if (checkNull(tempList)) return;
         
-        InfosTable.getTitle(new String [] {"Name"});
+        InfosTable.getTitle(Language.getAttributes());
         tempList.forEach(item -> 
             {
                 if (item != null)
                     InfosTable.calcLayout(
+                            item.getCode(),
                             item.getName()
                     );
             }
@@ -140,6 +142,7 @@ public class LanguageManager extends ListManager<Language> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
+                            item.getCode(),
                             item.getName()
                     );
             }

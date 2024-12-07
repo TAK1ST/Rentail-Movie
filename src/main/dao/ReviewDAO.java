@@ -81,6 +81,19 @@ public class ReviewDAO {
         }
         return false;
     }
+    
+    public static boolean deleteUserReviewFromDB(String customerID) {
+        String sql = "DELETE FROM Reviews WHERE customer_id = ?";
+        try (Connection connection = Database.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, customerID);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public static List<Review> getAllReviews() {
         String sql = "SELECT * FROM Reviews";

@@ -96,6 +96,7 @@ public class AccountManager extends ListManager<Account> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
 
@@ -138,8 +139,7 @@ public class AccountManager extends ListManager<Account> {
     @Override
     public void show(List<Account> tempList) {
         if (checkNull(tempList)) return;
-        InfosTable.getTitle(new String [] {"Username", "Password", "Email", "Role", 
-            "Status", "Creability"} );
+        InfosTable.getTitle(Account.getAttributes() );
         tempList.forEach(item -> 
             {
                 if (item != null)
@@ -149,6 +149,9 @@ public class AccountManager extends ListManager<Account> {
                         item.getEmail(),
                         item.getRole(),
                         item.getStatus(),
+                        formatDate(item.getCreateAt(), Validator.DATE),
+                        formatDate(item.getUpdateAt(), Validator.DATE),
+                        formatDate(item.getOnlineAt(), Validator.DATE),
                         item.getCreability());
             }
         );
@@ -163,6 +166,9 @@ public class AccountManager extends ListManager<Account> {
                         item.getEmail(),
                         item.getRole(),
                         item.getStatus(),
+                        formatDate(item.getCreateAt(), Validator.DATE),
+                        formatDate(item.getUpdateAt(), Validator.DATE),
+                        formatDate(item.getOnlineAt(), Validator.DATE),
                         item.getCreability());
             }
         );

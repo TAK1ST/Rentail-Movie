@@ -26,6 +26,7 @@ import static main.utils.Menu.Option.Trigger.ASK_FOR_AGAIN;
 import static main.utils.Menu.Option.Trigger.ASK_TO_CONFIRM;
 import static main.utils.Menu.Option.Trigger.ENTER_TO_CONTINUE;
 import static main.utils.Menu.Option.Trigger.EXIT_MENU;
+import static main.utils.Menu.Option.Trigger.LOCK;
 
 public class CustomerPannel {
 
@@ -38,6 +39,7 @@ public class CustomerPannel {
                         WishlistServices.initDataFor(account.getId());
                         ProfileServices.initDataFor(account.getId());
                         ReviewServices.initDataFor(account.getId());
+                        RentalServices.initDataFor(account.getId());
                         ProfileServices.updateAccountStatus(account, AccStatus.ONLINE);
                     }
                 },
@@ -47,15 +49,17 @@ public class CustomerPannel {
                     new Option("Update profile",
                             () -> ProfileServices.updateMyProfile(), ASK_FOR_AGAIN),
                     new Option("Display movies",
-                            () -> getMVM().displaySortDetail(), ENTER_TO_CONTINUE),
+                            () -> getMVM().displaySortDetail()),
                     new Option("Search movie",
                             () -> getMVM().search(), ASK_FOR_AGAIN),
                     new Option("Rent movie",
-                            () -> getRTM().addRental(account.getId()), ASK_FOR_AGAIN),
+                            () -> RentalServices.rentMovie(), ASK_FOR_AGAIN),
                     new Option("Renturn movie",
                             () -> RentalServices.returnMovie(), ASK_FOR_AGAIN),
                     new Option("Extend return date",
                             () -> RentalServices.extendReturnDate(), ASK_FOR_AGAIN),
+                    new Option("My rental history",
+                            () -> RentalServices.myHistoryRental(), ENTER_TO_CONTINUE),
                     new Option("See the movie's reviews",
                             () -> ReviewServices.displayAMovieReviews(), ENTER_TO_CONTINUE),
                     new Option("Make reviews",
@@ -64,21 +68,20 @@ public class CustomerPannel {
                             () -> ReviewServices.displayMyReviews(), ENTER_TO_CONTINUE),
                     new Option("Update my review",
                             () -> ReviewServices.updateMyReview(), ASK_FOR_AGAIN),
-                    new Option("My rental history",
-                            () -> RentalServices.myHistoryRental(), ENTER_TO_CONTINUE),
                     new Option("Add movie to wishlist",
                             () -> getWLM().addWishlist(account.getId()), ASK_FOR_AGAIN),
                     new Option("My wishlist",
-                            () -> WishlistServices.displayMyWishList()),
+                            () -> WishlistServices.displayMyWishList(), ENTER_TO_CONTINUE),
                     new Option("View discounts",
-                            () -> DiscountServices.showMyAvailableDiscount(), ENTER_TO_CONTINUE),
+                            () -> DiscountServices.showMyAvailableDiscount(), LOCK),
                     new Option("Take discount",
-                            () -> DiscountServices.getDiscount(), ASK_FOR_AGAIN),
+                            () -> DiscountServices.getDiscount(), LOCK),
                     new Option("Registor credit",
                             () -> ProfileServices.registorCredit(account), ASK_FOR_AGAIN),
                     new Option("Delete account",
                             () -> getACM().deleteAccount(account), ASK_TO_CONFIRM),
-                    new Option("Log Out", EXIT_MENU),},
+                    new Option("Log Out", EXIT_MENU),
+                },
                 new Action[]{
                     () -> {
                         getRVM().copy(ReviewDAO.getAllReviews());

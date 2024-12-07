@@ -94,6 +94,7 @@ public class GenreManager extends ListManager<Genre> {
                 result.add(item);
             }   
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
     
