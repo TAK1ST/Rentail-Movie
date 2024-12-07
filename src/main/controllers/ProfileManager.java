@@ -108,7 +108,7 @@ public class ProfileManager extends ListManager<Profile> {
     
     @Override
     public List<Profile> searchBy(List<Profile> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Profile> result = new ArrayList<>();
         for (Profile item : tempList) {
@@ -129,7 +129,7 @@ public class ProfileManager extends ListManager<Profile> {
 
     @Override
     public List<Profile> sortList(List<Profile> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         

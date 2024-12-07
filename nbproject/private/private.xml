@@ -3,54 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+            <file>file:/D:/Java/Rental-Movie/src/main/views/GuestPannel.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/dao/DiscountDAO.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/services/RentalServices.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/controllers/Managers.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/dto/Account.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/dao/AccountDAO.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/config/Database.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/base/ListManager.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/controllers/MovieManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/services/MovieServices.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/controllers/RentalManager.java</file>
-=======
-=======
-            <file>file:/E:/Code/learnJava/BE2/Rentail-Movie/test/test/services/ServicesTest.java</file>
-            <file>file:/E:/Code/learnJava/BE2/Rentail-Movie/src/main/Main.java</file>
-            <file>file:/E:/Code/learnJava/BE2/Rentail-Movie/src/main/constants/IDPrefix.java</file>
-            <file>file:/E:/Code/learnJava/BE2/Rentail-Movie/src/main/dao/AccountDAO.java</file>
-            <file>file:/E:/Code/learnJava/BE2/Rentail-Movie/src/main/views/CustomerPannel.java</file>
-=======
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/MiddleTableDAO.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Utility.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/AccountDAO.java</file>
->>>>>>> 1be03a01d2e66eba8a65df66265e73853df092a4
->>>>>>> 72dfa154e95edaeac3c4380f3da2a5b493e4cbc7
-=======
-
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/dao/AccountDAO.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/views/AdminPannel.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/services/AuthenServices.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/views/CustomerPannel.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/views/App.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/views/AuthenPannel.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/dao/ActorDAO.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/base/ListManager.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/services/StatisticServices.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/utils/Menu.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/Main.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/views/PremiumPannel.java</file>
-            <file>file:/home/tak/Code/Rentail-Movie/src/main/utils/Utility.java</file>
-
->>>>>>> 40df85ceaf8e751f5507a45f82c947e5722ee18f
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/MiddleTableDAO.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/utils/Utility.java</file>
-            <file>file:/C:/Users/trann/Downloads/BE2_FCODE/Rentail-Movie/src/main/dao/AccountDAO.java</file>
-<<<<<<< HEAD
->>>>>>> a51c6aa34433c91647a76f246892071da1570589
-=======
->>>>>>> 5e2c3b2ed24432ed121c51781471edd02fba254c
->>>>>>> 72dfa154e95edaeac3c4380f3da2a5b493e4cbc7
         </group>
     </open-files>
 </project-private>

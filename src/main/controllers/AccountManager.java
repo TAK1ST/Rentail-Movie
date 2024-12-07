@@ -81,7 +81,7 @@ public class AccountManager extends ListManager<Account> {
 
     @Override
     public List<Account> searchBy(List<Account> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Account> result = new ArrayList<>();
         for (Account item : tempList) {
@@ -101,7 +101,7 @@ public class AccountManager extends ListManager<Account> {
 
     @Override
     public List<Account> sortList(List<Account> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         

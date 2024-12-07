@@ -148,19 +148,26 @@ public abstract class ListManager<T extends Model> {
         return searchBy(list, propety);
     }
     
-    public List<T> searchBy(List<T> tempList, String propety1, String propety2) {
-        List<T> temp1 = searchBy(tempList, propety1);
-        List<T> temp2 = searchBy(tempList, propety2);
-        
-        List<T> common = temp1.stream()
-                                    .filter(temp2::contains)
-                                    .collect(Collectors.toList());
-        return common;
-    }
+//    public List<T> searchBy(List<T> tempList, String propety1, String propety2) {
+//        List<T> temp1 = searchBy(tempList, propety1);
+//        List<T> temp2 = searchBy(tempList, propety2);
+//        if (temp1 == null || temp2 == null) return null;
+//        
+//        List<T> temp3 = new ArrayList<>();
+//        
+//        for (T item1 : temp1) {
+//            for(T item2 : temp2) {
+//                if (item1.getId().equals(item2.getId()))
+//                    temp3.add(item2);
+//            }
+//        }
+//        if (temp3.isEmpty()) temp3 = null;
+//        return temp3;
+//    }
     
-    public List<T> searchBy(String propety1, String propety2) {
-        return searchBy(list, propety1, propety2);
-    }
+//    public List<T> searchBy(String propety1, String propety2) {
+//        return searchBy(list, propety1, propety2);
+//    }
 
     public List<T> getBy(String message) {
         return searchBy(list, getString(message));

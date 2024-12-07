@@ -39,7 +39,8 @@ public class WishlistManager extends ListManager<Wishlist> {
         Movie movie = (Movie) getMVM().getById("Enter movie' id to rent");
         if (getMVM().checkNull(movie)) return false;
         
-        List<Wishlist> items = searchBy(list, customer.getId(), movie.getId());
+        List<Wishlist> items = searchBy(list, customer.getId());
+        items = searchBy(list, movie.getId());
         if (items != null && !items.isEmpty()) 
             return errorLog("Already added this movie", false);
         
@@ -97,7 +98,7 @@ public class WishlistManager extends ListManager<Wishlist> {
 
     @Override
     public List<Wishlist> searchBy(List<Wishlist> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Wishlist> result = new ArrayList<>();
         for (Wishlist item : tempList) {
@@ -116,7 +117,7 @@ public class WishlistManager extends ListManager<Wishlist> {
     
     @Override
     public List<Wishlist> sortList(List<Wishlist> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
 
@@ -151,9 +152,8 @@ public class WishlistManager extends ListManager<Wishlist> {
             {
                 if (item != null)
                     InfosTable.calcLayout(
-                        item.getId(), 
-                        item.getMovieId(),
                         item.getCustomerId(),
+                        item.getMovieId(),
                         formatDate(item.getAddedDate(), Validator.DATE),
                         item.getPriority()
                 );
@@ -165,9 +165,8 @@ public class WishlistManager extends ListManager<Wishlist> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
-                        item.getId(), 
-                        item.getMovieId(),
                         item.getCustomerId(),
+                        item.getMovieId(),
                         formatDate(item.getAddedDate(), Validator.DATE),
                         item.getPriority()
                 );

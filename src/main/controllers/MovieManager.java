@@ -17,6 +17,7 @@ import main.utils.InfosTable;
 import static main.utils.Input.getDouble;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
+import static main.utils.Input.returnIDs;
 import static main.utils.Input.returnNames;
 import static main.utils.Input.selectByNumbers;
 import static main.utils.Utility.formatDate;
@@ -147,7 +148,7 @@ public class MovieManager extends ListManager<Movie> {
 
     @Override
     public List<Movie> searchBy(List<Movie> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Movie> result = new ArrayList<>();
         for (Movie item : tempList) {
@@ -167,7 +168,7 @@ public class MovieManager extends ListManager<Movie> {
     
     @Override
     public List<Movie> sortList(List<Movie> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         
@@ -213,6 +214,7 @@ public class MovieManager extends ListManager<Movie> {
                         item.getDescription(),
                         item.getAvgRating(),
                         returnNames(item.getGenreNames(), getGRM()),
+                        String.join(", ", returnNames(item.getGenreNames(), getGRM())),
                         String.join(", ", returnNames(item.getActorIDs(), getATM())),
                         String.join(", ", returnNames(item.getLanguageCodes(), getLGM())),
                         formatDate(item.getReleaseYear(), Validator.YEAR),
@@ -229,11 +231,12 @@ public class MovieManager extends ListManager<Movie> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
-                        item.getId(),
+item.getId(),
                         item.getTitle(),
                         item.getDescription(),
                         item.getAvgRating(),
                         returnNames(item.getGenreNames(), getGRM()),
+                        String.join(", ", returnNames(item.getGenreNames(), getGRM())),
                         String.join(", ", returnNames(item.getActorIDs(), getATM())),
                         String.join(", ", returnNames(item.getLanguageCodes(), getLGM())),
                         formatDate(item.getReleaseYear(), Validator.YEAR),

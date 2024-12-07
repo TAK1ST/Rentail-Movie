@@ -101,7 +101,7 @@ public class PaymentManager extends ListManager<Payment> {
 
     @Override
     public List<Payment> searchBy(List<Payment> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Payment> result = new ArrayList<>();
         for (Payment item : tempList) {
@@ -119,7 +119,7 @@ public class PaymentManager extends ListManager<Payment> {
 
     @Override
     public List<Payment> sortList(List<Payment> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         

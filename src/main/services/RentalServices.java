@@ -47,14 +47,15 @@ public class RentalServices {
         String movieID = getString("Enter movie' id");
         if (movieID == null) return false;
         
-        Rental rental = getRTM().searchBy(accountID, movieID).getFirst();
+        List<Rental> rental = getRTM().searchBy(getRTM().getList(), accountID);
+        rental = getRTM().searchBy(rental, movieID);
         if (getRTM().checkNull(rental)) return false;
         
         Rental temp = new Rental();
         temp.setReturnDate(LocalDate.now());
-        temp.setLateFee(calcLateFee(LocalDate.now(), rental));
+        temp.setLateFee(calcLateFee(LocalDate.now(), rental.getFirst()));
         
-        return getRTM().update(rental, temp);
+        return getRTM().update(rental.getFirst(), temp);
     }
     
     public static boolean extendReturnDate() {

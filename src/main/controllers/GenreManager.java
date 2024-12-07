@@ -82,7 +82,7 @@ public class GenreManager extends ListManager<Genre> {
    
     @Override
     public List<Genre> searchBy(List<Genre> tempList, String propety) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         List<Genre> result = new ArrayList<>();
         for (Genre item : tempList) {
@@ -99,7 +99,7 @@ public class GenreManager extends ListManager<Genre> {
     
     @Override
     public List<Genre> sortList(List<Genre> tempList, String propety, boolean descending) {
-        if (checkNull(tempList)) return null;
+        if (tempList == null) return null;
         
         if (propety == null) return tempList;
         
