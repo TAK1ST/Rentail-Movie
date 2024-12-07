@@ -79,7 +79,7 @@ public class AuthenServices {
     }
 
     public static boolean forgetPassword(String accountID) {
-        Account account = (Account) getACM().getById(accountID);
+        Account account = (Account) getACM().searchById(accountID);
         if (getACM().checkNull(account)) 
             return errorLog("Account not found", false);
         
