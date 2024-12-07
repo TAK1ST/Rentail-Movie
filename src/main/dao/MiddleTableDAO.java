@@ -12,10 +12,11 @@ public class MiddleTableDAO {
     
     public static boolean addDataToMidTable(String middleTableName, String mainId, String mainAttr, String subIds, String subAttr) {
         String sql = "INSERT INTO " + middleTableName +" (" + subAttr + ", " + mainAttr + ") VALUES (?, ?)";
-        try (Connection conn = Database.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = Database.getConnection(); 
+            PreparedStatement ps = conn.prepareStatement(sql)) {
 
             for (String subId : subIds.split(", ")) {
-                ps.setString(1, subId);
+                ps.setString(1, subId.trim());
                 ps.setString(2, mainId);
                 ps.addBatch();  
             }

@@ -178,11 +178,14 @@ public class Menu {
             System.out.println("\n[MENU] Data have changed!! Please save.");
     }
     
-    public static void showSuccess(boolean isSuccess) {
-        if (isSuccess) 
+    public static boolean showSuccess(boolean isSuccess) {
+        if (isSuccess) {
             System.out.println("[MENU] Success.");
+            return true;
+        }
         else 
             System.out.println("[MENU] Fail.");
+        return false;
     }
     
     @FunctionalInterface
