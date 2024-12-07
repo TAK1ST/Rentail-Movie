@@ -174,6 +174,7 @@ public class MovieManager extends ListManager<Movie> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
     

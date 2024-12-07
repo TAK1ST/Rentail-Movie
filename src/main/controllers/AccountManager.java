@@ -96,6 +96,7 @@ public class AccountManager extends ListManager<Account> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
 

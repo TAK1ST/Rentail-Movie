@@ -129,6 +129,7 @@ public class ActorManager extends ListManager<Actor> {
             ) 
             result.add(item);
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
     

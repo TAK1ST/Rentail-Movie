@@ -111,6 +111,7 @@ public class PaymentManager extends ListManager<Payment> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
 

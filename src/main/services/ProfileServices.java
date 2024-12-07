@@ -31,7 +31,11 @@ public class ProfileServices {
     }
     
     public static void showMyProfile(Account account) {
-        getACM().show(account, "My Profile");
+        Profile profile = getPFM().searchById(account.getId());
+        if (getPFM().checkNull(profile)) return;
+        
+        getACM().show(account);
+        getPFM().show(profile);
     }
     
     public static boolean updateMyProfile() {

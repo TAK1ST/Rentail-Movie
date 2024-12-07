@@ -129,6 +129,7 @@ public final class ReviewManager extends ListManager<Review> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
 

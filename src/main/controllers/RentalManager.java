@@ -50,11 +50,11 @@ public class RentalManager extends ListManager<Rental> {
         if (getMVM().checkNull(movie)) {
             return false;
         }
-        List<Rental> retals = searchBy(customer.getId());
-        retals = searchBy(retals, movie.getId());
-        if (retals != null && !retals.isEmpty()) 
-            return errorLog("Already rented this movie", false);
-        
+        List<Rental> myRental = searchBy(customer.getId());
+        if (myRental != null && !myRental.isEmpty()) {
+            if (searchBy(myRental, movie.getId()) != null) 
+                return errorLog("Already rented this movie", false);
+        }
         if (movie.getAvailableCopies() <= 0) {
             errorLog("No available copies for this movie!");
             return false;
@@ -199,6 +199,7 @@ public class RentalManager extends ListManager<Rental> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
 

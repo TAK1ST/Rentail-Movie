@@ -20,6 +20,7 @@ import static main.utils.Menu.Option.Trigger.ASK_FOR_AGAIN;
 import static main.utils.Menu.Option.Trigger.ASK_TO_CONFIRM;
 import static main.utils.Menu.Option.Trigger.ENTER_TO_CONTINUE;
 import static main.utils.Menu.Option.Trigger.EXIT_MENU;
+import static main.utils.Menu.Option.Trigger.LOCK;
 
 public class CustomerPannel {
     
@@ -28,6 +29,7 @@ public class CustomerPannel {
             new Action[] {
                 () ->  {
                     Managers.initAll();
+                    RentalServices.initDataFor(account.getId());
                     DiscountServices.initDataFor(account.getId());
                     WishlistServices.initDataFor(account.getId());
                     ProfileServices.initDataFor(account.getId());
@@ -65,9 +67,9 @@ public class CustomerPannel {
                 new Option("My wishlist", 
                         () -> WishlistServices.displayMyWishList()),
                 new Option("View discounts", 
-                        () -> DiscountServices.showMyAvailableDiscount(), ENTER_TO_CONTINUE),
+                        () -> DiscountServices.showMyAvailableDiscount(), LOCK),
                 new Option("Take discount", 
-                        () -> DiscountServices.getDiscount(), ASK_FOR_AGAIN),
+                        () -> DiscountServices.getDiscount(), LOCK),
                 new Option("Registor credit", 
                         () -> ProfileServices.registorCredit(account), ASK_FOR_AGAIN),
                 new Option("Delete account", 

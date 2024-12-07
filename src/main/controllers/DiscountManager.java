@@ -177,6 +177,7 @@ public class DiscountManager extends ListManager<Discount> {
                 result.add(item);
             }   
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
     

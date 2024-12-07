@@ -96,6 +96,7 @@ public class LanguageManager extends ListManager<Language> {
                 result.add(item);
             }   
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
     

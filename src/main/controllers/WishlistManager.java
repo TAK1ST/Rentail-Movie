@@ -112,6 +112,7 @@ public class WishlistManager extends ListManager<Wishlist> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
     
