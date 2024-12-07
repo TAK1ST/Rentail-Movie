@@ -5,10 +5,14 @@ import main.controllers.Managers;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRVM;
 import static main.controllers.Managers.getACM;
+import static main.controllers.Managers.getDCM;
 import static main.controllers.Managers.getRTM;
 import static main.controllers.Managers.getWLM;
+import main.dao.DiscountDAO;
 import main.dao.MovieDAO;
+import main.dao.RentalDAO;
 import main.dao.ReviewDAO;
+import main.dao.WishlistDAO;
 import main.dto.Account;
 import main.services.ProfileServices;
 import main.services.DiscountServices;
@@ -79,6 +83,9 @@ public class CustomerPannel {
                     () -> {
                         getRVM().copy(ReviewDAO.getAllReviews());
                         getMVM().copy(MovieDAO.getAllMovies());
+                        getRTM().copy(RentalDAO.getAllRentals());
+                        getWLM().copy(WishlistDAO.getAllWishlists());
+                        getDCM().copy(DiscountDAO.getAllDiscounts());
                     }
                 },
                 new Action[]{

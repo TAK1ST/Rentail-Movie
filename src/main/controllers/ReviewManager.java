@@ -123,7 +123,7 @@ public final class ReviewManager extends ListManager<Review> {
             if ((item.getId() != null && item.getId().equals(propety))
                     || (item.getMovieID() != null && item.getMovieID().equals(propety))
                     || (item.getReviewText() != null && item.getReviewText().trim().toLowerCase().contains(propety.trim().toLowerCase()))
-                    || (item.getReviewDate() != null && item.getReviewDate().format(Validator.DATE).contains(propety.trim()))
+                    || (item.getReviewDate() != null && item.getReviewDate().format(Validator.DATE).equals(propety))
                     || (item.getCustomerID() != null && item.getCustomerID().equals(propety))
                     || String.valueOf(item.getRating()).equals(propety)) {
                 result.add(item);

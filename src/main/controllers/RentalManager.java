@@ -194,9 +194,9 @@ public class RentalManager extends ListManager<Rental> {
                     || (item.getCustomerID() != null && item.getCustomerID().equals(propety))
                     || (item.getMovieID() != null && item.getMovieID().equals(propety))
                     || (item.getStaffID() != null && item.getStaffID().equals(propety))
-                    || (item.getRentalDate() != null && item.getRentalDate().format(Validator.DATE).contains(propety.trim()))
-                    || (item.getDueDate() != null && item.getDueDate().format(Validator.DATE).contains(propety.trim()))
-                    || (item.getReturnDate() != null && item.getReturnDate().format(Validator.DATE).contains(propety.trim()))
+                    || (item.getRentalDate() != null && item.getRentalDate().format(Validator.DATE).equals(propety))
+                    || (item.getDueDate() != null && item.getDueDate().format(Validator.DATE).equals(propety))
+                    || (item.getReturnDate() != null && item.getReturnDate().format(Validator.DATE).equals(propety))
                     || String.valueOf(item.getTotalAmount()).equals(propety)
                     || String.valueOf(item.getLateFee()).equals(propety)
                     || (item.getStatus() != null && item.getStatus().name().equals(propety.toLowerCase().trim()))) {
