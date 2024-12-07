@@ -16,6 +16,7 @@ import main.services.MovieServices;
 import main.utils.InfosTable;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
+import static main.utils.Input.returnNames;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
 import main.utils.Validator;
@@ -170,8 +171,8 @@ public final class ReviewManager extends ListManager<Review> {
             {
                 if (item != null)
                     InfosTable.calcLayout(
-                        item.getCustomerID(),
-                        item.getMovieID(),
+                        String.join(", ", returnNames(item.getCustomerID(), getACM())),
+                        String.join(", ", returnNames(item.getMovieID(), getMVM())),
                         item.getRating(),
                         item.getReviewText(),
                         formatDate(item.getReviewDate(), Validator.DATE)
@@ -184,8 +185,8 @@ public final class ReviewManager extends ListManager<Review> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
-                        item.getCustomerID(),
-                        item.getMovieID(),
+                        String.join(", ", returnNames(item.getCustomerID(), getACM())),
+                        String.join(", ", returnNames(item.getMovieID(), getMVM())),
                         item.getRating(),
                         item.getReviewText(),
                         formatDate(item.getReviewDate(), Validator.DATE)

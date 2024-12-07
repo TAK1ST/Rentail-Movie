@@ -208,13 +208,11 @@ public class DiscountManager extends ListManager<Discount> {
     public void show(List<Discount> tempList) {
         if (checkNull(tempList)) return;
         
-        InfosTable.getTitle(Discount.getAttributes());
+        InfosTable.getTitle(new String [] {"Type", "Start Date","End Date", "Quantity", "Active"});
         tempList.forEach(item -> 
             {if (item != null)
                 InfosTable.calcLayout(
-                    item.getCode(), 
-                    returnNames(item.getCustomerIds(), getPFM()),
-                    returnNames(item.getMovieIds(), getMVM()),
+                    String.join(", ", returnNames(item.getCustomerIds(), getACM())),
                     item.getType(),
                     item.getValue(),
                     formatDate(item.getStartDate(), Validator.DATE), 
@@ -228,9 +226,6 @@ public class DiscountManager extends ListManager<Discount> {
         tempList.forEach(item -> 
             {if (item != null)
                 InfosTable.displayByLine(
-                    item.getCode(), 
-                    returnNames(item.getCustomerIds(), getPFM()),
-                    returnNames(item.getMovieIds(), getMVM()),
                     item.getType(),
                     item.getValue(),
                     formatDate(item.getStartDate(), Validator.DATE), 

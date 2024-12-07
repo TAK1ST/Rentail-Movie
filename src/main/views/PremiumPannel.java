@@ -7,6 +7,7 @@ import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRTM;
 import static main.controllers.Managers.getRVM;
 import static main.controllers.Managers.getWLM;
+import main.dao.MovieDAO;
 import main.dto.Account;
 import main.services.ProfileServices;
 import main.services.DiscountServices;
@@ -76,7 +77,9 @@ public class PremiumPannel {
                         () -> getACM().deleteAccount(account), ASK_TO_CONFIRM),
                 new Option("Log Out", EXIT_MENU),
             },
-            null, 
+            new Action [] {
+                () -> getMVM().copy(MovieDAO.getAllMovies())
+            }, 
             new Action[] {
                 () -> ProfileServices.updateAccountStatus(account, AccStatus.OFFLINE)
             }

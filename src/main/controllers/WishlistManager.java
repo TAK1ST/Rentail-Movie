@@ -15,6 +15,7 @@ import main.dto.Movie;
 import main.dto.Wishlist;
 import main.utils.InfosTable;
 import static main.utils.Input.getString;
+import static main.utils.Input.returnNames;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
@@ -152,8 +153,8 @@ public class WishlistManager extends ListManager<Wishlist> {
             {
                 if (item != null)
                     InfosTable.calcLayout(
-                        item.getCustomerId(),
-                        item.getMovieId(),
+                        String.join(", ", returnNames(item.getCustomerId(), getACM())),
+                        String.join(", ", returnNames(item.getMovieId(), getMVM())),
                         formatDate(item.getAddedDate(), Validator.DATE),
                         item.getPriority()
                 );
@@ -165,8 +166,8 @@ public class WishlistManager extends ListManager<Wishlist> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
-                        item.getCustomerId(),
-                        item.getMovieId(),
+                        String.join(", ", returnNames(item.getCustomerId(), getACM())),
+                        String.join(", ", returnNames(item.getMovieId(), getMVM())),
                         formatDate(item.getAddedDate(), Validator.DATE),
                         item.getPriority()
                 );
@@ -174,5 +175,4 @@ public class WishlistManager extends ListManager<Wishlist> {
         );
         InfosTable.showFooter();
     }
-
 }

@@ -10,14 +10,17 @@ import main.constants.rental.RentalStatus;
 import main.dao.RentalDAO;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getACM;
+import static main.controllers.Managers.getGRM;
 import static main.controllers.Managers.getPMM;
 import main.dto.Account;
 import main.dto.Movie;
 import main.dto.Rental;
 import main.services.RentalServices;
 import main.utils.InfosTable;
+import main.utils.Input;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
+import static main.utils.Input.returnNames;
 import static main.utils.Input.yesOrNo;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
@@ -51,9 +54,10 @@ public class RentalManager extends ListManager<Rental> {
         }
         List<Rental> retals = searchBy(customer.getId());
         retals = searchBy(retals, movie.getId());
-        if (retals != null && !retals.isEmpty()) 
+        if (retals != null && !retals.isEmpty()) {
             return errorLog("Already rented this movie", false);
-        
+        }
+
         if (movie.getAvailableCopies() <= 0) {
             errorLog("No available copies for this movie!");
             return false;
@@ -69,9 +73,9 @@ public class RentalManager extends ListManager<Rental> {
         if (rentalDate == null) {
             return false;
         }
-        
-        LocalDate dueDate =  rentalDate.plusDays(howManyDays);
-        
+
+        LocalDate dueDate = rentalDate.plusDays(howManyDays);
+
         String staffID = null;
 //                RentalServices.findStaffForRentalApproval();
 //        if (staffID == null) {
@@ -204,10 +208,14 @@ public class RentalManager extends ListManager<Rental> {
 
     @Override
     public List<Rental> sortList(List<Rental> tempList, String propety, boolean descending) {
-        if (tempList == null) return null;
-        
-        if (propety == null) return tempList;
-        
+        if (tempList == null) {
+            return null;
+        }
+
+        if (propety == null) {
+            return tempList;
+        }
+
         String[] options = Rental.getAttributes();
         List<Rental> result = new ArrayList<>(tempList);
 
@@ -248,14 +256,14 @@ public class RentalManager extends ListManager<Rental> {
             return;
         }
 
-        InfosTable.getTitle(Rental.getAttributes());
-        tempList.forEach(item ->
-            {
-                if (item != null) 
-                    InfosTable.calcLayout(
-                        item.getCustomerID(),
-                        item.getMovieID(),
-                        item.getStaffID(),
+        InfosTable.getTitle(new String[]{"due_date", "rental_date", "return_date", "status", "total_amount", "late_fee"});
+        tempList.forEach(item
+                -> {
+            if (item != null) {
+                InfosTable.calcLayout(
+                        String.join(", ", returnNames(item.getCustomerID(), getACM())),
+                        String.join(", ", returnNames(item.getMovieID(), getMVM())),
+                        String.join(", ", returnNames(item.getStaffID(), getACM())),
                         formatDate(item.getRentalDate(), Validator.DATE),
                         formatDate(item.getDueDate(), Validator.DATE),
                         formatDate(item.getReturnDate(), Validator.DATE),
@@ -264,16 +272,17 @@ public class RentalManager extends ListManager<Rental> {
                         item.getStatus()
                 );
             }
+        }
         );
 
         InfosTable.showTitle();
-        tempList.forEach(item -> 
-            {
-                if (item != null) 
-                    InfosTable.displayByLine(
-                        item.getCustomerID(),
-                        item.getMovieID(),
-                        item.getStaffID(),
+        tempList.forEach(item
+                -> {
+            if (item != null) {
+                InfosTable.displayByLine(
+                        String.join(", ", returnNames(item.getCustomerID(), getACM())),
+                        String.join(", ", returnNames(item.getMovieID(), getMVM())),
+                        String.join(", ", returnNames(item.getStaffID(), getACM())),
                         formatDate(item.getRentalDate(), Validator.DATE),
                         formatDate(item.getDueDate(), Validator.DATE),
                         formatDate(item.getReturnDate(), Validator.DATE),
@@ -282,6 +291,7 @@ public class RentalManager extends ListManager<Rental> {
                         item.getStatus()
                 );
             }
+        }
         );
         InfosTable.showFooter();
     }

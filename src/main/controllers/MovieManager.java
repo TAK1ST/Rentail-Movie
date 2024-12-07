@@ -204,23 +204,18 @@ public class MovieManager extends ListManager<Movie> {
     public void show(List<Movie> tempList) {
         if (checkNull(tempList)) return;
             
-        InfosTable.getTitle(Movie.getAttributes());
+        InfosTable.getTitle(new String [] {"Title", "Description", "Average", "Release Year", 
+            "Price", "Available Copies"});
         tempList.forEach(item -> 
             {
                 if (item != null)
                     InfosTable.calcLayout(
-                        item.getId(),
                         item.getTitle(),
-                        String.join(", ", returnNames(item.getGenreNames(), getGRM())),
-                        String.join(", ", returnNames(item.getActorIDs(), getATM())),
-                        String.join(", ", returnNames(item.getLanguageCodes(), getLGM())),
                         item.getDescription(),
                         item.getAvgRating(),
                         formatDate(item.getReleaseYear(), Validator.YEAR),
                         item.getRentalPrice(),
-                        item.getAvailableCopies(),
-                        formatDate(item.getCreateDate(), Validator.DATE),
-                        formatDate(item.getUpdateDate(), Validator.DATE)
+                        item.getAvailableCopies()
                 );
             }
         );
@@ -230,18 +225,12 @@ public class MovieManager extends ListManager<Movie> {
             {
                 if (item != null)
                     InfosTable.displayByLine(
-                        item.getId(),
                         item.getTitle(),
-                        String.join(", ", returnNames(item.getGenreNames(), getGRM())),
-                        String.join(", ", returnNames(item.getActorIDs(), getATM())),
-                        String.join(", ", returnNames(item.getLanguageCodes(), getLGM())),
                         item.getDescription(),
                         item.getAvgRating(),
                         formatDate(item.getReleaseYear(), Validator.YEAR),
                         item.getRentalPrice(),
-                        item.getAvailableCopies(),
-                        formatDate(item.getCreateDate(), Validator.DATE),
-                        formatDate(item.getUpdateDate(), Validator.DATE)
+                        item.getAvailableCopies()
                 );
             }
         );
