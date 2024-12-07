@@ -118,7 +118,7 @@ public class ProfileManager extends ListManager<Profile> {
                     || (item.getFullName()      != null && propety.trim().toLowerCase().contains(item.getFullName().trim().toLowerCase())) 
                     || (item.getPhoneNumber()   != null && item.getPhoneNumber().equals(propety))
                     || (item.getAddress()       != null && item.getAddress().trim().toLowerCase().contains(propety))
-                    || (item.getBirthday()      != null && item.getBirthday().format(Validator.DATE).contains(propety.trim()))
+                    || (item.getBirthday()      != null && item.getBirthday().format(Validator.DATE).equals(propety))
                     || String.valueOf(item.getCredit()).equals(propety)) 
             {
                 result.add(item);
