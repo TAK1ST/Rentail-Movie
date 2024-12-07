@@ -42,12 +42,13 @@ public class LogMessage {
         System.out.printf("[FLAG %d]\n", flagNum++);
     }
     
-    public static void valueLog(Object item) {
-        System.out.println("-> " + item.toString());
-    }
-    
     public static void valueLog(Object... items) {
         System.out.println("-> " +Arrays.toString(items));
+    }
+    
+    public static Object valueLog(Object item) {
+        System.out.println("-> " + item.toString());
+        return item;
     }
     
 }

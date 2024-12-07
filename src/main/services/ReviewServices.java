@@ -17,6 +17,7 @@ import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
 import static main.utils.Input.pressEnterToContinue;
 import static main.utils.Input.returnName;
+import static main.utils.LogMessage.debugLog;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.LogMessage.successLog;
 import static main.utils.Utility.formatDate;
@@ -36,7 +37,7 @@ public class ReviewServices {
     
     public static void initDataFor(String id) {
         accountID = id;
-        myReviews = ReviewDAO.getUserReviews(id);
+        myReviews = getRVM().searchBy(id);
     }
         
     public static void displayAMovieReviews() {
@@ -47,7 +48,6 @@ public class ReviewServices {
         if (getRVM().checkNull(movieReviews)) return;
         
         getMVM().show(movie, "");
-        
         InfosTable.getTitle("Username", "Rating", "Comment", "Date");
         movieReviews.forEach(item -> 
             InfosTable.calcLayout(
@@ -68,7 +68,6 @@ public class ReviewServices {
             )
         );
         InfosTable.showFooter();
-        
     }
 
     public static void displayMyReviews() {
