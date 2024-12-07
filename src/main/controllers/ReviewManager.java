@@ -72,12 +72,13 @@ public final class ReviewManager extends ListManager<Review> {
         if (checkNull(list)) return false;
         
         if (review == null)
-            review = (Review) getById("Enter review's id");
+            review = (Review) getBy("Enter movie's id");
         if (checkNull(review)) return false;
         
         Review temp = new Review(review);
         temp.setRating(getInteger("Enter rating", 1, 5, temp.getRating()));
         temp.setReviewText(getString("Enter comment", temp.getReviewText()));
+        temp.setReviewDate(LocalDate.now());
                 
         return update(review, temp);
     }

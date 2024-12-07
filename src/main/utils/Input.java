@@ -19,6 +19,9 @@ public class Input {
     
     private static final Scanner scanner = new Scanner(System.in);
     
+    private static final String SELECT_NUM_UNVALID_PATTERN = "[^0-9, ]";
+    private static final String COMMA_UNVALID_PATTERN = "[^a-zA-Z0-9, ]";
+    
     private static int getBackIn = 3;
     
     public static boolean askToExit() {
@@ -171,8 +174,22 @@ public class Input {
         manager.show();
         List<String> temps = new ArrayList<>();
 
-        String input = getString(message, null);
-        if (input == null) return oldData;
+        String input = oldData;
+        do {
+            input = getString(message, input);
+            if (input == oldData)
+                return oldData;
+            
+            if (input != null && input.matches("[a-zA-Z]+")) {
+                errorLog("Input must not contain letters");
+                input = null;
+            }
+            
+            if (input != null && input.matches(".*" + SELECT_NUM_UNVALID_PATTERN + ".*")) {
+                errorLog("Input must not have special characters");
+                input = null; 
+            }
+        } while (input == null);
         
         String[] inputs = input.split(",");
 
@@ -180,7 +197,13 @@ public class Input {
             item = item.trim();
             int index = toInt(item);
             if (index >= 0 && index < manager.getList().size()) {
-                temps.add(manager.getList().get(index).getId());
+                String value = manager.getList().get(index).getId();
+                if (!temps.contains(value))
+                    temps.add(value);
+                else 
+                    infoLog("Removing duplicate..");
+            } else {
+                infoLog("Removing out of index inputs..");
             }
         }
 
@@ -193,7 +216,12 @@ public class Input {
     
     public static <T extends Model> String[] returnIDs(String stringList, ListManager<T> manager) {
         if (stringList.isEmpty() || stringList.isBlank())
-            return new String[] {};
+            return null;
+        
+        if (stringList.matches(".*" + COMMA_UNVALID_PATTERN + ".*")) {
+            errorLog("Input must not have special characters");
+            return null;   
+        }
         
         List<T> items = manager.getList();
         String[] ids = stringList.split(",");
@@ -204,15 +232,18 @@ public class Input {
                 if (item.getId().equals(id.trim())) {
                     if (item instanceof Genre) {
                         Genre res = (Genre) item;
-                        result.add(res.getGenreName()); 
+                        if (!result.contains(res.getGenreName()))
+                            result.add(res.getGenreName()); 
                     } 
                     else if (item instanceof Actor) {
                         Actor res = (Actor) item;
-                        result.add(res.getId()); 
+                        if (!result.contains(res.getId()))
+                            result.add(res.getId()); 
                     } 
                     else if (item instanceof Language) {
                         Language res = (Language) item;
-                        result.add(res.getCode()); 
+                        if (!result.contains(res.getCode()))
+                            result.add(res.getCode()); 
                     } 
                     break; 
                 }
@@ -228,7 +259,12 @@ public class Input {
     
     public static <T extends Model> String[] returnNames(String stringList, ListManager<T> manager) {
         if (stringList.isEmpty() || stringList.isBlank())
-            return new String[] {};
+            return null;
+        
+        if (stringList.matches(".*" + COMMA_UNVALID_PATTERN + ".*")) {
+            errorLog("Input must not have special characters");
+            return null;   
+        }
         
         List<T> items = manager.getList();
         String[] ids = stringList.split(",");
@@ -239,27 +275,33 @@ public class Input {
                 if (item.getId().equals(id.trim())) {
                     if (item instanceof Genre) {
                         Genre res = (Genre) item;
-                        result.add(res.getGenreName()); 
+                        if (!result.contains(res.getGenreName())) 
+                            result.add(res.getGenreName()); 
                     } 
                     else if (item instanceof Actor) {
                         Actor res = (Actor) item;
-                        result.add(res.getActorName()); 
+                        if (!result.contains(res.getActorName())) 
+                            result.add(res.getActorName()); 
                     } 
                     else if (item instanceof Language) {
                         Language res = (Language) item;
-                        result.add(res.getName()); 
+                        if (!result.contains(res.getName())) 
+                            result.add(res.getName()); 
                     } 
                     else if (item instanceof Account) {
                         Account res = (Account) item;
-                        result.add(res.getUsername()); 
+                        if (!result.contains(res.getUsername())) 
+                            result.add(res.getUsername()); 
                     } 
                     else if (item instanceof Movie) {
                         Movie res = (Movie) item;
-                        result.add(res.getTitle()); 
+                        if (!result.contains(res.getTitle())) 
+                            result.add(res.getTitle()); 
                     } 
                     else if (item instanceof Profile) {
                         Profile res = (Profile) item;
-                        result.add(res.getFullName()); 
+                        if (!result.contains(res.getFullName())) 
+                            result.add(res.getFullName()); 
                     }
                     break; 
                 }
