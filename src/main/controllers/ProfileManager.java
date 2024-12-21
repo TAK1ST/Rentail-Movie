@@ -70,7 +70,7 @@ public class ProfileManager extends ListManager<Profile> {
         temp.setPhoneNumber(getPhoneNumber("Enter phone number", temp.getPhoneNumber()));
         temp.setAddress(getString("Enter address", temp.getAddress()));
         temp.setBirthday(getDate("Enter birthday", temp.getBirthday()));
-        temp.setCredit(getDouble("Enter credit", 0f, Double.MAX_VALUE, temp.getCredit()));
+        temp.setCredit(getDouble("Enter credit", 0.2f, Double.MAX_VALUE, temp.getCredit()));
         
         return update(profile, temp);
     }
@@ -124,6 +124,7 @@ public class ProfileManager extends ListManager<Profile> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
 

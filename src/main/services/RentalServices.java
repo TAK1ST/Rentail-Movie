@@ -11,12 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import main.config.Database;
 import main.constants.rental.RentalStatus;
 import static main.controllers.Managers.getACM;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getRTM;
+import static main.controllers.Managers.getRVM;
 import main.dao.RentalDAO;
 import main.dto.Account;
 import main.dto.Movie;
@@ -24,6 +26,10 @@ import main.dto.Rental;
 import main.utils.InfosTable;
 import static main.utils.Input.getInteger;
 import static main.utils.Input.getString;
+import static main.utils.Input.returnName;
+import static main.utils.LogMessage.errorLog;
+import static main.utils.Utility.formatDate;
+import main.utils.Validator;
 
 /**
  *
@@ -34,73 +40,127 @@ public class RentalServices {
     private static List<Rental> myRentals;
     private static String accountID;
     
+    private static final String[] showAtrributes = {"Movie ID", "Title", "Rental date", "Due date", "Return date", "Status", "Total", "Late Fee"};
+    
     public static void initDataFor(String id) {
         accountID = id;
-        myRentals = RentalDAO.getUserRentals(id);
+        myRentals = new ArrayList<>(RentalDAO.getUserRentals(accountID));
     }
     
     public static void myHistoryRental() {
-        getRTM().display(myRentals);
+        if (getRTM().checkNull(myRentals)) return;
+        
+        InfosTable.getTitle(showAtrributes);
+        myRentals.forEach(item -> 
+            InfosTable.calcLayout(
+                item.getMovieID(),
+                returnName(item.getMovieID(), getMVM()),
+                formatDate(item.getRentalDate(), Validator.DATE),
+                formatDate(item.getDueDate(), Validator.DATE),
+                formatDate(item.getReturnDate(), Validator.DATE),
+                item.getStatus(),
+                item.getTotalAmount(),
+                item.getLateFee()
+                    
+            )
+        );
+        
+        InfosTable.showTitle();
+        myRentals.forEach(item -> 
+            InfosTable.displayByLine(
+                item.getMovieID(),
+                returnName(item.getMovieID(), getMVM()),
+                formatDate(item.getRentalDate(), Validator.DATE),
+                formatDate(item.getDueDate(), Validator.DATE),
+                formatDate(item.getReturnDate(), Validator.DATE),
+                item.getStatus(),
+                item.getTotalAmount(),
+                item.getLateFee()
+            )
+        );
+        InfosTable.showFooter();
+    }
+    
+    public static boolean rentMovie() {
+        if (getRTM().addRental(accountID)) {
+            myRentals = RentalDAO.getUserRentals(accountID);
+            return true;
+        }
+        else return false;
     }
     
     public static boolean returnMovie() {
         String movieID = getString("Enter movie' id");
         if (movieID == null) return false;
         
-        List<Rental> rental = getRTM().searchBy(getRTM().getList(), accountID);
-        rental = getRTM().searchBy(rental, movieID);
+        List<Rental> rental = getRTM().searchBy(myRentals, movieID);
         if (getRTM().checkNull(rental)) return false;
         
-        Rental temp = new Rental();
+        Rental temp = new Rental(rental.getLast());
         temp.setReturnDate(LocalDate.now());
-        temp.setLateFee(calcLateFee(LocalDate.now(), rental.getFirst()));
+        temp.setLateFee(calcLateFee(LocalDate.now(), temp));
         
-        return getRTM().update(rental.getFirst(), temp);
+        if (getRTM().update(rental.getLast(), temp)) {
+            myRentals = RentalDAO.getUserRentals(accountID);
+            return true;
+        }
+        else return false;
     }
     
     public static boolean extendReturnDate() {
-        Rental rental = getRTM().getById("Enter rental's id to extend");
-        rental.setLateFee(calcLateFee(LocalDate.now(), rental));
         
-        Movie movie = (Movie) getMVM().searchById(rental.getMovieID());
-        if (getMVM().checkNull(movie)) return false;
+        Movie movie = (Movie) getMVM().getById("Enter movie' id");
+        if (movie == null) return false;
         
+        List<Rental> rental = getRTM().searchBy(myRentals, movie.getId());
+        if (getRTM().checkNull(rental)) return false;
+        
+        Rental temp = new Rental(rental.getLast());
         int howManyDays = getInteger("How many days to extends", 1, 365, Integer.MIN_VALUE);
         if (howManyDays == Integer.MIN_VALUE) return false;
         
-        rental.setTotalAmount(movie.getRentalPrice() * howManyDays * 1.5);
-        rental.setDueDate(rental.getDueDate().plusDays(howManyDays));
+        temp.setTotalAmount(movie.getRentalPrice() * howManyDays * 1.5);
+        temp.setDueDate(rental.getLast().getDueDate().plusDays(howManyDays));
         
-        return RentalDAO.updateRentalInDB(rental);
+        if (getRTM().update(rental.getLast(), temp)) {
+            myRentals = RentalDAO.getUserRentals(accountID);
+            return true;
+        }
+        return false;
     }
     
     public static double calcLateFee(LocalDate rightNow, Rental rental) {
+        if (rental.getDueDate() == null) {
+            System.err.println("Error: Due date is null for rental ID: " + rental.getMovieID());
+            return 0.0;
+        }
+
         long days = ChronoUnit.DAYS.between(rental.getDueDate(), rightNow);
-        
+
         Movie movie = (Movie) getMVM().searchById(rental.getMovieID());
-        if (getMVM().checkNull(movie)) return 0f;
-        
+        if (getMVM().checkNull(movie)) {
+            System.err.println("Error: Movie not found for rental ID: " + rental.getMovieID());
+            return 0.0;
+        }
+
         final double price = movie.getRentalPrice();
-        
-        double total = 0f;
+
+        double total = 0.0;
         if (days <= 0) {
-            return 0f;
-        } 
-        else if (days > 0 && days < 3) { 
-            total+= (price * 3) * 1.1;
-        } 
-        else if (days >= 3 && days < 7) {
-            total+= (price * 4) * 1.3;
+            return 0.0;
+        } else if (days > 0 && days < 3) {
+            total += (price * 3) * 1.1;
+        } else if (days >= 3 && days < 7) {
+            total += (price * 4) * 1.3;
+        } else if (days >= 7 && days < 14) {
+            total += (price * 7) * 1.5;
+        } else {
+            total += (price * (days - 14)) * 2;
         }
-        else if (days >= 7 && days < 14) {
-            total+= (price * 7) * 1.5;
-        } 
-        else {
-            total+= (price * (days - 14)) * 2;
-        }
-        
+
         return total;
     }
+
     
     // Lấy số lượng nhiệm vụ PENDING của nhân viên
     public static int getPendingTasks(String staffId) {
@@ -206,36 +266,5 @@ public class RentalServices {
 //
 //        return RentalDAO.updateRentalInDB(rental); 
 //    }
-    public static void showCustomerRentalHistory() {
-        if (getRTM().checkNull(getRTM().getList())) return;
-            
-        InfosTable.getTitle(new String[] {"Title", "Description", "Average Rating", "Rental price", "Available copies"});
-        getMVM().getList().forEach(item -> 
-            {
-                if (item != null)
-                    InfosTable.calcLayout(
-                        item.getTitle(),
-                        item.getDescription(),
-                        item.getAvgRating(),
-                        item.getRentalPrice(),
-                        item.getAvailableCopies()
-                );
-            }
-        );
-        
-        InfosTable.showTitle();
-        getMVM().getList().forEach(item -> 
-            {
-                if (item != null)
-                    InfosTable.displayByLine(
-                        item.getTitle(),
-                        item.getDescription(),
-                        item.getAvgRating(),
-                        item.getRentalPrice(),
-                        item.getAvailableCopies()
-                );
-            }
-        );
-        InfosTable.showFooter();
-    }
+    
 }

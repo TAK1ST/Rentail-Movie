@@ -145,10 +145,11 @@ public class RentalDAO {
                 );
                 list.add(rental);
             }
+            return list;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return list;
+        return null;
     }
 
 }

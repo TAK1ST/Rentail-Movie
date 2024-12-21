@@ -129,6 +129,7 @@ public class ActorManager extends ListManager<Actor> {
             ) 
             result.add(item);
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
     
@@ -141,19 +142,20 @@ public class ActorManager extends ListManager<Actor> {
             {
                 if (item != null)
                     InfosTable.calcLayout(
-                        item.getId(), 
+                        item.getId(),
                         item.getActorName(), 
                         item.getRank(), 
                         item.getDescription());
             }
         );
+
         InfosTable.setShowNumber();
         InfosTable.showTitle();
         tempList.forEach(item -> 
             {
                 if (item != null)
                     InfosTable.displayByLine(
-                        item.getId(), 
+                        item.getId(),
                         item.getActorName(), 
                         item.getRank(), 
                         item.getDescription());

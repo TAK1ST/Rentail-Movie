@@ -13,6 +13,7 @@ import main.dao.WishlistDAO;
 import main.dto.Wishlist;
 import main.constants.wishlist.WishlistPriority;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import static main.controllers.Managers.getMVM;
 import static main.controllers.Managers.getWLM;
@@ -30,27 +31,31 @@ public class WishlistServices {
     private static List<Wishlist> myWishlist = null; 
     private static String accountID = null;
             
-    private static final String[] showAtrributes = {"Movie", "Priority", "Added date"};
+    private static final String[] showAtrributes = {"Movie ID", "Movie", "Priority", "Added date"};
     
     public static void initDataFor(String id) {
         accountID = id;
-        myWishlist = WishlistDAO.getUserWishlist(id);
+        myWishlist = WishlistDAO.getUserWishlist(accountID);
     }
     
     public static boolean addToMyWishList() {
-        
         Movie movie = (Movie) getMVM().getById("Enter movie's id");
         if (getMVM().checkNull(movie)) return false;
         
         WishlistPriority priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, WishlistPriority.MEDIUM);
         if (priority == null) return false;
         
-        return getWLM().add(new Wishlist(
+        if (getWLM().add(new Wishlist(
                 accountID,
                 movie.getId(),
                 LocalDate.now(),
                 priority
-        ));
+        ))) {
+            myWishlist = new ArrayList<>(WishlistDAO.getUserWishlist(accountID));
+            return true;
+        }
+        else 
+            return false;
     }
 
     public static boolean updateWishlistItem() {
@@ -61,7 +66,13 @@ public class WishlistServices {
         WishlistPriority priority = (WishlistPriority) getEnumValue("Choose priority", WishlistPriority.class, item.getPriority());
         if (priority == null) return false;
         
-        return getWLM().updateWishlist(item);
+        if (getWLM().updateWishlist(item))
+        {
+            myWishlist = new ArrayList<>(WishlistDAO.getUserWishlist(accountID));
+            return true;
+        }
+        else 
+            return false;
     }
 
     public static boolean deleteMyWishlistItem() {
@@ -69,7 +80,11 @@ public class WishlistServices {
         if (item == null) 
             return errorLog("No data about the movie in your wishlist", false);
         
-        return getWLM().updateWishlist(item);
+        if (getWLM().delete(item)) {
+            myWishlist.remove(item);
+            return true;
+        }
+        else return false;
     }
 
     public static boolean clearAllMyWishList() {
@@ -78,7 +93,10 @@ public class WishlistServices {
                 return errorLog("Error during clearing your wishlist", false);
         }
         myWishlist.clear();
-        return successLog("Your wishlist have been cleared", true);
+        if (getWLM().copy(WishlistDAO.getAllWishlists())) {
+            return successLog("Your wishlist have been cleared", true); 
+        } else 
+            return false;
     }
 
     public static void displayMyWishList() {
@@ -87,7 +105,8 @@ public class WishlistServices {
             {
                 if (item != null)
                     InfosTable.calcLayout(
-                        returnName(item.getMovieId(), getWLM()),
+                        item.getMovieId(),
+                        returnName(item.getMovieId(), getMVM()),
                         item.getPriority(),
                         formatDate(item.getAddedDate(), Validator.DATE)
                 );
@@ -99,7 +118,8 @@ public class WishlistServices {
             {
                 if (item != null)
                     InfosTable.displayByLine(
-                        returnName(item.getMovieId(), getWLM()),
+                        item.getMovieId(),
+                        returnName(item.getMovieId(), getMVM()),
                         item.getPriority(),
                         formatDate(item.getAddedDate(), Validator.DATE)
                 );

@@ -15,6 +15,7 @@ import main.dto.Movie;
 import main.dto.Wishlist;
 import main.utils.InfosTable;
 import static main.utils.Input.getString;
+import static main.utils.Input.returnName;
 import static main.utils.LogMessage.errorLog;
 import static main.utils.Utility.formatDate;
 import static main.utils.Utility.getEnumValue;
@@ -112,6 +113,7 @@ public class WishlistManager extends ListManager<Wishlist> {
                 result.add(item);
             }
         }
+        if (result.isEmpty()) result = null;
         return result;
     }
     
@@ -174,5 +176,4 @@ public class WishlistManager extends ListManager<Wishlist> {
         );
         InfosTable.showFooter();
     }
-
 }

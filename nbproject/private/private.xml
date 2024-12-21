@@ -3,19 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Java/Rental-Movie/src/main/views/GuestPannel.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/dao/DiscountDAO.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/services/RentalServices.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/controllers/MovieManager.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/services/ProfileServices.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/services/MovieServices.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/controllers/RentalManager.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/dao/GenreDAO.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/utils/Validator.java</file>
             <file>file:/D:/Java/Rental-Movie/src/main/base/ListManager.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/controllers/GenreManager.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/services/WishlistServices.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/controllers/ReviewManager.java</file>
-            <file>file:/D:/Java/Rental-Movie/src/main/views/CustomerPannel.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/MovieManager.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/Main.java</file>
+            <file>file:/D:/Java/Rental-Movie/src/main/controllers/RentalManager.java</file>
         </group>
     </open-files>
 </project-private>

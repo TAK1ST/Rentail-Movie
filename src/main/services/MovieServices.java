@@ -12,12 +12,16 @@ import main.config.Database;
 import static main.config.Database.getConnection;
 import static main.controllers.Managers.getMVM;
 import main.utils.InfosTable;
+import static main.utils.Utility.formatDate;
+import main.utils.Validator;
 
 /**
  *
  * @author trann
  */
 public class MovieServices {
+    
+    private static final String[] showAttributes = {"Title", "Description", "Average", "Release Year", "Price", "Available Copies"};
     
     public static double saveAndReturnAverageRating(String movieId) {
         Connection connection = null;
@@ -87,10 +91,11 @@ public class MovieServices {
         }
         return false;  
     }
-    public static void showCustomerMovie() {
-        if (getMVM().checkNull(getMVM().getList())) return;
-            
-        InfosTable.getTitle(new String[] {"Title", "Description", "Average Rating", "Rental price", "Available copies"});
+    
+    public static void showMovie() {
+        if (getMVM().isNull()) return;
+        
+        InfosTable.getTitle(showAttributes);
         getMVM().getList().forEach(item -> 
             {
                 if (item != null)
@@ -98,6 +103,7 @@ public class MovieServices {
                         item.getTitle(),
                         item.getDescription(),
                         item.getAvgRating(),
+                        formatDate(item.getReleaseYear(), Validator.YEAR),
                         item.getRentalPrice(),
                         item.getAvailableCopies()
                 );
@@ -112,6 +118,7 @@ public class MovieServices {
                         item.getTitle(),
                         item.getDescription(),
                         item.getAvgRating(),
+                        formatDate(item.getReleaseYear(), Validator.YEAR),
                         item.getRentalPrice(),
                         item.getAvailableCopies()
                 );
@@ -119,5 +126,5 @@ public class MovieServices {
         );
         InfosTable.showFooter();
     }
-   
+    
 }

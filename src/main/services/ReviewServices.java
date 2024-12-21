@@ -37,7 +37,7 @@ public class ReviewServices {
     
     public static void initDataFor(String id) {
         accountID = id;
-        myReviews = getRVM().searchBy(id);
+        myReviews = ReviewDAO.getUserReviews(accountID);
     }
         
     public static void displayAMovieReviews() {
@@ -48,9 +48,10 @@ public class ReviewServices {
         if (getRVM().checkNull(movieReviews)) return;
         
         getMVM().show(movie, "");
-        InfosTable.getTitle("Username", "Rating", "Comment", "Date");
+        InfosTable.getTitle("Account ID", "Username", "Rating", "Comment", "Date");
         movieReviews.forEach(item -> 
             InfosTable.calcLayout(
+                item.getCustomerID(),
                 returnName(item.getCustomerID(), getACM()),
                 item.getRating(),
                 item.getReviewText(),
@@ -61,6 +62,7 @@ public class ReviewServices {
         InfosTable.showTitle();
         movieReviews.forEach(item -> 
             InfosTable.displayByLine(
+                item.getCustomerID(),
                 returnName(item.getCustomerID(), getACM()),
                 item.getRating(),
                 item.getReviewText(),
@@ -101,11 +103,20 @@ public class ReviewServices {
         if (myReviews == null) 
             return errorLog("You have no reviews", false);
         
-        for (Review item : myReviews) {
-            if (!ReviewDAO.deleteReviewFromDB(item.getCustomerID(), item.getMovieID()))
-                return errorLog("Error during clearing your reviews", false);
-        }
+        if (!ReviewDAO.deleteUserReviewFromDB(accountID))
+            return errorLog("Error during clearing your reviews", false);
+        
+        myReviews.clear();
+        getRVM().copy(ReviewDAO.getAllReviews());
         return successLog("All your reviews have been cleared", true);
+    }
+    
+    public static boolean makeReview() {
+        if (getRVM().addReview(accountID)) {
+            myReviews = ReviewDAO.getUserReviews(accountID);
+            return true;
+        } 
+        else return false;
     }
     
     public static boolean updateMyReview() {
@@ -115,14 +126,18 @@ public class ReviewServices {
         String movieID = getString("Enter movie's id");
         if (movieID == null) return false;
         
-        Review movieIsReview = getRVM().searchBy(myReviews, movieID).getLast();
+        List<Review> movieIsReview = getRVM().searchBy(myReviews, movieID);
         getRVM().show(movieIsReview);
         
-        Review temp = new Review(movieIsReview);
-        temp.setRating(getInteger("Enter rating", 1, 5, movieIsReview.getRating()));
-        temp.setReviewText(getString("Enter comment", movieIsReview.getReviewText()));
+        Review temp = new Review(movieIsReview.getFirst());
+        temp.setRating(getInteger("Enter rating", 1, 5, movieIsReview.getFirst().getRating()));
+        temp.setReviewText(getString("Enter comment", movieIsReview.getFirst().getReviewText()));
         
-        return getRVM().update(movieIsReview, temp);
+        if (getRVM().update(movieIsReview.getFirst(), temp)) {
+            myReviews = getRVM().searchBy(accountID);
+            return true;
+        }
+        else return false;
     }
     
     public static boolean deleteMyReview() {
@@ -132,9 +147,13 @@ public class ReviewServices {
         String movieID = getString("Enter movie's id");
         if (movieID == null) return false;
         
-        Review movieIsReview = getRVM().searchBy(myReviews, movieID).getFirst();
+        List<Review> movieIsReview = getRVM().searchBy(myReviews, movieID);
         
-        return getRVM().delete(movieIsReview);
+        if (getRVM().delete(movieIsReview.getFirst())) {
+            myReviews.remove(movieIsReview.getFirst());
+            return true;
+        } 
+        else return false;
     }
 
 }
